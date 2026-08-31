@@ -1,0 +1,126 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "theme_engagement",
+    "theme_technical_issues",
+    "theme_peer_interaction",
+    "theme_instructor_effectiveness",
+    "theme_pacing",
+    "theme_hands_on_learning",
+    "theme_content_delivery",
+    "theme_mental_health",
+    "theme_access_equity",
+    "primary_theme",
+    "theme_count"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 11,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "theme_engagement",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag with a workable 204/46 split; satisfaction can be compared across presence/absence of the engagement theme."
+      },
+      {
+        "name": "theme_technical_issues",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary theme; 18 positives is modest but still allows a meaningful group comparison against satisfaction."
+      },
+      {
+        "name": "theme_peer_interaction",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated 179/71 split; clear semantic category to segment satisfaction by."
+      },
+      {
+        "name": "theme_instructor_effectiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Balanced 160/90 split, highly interpretable theme strongly relevant to satisfaction."
+      },
+      {
+        "name": "theme_pacing",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag with a usable 209/41 split; interpretable segmentation."
+      },
+      {
+        "name": "theme_hands_on_learning",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Balanced 149/101 split; clear, comparable category against the focus."
+      },
+      {
+        "name": "theme_content_delivery",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "176/74 split; interpretable theme suitable for grouping satisfaction."
+      },
+      {
+        "name": "theme_mental_health",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable theme but only 12 positives; borderline near-constant, yet still a distinct segment."
+      },
+      {
+        "name": "theme_access_equity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "208/42 split; interpretable, comparable theme category."
+      },
+      {
+        "name": "primary_theme",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categorical dominant theme with well-labeled, interpretable levels; excellent single-variable segmentation of satisfaction."
+      },
+      {
+        "name": "theme_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal count of themes mentioned; interpretable scale (0-5) to compare against satisfaction, e.g. breadth of concerns."
+      }
+    ],
+    "n_predictors": 11,
+    "relationship_informativeness": 0.85,
+    "rationale": "The added columns decompose the open_response into a set of interpretable, well-labeled theme categories that can be grouped and cross-tabulated against satisfaction and the existing role/grade/subject segments. Most binary flags have well-separated distributions supporting meaningful comparisons; primary_theme and theme_count add complementary categorical and ordinal views. A couple of themes (mental_health, technical_issues) are near-rare and offer weaker contrasts, and the flags are somewhat redundant with primary_theme, but as a set they strongly realise the exploratory goal of discovering interpretable theme-satisfaction relationships rather than opaque scores."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 11
+}

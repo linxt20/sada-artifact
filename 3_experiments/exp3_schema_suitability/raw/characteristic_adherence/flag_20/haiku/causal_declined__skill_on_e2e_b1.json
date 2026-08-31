@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "asset_category",
+    "acquisition_driver",
+    "travel_expense_indicator",
+    "department_origin",
+    "source_id_presence"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.26,
+    "analytical_usefulness__table_level": 0.25,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.455,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizes assets (hardware, travel_equipment, service) which is a reasonable reading of short_description/ci. However, the query is about why TRAVEL EXPENSES get declined; asset categories relate to procurement/inventory rows, not the decline-driver analysis. Only marginally useful for THIS query, though travel_equipment could help isolate travel items."
+      },
+      {
+        "name": "acquisition_driver",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Values (standard_procurement, automated_generated, travel_related) are readable from short_description phrasing ('Automated creation', 'Procurement'). It gives a grouping axis, but it concerns how assets were acquired rather than why expenses are declined. The 'travel_related' bucket has some relevance; overall usefulness is limited for the decline query."
+      },
+      {
+        "name": "travel_expense_indicator",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A boolean flag isolating travel expenses is directly relevant to segmenting the query population. But all sampled rows are asset/procurement records marked False, and there is no clear source evidence for how True is assigned; groundedness is questionable and the flag is a bare binary with limited analytical leverage beyond filtering."
+      },
+      {
+        "name": "department_origin",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "This is trivially redundant with the existing original 'department' column, so it adds no new analytical axis. Moreover the source_text samples do not expose any department signal (only short_description/processed_date/ci), yet confident specific values (Customer_Support, Sales) are asserted, indicating unsupported/invented values."
+      },
+      {
+        "name": "source_id_presence",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A presence/absence flag derivable from whether source_id exists, so it is reasonably grounded. But it is a near-trivial null-check on an existing column and offers little leverage for explaining travel expense declines; likely near-constant and low-value for this query."
+      }
+    ],
+    "analytical_usefulness": 0.25,
+    "source_groundedness": 0.6,
+    "rationale": "The added columns are oriented around asset procurement/inventory (hardware categories, acquisition drivers, source_id presence) rather than the decline-of-travel-expenses question the query poses. Only travel_expense_indicator and the travel_related bucket touch the query, and even those are weak binary/generic signals. department_origin duplicates an existing column and asserts values not supported by the shown source text, and travel_expense_indicator's True assignment lacks visible grounding. Categorical columns tied to short_description are otherwise soundly readable, giving moderate overall groundedness but low usefulness for THIS specific analysis."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

@@ -1,0 +1,60 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What operational burdens appear in incident descriptions?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "primary_impacted_system",
+    "issue_severity_indicator",
+    "scope_of_impact",
+    "resolution_complexity_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8625,
+    "analytical_usefulness__table_level": 0.86,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7812,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_impacted_system",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Categorizing the affected system (wifi, vpn, database, etc.) gives a clean grouping axis for analyzing operational burdens. Values are well-grounded in short_description text. The 'network' inference for 'Printing issues' is a mild stretch but defensible."
+      },
+      {
+        "name": "issue_severity_indicator",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Classifying incidents as access_failure, service_unavailable, degraded, or config_error adds a genuine severity/type axis useful for the burden query. Mappings like 'Cannot connect' -> access_failure and 'Printing issues' -> service_degraded are reasonable readings of the text."
+      },
+      {
+        "name": "scope_of_impact",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "rationale": "Scope (individual vs enterprise_wide) is analytically valuable for gauging operational burden. However the source text rarely states scope explicitly; e.g. 'Unable to connect to the office VPN' is labeled individual_user with no textual basis. Many labels appear to be assumptions the text does not directly support, though 'individual_user' as a default is a plausible weak inference."
+      },
+      {
+        "name": "resolution_complexity_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "rationale": "Resolution complexity is a useful modeling axis. But short_descriptions describe the problem, not the fix, so labels like 'routine_access_restore' or 'infrastructure_intervention' are largely inferred/invented; nothing in 'Printing issues in office' warrants asserting 'infrastructure_intervention'. Groundedness is weak."
+      }
+    ],
+    "analytical_usefulness": 0.86,
+    "source_groundedness": 0.68,
+    "rationale": "All four columns provide distinct, non-redundant axes (system, severity type, scope, resolution complexity) directly relevant to characterizing operational burdens, so analytical usefulness is high across the board. Groundedness varies: primary_impacted_system and issue_severity_indicator are sound readings of the description text, but scope_of_impact and especially resolution_complexity_signal assert facts (impact breadth, remediation effort) that the terse short_descriptions do not actually state, indicating some unwarranted inference."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

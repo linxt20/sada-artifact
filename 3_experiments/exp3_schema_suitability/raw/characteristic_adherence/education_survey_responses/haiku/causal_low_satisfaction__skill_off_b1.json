@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "satisfaction_category",
+    "mentions_community_impact",
+    "mentions_hands_on_limitation",
+    "mentions_technical_issues",
+    "mentions_emotional_wellbeing",
+    "mentions_teacher_quality",
+    "mentions_async_learning"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7786,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7214,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.75,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "satisfaction_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "rationale": "Directly redundant with existing satisfaction_1to5 (a binned restatement), so limited new leverage, but a convenient grouping axis; values align well with numeric satisfaction and tone.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "mentions_community_impact",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "rationale": "Peer-interaction/community theme is a genuine driver axis for the query. However Yes-labels appear loosely applied (ED-0005 participation, ED-0002 unclear) suggesting over-broad tagging.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "mentions_hands_on_limitation",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.35,
+        "rationale": "Relevant potential driver, but clearly mislabeled: ED-0002 and ED-0004 marked Yes without any hands-on limitation, while ED-0001 (no lab) is No. Values not well grounded.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "mentions_technical_issues",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "rationale": "Strong driver axis; ED-0001 (camera freezes) and ED-0003 (logs out) correctly Yes, others No. Well grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "mentions_emotional_wellbeing",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Highly relevant to low satisfaction; ED-0001 ('miss raising hand') and ED-0003 ('cries') plausibly Yes. Mostly grounded, slightly loose on ED-0001.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "mentions_teacher_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "rationale": "Reasonable driver axis, but ED-0002 Yes is unsupported (self-report, no quality claim); other rows plausible. Mixed grounding.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "mentions_async_learning",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Distinctive driver axis (recorded/self-paced); ED-0004 ('pause recorded lectures') and ED-0002 correctly Yes. Well grounded.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns provide multiple genuine thematic driver axes (technical issues, emotional wellbeing, async learning, community impact) well suited to explaining low satisfaction and grouping by respondent role/grade/subject, giving real analytical leverage beyond the original numeric score. satisfaction_category is somewhat redundant with the existing 1-5 score. Groundedness is solid for technical_issues, emotional_wellbeing, and async_learning, but weaker for mentions_hands_on_limitation (clear mislabels on ED-0002/ED-0004), teacher_quality (ED-0002), and community_impact (over-broad Yes tagging), indicating a tendency to over-assert theme presence. Overall useful set with moderate grounding reliability."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

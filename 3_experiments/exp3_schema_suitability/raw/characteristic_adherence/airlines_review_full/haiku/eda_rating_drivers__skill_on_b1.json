@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "crew_service_warmth",
+    "seat_comfort_design",
+    "food_beverage_quality",
+    "aircraft_condition_age",
+    "customer_service_responsiveness",
+    "value_perception_premium",
+    "service_consistency_across_class",
+    "special_requests_accommodation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6325,
+    "analytical_usefulness__table_level": 0.66,
+    "source_groundedness": 0.51,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.5713,
+    "hallucination_rate": 0.875
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_warmth",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.63,
+        "hallucination_observed": true,
+        "rationale": "Crew/cabin service is one of the most frequently discussed review themes and mapping it to a warm/neutral/inattentive scale gives a genuine axis to correlate with Overall Rating across traveller type and class. Groundedness is mostly sound (S1, S3, S4, S5 read crew descriptions correctly), but Sample 2's review says nothing about crew yet was labelled 'inattentive_rushed', and the very low NULL count (24) shows the operator forces a value even when the text is silent about crew."
+      },
+      {
+        "name": "seat_comfort_design",
+        "analytical_usefulness": 0.66,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A useful text-derived comfort theme, though it partly restates the existing numeric 'Seat Comfort' rating so its marginal analytical leverage is reduced. Groundedness is strong: 'spacious_comfortable'/'cramped_uncomfortable' match the seat descriptions in S1/S2/S4/S5, and critically it returned 'Unknown' in S3 where seats were not mentioned, showing it correctly abstains on silent rows (3210 NULLs)."
+      },
+      {
+        "name": "food_beverage_quality",
+        "analytical_usefulness": 0.62,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A relevant theme but largely overlaps the original 'Food & Beverages' rating, limiting new leverage. It sometimes abstains (3392 NULLs) but in the samples it fabricated values on silent rows: S2 (only seats/IFE discussed) was labelled 'poor_bland' and S5 (no food mention) 'adequate_acceptable', showing sentiment leakage from overall tone rather than food evidence."
+      },
+      {
+        "name": "aircraft_condition_age",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "This is a genuinely new axis not covered by any original column, so it adds analytical value. However groundedness is shaky: S3/S4 are well supported ('well-maintained', 'older aircraft in good condition'), but S1 inferred 'modern_well_maintained' from 'well sanitized', and S2/S5 assigned condition labels where the text never mentions the aircraft at all."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.48,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Heavily overlaps both the added 'crew_service_warmth' column and the original 'Staff Service' rating, so it largely restates an axis already present, reducing usefulness. It also carries no NULLs (every row forced a value); S2 was labelled 'neutral_procedural' with no service content in the text, and other rows are re-derived from the same crew sentences already captured elsewhere."
+      },
+      {
+        "name": "value_perception_premium",
+        "analytical_usefulness": 0.58,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Value is relevant to the query but this substantially duplicates the original 'Value For Money' rating. Groundedness is weak: with only 83 NULLs almost every row gets a specific value, yet none of the five sampled reviews mention price at all. S1 ('excellent_value') and the negative S2 ('fair_price_justified') are inferred from overall tone, and S2's label even conflicts with the review's harshly negative content."
+      },
+      {
+        "name": "service_consistency_across_class",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "The concept is attractive for the 'across Class' part of the query, but judging cross-class consistency generally requires a comparison a single review cannot provide, and values largely restate the existing 'Class' field. With only 164 NULLs the operator asserts a value almost everywhere: 'consistent_high' (S1), 'degraded_economy' (S2), 'class_appropriate' (S3-S5) are not supported by any cross-class comparison in the source texts, making the dominant 'degraded_economy' (3404) an unfounded inference."
+      },
+      {
+        "name": "special_requests_accommodation",
+        "analytical_usefulness": 0.52,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "A potentially distinct theme, but it is the least grounded: only 2 NULLs across the whole table means essentially every review is assigned a special-request outcome even though most reviews never mention a special request. The birthday-cake gesture in S1 is defensible, but S2-S5 have no special-request content yet received values, and the broadly applied 'refused_discriminatory' (1729) asserts a serious specific claim the texts do not support."
+      }
+    ],
+    "analytical_usefulness": 0.66,
+    "source_groundedness": 0.45,
+    "rationale": "The added columns supply several categorical review-theme axes (crew warmth, seat comfort, food, aircraft condition, value, cross-class consistency, special requests) that are directly on-topic for grouping themes against Overall Rating by Type of Traveller and Class, giving reasonable holistic analytical value. Usefulness is dampened by redundancy: seat_comfort_design/food_beverage_quality/value_perception_premium closely mirror the existing numeric sub-ratings, and customer_service_responsiveness largely restates crew_service_warmth and Staff Service. Groundedness is the bigger weakness. Only seat_comfort_design reliably abstains on silent rows; several columns (customer_service_responsiveness 0 NULL, special_requests_accommodation 2 NULL, value_perception_premium 83 NULL, service_consistency_across_class 164 NULL) force specific values almost everywhere and the samples confirm fabrication—e.g. Sample 2 discusses only seats and IFE yet received confident labels for crew, food, value, consistency, and special requests. This pattern of asserting specifics where the text is silent, rather than returning 'unknown', pulls the table-level groundedness down."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

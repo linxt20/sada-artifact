@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "ticket_category",
+    "product_area",
+    "reported_severity_signal",
+    "business_deadline_pressure",
+    "affected_user_scope",
+    "environment_scope",
+    "root_cause_type",
+    "regression_after_change",
+    "reproducibility"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.8222,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8778,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.85,
+    "hallucination_rate": 0.1111
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "ticket_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A strong grouping axis for resolution time; category types (bug, outage, feature) plausibly correlate with resolution duration. Values are well-grounded in the issue text across samples."
+      },
+      {
+        "name": "product_area",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis for comparing resolution time by affected component. Values map cleanly to described modules (billing, SSO, export pipeline), with reasonable NULLs for silent rows."
+      },
+      {
+        "name": "reported_severity_signal",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Severity is a plausible driver of resolution time and adds leverage beyond the existing priority column. Mostly grounded; the billing duplicate line item as 'degraded_non_blocking' is a defensible reading, though such gradations involve some interpretation."
+      },
+      {
+        "name": "business_deadline_pressure",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Deadline pressure is a meaningful signal that could influence handling speed. Values track the text (Friday books close = hard_deadline; renewal parity = soft_urgency). The outage 'immediate' rated soft rather than hard is arguable but not a clear error."
+      },
+      {
+        "name": "affected_user_scope",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Blast radius is a strong predictor of resolution effort. Values are well-grounded (single user vs entire tenant 502). Export affecting the tenant is a reasonable inference."
+      },
+      {
+        "name": "environment_scope",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Prod vs non-prod can correlate with urgency and complexity, giving analytical value. Heavily 'not_specified' (178) which limits leverage, but grounded values are sound and silent rows correctly marked."
+      },
+      {
+        "name": "root_cause_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Root cause is highly relevant to resolution difficulty. However, the billing duplicate-line-item ticket is labeled 'regression_code_bug' with no textual support for a code regression, an unwarranted specific. Other samples are reasonable, but this contradicts the silent source."
+      },
+      {
+        "name": "regression_after_change",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A regression flag is a plausible resolution-time signal but partially redundant with root_cause_type/ticket_category. Values grounded: '4.7 release' -> true, SSO push suspicion left false is conservative and acceptable."
+      },
+      {
+        "name": "reproducibility",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Reproducibility genuinely affects diagnosis time. Values largely sound (session drops every 12-15 min as intermittent is defensible). Marking the billing invoice as 'consistently_reproducible' is a mild stretch but not a clear error."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.87,
+    "rationale": "The added columns provide multiple genuinely distinct axes (category, product area, severity, deadline pressure, blast radius, root cause, regression, reproducibility) that all plausibly relate to why a ticket takes longer to resolve, giving strong analytical leverage with little redundancy. Groundedness is generally high and silent rows are appropriately marked 'not_present'/'not_specified'. The main weakness is occasional over-confident inference, most notably root_cause_type='regression_code_bug' for the billing ticket that offers no evidence of a code regression, plus mild severity/reproducibility stretches."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

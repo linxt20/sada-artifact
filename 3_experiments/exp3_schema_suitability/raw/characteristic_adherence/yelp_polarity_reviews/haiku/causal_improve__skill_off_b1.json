@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "sentiment_driver",
+    "problem_mentioned",
+    "improvement_keyword_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.6833,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.5667,
+    "source_groundedness__table_level": 0.57,
+    "b1_overall": 0.625,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "sentiment_driver",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A categorical driver axis (service, food, price, ambiance, wait, cleanliness) is exactly the kind of grouping that supports 'how to improve satisfaction'. However, several samples show questionable readings: YLP-0003 is dominated by pizza/food quality and price yet labelled service_quality; YLP-0005 (gave away cabana, denied entry, bad drinks — clearly service/discrimination) is labelled 'other'. The dimension is sound but per-row assignment is unreliable, lowering groundedness."
+      },
+      {
+        "name": "problem_mentioned",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A binary problem flag is useful for isolating actionable negative feedback. But labelling is inconsistent: YLP-0005 lists an explicit 'Cons' section with multiple problems yet is coded 0, and YLP-0003 has a stated complaint (smallest pie too big) coded 0. The flag partly aligns with label_pos, giving some redundancy risk, but it captures problems even in positive reviews, so it adds leverage. Groundedness weakened by mislabels."
+      },
+      {
+        "name": "improvement_keyword_count",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A raw keyword count is a fairly generic surface signal; it is heavily zero (166/250) and its semantics are vague ('improvement keyword' undefined), limiting analytical leverage for prioritising improvements versus the richer sentiment_driver column. Values are broadly derivable from text (word matching), so groundedness is moderate, though the count for YLP-0002 (=2) is not clearly traceable."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.57,
+    "rationale": "The columns provide genuine analytical axes for the improvement query — a driver category and a problem flag are directly relevant for grouping and prioritising fixes, while the keyword count is a weaker generic signal. The main weakness is groundedness: several sampled rows show driver/problem labels that contradict or ignore clear cues in the source text (e.g., food/price-focused review tagged service_quality, an explicit Cons list flagged as no problem), indicating unreliable per-row extraction rather than invented facts."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

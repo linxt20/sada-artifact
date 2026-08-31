@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "resolution_action_type",
+    "failure_symptom",
+    "reassignment_occurred",
+    "caller_type",
+    "software_trigger"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6167,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.625,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.6209,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Provides a finer-grained categorization derived from short_description (printer, network, database, etc.), giving a genuine grouping axis beyond the original coarse 'category'. Values match source text well."
+      },
+      {
+        "name": "resolution_action_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A useful axis for resolution efficiency analysis. However, short_descriptions state only the problem, not the resolution; values like 'repair' or 'investigation' are inferred and not directly supported by the source text, so groundedness is weak."
+      },
+      {
+        "name": "failure_symptom",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Symptom extraction (not_connecting, not_responding, display_issue) is a legitimate new axis and is well grounded in the descriptions. NULL for silent rows is acceptable behaviour."
+      },
+      {
+        "name": "reassignment_occurred",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is directly relevant to assignment-group efficiency. But the provided source_text (short_description, timestamps) contains no evidence about reassignment; true/false values appear invented and cannot be verified from the shown fields."
+      },
+      {
+        "name": "caller_type",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Values are just caller names (David_Loo, ITIL_user), effectively duplicating caller_id rather than a 'type'. Near-redundant with an existing column and not a meaningful new axis for the category/priority/assignment-group query."
+      },
+      {
+        "name": "software_trigger",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A bare boolean flag with limited leverage for the query. Groundedness is questionable: whether an incident is software-triggered is often not stated in the short description, making many values unverifiable inferences."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.62,
+    "rationale": "Several columns (incident_category, failure_symptom, resolution_action_type) add real grouping/comparison axes aligned with the efficiency query and are largely grounded in short_description. Weak spots: caller_type merely restates caller identity, software_trigger is a low-leverage flag, and reassignment_occurred plus software_trigger assert facts not supported by the shown source fields, indicating hallucination risk. Overall moderate quality on both dimensions."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

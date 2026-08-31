@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What company traits explain regional clustering?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_tech_domain",
+    "industry_vertical",
+    "company_stage",
+    "target_market",
+    "delivery_model",
+    "hardware_software_orientation"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "primary_tech_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable tech categories that plausibly vary by region (e.g., semiconductor vs fintech clustering); strong segmentation variable despite ~24% nulls."
+      },
+      {
+        "name": "industry_vertical",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Human-readable industry categories external to region that can be grouped and compared; enterprise_software dominates but distribution still permits contrasts."
+      },
+      {
+        "name": "company_stage",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear, balanced lifecycle categories (early/growth/established/investor); regional ecosystems differ markedly by stage, making this a rich exploratory axis."
+      },
+      {
+        "name": "target_market",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable B2B/B2C segmentation; somewhat skewed toward b2b_enterprise but still allows meaningful cross-tabulation with region."
+      },
+      {
+        "name": "delivery_model",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct delivery categories (SaaS, services, hardware) that can reflect regional economic structure; well-labeled and groupable."
+      },
+      {
+        "name": "hardware_software_orientation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable orientation categories; partially overlaps delivery_model (hardware/software axis) but adds a clean binary-ish contrast useful for regional comparison."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.85,
+    "rationale": "All six columns are external, associational, and framed as clean human-readable categorical segments rather than opaque scores, directly supporting exploration of which company traits co-vary with regional clustering. Categories are well-separated and groupable, and several (tech domain, stage, hardware/software) are classic regional-differentiator axes. Minor weaknesses: some skew (target_market, industry_vertical concentrate heavily in one bucket, limiting contrast) and partial redundancy between delivery_model and hardware_software_orientation. None merely restate the focus. Overall a strong EDA-oriented set."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_regional",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

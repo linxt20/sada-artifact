@@ -1,0 +1,138 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do expense decline rates differ across departments?",
+  "focus_variable": "departmental_declined_rate_variation",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "device_form_factor",
+    "entry_origin",
+    "vendor_brand",
+    "is_travel_related",
+    "ci_identifier_quality",
+    "has_source_id",
+    "recurring_submitter"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 7,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 7,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "departmental_declined_rate_variation",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Type of expense (hardware/travel/software) plausibly affects both what departments purchase (varies by department) and the likelihood of decline (different approval scrutiny). Common cause of department-composition and outcome."
+      },
+      {
+        "name": "device_form_factor",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Finer-grained item type; correlates with department mix and with decline likelihood (expensive servers vs peripherals). Plausible common cause, though partly redundant with asset_category_type."
+      },
+      {
+        "name": "entry_origin",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Manual vs auto-generated entry is a candidate cause: manual entries may be declined more often due to error/incompleteness. This is a plausible treatment whose effect on decline rate could be attributed."
+      },
+      {
+        "name": "vendor_brand",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Vendor may relate to which department buys and to approval outcome (approved vendor lists), so a plausible common cause, though effect is weaker."
+      },
+      {
+        "name": "is_travel_related",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Travel status affects department composition and decline propensity (travel policies stricter). Overlaps with asset_category_type."
+      },
+      {
+        "name": "ci_identifier_quality",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Quality/legibility of the CI identifier plausibly affects reviewability (decline) and may vary by department practices. Weak but plausible common cause."
+      },
+      {
+        "name": "has_source_id",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Completeness of record (source id present) may drive decline and vary by department entry process. Could also be treated as treatment; treated here as a data-quality common cause."
+      },
+      {
+        "name": "recurring_submitter",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the submitter is recurring may affect both submission patterns (concentrated in some departments) and decline likelihood (familiarity with policy). Plausible common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "entry_origin"
+    ],
+    "confounders": [
+      {
+        "name": "asset_category_type",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "device_form_factor",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "vendor_brand",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "is_travel_related",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "ci_identifier_quality",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "has_source_id",
+        "named_in_query": false,
+        "plausibility": 0.45
+      },
+      {
+        "name": "recurring_submitter",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "The query names only the outcome (decline rate variation) and the grouping (department); no treatment or confounders are named, so all surfaced variables are query-independent, which is the capability under test. entry_origin (manual vs auto) is the clearest candidate TREATMENT whose effect on decline could be attributed. Several added columns (asset_category_type, is_travel_related, has_source_id, recurring_submitter) are plausible common causes of both what a department submits and whether it is declined, so they function as genuine confounders. However quality is only moderate: many columns describe item/asset attributes that are strongly redundant with each other, and their status as common causes of the treatment (manual entry) is weak — several read more as parallel candidate causes or descriptive attributes than as classical confounders adjusting a specific treatment-outcome pair. No clear mediators or colliders are labelled as confounders, but the set is skewed toward item-type descriptors rather than variables that jointly cause the manual-entry treatment and the decline outcome."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

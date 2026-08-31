@@ -1,0 +1,127 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "negative_theme_product_defect",
+    "negative_theme_poor_quality",
+    "negative_theme_misleading",
+    "negative_theme_shipping_issues",
+    "negative_theme_customer_service",
+    "negative_theme_disappointment",
+    "negative_theme_pricing",
+    "negative_theme_count",
+    "negative_intensity_score",
+    "review_length_bucket"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.25,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.25,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "negative_theme_product_defect",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate substantive cause of negative sentiment; a real-world attribute (product defect) whose presence could drive the outcome."
+      },
+      {
+        "name": "negative_theme_poor_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of negativity reflecting product quality; plausibly drives the outcome."
+      },
+      {
+        "name": "negative_theme_misleading",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause: misleading listings could cause negative reviews."
+      },
+      {
+        "name": "negative_theme_shipping_issues",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause: shipping problems driving negativity."
+      },
+      {
+        "name": "negative_theme_customer_service",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause: service failures driving negativity."
+      },
+      {
+        "name": "negative_theme_disappointment",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Disappointment is an emotional state on the causal path between a substantive problem and the expressed negative label; it is an outcome/mediator of dissatisfaction rather than an independent cause."
+      },
+      {
+        "name": "negative_theme_pricing",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause: pricing complaints driving negativity."
+      },
+      {
+        "name": "negative_theme_count",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "An aggregate count of the theme flags; it is a downstream summary of the themes and effectively co-determined with the label rather than a common cause of the individual treatments and the outcome."
+      },
+      {
+        "name": "negative_intensity_score",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Intensity of negative language is a proxy/measure of the outcome itself (sentiment), on the causal path, not an independent confounder."
+      },
+      {
+        "name": "review_length_bucket",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Review length can plausibly relate to the propensity to express/detect specific themes (treatment measurement) and to sentiment expression (outcome), making it a plausible common influence on both; the only column functioning as a genuine adjustment variable."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "negative_theme_product_defect",
+      "negative_theme_poor_quality",
+      "negative_theme_misleading",
+      "negative_theme_shipping_issues",
+      "negative_theme_customer_service",
+      "negative_theme_pricing"
+    ],
+    "confounders": [
+      {
+        "name": "review_length_bucket",
+        "named_in_query": false,
+        "plausibility": 0.35
+      }
+    ],
+    "confounder_quality": 0.25,
+    "rationale": "The schema supplies multiple candidate treatments (thematic causes of negativity) so requirement (a) is met. However it largely fails requirement (b): the remaining added columns are mediators or proxies of the outcome (disappointment, negative_theme_count, negative_intensity_score) rather than common causes of both treatment and outcome. The only column plausibly acting as a surfaced confounder is review_length_bucket, but its status as a genuine common cause of a specific theme and sentiment is weak and more likely a measurement/detection artifact than a true confounder. No genuine background common causes (e.g., product category, price tier, brand, reviewer verification, expectation level) were surfaced, so the causal-attribution claim is only weakly realised."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

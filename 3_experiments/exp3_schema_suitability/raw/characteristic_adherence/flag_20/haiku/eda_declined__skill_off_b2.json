@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "is_travel",
+    "has_automated_desc",
+    "is_high_amount",
+    "missing_processing"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "is_travel",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary flag for whether the expense is travel-related, derivable from the description. Well-separated categories (354/146) and interpretable; a human can segment declined rates by travel vs non-travel, directly serving the query's focus on travel-expense descriptions."
+      },
+      {
+        "name": "has_automated_desc",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Flags automated/boilerplate descriptions, an external associational signal in the text. Reasonably balanced (381/119) and interpretable; one can compare decline rates between automated and human-written descriptions, a plausible signal for declines."
+      },
+      {
+        "name": "is_high_amount",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Discretizes amount into high/low, giving a clean two-way segmentation (264/236) that a human can group on and compare against decline rate. Interpretable scale-derived category, not opaque."
+      },
+      {
+        "name": "missing_processing",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Flags absence of processing data, an interpretable and well-separated category (295/205). Could plausibly associate with declines and supports meaningful grouping, though it is more procedural than a description signal per se."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.72,
+    "rationale": "All four added columns are external, associational binary flags with well-separated, interpretable categories that a human can group on and compare against state_declined, satisfying the EDA claim. None merely restate the focus, and none are near-constant or opaque scores. The set is moderately strong for discovering interpretable relationships: is_travel and has_automated_desc are genuine description-derived signals aligned with the query, is_high_amount is a clean amount segmentation. Informativeness is held below the top range because the columns are all coarse binary buckets (limiting granularity of exploration) and missing_processing is more of a data-pipeline artifact than a substantive description signal, so the set covers a fairly narrow slice of potentially informative relationships."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

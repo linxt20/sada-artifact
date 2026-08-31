@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_concern",
+    "quality_or_durability_judgment",
+    "problem_scope",
+    "failure_pattern_or_cause",
+    "usage_expectation_alignment",
+    "satisfaction_outcome"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.725,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8333,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.7792,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_concern",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A thematic categorization that gives a strong axis to group what drives complaints/praise, directly serving the query. Row readings are sound (e.g., 'No Black Dolls' as expectation_mismatch, real Eamon rant as quality). Values well-grounded in text."
+      },
+      {
+        "name": "quality_or_durability_judgment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Provides an ordinal quality signal beyond the binary label, useful for correlating praise/complaint intensity. Samples map reasonably (excellent for skin cream and Criterion film, poor for the punk rant). The Lamott book as 'acceptable' is a defensible mixed read."
+      },
+      {
+        "name": "problem_scope",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Characterizes failure severity, relevant to complaint drivers. Heavily skewed to not_applicable (192), reducing leverage, but non-null values add a genuine axis. All five samples correctly marked not_applicable since none describe product failures; correct silent handling."
+      },
+      {
+        "name": "failure_pattern_or_cause",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Root-cause typology useful for diagnosing complaints, but very sparse (195 not_present) and conceptually overlapping with problem_scope. When populated it offers distinct causal detail. Samples correctly all not_present, faithful to silent source text."
+      },
+      {
+        "name": "usage_expectation_alignment",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Expectation vs delivery is a genuine driver dimension. Some redundancy with satisfaction_outcome, but distinct framing. Readings are sound (skin cream/film exceed, doll/rant fall short, Lamott partially meets). Grounded in text."
+      },
+      {
+        "name": "satisfaction_outcome",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Behavioral/attitudinal outcome that adds leverage beyond raw sentiment, though somewhat correlated with label_pos and expectation columns. Sample mappings are accurate (high_satisfaction for praise, would_not_recommend/regret for negatives). Well grounded."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns collectively provide multiple meaningful axes (theme, quality judgment, expectation alignment, satisfaction, failure characterization) that directly serve the 'what drives praise and complaints' query. There is moderate conceptual overlap among problem_scope/failure_pattern and among usage_expectation_alignment/satisfaction_outcome, and two columns are quite sparse, slightly limiting leverage. Groundedness is strong across all sampled rows: values are sound readings of the source text and silent rows are correctly marked not_applicable/not_present rather than fabricated. No hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

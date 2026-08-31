@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "failure_mode",
+    "affected_component",
+    "scope_indicator",
+    "recurrence_signal",
+    "resolution_ownership_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.84,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.748,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.794,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing the underlying failure type is exactly the causal axis the query needs; it lets the analyst group resolution times by root cause. Values track the short_description well (VPN/WiFi/DB -> connection_failure, email system down -> service_down). Some fine distinctions (service_down vs connection_failure) require judgment but are reasonable readings."
+      },
+      {
+        "name": "affected_component",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Identifies the impacted system, a distinct and useful grouping dimension for explaining resolution-time differences. Values are cleanly derivable from the descriptions (vpn_client, network_infrastructure, database_server, email_server) and are well grounded."
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Scope/blast-radius is a genuinely useful explanatory axis for longer resolutions. Grounding is weaker: 'Cannot connect to database' -> single_user and 'VPN connection issue' -> remote_access are inferences not stated, and 'system_wide' being the modal value suggests confident scope assignments the terse text often does not support."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Recurrence is a plausibly relevant driver of long resolution times, so it has analytical value. However it is a bare boolean and its derivation is unclear from the samples; the short_description alone rarely states recurrence, so many 'false'/'true' assignments appear inferred without visible support."
+      },
+      {
+        "name": "resolution_ownership_pattern",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Whether a ticket was handed across agents vs self-resolved vs unassigned is a meaningful process factor for resolution duration. It is derivable in principle from assigned_to/closed_by/sys_updated_by fields, but those are not shown in the samples, and the 'self_resolved' vs 'cross_agent_resolved' split for otherwise similar rows is not verifiable from the provided evidence."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns collectively supply strong new causal axes (failure type, affected component, scope, recurrence, ownership pattern) precisely aligned with a query about what drives longer resolution times while controlling for priority and category. Failure_mode and affected_component are both highly useful and well grounded in the short_description. Scope_indicator, recurrence_signal, and resolution_ownership_pattern remain analytically valuable but rely on inferences the shown source text does not always support, lowering groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

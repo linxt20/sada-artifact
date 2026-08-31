@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest a longer visit?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "number_of_distinct_problems",
+    "primary_problem_category",
+    "new_treatment_initiated",
+    "in_visit_procedure_or_intervention",
+    "critical_or_life_threatening_status",
+    "imaging_or_lab_testing_scope",
+    "specialist_referral_or_consultation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7929,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7214,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7571,
+    "hallucination_rate": 0.7143
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "number_of_distinct_problems",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Problem count is a plausible driver of visit length and offers a real modeling axis. However the value is dominated by '2' (185/250) and the samples show '2' for texts that read as single-problem (e.g. viral URI, acne, knee injury), suggesting inflated/weakly-grounded counts."
+      },
+      {
+        "name": "primary_problem_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A well-distributed categorical that gives a genuine grouping axis for visit duration. Mostly sound readings, but the acne case labeled 'procedural_or_surgical' is a misclassification (it is medication management), showing some categorisation error."
+      },
+      {
+        "name": "new_treatment_initiated",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Balanced boolean plausibly linked to visit length. Sample values track the text well (adapalene/doxycycline started = True; continue regimen = False)."
+      },
+      {
+        "name": "in_visit_procedure_or_intervention",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Procedure type is a reasonable duration signal. But grounding is weak: the URI visit with no imaging is labeled 'imaging_or_diagnostic_procedure', and the annual-physical/MI-followup labs are folded into an imaging category, conflating labs with in-visit procedures and asserting procedures not in text."
+      },
+      {
+        "name": "critical_or_life_threatening_status",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Somewhat useful acuity flag, though heavily skewed to False (223/250) limiting leverage and overlapping with the existing urgency column. Sample readings are correct."
+      },
+      {
+        "name": "imaging_or_lab_testing_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Testing scope is a strong candidate driver of visit length with good spread. Grounding is mixed: physical with lipid+HbA1c as 'multiple_tests' is defensible, but single MRI as 'single_test' vs the URI 'no_labs_or_imaging' are fine, while overall consistency is uneven."
+      },
+      {
+        "name": "specialist_referral_or_consultation",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Referral is a plausible signal. Sample readings are mostly defensible, but the knee-injury 'True' is an inference not explicitly stated (MRI ordered, no referral mentioned), indicating some over-assertion."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns collectively give several genuine, non-redundant axes (problem count, problem category, treatment initiation, testing scope, referral) that plausibly drive visit duration, making them analytically useful for the query. Groundedness is the weaker dimension: multiple rows show over-assertion, notably labeling texts with no imaging/procedure as 'imaging_or_diagnostic_procedure' and inflating distinct-problem counts and referrals beyond what the text supports. No column is fatally ungrounded, but several exhibit systematic mild hallucination."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

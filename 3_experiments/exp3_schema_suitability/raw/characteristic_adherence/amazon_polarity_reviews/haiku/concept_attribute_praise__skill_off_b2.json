@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "focus_variable": "praise_and_complaint_drivers",
+  "concept": "praise_and_complaint_drivers",
+  "n_added_columns": 5,
+  "added_columns": [
+    "praise_word_count",
+    "complaint_word_count",
+    "review_detail_level",
+    "emotional_intensity",
+    "aspects_discussed"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.05,
+    "mece": 0.1225,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "praise_and_complaint_drivers",
+    "per_column": [
+      {
+        "name": "praise_word_count",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A bare count of praise words is a mechanical proxy for the presence of praise itself, not a distinct constitutive aspect of what DRIVES praise. It restates the sentiment magnitude rather than naming a driver (e.g., product quality, price, delivery)."
+      },
+      {
+        "name": "complaint_word_count",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Symmetric to praise_word_count: a count of complaint words measures the complaint signal, not an aspect/facet of the underlying drivers. It also overlaps heavily with praise_word_count as a generic polarity-count pair."
+      },
+      {
+        "name": "review_detail_level",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "How detailed a review is may correlate with review informativeness but is not a part-of the drivers of praise/complaint; it is a property of the review text, an external predictor at best."
+      },
+      {
+        "name": "emotional_intensity",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Generic sentiment/emotion intensity is a bare affect measure. It captures how strongly the reviewer feels, not WHAT drives that feeling, so it restates polarity strength rather than decomposing the drivers."
+      },
+      {
+        "name": "aspects_discussed",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A single count of aspects discussed points toward the right idea (drivers are product/service aspects) but does not itself enumerate any facet; it is a meta-count, not a named constitutive aspect such as quality, price, shipping, or usability."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "praise_word_count",
+      "complaint_word_count",
+      "review_detail_level",
+      "emotional_intensity",
+      "aspects_discussed"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.05,
+    "rationale": "The concept 'praise_and_complaint_drivers' should decompose into constitutive aspects that people praise or complain about -- e.g., product quality, price/value, shipping/delivery, customer service, usability, durability. None of the added columns name such facets. Instead they are mechanical magnitude measures (praise/complaint word counts, emotional intensity), text-property proxies (detail level), or a bare aspect count. praise_word_count and complaint_word_count are near-mirror generic polarity counts that overlap in what they capture, and emotional_intensity again reflects polarity magnitude, lowering mutual exclusivity. Since no genuine driver facet is present, exhaustiveness against the concept is near zero. The set fails the meronymy test."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

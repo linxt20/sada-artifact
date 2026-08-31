@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "focus_variable": "audience_praise_and_complaints",
+  "concept": "audience_praise_and_complaints",
+  "n_added_columns": 3,
+  "added_columns": [
+    "praise_type",
+    "complaint_type",
+    "subject_target"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6423,
+    "facet_fraction": 1.0,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.75,
+    "mece": 0.6423,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "audience_praise_and_complaints",
+    "per_column": [
+      {
+        "name": "praise_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Praise is one of the two named halves of the concept 'praise and complaints'. Capturing the type/aspect of praise expressed is a constitutive part-of the concept — it is an aspect OF the audience reaction, not an external predictor of it."
+      },
+      {
+        "name": "complaint_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Complaint is the other named half of the concept. Its type is a constitutive facet of audience_praise_and_complaints, decomposing the negative valence of the reaction."
+      },
+      {
+        "name": "subject_target",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The target of the praise/complaint (film, actor, director, screenplay, etc.) is an intrinsic aspect of the reaction itself — every praise or complaint is about something. It is meronymic (the 'what it is about' dimension), not an external cause or predictor."
+      }
+    ],
+    "facet_columns": [
+      "praise_type",
+      "complaint_type",
+      "subject_target"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.75,
+    "rationale": "All three columns are genuine constitutive facets of the concept, decomposing valence (praise vs. complaint) and target. However mutual exclusivity is weakened: praise_type and complaint_type draw from largely the SAME underlying value vocabulary (acting_performance, screenplay_writing, cinematography_visuals, direction, character-related aspects), so the 'aspect' dimension is duplicated across the two valence columns; furthermore subject_target overlaps heavily with the *_type columns (e.g., performance_actor / director / screenplay in subject_target restate acting_performance / direction / screenplay_writing in the type columns), so the same content-aspect is captured twice under different names. Exhaustiveness is fairly good: the type columns cover the main quality dimensions (acting, writing, visuals, direction, pacing, technical, originality, emotional impact) and the target column adds the object dimension, together spanning valence × aspect × target. What is not cleanly separated is intensity/strength of sentiment, but the core constitutive aspects of what praise and complaints consist of are largely covered."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

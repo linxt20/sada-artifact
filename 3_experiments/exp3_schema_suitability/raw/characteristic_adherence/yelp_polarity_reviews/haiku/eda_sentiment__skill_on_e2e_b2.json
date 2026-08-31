@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "staff_attentiveness",
+    "staff_demeanor",
+    "food_taste_flavor"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 3,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "staff_attentiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A distinct review theme (service responsiveness) with clean, well-separated, interpretable categories (attentive, slow, inattentive, not_present). It is an external associational variable that can be segmented and compared against sentiment, directly serving the query about theme differences."
+      },
+      {
+        "name": "staff_demeanor",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Captures a separate service-quality theme (friendliness vs rudeness/indifference) with clear, balanced, human-readable categories. Enables meaningful cross-tabulation against positive/negative sentiment."
+      },
+      {
+        "name": "food_taste_flavor",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Encodes the food-quality theme with interpretable, well-separated levels (delicious/fresh, bland, off-quality, not_present). A strong associational dimension to compare across sentiment labels."
+      }
+    ],
+    "n_predictors": 3,
+    "relationship_informativeness": 0.85,
+    "rationale": "All three columns are genuine, human-interpretable review themes (service attentiveness, staff demeanor, food flavor) with categorical, well-separated values and reasonable distributions that avoid near-constancy. They are external segmentation variables rather than restatements of label_pos or opaque model scores, and each can be grouped and cross-tabulated against sentiment to reveal how themes differ between positive and negative reviews. This closely matches the exploratory intent. The set is slightly narrow (two of three concern staff, none cover ambiance/price/value), so informativeness is high but not maximal."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

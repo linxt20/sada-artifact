@@ -1,0 +1,100 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some agents have longer resolution times?",
+  "focus_variable": "agent_resolution_discrepancy",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "incident_symptom_type",
+    "affected_system_scope",
+    "ticket_handoff",
+    "recurrence_indicator"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "agent_resolution_discrepancy (resolution time)",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident (email, vpn, database) plausibly drives both which agent/group is assigned (routing by expertise) and the intrinsic difficulty/resolution time. A common cause of both treatment (agent) and outcome (time), not on the causal path between them."
+      },
+      {
+        "name": "incident_symptom_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Symptom type (outage vs error message) affects intrinsic complexity/time and can influence which agent handles it. A pre-existing case attribute that is a common cause rather than a mediator of the agent effect."
+      },
+      {
+        "name": "affected_system_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (individual device vs systemic outage) affects both routing/assignment and inherent resolution effort; a plausible common cause of agent assignment and resolution time."
+      },
+      {
+        "name": "ticket_handoff",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the ticket was handed off is a consequence of the agent handling the case and lies ON the causal path to longer resolution time; it is an outcome/mediator of the agent, not a pre-existing common cause. Adjusting for it would block part of the effect."
+      },
+      {
+        "name": "recurrence_indicator",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an incident is recurring is a pre-existing property that can affect both which agent it lands on (specialist for known recurring issues) and how long it takes; plausible common cause, though it could also be partly outcome-influenced."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "incident_symptom_type",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "affected_system_scope",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "recurrence_indicator",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The query attributes variation in resolution time to 'some agents', so the implicit TREATMENT is the agent/assignee. That treatment already exists in the original table (assigned_to, assignment_group) but NO added column introduces or operationalises the agent-level cause; the augmentation adds no treatment variable, so treatment_present is false. The added columns are mostly case-characteristic confounders (category, symptom type, scope, recurrence) that plausibly influence both agent routing and intrinsic resolution effort, and none were named in the query, which does demonstrate genuine confounder surfacing. However, ticket_handoff is a mediator/consequence of the agent's handling, not a confounder, and mislabelling it would bias the estimate. Because the design surfaces good confounders but fails to instantiate the treatment and includes a mediator, it only partially realises the causal-attribution claim."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

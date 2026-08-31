@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "primary_complaint_category",
+    "seat_comfort_reality",
+    "cabin_crew_professionalism",
+    "food_quality_consistency",
+    "operational_reliability_issue",
+    "ground_staff_competence_empowerment",
+    "service_delivery_consistency",
+    "premium_amenity_cost_cutting",
+    "premium_class_value_perception",
+    "passenger_class_factor"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.08,
+    "leakage_rate": 0.8
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "primary_complaint_category",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "The dominant complaint expressed in a review is essentially a summary of the sentiment that produces the overall rating. It is extracted from the same review text and is a near-restatement of dissatisfaction, so it leaks the outcome rather than predicting it from independent signal."
+      },
+      {
+        "name": "seat_comfort_reality",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A text-derived qualitative judgement of seat comfort mirrors the existing Seat Comfort sub-rating and the reviewer's evaluative stance, which is a direct component of the overall rating. It restates outcome-correlated opinion rather than an independent predictor."
+      },
+      {
+        "name": "cabin_crew_professionalism",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "An evaluative rating of crew ('rude', 'friendly') derived from the review is the same subjective assessment that drives Staff Service and the overall rating. It is a co-outcome/restatement, not an exogenous predictor."
+      },
+      {
+        "name": "food_quality_consistency",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Qualitative food judgement duplicates the Food & Beverages sub-rating and the reviewer's evaluative tone, both components of the overall rating. Extracted from the same review, it leaks outcome sentiment."
+      },
+      {
+        "name": "operational_reliability_issue",
+        "role": "predictor",
+        "is_predictor": false,
+        "rationale": "Occurrence of a delay/cancellation/baggage event is a concrete factual circumstance of the trip that plausibly causes lower ratings but is not itself the rating. However it is extracted post hoc from the review, so it carries some leakage risk; treated as a borderline predictor since the event exists independently of the score."
+      },
+      {
+        "name": "ground_staff_competence_empowerment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "An evaluative judgement of ground staff derived from the review is the same opinion signal that feeds the overall rating. Restates sentiment rather than providing exogenous features."
+      },
+      {
+        "name": "service_delivery_consistency",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A summary of how good/consistent service was is a direct paraphrase of overall satisfaction ('consistent_high' vs 'consistently_poor') and maps almost one-to-one to the outcome. Strong leakage/restatement."
+      },
+      {
+        "name": "premium_amenity_cost_cutting",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "'Amenities enhanced/withdrawn' is an evaluative complaint extracted from the review reflecting dissatisfaction with value, overlapping Value For Money and the overall stance. Not an independent predictor."
+      },
+      {
+        "name": "premium_class_value_perception",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "'negative/positive premium perception' is essentially the reviewer's value judgement, a direct component of the overall rating (and Value For Money). Restates outcome sentiment."
+      },
+      {
+        "name": "passenger_class_factor",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This duplicates the existing 'Class' column already in the original table, so it adds no new predictive leverage beyond what a model already has."
+      }
+    ],
+    "n_predictors": 0,
+    "predictive_utility": 0.08,
+    "rationale": "Almost every added column is a text-derived evaluative judgement (crew rudeness, seat comfort quality, food quality, service consistency, premium value perception) extracted from the very review that generated the Overall Rating. These are co-outcomes/restatements of the reviewer's sentiment and constitute leakage: a model using them would predict overall_rating_gt7 from paraphrases of itself, not from independent signal. 'passenger_class_factor' merely duplicates the existing Class column. The only near-exogenous candidate is 'operational_reliability_issue' (a factual event), but it too is mined from the review post hoc. As a set these give minimal genuine predictive leverage beyond leakage, so predictive utility is very low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

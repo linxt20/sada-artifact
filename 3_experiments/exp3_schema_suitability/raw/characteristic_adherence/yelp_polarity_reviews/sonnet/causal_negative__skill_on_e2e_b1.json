@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "service_staff_behavior",
+    "complaint_severity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.825,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.675,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.75,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_staff_behavior",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "A categorical axis of staff-behavior problems is directly on-point for explaining negative Yelp experiences, enabling grouping by failure type. Values are well grounded overall: 'not_present' for positive/non-service reviews (YLP-0001, 0003, 0004) is correct, and 'discriminatory' for YLP-0005 ('would not recommend to anyone of color') is strongly warranted. The weak spot is YLP-0002, where repeated forgetting/neglect is coded 'dismissive_or_condescending'; the text supports neglect/inattentiveness rather than condescension, a slight mischaracterization but still in the right family."
+      },
+      {
+        "name": "complaint_severity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "An ordinal severity score is a genuinely useful modeling/grouping axis for ranking what drives negative experiences. However groundedness is questionable: YLP-0003 is a positive review whose 'only complaint' is pizza size, yet it receives severity 2 rather than null, asserting a complaint magnitude that overstates the mild, non-negative remark. The scale is also opaque and inconsistently applied, and null-for-silent behavior (YLP-0001, 0004) is correct but the non-null values are not always well warranted."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.68,
+    "rationale": "Both columns give real analytical leverage for the query: a typed staff-behavior category and an ordinal severity score are natural axes to group and model negative experiences on, and neither is a trivial restatement of the existing label_pos or a bare sentiment flag. Groundedness is generally sound for the behavior column (correct 'not_present' and 'discriminatory' calls, one questionable 'dismissive' label), but the severity column shows imperfect grounding, notably assigning a non-trivial severity to a positive review with a trivial size gripe. Judged only against usefulness and groundedness (not completeness), the set passes on usefulness and is moderately acceptable on groundedness."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 2
+}

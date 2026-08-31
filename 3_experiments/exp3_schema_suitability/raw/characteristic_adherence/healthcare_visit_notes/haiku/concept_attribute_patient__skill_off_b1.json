@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What patient needs appear in visit notes?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "primary_patient_need",
+    "patient_need_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.9,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.9,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.9,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_patient_need",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "This column directly answers the query by extracting the specific patient need from each visit note. The values are well-grounded readings of the source text (e.g., 'Cardiac recovery monitoring post-MI' from a post-MI follow-up, 'Acne treatment escalation' from failed OTC then escalated therapy). It provides a genuine analytical axis. High cardinality is expected given the specificity and does not reduce usefulness for identifying needs."
+      },
+      {
+        "name": "patient_need_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A coarse categorization that gives a strong grouping axis for aggregating needs across visits, complementing rather than merely restating the fine-grained column. Mappings are largely defensible (Preventive care for annual exam, Chronic disease management for post-MI follow-up). Minor concern: the viral URI row is labeled 'Acute care' here while the top-values list implies overlap with 'Urgent care'; and acne mapped to 'Chronic disease management' is arguable but reasonable. Categories derive soundly from the notes."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.9,
+    "rationale": "Both added columns directly serve the query 'What patient needs appear in visit notes?' The fine-grained primary_patient_need extracts the specific need per row, and patient_need_category provides a complementary aggregation axis; they are not mere restatements of each other or of existing columns like reason_for_visit, since they distill and categorize free text into analyzable form. Values are sound readings of the source text with no invented facts observed in the samples. Minor categorization edge cases exist but are defensible inferences."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 2
+}

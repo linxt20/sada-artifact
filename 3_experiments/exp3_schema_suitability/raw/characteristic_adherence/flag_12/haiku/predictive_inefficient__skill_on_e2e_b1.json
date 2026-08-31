@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "problem_category",
+    "issue_specificity_level",
+    "assignee_workload_signal",
+    "closed_by_expertise_turnover",
+    "inter_update_delay_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.66,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.63,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.645,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing the problem type from short_description gives a genuine grouping axis to compare resolution efficiency across issue types. Values (printer, connectivity, database) are sound readings of the source descriptions. Somewhat overlaps with the existing 'category' column but adds finer granularity."
+      },
+      {
+        "name": "issue_specificity_level",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing specific hardware failures from generic symptoms is analytically relevant, since vague/generic descriptions plausibly correlate with inefficient resolution. Mostly grounded, though some assignments are debatable: 'Printer not working properly' labeled 'specific_hardware_failure' is arguably a generic symptom, and 'Unable to connect to the database' as 'systemic_issue' is an interpretive stretch. Still defensible categorization overall."
+      },
+      {
+        "name": "assignee_workload_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Assignee workload is a strong efficiency signal. Volume buckets could be derived by aggregating assigned_to frequency across the table, which is legitimately in-table. However, the per-row samples show no basis to distinguish high vs moderate for identical-looking printer issues, and the specific bucketing thresholds appear asserted rather than clearly warranted from the shown evidence, so groundedness is only moderate."
+      },
+      {
+        "name": "closed_by_expertise_turnover",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.4,
+        "hallucination_observed": false,
+        "rationale": "The column is constant (false for all 500 rows), providing zero discriminative power for the analysis. A near-constant column adds no analytical leverage. Groundedness is moot but the uniform 'false' may reflect a failure to actually compute turnover from closed_by vs assigned_to rather than a true reading."
+      },
+      {
+        "name": "inter_update_delay_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Delay between updates is directly relevant to resolution efficiency. However, in every sample sys_updated_on equals closed_at exactly, which cannot itself yield a delay signal, yet rows are marked true/false with no visible basis. The true/false assignment appears not derivable from the shown fields, undermining groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.62,
+    "rationale": "Most added columns (problem_category, issue_specificity_level, assignee_workload_signal, inter_update_delay_signal) offer genuine new axes for analyzing resolution inefficiency and are well-aligned with the query. Groundedness is uneven: problem_category and issue_specificity_level are sound readings of short_description, but assignee_workload_signal and inter_update_delay_signal assign per-row buckets/flags not clearly derivable from the shown evidence (identical timestamps yielding differing delay flags), and closed_by_expertise_turnover is a constant that contributes nothing analytically."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

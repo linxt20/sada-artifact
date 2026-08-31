@@ -1,0 +1,109 @@
+{
+  "var_a": "skill_off",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.7,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "Mean of 10.77 incidents in the previous 7 days",
+        "why": "quantified signal comparison"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Keyboard and input device failures (13.4%) appear exclusively in anomaly windows",
+        "why": "segmented symptom analysis"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "98.4% occur within an anomaly window",
+        "why": "near-total overlap undermines using symptoms/priority as discriminators, causing internal tension"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "2023-07-19 to 2023-08-17",
+        "why": "concrete time window"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "3.0 incidents/day in the window vs 0.25/day outside, about 12x higher",
+        "why": "numeric rate comparison"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "category = Hardware ... opened_at is in the late-July to mid-August 2023 surge",
+        "why": "clear decision rule"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "priority: mostly 2 - High both inside and outside",
+        "why": "correctly rejects weak signals, consistent"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B is more coherent and honest about non-discriminating signals with a crisp date-based rule, while A over-relies on features nearly identical across near-total overlap.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

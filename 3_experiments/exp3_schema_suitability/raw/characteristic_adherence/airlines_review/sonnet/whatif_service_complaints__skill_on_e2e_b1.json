@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "cabin_service_complaint_type",
+    "crew_proactivity",
+    "cabin_class_service_gap",
+    "service_consistency_issue",
+    "post_covid_service_decline_flag",
+    "route_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7367,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8333,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.785,
+    "hallucination_rate": 0.1667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_service_complaint_type",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorising the most common cabin-service complaints, enabling counterfactual grouping on Overall Rating. Sample values (seat_comfort, no_complaint) are well grounded in the review text."
+      },
+      {
+        "name": "crew_proactivity",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Gives a genuine new axis (service quality dimension) that supports the complaint analysis. Values match text: welcoming/regular-round crew tagged proactive, complaint-heavy review reactive. Some subjectivity but defensible."
+      },
+      {
+        "name": "cabin_class_service_gap",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Combines class and service shortfall into a useful comparative axis relevant to cabin-service complaints. Sample mappings are reasonable, though economy_below_expectation for a seat-comfort complaint infers class from context; generally warranted."
+      },
+      {
+        "name": "service_consistency_issue",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Adds a consistency axis that can correlate with rating impact. Partly overlaps conceptually with complaint type but offers distinct grouping. Values align with text (consistently_good, consistently_poor)."
+      },
+      {
+        "name": "post_covid_service_decline_flag",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Weakly tied to the cabin-complaint query and highly skewed (825 false). Groundedness is uncertain: without explicit dates/covid mentions in most reviews, a true/false decline flag risks unsupported inference, though 'false' as default for silent rows is defensible."
+      },
+      {
+        "name": "route_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Haul length is derivable from Route and offers a plausible segmentation axis, though only indirectly related to eliminating cabin-service complaints. Samples (Jakarta-Singapore short_haul, Singapore-London ultra_long_haul) are accurate."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.83,
+    "rationale": "The core column (cabin_service_complaint_type) directly enables the counterfactual analysis the query demands, and several supporting columns add genuine service-quality axes. Most values are sound readings of the review text. The main weakness is post_covid_service_decline_flag, which is only tangentially relevant and relies on inference the source text often does not support. Groundedness is otherwise strong, with silent rows handled via NULL/false defaults."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

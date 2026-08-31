@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "industry_vertical",
+    "tech_stack_focus",
+    "stage_signals",
+    "market_reach",
+    "service_model"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.79,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.77,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A meaningful categorical axis derived from the description; strong feature for predicting regional cluster (e.g. VC on Sand Hill Road). Samples are well-grounded readings of the text. 23andme labeled consumer_internet is defensible though healthcare/genomics would be arguably better, minor imprecision."
+      },
+      {
+        "name": "tech_stack_focus",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures a distinct technology axis not redundant with industry_vertical; useful for clustering. 'not_present' used honestly for silent rows (VC firms, consulting), which is correct behavior. Values track the source text well."
+      },
+      {
+        "name": "stage_signals",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Company stage could help distinguish clusters, but the values are weakly supported. Descriptions rarely state stage; 'growth_stage' for 280 Group and 'established_public' for 23andme are confident assertions the text does not support (23andme description says nothing about being public). Heavy inference beyond the source. 'venture_capital' as a stage also just restates industry."
+      },
+      {
+        "name": "market_reach",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "B2B/B2C/global axis is a plausible clustering feature, but overlaps somewhat with service_model. Groundedness is moderate: labeling VC firms 'b2b_focused' is a stretch and 'global_enterprise' vs 'b2b_focused' distinctions are often not stated in the short descriptions, inviting invented specificity."
+      },
+      {
+        "name": "service_model",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct and useful axis (SaaS vs hardware vs consulting vs VC). Sample values are sound readings: 280 Group->consulting_staffing, 5AM->venture_investing, Addepar->saas_cloud_platform. Some 'saas_cloud_platform' assignments (23andme) are inferred but reasonable."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns provide several genuinely distinct categorical axes (industry, tech, service model, market reach) that give real leverage for predicting a regional cluster from business descriptions, with limited redundancy. Groundedness is generally good, with honest 'not_present' handling. The main weakness is stage_signals and parts of market_reach, which assert stage/reach specifics (public status, growth stage, global) that the short descriptions frequently do not state, indicating over-confident inference on silent rows."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

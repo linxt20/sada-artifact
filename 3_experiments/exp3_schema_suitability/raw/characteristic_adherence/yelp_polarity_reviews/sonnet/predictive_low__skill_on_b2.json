@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict low Yelp user satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "service_failure_type",
+    "staff_conduct",
+    "complaint_intensity",
+    "return_intent"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.4,
+    "leakage_rate": 0.5
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "service_failure_type",
+        "role": "predictor",
+        "rationale": "Captures the specific type of service failure described in the review (rude dismissal, slow, wrong order, etc.). This is an observable characteristic of the experience that plausibly drives satisfaction and is not a restatement of the label itself—positive reviews would predominantly show 'not_present'. It carries genuine predictive signal without deterministically encoding label_pos."
+      },
+      {
+        "name": "staff_conduct",
+        "role": "predictor",
+        "rationale": "Describes staff behavior (professional/friendly vs rude/hostile), an aspect of the experience that is a legitimate antecedent of satisfaction rather than a copy of the label. It varies across categories and plausibly predicts polarity without being a deterministic function of it."
+      },
+      {
+        "name": "complaint_intensity",
+        "role": "leakage",
+        "rationale": "An ordinal measure of how strongly the review complains. This is essentially a graded restatement of dissatisfaction—the target itself—rather than an independent antecedent signal. High complaint intensity is near-tautologically tied to a negative label, so it leaks the outcome instead of predicting it from external evidence."
+      },
+      {
+        "name": "return_intent",
+        "role": "leakage",
+        "rationale": "Whether the reviewer states they will/won't return is an expression of the same underlying (dis)satisfaction being predicted. 'will_not_return' is effectively a paraphrase of a negative sentiment outcome, so it restates/leaks the focus rather than serving as an independent predictor."
+      }
+    ],
+    "n_predictors": 2,
+    "predictive_utility": 0.4,
+    "rationale": "Two of the four columns (service_failure_type, staff_conduct) describe concrete, external features of the dining experience that legitimately serve as antecedents predicting satisfaction. The remaining two (complaint_intensity, return_intent) are graded/behavioral expressions of the satisfaction itself and constitute leakage/restatement of the target. As a set, the genuine predictors give moderate leverage, but half the columns merely re-encode the outcome, so overall predictive utility is limited."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

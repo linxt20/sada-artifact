@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "is_travel",
+    "policy_risks",
+    "amount_tier"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7833,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7833,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7833,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_travel",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Flagging travel-related expenses is directly relevant to a travel-policy-risk query and provides a clean grouping axis. The sampled hardware/cloud rows are correctly labeled 'No', consistent with the source descriptions."
+      },
+      {
+        "name": "policy_risks",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "This is the most on-target column for the query, decomposing risks into interpretable categories. Grounding is mixed: 'Unresolved Status' and 'High Amount' are derivable from state/amount fields, and NULL for non-travel rows is appropriate. However tags like 'International Travel' and 'Premium Travel' assert specifics that the sampled short_descriptions do not clearly support; without descriptive text naming international/premium travel, these risk being invented distinctions."
+      },
+      {
+        "name": "amount_tier",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Bucketing the existing 'amount' column is a straightforward, warranted transform and gives a usable grouping axis, though it is only lightly novel over the raw amount and not travel-specific. Values are directly derivable from the amount field."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.72,
+    "rationale": "Collectively the columns give genuine analytical leverage for the travel-policy-risk query: is_travel scopes the population, policy_risks directly enumerates risk types, and amount_tier supports magnitude-based grouping. Grounding is generally sound for is_travel and amount_tier, but policy_risks introduces specific travel qualifiers (International/Premium Travel) that are not clearly supported by the available source text, lowering the table-level groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

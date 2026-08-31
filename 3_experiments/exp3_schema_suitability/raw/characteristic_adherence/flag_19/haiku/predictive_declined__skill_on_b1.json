@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an expense will be declined?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "asset_purpose_scope",
+    "asset_brand_vendor",
+    "processing_lag_indicator",
+    "department_origin",
+    "source_id_validity",
+    "asset_specificity_level",
+    "travel_associated_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.575,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.6875,
+    "hallucination_rate": 0.125
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the asset from short_description/ci, giving a groundable axis to group decline rates by asset type. Reasonably useful though indirectly tied to decline; values well-supported by source text."
+      },
+      {
+        "name": "asset_purpose_scope",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Purpose classification is largely redundant with asset_category_type (service->cloud_service, laptop->general_business track together) and some assignments (e.g. iPod touch -> cloud_service) are loose inferences. Moderate leverage."
+      },
+      {
+        "name": "asset_brand_vendor",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Vendor extraction from ci/description is a plausible new grouping axis (vendor-linked decline patterns) and mostly well-grounded, though 'cloud_provider' for a service is inferred rather than stated."
+      },
+      {
+        "name": "processing_lag_indicator",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Lag between opened_at and processed_date is a strong candidate signal for decline; derivable from date columns. NULL/Unknown for nan processed_date is correct behaviour."
+      },
+      {
+        "name": "department_origin",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with the existing 'department' column, and samples show values (sales, customer_support, product_management) with no supporting cue in the provided source text, suggesting invented assignment rather than grounded reading."
+      },
+      {
+        "name": "source_id_validity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Presence/absence of source_id is a plausible decline signal (missing identifiers -> rejection) and directly derivable from the source_id column."
+      },
+      {
+        "name": "asset_specificity_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Vague vs specific description is a reasonable decline signal (vague expenses more likely rejected) and grounded in the description text, though specific/generic boundary is somewhat subjective."
+      },
+      {
+        "name": "travel_associated_flag",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Binary travel flag derivable from category/description; a plausible grouping axis for policy-driven declines, though somewhat narrow and overlapping with category."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.8,
+    "rationale": "Most added columns give genuine axes relevant to predicting declines (processing lag, source_id validity, specificity, travel), and their values are largely sound readings of the source text. Weak points: asset_purpose_scope duplicates asset_category_type, and department_origin both duplicates an existing original column and shows ungrounded, seemingly invented values in the samples. Overall the set offers real analytical leverage with mostly well-grounded values."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

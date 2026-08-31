@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit-note signals suggest a longer visit?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "procedural_intervention_present",
+    "diagnostic_workup_scope",
+    "clinical_severity_level",
+    "emergency_critical_status",
+    "specialist_consultation_or_referral",
+    "counseling_education_complexity",
+    "comorbidity_or_multisystem_scope"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.82,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "procedural_intervention_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a procedure, injection, biopsy, or medication change occurred is a distinct clinical activity that plausibly drives visit length without being a restatement or deterministic function of duration. Legitimate predictor knowable from the note."
+      },
+      {
+        "name": "diagnostic_workup_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Extent of labs/imaging ordering is a separate work-intensity signal that correlates with longer visits; it is not a component of duration itself and carries real predictive signal."
+      },
+      {
+        "name": "clinical_severity_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Severity of the clinical picture is an independent covariate plausibly associated with longer, more complex visits. Not a restatement or leakage of duration."
+      },
+      {
+        "name": "emergency_critical_status",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Emergency/critical escalation status is an external condition variable that plausibly influences visit length; not derived from duration."
+      },
+      {
+        "name": "specialist_consultation_or_referral",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Consultation/referral involvement reflects added care coordination that can extend a visit; a distinct activity variable, not a restatement of duration."
+      },
+      {
+        "name": "counseling_education_complexity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Amount/type of counseling or education is a plausible time-consuming activity distinct from the duration measure; legitimate predictor."
+      },
+      {
+        "name": "comorbidity_or_multisystem_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Patient complexity/comorbidity burden is an independent covariate that plausibly predicts longer visits without leaking the outcome."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.82,
+    "rationale": "All seven added columns capture distinct clinical-activity and complexity dimensions extractable from visit notes. Each lies outside the focus variable (visit_duration_min) -- none restates it, is a deterministic component of it, or is knowable only after the outcome in a leaking sense; they describe what happened during the visit, which is a legitimate driver of duration rather than a post-hoc measurement of it. As a set they cover complementary axes (procedures, diagnostics, severity, emergency status, referrals, counseling, comorbidity), giving substantial and non-redundant predictive leverage beyond the original department/urgency/age columns. Utility is high but not maximal because several dimensions correlate with one another and with the existing urgency column, and none directly quantifies time."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

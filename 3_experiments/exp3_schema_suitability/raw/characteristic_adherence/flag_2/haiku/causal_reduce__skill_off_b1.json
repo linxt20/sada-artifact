@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce incident resolution time?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "priority_level",
+    "incident_type",
+    "is_resolved"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7325,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8625,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.7975,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is the core dependent variable for a resolution-time reduction analysis; directly derivable from opened_at and closed_at. NULLs correctly correspond to unresolved rows. Minor concern: the sampled derivation shows closed_at only, but opened_at exists in the table so the computation is well-grounded."
+      },
+      {
+        "name": "priority_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Grouping resolution time by priority is a genuine analytical axis. However the original table already has a 'priority' column, making this largely redundant/a restatement. Values (High/Critical/Moderate) are a plausible normalization of the existing priority field; samples show plausible readings though not directly verifiable from the given text snippets."
+      },
+      {
+        "name": "incident_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents (Network/Database/Software/Hardware) gives a strong new axis to compare resolution times across problem classes; not directly present as a clean field ('category' is broader). The samples show sound categorization of short_description text (e.g., 'VPN'/'WiFi'->Network, 'database'->Database)."
+      },
+      {
+        "name": "is_resolved",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A binary resolved flag is well-grounded (derivable from state/closed_at, consistent with NULL resolution times). But it is largely redundant with the existing 'state'/'closed_at' fields and with the NULL pattern in resolution_time_hours, limiting added analytical leverage."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.86,
+    "rationale": "The set centers on the correct dependent variable (resolution_time_hours) and adds a genuinely useful grouping axis (incident_type), both well suited to a 'reduce resolution time' query. priority_level and is_resolved are more grounded but partly redundant with existing columns, lowering their usefulness. Values are sound readings of the source data with no evident hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

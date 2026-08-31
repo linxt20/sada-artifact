@@ -1,0 +1,89 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "focus_variable": "hardware_incident_rate",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "recurrence_signal",
+    "affected_scope",
+    "software_issue_subtype"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.25,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "hardware_incident_rate",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Distinguishes hardware from other categories; the query is about hardware incidents, so this scoping variable is implied by the query text. Not a settable lever."
+      },
+      {
+        "name": "failure_mode",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Identifies the specific hardware failure causes (connectivity, drive failure, overheating, etc.). This is exactly the 'most common failure causes' the query proposes to address. However, a failure mode is a diagnostic classification of what went wrong, not itself a directly settable lever; addressing it requires an unspecified upstream intervention."
+      },
+      {
+        "name": "recurrence_signal",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "Whether an incident recurs is a downstream manifestation of the incident rate itself, not a common cause of treatment and outcome. Behaves as an outcome/proxy rather than a confounder."
+      },
+      {
+        "name": "affected_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (individual vs production vs shared) plausibly influences both which failure modes occur and the incident rate/visibility, and is not named in the query. Weak-to-moderate confounder."
+      },
+      {
+        "name": "software_issue_subtype",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Pertains to software incidents, largely NULL for hardware; irrelevant to the hardware outcome and not a common cause of the hardware failure treatment."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "failure_mode"
+    ],
+    "treatment_intervenable": false,
+    "confounders": [
+      {
+        "name": "affected_scope",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.25,
+    "rationale": "The added columns identify the 'treatment' (failure_mode = the common hardware failure causes) and scope it to hardware, matching the query's framing. But the what-if claim fails on both prongs. (a) failure_mode is a diagnostic label of what failed, not an intervenable lever an actor can set/change/decide; the query's 'addressed' action (e.g., a maintenance policy, hardware replacement program, patch schedule) is nowhere represented as a settable treatment. (b) No genuine confounder that is a common cause of BOTH an intervention and the hardware incident rate is provided: incident_category and failure_mode are query-implied scoping/treatment, recurrence_signal is an outcome/proxy, software_issue_subtype is irrelevant, and only affected_scope is a plausible not-named confounder — and even it is weak and not clearly a common cause of an intervention. The set does not set up an identifiable counterfactual effect of an intervenable treatment."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "narrative_structure_issue",
+    "originality_or_novelty",
+    "tone_or_consistency_issue",
+    "genre_audience_mismatch",
+    "reliance_on_clich_s"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.73,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.765,
+    "hallucination_rate": 0.8
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "narrative_structure_issue",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Categorising narrative/plot problems gives a genuine axis for explaining dissatisfaction. Values are conservative (mostly not_present) and defensible for the sampled rows; no clear contradictions observed."
+      },
+      {
+        "name": "originality_or_novelty",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Formulaic/derivative/clichéd is a useful dimension for dissatisfaction. Row IMDB-0002 tagged 'derivative' has little source support (review stresses badness, not derivativeness), a mild overreach; other rows (formulaic for housewife/soap-opera premise) are well grounded."
+      },
+      {
+        "name": "tone_or_consistency_issue",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Tone/consistency is a distinct, useful axis. 'mismatched_attempted_appeal' for the positive sexploitation review (IMDB-0004) is a stretch since that review is favourable; 'wrong_genre_fit' labels are plausible readings of the daytime-movie/technobabble complaints."
+      },
+      {
+        "name": "genre_audience_mismatch",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Genre/audience mismatch is a meaningful grouping axis. 'inappropriate_for_audience' for the housewife-movie row is well grounded, but 'marketed_vs_delivered_genre' for IMDB-0001 is not clearly supported by the text (no marketing claim mentioned)."
+      },
+      {
+        "name": "reliance_on_clich_s",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Overlaps somewhat with originality_or_novelty (clichés vs formulaic) reducing marginal leverage, but the sub-typing (plot device/theme/characters) still adds detail. 'overused_theme' for IMDB-0005, a broadly positive review, is weakly supported."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.73,
+    "rationale": "The added columns decompose reasons for dissatisfaction into distinct, groupable dimensions (structure, originality, tone, genre fit, clichés) directly serving the query; each gives an analytical axis rather than being trivial or near-constant, though originality and reliance_on_clichés partly overlap. Values are generally conservative and defensible readings of the source text, but several sampled rows show unwarranted specifics ('marketed_vs_delivered_genre', 'derivative', 'mismatched_attempted_appeal' and 'overused_theme' applied to positive reviews) that the text does not clearly support, indicating occasional but not pervasive hallucination."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

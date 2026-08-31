@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary by agent and issue type?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "assigned_agent",
+    "issue_category",
+    "resolution_closure_match"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.4667,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.7,
+    "interpretable_fraction": 0.6667
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly names the agent dimension in the query. Well-separated categorical values with balanced counts across several named agents, enabling clean grouping of resolution_time by agent."
+      },
+      {
+        "name": "issue_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Realises the 'issue type' dimension. Interpretable, well-separated categories (email, network, VPN, database, etc.) that can be segmented and compared against resolution_time."
+      },
+      {
+        "name": "resolution_closure_match",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A near-constant boolean (478 true vs 22 false) that is a derived data-quality flag rather than an external associational variable. The extreme imbalance means no meaningful comparison of resolution_time can be drawn across its categories."
+      }
+    ],
+    "n_predictors": 2,
+    "relationship_informativeness": 0.7,
+    "rationale": "Two of the three added columns directly and cleanly realise the query's two requested segmentation dimensions (agent and issue type) with interpretable, well-separated, balanced categories ideal for exploratory comparison against resolution_time. The third column is a near-constant quality-flag that adds no exploratory value. As a set, the columns strongly support the intended analysis, discounted only by the one uninformative near-constant column."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

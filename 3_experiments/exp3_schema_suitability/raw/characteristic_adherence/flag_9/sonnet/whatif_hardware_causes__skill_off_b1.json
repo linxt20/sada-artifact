@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "hardware_failure_cause",
+    "is_top_hardware_cause"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.925,
+    "source_groundedness__table_level": 0.92,
+    "b1_overall": 0.85,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_failure_cause",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly categorizes the hardware failure type from short_description, which is exactly the axis needed to identify the most common causes and estimate incident-rate reduction. Values in samples are sound: software/MySQL rows correctly get NULL. The rich distribution (Printer, Monitor, Keyboard, etc.) gives strong grouping leverage. Slight uncertainty since only NULL samples are shown, but categorization scheme is well-grounded in a short_description field."
+      },
+      {
+        "name": "is_top_hardware_cause",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A binary flag largely derivable from hardware_failure_cause, so it is partly redundant with the richer column. Still it usefully isolates the top causes for the 'if addressed' counterfactual, so it has some independent leverage. Values are well-grounded and consistent with the cause column (NULL rows -> 0)."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.92,
+    "rationale": "Both columns target the query's need to identify and quantify the impact of top hardware failure causes. hardware_failure_cause is the core analytical axis and is well grounded in short_description; is_top_hardware_cause is somewhat derivative but supports the counterfactual framing. No hallucination observed in the samples, and silent/non-hardware rows correctly receive NULL/0."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 2
+}

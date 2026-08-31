@@ -1,0 +1,113 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do goal achievement rates differ across departments?",
+  "focus_variable": "department_goal_achievement",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "goal_achieved",
+    "completion_gap",
+    "dept_goal_achievement_rate",
+    "dept_avg_target_pct",
+    "dept_avg_completion_pct",
+    "dept_completion_rate",
+    "dept_cancellation_rate",
+    "dept_high_priority_rate"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.3,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.3,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "department_goal_achievement",
+    "per_column": [
+      {
+        "name": "goal_achieved",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Binary per-record realization of the focus outcome (goal achievement), directly restates the target, not a treatment or confounder."
+      },
+      {
+        "name": "completion_gap",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Difference between completion and target; lies on the causal path to whether the goal is achieved (goal_achieved is essentially derived from this gap). Adjusting for it would block the effect, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "dept_goal_achievement_rate",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Department-level aggregation of the outcome itself; it is the very quantity that differs across departments, not a cause of it."
+      },
+      {
+        "name": "dept_avg_target_pct",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Departmental average target ambition is a candidate cause of achievement rates (harder targets lower achievement). A plausible treatment whose effect on the outcome is being attributed."
+      },
+      {
+        "name": "dept_avg_completion_pct",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Average completion percentage is directly downstream of effort/targets and directly determines achievement; it sits on the causal path to the outcome, so it is a mediator."
+      },
+      {
+        "name": "dept_completion_rate",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Rate of completed items is essentially a restatement/proxy of the outcome-generating mechanism, on the path to achievement rather than a common cause."
+      },
+      {
+        "name": "dept_cancellation_rate",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Departmental workflow/discipline reflected by cancellation rate can plausibly influence both how targets are set/pursued (treatment) and achievement (outcome); surfaced from data, not named in query. Weakly a common cause; could also be partly downstream."
+      },
+      {
+        "name": "dept_high_priority_rate",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Share of high-priority goals reflects departmental work portfolio, which can affect both the ambition of targets set (treatment) and achievability (outcome). Not named in the query; a plausible common cause, though partly a treatment-like exposure itself."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "dept_avg_target_pct"
+    ],
+    "confounders": [
+      {
+        "name": "dept_cancellation_rate",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "dept_high_priority_rate",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.3,
+    "rationale": "The set does supply a plausible treatment (dept_avg_target_pct) and a couple of department-context variables (cancellation rate, high-priority rate) that were NOT named in the query and could act as common causes of both target-setting behaviour and achievement, demonstrating some genuine surfacing. However, the design is dominated by outcome restatements (goal_achieved, dept_goal_achievement_rate) and mediators on the causal path (completion_gap, dept_avg_completion_pct, dept_completion_rate). These completion-based columns are essentially the mechanism by which goals are achieved, so labelling them as adjustment variables would be a mistake. The identified confounders are only weakly established as common causes and are themselves partly exposure-like, so confounder quality is low. Overall the augmentation leans toward describing/aggregating the outcome rather than setting up an unbiased causal estimation with clearly adjusted, query-independent confounders."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

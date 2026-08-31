@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "focus_variable": "agent_workload_burden",
+  "concept": "agent_workload_burden",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "problem_nature",
+    "affected_system",
+    "scope_indicator",
+    "long_running_ticket",
+    "cross_agent_resolution",
+    "recurrence_signal",
+    "ticket_open_unresolved"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1569,
+    "facet_fraction": 0.375,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.35,
+    "mece": 0.4183,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "agent_workload_burden",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes what the ticket is about (email, VPN, database). This is an attribute of the ticket that may predict burden, not a constitutive part of the burden itself."
+      },
+      {
+        "name": "problem_nature",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Type of problem (outage, access denied, crash) characterizes the incident, not an aspect of the workload burden. It is a driver/predictor, not a part of burden."
+      },
+      {
+        "name": "affected_system",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Which system is affected is a ticket attribute predicting difficulty, not an aspect of the agent's workload burden."
+      },
+      {
+        "name": "scope_indicator",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "Breadth of impact (individual vs system-wide) is a driver that increases workload, not a constitutive facet of the burden concept itself."
+      },
+      {
+        "name": "long_running_ticket",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Duration/time-to-resolve is a genuine aspect OF workload burden -- the temporal/effort dimension of how much work a ticket consumes."
+      },
+      {
+        "name": "cross_agent_resolution",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Number/breadth of agents involved is a constitutive facet of burden -- the coordination/labor-spread dimension of the effort a ticket imposes."
+      },
+      {
+        "name": "recurrence_signal",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "Recurrence is a property of the ticket type that drives repeated work, but it is a cause of accumulated burden rather than an aspect of a single ticket's burden."
+      },
+      {
+        "name": "ticket_open_unresolved",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Unresolved/outstanding status reflects ongoing outstanding effort, a state-of-effort facet of burden, though it overlaps with the duration facet."
+      }
+    ],
+    "facet_columns": [
+      "long_running_ticket",
+      "cross_agent_resolution",
+      "ticket_open_unresolved"
+    ],
+    "non_facet_columns": [
+      "incident_category",
+      "problem_nature",
+      "affected_system",
+      "scope_indicator",
+      "recurrence_signal"
+    ],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.35,
+    "rationale": "Most added columns describe the ticket's content and scope (category, problem nature, affected system, scope, recurrence), which are external predictors or causes of workload burden rather than constitutive facets of it. Only the effort/labor-dimension columns (long_running_ticket = time cost, cross_agent_resolution = labor spread, ticket_open_unresolved = outstanding effort) qualify as parts of the burden concept. Among these facets there is meaningful overlap: long_running_ticket and ticket_open_unresolved both capture the temporal/duration aspect of effort, lowering mutual exclusivity. Exhaustiveness is weak because key burden aspects such as number of interactions/touches, reassignments, escalations, and cognitive/complexity effort are not directly captured; the decomposition leans heavily on ticket-content predictors rather than covering the constitutive dimensions of agent effort."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

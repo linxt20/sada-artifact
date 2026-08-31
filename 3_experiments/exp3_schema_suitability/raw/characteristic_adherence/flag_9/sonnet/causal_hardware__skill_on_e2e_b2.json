@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "focus_variable": "hardware_incident_spike",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "incident_action_type",
+    "affected_asset_scope",
+    "software_update_trigger",
+    "recurrence_signal",
+    "is_repeat_caller"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "hardware_incident_spike",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Identifies hardware vs other categories; needed to define/filter the outcome group. It is more a stratifier of the outcome (hardware is named in query) than a surfaced common cause; largely descriptive of the outcome itself."
+      },
+      {
+        "name": "failure_mode",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Describes the mechanism of failure (overheating, not_powering_on, physical_damage). Could serve as a candidate cause of hardware incidents; surfaced from text and plausibly explanatory of the spike."
+      },
+      {
+        "name": "incident_action_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "break_fix/installation etc. is a downstream response to the incident, on the path after the incident occurs, not a common cause of both a cause and the outcome."
+      },
+      {
+        "name": "affected_asset_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "server_infrastructure vs end_user_device etc. plausibly affects both the failure mode (treatment) and the propensity to generate hardware incidents; surfaced from data, a candidate common cause."
+      },
+      {
+        "name": "software_update_trigger",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A boolean candidate cause: whether a software update/patch triggered the incident. Timing of updates could drive the spike; a genuine attributable treatment surfaced from data."
+      },
+      {
+        "name": "recurrence_signal",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether the incident recurs is a consequence of the incident, not a prior common cause; conditioning on it risks selection bias rather than confounding control."
+      },
+      {
+        "name": "is_repeat_caller",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Repeat callers may both experience more failures and be more likely to log incidents, plausibly a common cause of reporting propensity and observed incident counts; surfaced from data."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "failure_mode",
+      "software_update_trigger"
+    ],
+    "confounders": [
+      {
+        "name": "affected_asset_scope",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "is_repeat_caller",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The set supplies plausible treatments (software_update_trigger as a candidate cause, failure_mode as mechanism), satisfying part (a). For part (b), a couple of surfaced variables (affected_asset_scope, is_repeat_caller) could act as common causes and were not named in the query, showing some genuine confounder discovery. However several columns are mediators (incident_action_type) or colliders (recurrence_signal) mislabelled as explanatory, incident_category largely restates the outcome definition, and no confounder is a clearly strong common cause of both a specific treatment and the outcome. The causal estimation is only weakly set up, so confounder quality is moderate-to-low."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

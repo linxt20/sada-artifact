@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are some incidents resolved inefficiently, and which underlying issues drive it?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_time_hours",
+    "is_reassigned",
+    "expected_resolution_hours",
+    "resolution_delay_hours",
+    "inefficiency_flag",
+    "inefficiency_drivers"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.9,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.525,
+    "source_groundedness__table_level": 0.52,
+    "b1_overall": 0.7125,
+    "hallucination_rate": 0.8333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Directly central to diagnosing inefficient resolution; a strong new axis derived from opened_at/closed_at. However, the row samples show closed_at == sys_updated_on and no opened_at is exposed, yet nonzero values like 161.13 are produced -- the derivation is opaque and the heavy spike at exactly 24 (57 rows) is suspicious, suggesting a default/fallback rather than a true reading of the timestamps. Partially grounded but with signs of unwarranted specifics."
+      },
+      {
+        "name": "is_reassigned",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is a plausible driver of inefficiency and a useful grouping variable. But the table has no reassignment_count or work-notes field; assignment_group/assigned_to alone do not reveal reassignment history. A 79% reassigned rate asserted with no supporting evidence field looks largely invented."
+      },
+      {
+        "name": "expected_resolution_hours",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A baseline/SLA expectation is exactly what an efficiency analysis needs. But values appear to be priority/category-derived constants (e.g. 181.8 repeated 336 times) that are model assumptions, not stated SLAs present in the source. Defensible as a warranted heuristic yet not truly grounded in table content."
+      },
+      {
+        "name": "resolution_delay_hours",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "The gap between actual and expected is the core quantity for the query. Groundedness inherits the weaknesses of its two inputs (resolution_time and the assumed expected baseline), so its specifics rest partly on invented expectations."
+      },
+      {
+        "name": "inefficiency_flag",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A clean binary segment for the query's central 'inefficient vs not' comparison. It is a deterministic function of the delay column, so its correctness follows from those inputs; the thresholding itself is a reasonable derived judgment."
+      },
+      {
+        "name": "inefficiency_drivers",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Most directly answers 'which underlying issues drive it' by naming drivers per row -- high leverage. But it composes the reassigned flag (unsupported) and pct-above-expected (against an assumed baseline), so the specific driver tags carry the same groundedness concerns; the labels themselves are sound restatements of the computed inputs."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.52,
+    "rationale": "Every added column is squarely aimed at the query -- they give distinct, combinable axes (duration, expectation, delay, a binary segment, and named drivers) with little redundancy, so analytical usefulness is high. Groundedness is the weak point: the exposed source rows show only closed_at/sys_updated_on (identical) and no opened_at, no SLA field, and no reassignment history, yet the operator confidently produces nonzero resolution times, constant 'expected' baselines, and a 79% reassigned rate. These are plausible heuristics but assert specifics the visible table does not clearly support, and the exact-24 and repeated-181.8 spikes suggest fallback constants presented as measured values."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

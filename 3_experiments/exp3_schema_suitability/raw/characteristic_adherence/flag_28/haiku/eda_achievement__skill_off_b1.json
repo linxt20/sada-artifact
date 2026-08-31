@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does goal achievement vary across department, metric, and the management practices described?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "achievement_gap",
+    "on_track",
+    "priority_impact_level",
+    "goal_status_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.525,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.6375,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "achievement_gap",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A numeric gap between target and completion is a strong analytical axis for comparing goal achievement across departments and metrics. However, groundedness is questionable: it is presumably target_percentage minus percent_complete, but the sampled values are hard to reconcile with the source text. Row 1 shows -27 with status 'Achieved' and on_track 'Yes', which is internally consistent (exceeded), yet other rows (e.g. 61, 63 gaps labelled 'Active'/'No') show wide spreads whose exact derivation cannot be verified from the shown fields, and the signs are inconsistent across rows."
+      },
+      {
+        "name": "on_track",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A binary on-track flag is a useful grouping variable for the query. It largely tracks the achievement_gap, but sample rows show inconsistencies: row 1 has a favorable gap (-27, i.e. exceeded) and is 'Yes', while row 2 with gap 0 is 'Yes' but labelled 'Medium-High' — the mapping to the underlying numbers is not always coherent, and derivation from source is only partly verifiable."
+      },
+      {
+        "name": "priority_impact_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A four-level impact bucket adds a useful axis for relating management practice/priority to achievement. But it appears to restate the existing 'priority' column and the assigned levels are not clearly warranted by the source text: e.g. a 20% cost-reduction and a revenue-growth goal both mapped to 'Low Impact' without evident textual basis, suggesting an unsupported assignment."
+      },
+      {
+        "name": "goal_status_category",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A tidied status category (Achieved/Active/Inactive) is helpful for the achievement query, though it likely overlaps heavily with the existing 'state' column, reducing novelty. Groundedness is uneven: row 1 is 'Achieved' consistent with an exceeded gap, but row 2 (gap 0) is also 'Achieved' while similar mid-progress rows are 'Active'/'Inactive' without clear textual support, indicating some values are not soundly derived."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.5,
+    "rationale": "The added columns collectively give genuine new axes (a continuous achievement gap, an on-track flag, an impact tier, and a cleaned status) that directly serve grouping and comparison for the achievement query, so usefulness is solid despite some redundancy with existing 'priority' and 'state'. Groundedness is the weaker dimension: several sampled values are hard to reconcile with the source text and with each other (inconsistent gap signs, an 'Achieved' label paired with an unfavorable gap, impact tiers assigned without evident textual warrant), indicating unsupported or inconsistent assertions in a meaningful fraction of rows."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "eda_achievement",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

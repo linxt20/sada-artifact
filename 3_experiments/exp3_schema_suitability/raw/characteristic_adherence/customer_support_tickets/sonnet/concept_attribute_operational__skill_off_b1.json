@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What customer issues create the most support burden?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "issue_category",
+    "burden_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.9,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.735,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.8175,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by giving a categorical axis to group and rank support burden by issue type. Sampled categorisations (billing, authentication, outage, feature_request, data) are all sound readings of the source text. A large 'other' bucket (52) slightly dilutes analytical leverage but the axis is genuinely useful."
+      },
+      {
+        "name": "burden_score",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A composite burden metric is highly relevant to a 'support burden' query and enables ranking/modeling. However, the specific two-decimal values are opaque: their derivation is not transparent from the visible source, and priority/resolution_minutes could ground such a score, but the fine-grained precision (e.g. 29.24, 9.38) asserts a specificity not clearly warranted by the text alone. Values look plausibly correlated with severity (outage 32 > feature_request 4), so partially grounded but with unexplained precision."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.72,
+    "rationale": "Both columns give genuine new axes for the 'support burden' query: issue_category enables grouping/ranking by problem type, and burden_score enables severity-weighted aggregation—neither is redundant with existing columns. issue_category is well grounded in the source text. burden_score is analytically apt and directionally consistent with severity, but its exact continuous values lack transparent derivation from the presented fields, introducing some ungrounded specificity. Overall strong on usefulness, moderate-to-good on groundedness."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 2
+}

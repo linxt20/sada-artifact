@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can educators improve learning satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "teacher_instructional_quality",
+    "engagement_modality",
+    "peer_social_interaction_quality",
+    "student_disengagement_pattern",
+    "subject_format_fit"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.89,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.77,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.83,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "teacher_instructional_quality",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant axis for improving satisfaction; distinguishes adaptive vs passive teaching. Values are well-grounded readings of the text (e.g. ED-0002 'high_adaptive' from creative labs, ED-0003 'low_passive' from teacher unable to tell when child is lost). ED-0001 'adequate_functional' is a defensible neutral read given the issue is technical, not the teacher."
+      },
+      {
+        "name": "engagement_modality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Modality (live/async/mixed) is a useful grouping axis for what formats drive satisfaction. However grounding is shaky: ED-0004 explicitly describes recorded lectures yet elsewhere the pattern of defaulting to 'live_interactive' is questionable, and ED-0003 labeled 'live_interactive' when the text only mentions a platform logging out with no clear live component. Some values assert a specific modality the text does not clearly support."
+      },
+      {
+        "name": "peer_social_interaction_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Peer interaction is a strong, distinct lever for satisfaction. Values track the text well: ED-0003 'absent' (zero peer interaction stated), ED-0005 'absent' (silent chat). ED-0004 'not_applicable' is a reasonable silent-row read. ED-0001 'minimal_awkward' is a mild inference from 'raise my hand quietly' but defensible."
+      },
+      {
+        "name": "student_disengagement_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful behavioral axis for diagnosing dissatisfaction. Mostly grounded (ED-0005 'cameras_off_silent' matches text exactly). But ED-0003 'disappeared_from_roster' contradicts the text, which shows the child still attending sessions and crying, not disappearing. ED-0001 'cameras_off_silent' is not supported by the source, which describes technical freezing, not cameras off."
+      },
+      {
+        "name": "subject_format_fit",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "How well a subject suits the online format is a strong modeling axis for satisfaction. Values are reasonable inferences: ED-0004 'high_fit_digital_native' (history via video/clips), ED-0003 'low_fit_needs_physical' (early reading needing hands-on support). ED-0001 'low_fit_needs_physical' for algebra is a bit arguable but warranted given the whiteboard dependence."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.77,
+    "rationale": "The added columns collectively provide genuinely distinct and analytically valuable axes—teaching quality, delivery modality, peer interaction, disengagement behavior, and subject-format fit—each offering real leverage for grouping and modeling drivers of learning satisfaction. None are near-constant, redundant, or generic. Groundedness is generally sound but weakened by several unsupported or contradictory categorical assignments, notably in engagement_modality (defaulting to live_interactive against textual cues) and student_disengagement_pattern (ED-0003 'disappeared_from_roster' and ED-0001 'cameras_off_silent' contradict their source text). These are confident specifics where the text points elsewhere, dragging groundedness below the usefulness score."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

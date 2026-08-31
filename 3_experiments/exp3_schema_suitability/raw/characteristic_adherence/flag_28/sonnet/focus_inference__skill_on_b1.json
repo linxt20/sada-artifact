@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "n_added_columns": 8,
+  "added_columns": [
+    "improvement_domain",
+    "primary_action_lever",
+    "target_metric_type",
+    "time_horizon",
+    "improvement_magnitude_band",
+    "scope_of_change",
+    "has_baseline_value",
+    "metric_category_alignment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7812,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7656,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "improvement_domain",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Gives a clean grouping axis for what each goal targets. Values align well with the description text, though it largely mirrors the existing 'category' column, reducing incremental leverage."
+      },
+      {
+        "name": "primary_action_lever",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Distinct, useful axis capturing the HOW of each goal, not present in original columns. Generally grounded (resource_optimization, process_improvement, marketing_sales all fit text), but row 2 maps after-sales support and personalized interactions to 'training_development', which is a stretch not clearly supported by the text."
+      },
+      {
+        "name": "target_metric_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful for comparing how targets are expressed. However labelling is inconsistent: the cost-reduction 20% and meeting-time 20% decreases are 'percentage_increase' (mislabelled direction), which weakens grounding even if categorizable."
+      },
+      {
+        "name": "time_horizon",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Strong analytical axis for prioritization by urgency. Samples (Q4->within_quarter, next fiscal year->within_year) read the text soundly, with NULL appropriately used when silent."
+      },
+      {
+        "name": "improvement_magnitude_band",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Banding target sizes is genuinely useful for triage. But grounding is shaky: rows with explicit 78%->90% and 75%->85% (both ~12-15pt/absolute increases) are labelled 'absolute_target_only' while a 20% goal is 'standard_20pct', and the customer-sat 12-point jump is not really 'absolute only'."
+      },
+      {
+        "name": "scope_of_change",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Good axis for assessing organizational reach/impact. Some inferences are warranted (across functions->company_wide) but others are unsupported specifics (customer satisfaction goal -> department_level is asserted where text is silent on scope)."
+      },
+      {
+        "name": "has_baseline_value",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Flags whether a from->to baseline is stated, useful for judging measurability/quality of goals. Sample values correctly track presence of explicit start figures (78%, 75%, 1000) vs absence."
+      },
+      {
+        "name": "metric_category_alignment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Detects mismatch between the goal's category and its assigned metric (e.g. Customer Satisfaction paired with Expense Ratio), a strong signal of data-quality issues worth attention. Samples correctly return False for clearly mismatched metric/category pairs."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns provide several genuinely new axes (action lever, time horizon, magnitude band, scope, baseline presence, metric/category alignment) that support triage of which goals are urgent, ambitious, well-defined, or data-flawed for the 'what's worth attention' query; only improvement_domain heavily overlaps existing 'category'. Grounding is mostly sound where evidence is available, but recurring issues drag it down: direction mislabelling in target_metric_type ('percentage_increase' for decreases), inconsistent magnitude banding, and scope inferences asserted where the text is silent."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 8
+}

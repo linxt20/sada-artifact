@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "resolution_hours",
+    "duration_band",
+    "duration_vs_category_median",
+    "duration_vs_priority_median",
+    "duration_z_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.844,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.916,
+    "source_groundedness__table_level": 0.92,
+    "b1_overall": 0.88,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "This is the core dependent variable the query asks about; resolution duration is exactly what must vary across category and priority. Derivable from opened_at and closed_at, which are present. Values are plausible (24.6h, 47.9h, etc.) and consistent with typical incident spans."
+      },
+      {
+        "name": "duration_band",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.93,
+        "hallucination_observed": false,
+        "rationale": "A short/medium/long categorization of resolution_hours gives a clean grouping axis useful for cross-tabbing against category and priority. Somewhat redundant with resolution_hours but adds a usable discretization. Bands match the underlying hours (47.9h and 56.7h -> long, 24.6h -> medium)."
+      },
+      {
+        "name": "duration_vs_category_median",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Deviation of each incident's duration from its category median directly supports the 'across category' half of the query, normalizing for category baseline. Derived from resolution_hours grouped by the present category column; sample values track resolution_hours sensibly."
+      },
+      {
+        "name": "duration_vs_priority_median",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Deviation from priority median directly supports the 'across priority' half of the query. Grounded in resolution_hours and the present priority column; values are consistent with the hours in the samples."
+      },
+      {
+        "name": "duration_z_score",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A global standardization of duration is a mild new axis for outlier detection, but it is largely a monotone rescaling of resolution_hours and does not condition on category or priority, so it adds less leverage for THIS grouped query than the two median-deviation columns. Values are correctly derived from resolution_hours."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.92,
+    "rationale": "The added columns are well targeted to the query: resolution_hours is the key measure, duration_band gives a grouping axis, and the two median-deviation columns are almost purpose-built for comparing duration across category and priority. All values are soundly derived from present fields (opened_at/closed_at, category, priority). The z-score is somewhat redundant with resolution_hours and does not condition on the grouping dimensions, slightly lowering the holistic usefulness, but it remains grounded and no hallucinations were observed."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

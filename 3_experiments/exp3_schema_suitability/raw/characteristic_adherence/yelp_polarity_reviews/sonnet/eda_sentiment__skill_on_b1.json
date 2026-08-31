@@ -1,0 +1,60 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "service_staff_behavior",
+    "food_quality_signal",
+    "food_freshness_issue",
+    "return_intent"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.855,
+    "analytical_usefulness__table_level": 0.86,
+    "source_groundedness": 0.88,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.8675,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_staff_behavior",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Categorizes staff behavior into meaningful buckets that give a genuine thematic axis to compare positive vs negative sentiment. Samples align well: rowdy-but-friendly employees -> friendly_attentive, forgotten twice -> indifferent_neglectful, discriminatory door policy -> rude_hostile, Michelle -> professional_helpful. NULL for silent rows is appropriate."
+      },
+      {
+        "name": "food_quality_signal",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "rationale": "A distinct, useful thematic axis for the query. Readings are sound: chicken caesar pita / greek fries praise -> good_solid, pizza review -> good_solid, service-only or non-food reviews -> not_assessed. Graded values well warranted from text."
+      },
+      {
+        "name": "food_freshness_issue",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.85,
+        "rationale": "Freshness/temperature/hygiene is a plausible additional axis, though it overlaps somewhat with food_quality_signal and is largely not_present. Grounding is mostly sound, but 'fresh_well_prepared' for the Oliveo row is a mild over-read since the text praises taste, not freshness specifically; still defensible for the pizza (crust cooked well, comments on heat)."
+      },
+      {
+        "name": "return_intent",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "rationale": "Return intent is a genuinely useful axis correlated with sentiment. Most values are sound (forgotten-twice / would-not-recommend -> explicit_will_not_return). However 'explicit_will_return' for YLP-0001 is an over-read: the reviewer says 'I always come' (habitual visits) which supports return intent but is not an explicit future statement; borderline but acceptable, slight groundedness penalty."
+      }
+    ],
+    "analytical_usefulness": 0.86,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns provide four distinct thematic axes (service, food quality, freshness, return intent) that directly enable comparing review themes across positive and negative sentiment, matching the query well. Values are generally well-grounded in source text with appropriate null/not-assessed handling for silent rows. Minor over-reads appear in return_intent and food_freshness_issue, and food_freshness_issue partially overlaps food_quality_signal, but none rise to systematic hallucination."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

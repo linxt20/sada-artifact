@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "service_staff_conduct",
+    "food_quality_signal",
+    "food_praised_highlight",
+    "atmosphere_ambiance_signal",
+    "return_recommend_intent"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.87,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.914,
+    "source_groundedness__table_level": 0.91,
+    "b1_overall": 0.892,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_staff_conduct",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "A strong theme axis directly relevant to comparing positive vs negative reviews. Categorizations match the evidence rows well (friendly for Oliveo, inattentive for the forgotten-table review, rude/discriminatory for the cabana review). 'mixed' for YLP-0003 is a slightly loose read since service was called 'good', but overall grounded."
+      },
+      {
+        "name": "food_quality_signal",
+        "analytical_usefulness": 0.93,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly captures a core review theme with a graded quality scale useful for group comparison across sentiment. Values track the text soundly (good pizza -> good_solid; service-only complaint review -> not_present)."
+      },
+      {
+        "name": "food_praised_highlight",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Adds a finer axis of what specifically is praised, giving some new leverage, but overlaps substantially with food_quality_signal for the positive cases (largely redundant when food is 'excellent'). Values are grounded (specific dish highlighted in the pita and pizza reviews)."
+      },
+      {
+        "name": "atmosphere_ambiance_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A distinct thematic dimension useful for the sentiment comparison. Mostly 'not_present', which is appropriate silence for these rows, and no invented ambiance claims observed in the samples."
+      },
+      {
+        "name": "return_recommend_intent",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Behavioral-intent axis that correlates with and enriches sentiment analysis. Grounded on explicit cues (warn_others for cabana, return_no for worst-service). 'explicit_return_yes' for YLP-0001 is a mild inference (strong loyalty language but no literal 'I'll return' statement), and 'conditional_return' for YLP-0003 is a loose but defensible read of the 'maybe if they offer' line."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.91,
+    "rationale": "The added columns decompose reviews into genuine thematic axes (service, food quality, food highlights, atmosphere, return intent) that directly support comparing themes across positive and negative Yelp sentiment. Each offers a real grouping/comparison dimension; only food_praised_highlight partially overlaps food_quality_signal, slightly reducing its independent leverage. Values are sound readings of the source text with appropriate 'not_present' for silent rows; a few intent/mixed labels are mild inferences but remain defensible, and no clear hallucinations were observed."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

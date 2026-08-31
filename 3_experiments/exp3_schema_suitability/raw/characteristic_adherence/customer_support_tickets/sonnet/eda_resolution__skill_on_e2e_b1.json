@@ -1,0 +1,74 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_theme",
+    "ticket_class",
+    "operational_impact",
+    "scope_of_impact",
+    "root_cause_class",
+    "requires_escalation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.8333,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8167,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Directly provides the 'issue theme' axis the query explicitly calls for. Values (billing_invoicing, authentication_sso, performance, file_export_import) are sound readings of each source text. Strong grouping axis for resolution-time analysis."
+      },
+      {
+        "name": "ticket_class",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "A complementary categorical axis (bug/feature_request/outage/etc.) useful for comparing resolution times; partially overlaps issue_theme but offers a distinct type-of-work dimension. Values well-grounded, though CS-0002 as 'bug' vs config uncertainty is a defensible reading."
+      },
+      {
+        "name": "operational_impact",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "rationale": "Severity/impact gives a genuine new modeling axis correlated with priority and resolution time. Mostly well-grounded, but 'revenue_at_risk' for CS-0001 (a corrected-invoice request already paid) is a stretch, and impact inferences are somewhat interpretive."
+      },
+      {
+        "name": "scope_of_impact",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Breadth of impact (single_user vs all_users_single_tenant vs cross_tenant) is a meaningful axis distinct from severity and useful for explaining resolution variance. Values match the text well, with appropriate 'not_stated' for silent rows."
+      },
+      {
+        "name": "root_cause_class",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "Root cause offers analytical leverage on why resolution times differ. However groundedness is weaker: CS-0002 labeled 'configuration_error' when text only says user 'suspects' SSO config, and CS-0003 'infrastructure_failure' is inferred from a 502 without confirmation. Appropriate 'not_identified' fallback mitigates this."
+      },
+      {
+        "name": "requires_escalation",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "rationale": "A binary flag largely inferable from priority/impact, adding limited independent leverage. Values are plausible but interpretive (e.g., CS-0003 True vs CS-0001 False), and the flag risks being a coarse restatement of severity signals."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns supply several genuine grouping/modeling axes directly serving the query (issue_theme, ticket_class, scope_of_impact, operational_impact), complementing the existing priority and channel columns for resolution-time analysis. Groundedness is generally strong with sensible 'not_stated'/'not_identified' handling of silent rows, though root_cause_class and operational_impact contain some interpretive leaps (e.g., 'revenue_at_risk', unconfirmed 'infrastructure_failure'). requires_escalation is the weakest, being a coarse, partly redundant flag. No egregious hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

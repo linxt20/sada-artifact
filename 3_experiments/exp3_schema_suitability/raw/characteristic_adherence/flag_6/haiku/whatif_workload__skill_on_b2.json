@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_issue_category",
+    "assigned_agent",
+    "issue_severity_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "primary_issue_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query explicitly targets 'ticket types that create the heaviest agent workload.' This column encodes ticket/issue type, which is the lever being reduced. It is a settable/configurable classification an actor could intervene on (routing, deflection, self-service), so it qualifies as the intervenable treatment and is clearly named in the query."
+      },
+      {
+        "name": "assigned_agent",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The agent handling a ticket can influence both which issue types they receive (specialization/assignment) and the resolution time (skill/speed), making it a plausible common cause. It is not named in the query, so it demonstrates the capability under test. However, whether assignment precedes issue type is arguable; it could also be a mediator of workload."
+      },
+      {
+        "name": "issue_severity_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A binary severity/urgency signal plausibly drives both the type/volume of tickets (workload) and resolution time (harder cases take longer). Severity is a pre-treatment common cause not named in the query. It is a generic-ish boolean though, weakening its confounding value."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_issue_category"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "assigned_agent",
+        "named_in_query": false,
+        "plausibility": 0.45
+      },
+      {
+        "name": "issue_severity_signal",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The treatment (issue/ticket category) is present, intervenable, and explicitly named in the query as the lever to reduce. Two candidate confounders are provided that are not named in the query: assigned_agent and issue_severity_signal. Both are plausible common causes of ticket type and resolution time, satisfying the interventional setup at a basic level. Quality is only moderate: assigned_agent is ambiguous between confounder and mediator of workload, and issue_severity_signal is a thin binary that only weakly captures the true confounding structure (e.g., priority, category already exist in the original table, agent tenure/skill, staffing levels, time period). The set sets up a legitimate what-if but with limited, partly uncertain adjustment coverage."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

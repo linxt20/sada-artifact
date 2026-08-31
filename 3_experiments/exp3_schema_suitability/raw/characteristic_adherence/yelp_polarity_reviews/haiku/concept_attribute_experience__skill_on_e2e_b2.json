@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "focus_variable": "satisfaction_and_complaint_facets",
+  "concept": "satisfaction_and_complaint_facets",
+  "n_added_columns": 3,
+  "added_columns": [
+    "food_quality_sentiment",
+    "service_sentiment",
+    "atmosphere_sentiment"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.7141,
+    "facet_fraction": 1.0,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.6,
+    "mece": 0.7141,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "satisfaction_and_complaint_facets",
+    "per_column": [
+      {
+        "name": "food_quality_sentiment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Food quality is a core constitutive aspect of restaurant satisfaction/complaint themes; sentiment on this facet is genuinely 'an aspect of' the concept, not an external predictor."
+      },
+      {
+        "name": "service_sentiment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Service is a distinct constitutive dimension of dining satisfaction and a common complaint theme; it is a part-of the concept."
+      },
+      {
+        "name": "atmosphere_sentiment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Ambiance/atmosphere is a recognized separate aspect of the dining experience and a legitimate facet of satisfaction/complaint themes."
+      }
+    ],
+    "facet_columns": [
+      "food_quality_sentiment",
+      "service_sentiment",
+      "atmosphere_sentiment"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.6,
+    "rationale": "All three columns are genuine constitutive facets (meronymic aspects) of the satisfaction/complaint concept rather than external predictors, causes, or restatements, so the part-of claim is satisfied. Mutual exclusivity is high: food, service, and atmosphere are conceptually distinct dining dimensions with minimal overlap, though value/price sentiment can occasionally bleed into food or service perception. Exhaustiveness is moderate: the classic food/service/atmosphere triad covers the primary drivers, but salient recurring Yelp themes such as price/value, wait time/speed, and cleanliness/hygiene are not represented, leaving notable constitutive aspects of the concept uncovered."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

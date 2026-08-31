@@ -1,0 +1,130 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.7,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 5,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Median resolution time is 173.2 hours; the slowest 10% start at 320.3 hours",
+        "why": "concrete magnitudes and thresholds"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Luke Wilson averages 195.5h with 12.1% in the slowest decile",
+        "why": "claims tied to numbers and columns"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "sys_updated_on matches closed_at in all rows, so post-close update lag is not a usable signal",
+        "why": "self-aware limits, consistent"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "Incidents both auto-closed and reassigned reach a 30.5 % inefficiency rate",
+        "why": "two-variable interaction analysis"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "workstation | 21 | 47.6 % | 9.20",
+        "why": "numeric table with rates"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Method Note: TAPP-generated columns used",
+        "why": "cites derived columns not present in stated augmented set"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "reassignment_signal",
+        "quote": "reassignment_signal = True is the most consistently elevated predictor",
+        "dependent": true
+      },
+      {
+        "column": "repeat_incident_signal",
+        "quote": "repeat_incident_signal = True (171 incidents, 34 %)",
+        "dependent": true
+      },
+      {
+        "column": "affected_asset_type",
+        "quote": "affected_asset_type ... workstation | 21 | 47.6 %",
+        "dependent": true
+      },
+      {
+        "column": "shared_vs_personal_asset",
+        "quote": "shared_office_asset | 216 | 26.4 %",
+        "dependent": true
+      },
+      {
+        "column": "hardware_failure_severity",
+        "quote": "hardware_failure_severity is a weak predictor",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "A is more internally consistent and evidence-dense while B relies on unlisted derived columns and shows narrower signal separation.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

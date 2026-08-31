@@ -1,0 +1,120 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce declined travel expenses?",
+  "focus_variable": "travel_expense_declined_status",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "is_travel_related",
+    "expense_category",
+    "entry_origin",
+    "has_source_id",
+    "ci_specificity",
+    "processing_lag_category",
+    "expense_action_type",
+    "submitting_department",
+    "asset_brand"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.3,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.3,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "travel_expense_declined_status",
+    "per_column": [
+      {
+        "name": "is_travel_related",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "A scoping/filter flag identifying travel-related records; already implied by the query's focus on travel expenses. Not an intervenable treatment nor a confounder."
+      },
+      {
+        "name": "expense_category",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "Categorical classification of expense type, implied by the query. It is a descriptive attribute, not a settable lever affecting decline status."
+      },
+      {
+        "name": "entry_origin",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How an expense enters the system (manual procurement vs automated system vs travel claim) is a configurable process choice an actor could change to affect decline rates; intervenable."
+      },
+      {
+        "name": "has_source_id",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether a source id is attached is a data-completeness property that could plausibly be enforced/set as a policy, potentially affecting acceptance; a weak but settable lever."
+      },
+      {
+        "name": "ci_specificity",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How specifically the configuration item is described is a settable data-quality lever (require specific model vs placeholder) that could influence decline; intervenable."
+      },
+      {
+        "name": "processing_lag_category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Processing speed is an operational lever an actor could change; it can plausibly affect decline status. Intervenable, though it risks being a mediator/collider depending on timing."
+      },
+      {
+        "name": "expense_action_type",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Descriptive classification of the action; largely an intrinsic attribute of the expense rather than a settable lever."
+      },
+      {
+        "name": "submitting_department",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Department drives both submission practices (treatment) and decline outcomes; a common cause not named in the query."
+      },
+      {
+        "name": "asset_brand",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Brand of hardware asset is largely irrelevant to travel expense declines and not a settable travel lever; not a confounder for the travel outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "entry_origin",
+      "has_source_id",
+      "ci_specificity",
+      "processing_lag_category"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "submitting_department",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.3,
+    "rationale": "The set includes at least one genuinely intervenable lever (entry_origin, has_source_id, ci_specificity, processing_lag), satisfying claim (a) weakly. However, most columns are scoping flags or descriptive attributes rather than levers, and several are more relevant to hardware/asset records than to travel expenses. Claim (b) is barely met: only submitting_department functions as an unnamed common cause of both a submission-process lever and decline outcome. There is no adjustment for co-determinants like expense amount magnitude, policy compliance, approver, or claimant experience that would confound the treatment-outcome relationship. The confounding structure is thin, so the what-if identification is weak."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

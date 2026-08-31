@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can clinics improve triage and scheduling?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "clinical_acuity_level",
+    "visit_type_category",
+    "complexity_driver",
+    "required_diagnostic_workup",
+    "specialty_routing_signal",
+    "care_continuity_type",
+    "in_visit_procedure_performed",
+    "pediatric_age_vulnerability"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8187,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7969,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "clinical_acuity_level",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A finer acuity scale than the raw 'urgency' column gives real triage leverage. Mostly well-grounded, but the MI follow-up (EF 50%, stable) labeled 'routine_preventive' understates a cardiac follow-up, and the annual physical also mapped to routine is fine. Slight drift from source in some rows but broadly defensible."
+      },
+      {
+        "name": "visit_type_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing acute vs chronic vs preventive vs follow-up is a genuine new axis for scheduling (slot length, provider type). Sample values (annual physical=preventive, MI follow-up=chronic, cough=acute) are sound readings of the text."
+      },
+      {
+        "name": "complexity_driver",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Useful for staffing/time allocation, but grounding is weak in places: the annual physical (mild fatigue, one abnormal BMI, routine labs) labeled 'multi_system_comorbidity' overstates comorbidity not evidenced in the text. Infectious/trauma tags are well-supported. Some invented specificity lowers grounding."
+      },
+      {
+        "name": "required_diagnostic_workup",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Whether labs/imaging are needed directly informs scheduling of ancillary resources. Values track the text precisely (labs ordered, MRI ordered=imaging, viral URI=no_workup)."
+      },
+      {
+        "name": "specialty_routing_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Referral/escalation routing is highly relevant to triage flow. Mostly grounded, but the knee-injury row labeled 'intra_specialty_referral' is not supported by the text (already in Orthopedics, MRI ordered, no referral mentioned). Cardiology follow-up=same_department is sound."
+      },
+      {
+        "name": "care_continuity_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "New vs established vs surveillance is useful for slot allocation, though partly correlated with visit_type_category. Grounding mostly good, but annual physical labeled 'protocol_surveillance' rather than a routine/preventive continuity is a stretch given no prior-patient context stated."
+      },
+      {
+        "name": "in_visit_procedure_performed",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Whether a procedure occurs affects room/time needs, so it has scheduling value though dominated by 'no_procedure'. Sample rows correctly show no procedure."
+      },
+      {
+        "name": "pediatric_age_vulnerability",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean flag largely derivable from existing age_group/department, so limited new leverage; still marginally relevant for pediatric triage prioritization. Pediatrics row=True and adults=False are correctly read."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns collectively provide multiple genuine analytical axes (acuity, visit type, workup needs, routing, procedures) that directly support triage and scheduling analysis, well beyond the original six columns. Grounding is generally sound, but several columns show over-specific inferences not supported by the source text—notably 'multi_system_comorbidity' for a low-risk physical and 'intra_specialty_referral' for a knee injury with no referral mentioned—indicating occasional hallucinated confidence. The pediatric flag is the weakest for usefulness due to redundancy with existing age fields. Overall strong on both necessary conditions with pockets of unwarranted specificity."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 8
+}

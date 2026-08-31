@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "affected_system",
+    "failure_symptom",
+    "scope_qualifier",
+    "resolver_match",
+    "assignment_lag_present",
+    "caller_id_group",
+    "resolution_delay_proxy"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6225,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7438,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.6832,
+    "hallucination_rate": 0.375
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A finer-grained categorisation derived from short_description gives a new axis to group resolution time beyond the coarse original category column. Values (vpn, database, email, network_connectivity) are sound readings of the source descriptions."
+      },
+      {
+        "name": "affected_system",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Maps descriptions to specific systems (vpn_gateway, email_server, wifi), providing a useful grouping dimension. Values are well-warranted inferences from the text, though somewhat correlated with incident_category."
+      },
+      {
+        "name": "failure_symptom",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Symptom type (connection_failure, outage_down, access_denied) is a distinct analytical axis that could correlate with resolution time. Mostly grounded, though 'Email system not working properly' -> 'outage_down' is a mild over-specification of a vague description."
+      },
+      {
+        "name": "scope_qualifier",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Scope (remote_access, department_specific, location_specific) is a plausible new grouping dimension relevant to resolution time. Values like 'department_specific' for WiFi in sales are well grounded; 'general' as default for silent rows is acceptable."
+      },
+      {
+        "name": "resolver_match",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Presumably whether assigned_to matches closed_by; a plausible axis but the boolean is coarse. Row evidence samples do not expose assigned_to/closed_by, and same-timestamp VPN row labelled True vs others False is not verifiable from provided text, so groundedness is uncertain."
+      },
+      {
+        "name": "assignment_lag_present",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Near-constant (428 true / 72 false) giving little discriminative leverage. Derivation from timestamps is plausible but not verifiable in the samples, where every row is labelled True; low grounding support."
+      },
+      {
+        "name": "caller_id_group",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "This is essentially a copy of the existing caller_id values (Don Goodliffe, Bud Richman, etc.), trivially redundant with an original column and not an axis the query (category/priority/assignment_group) calls for. Grounded but adds no leverage."
+      },
+      {
+        "name": "resolution_delay_proxy",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Directly bins resolution time, which is the core dependent variable of the query -- highly useful. However samples show closed_at == sys_updated_on with no opened_at, and the VPN row is 'same_day' while identical-timestamp rows are 'one_to_three_days', suggesting the underlying duration computation is only partially verifiable/consistent."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.78,
+    "rationale": "The text-derived categorisation columns (incident_category, affected_system, failure_symptom, scope_qualifier) provide genuine new grouping axes well aligned with the query and are soundly grounded in the short_description text. resolution_delay_proxy is the most useful column as it bins the target variable, though its exact derivation is only partially verifiable and shows minor inconsistency across identical-timestamp rows. caller_id_group is a trivial restatement of an existing column and adds no leverage for this query. resolver_match and assignment_lag_present are weaker: near-constant and/or not verifiable from the provided evidence samples. Overall the set leans useful and mostly grounded with a few weak members."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

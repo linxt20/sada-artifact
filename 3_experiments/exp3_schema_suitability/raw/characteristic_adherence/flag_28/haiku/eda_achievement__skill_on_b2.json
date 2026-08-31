@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does goal achievement vary across department, metric, and the management practices described?",
+  "focus_variable": "goal_achievement",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "management_practice_category",
+    "improvement_target_type",
+    "target_metric_alignment",
+    "target_scope",
+    "stakeholder_impact_span",
+    "risk_or_dependency_indicator",
+    "comparison_baseline",
+    "temporal_scope_window"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "goal_achievement",
+    "per_column": [
+      {
+        "name": "management_practice_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly named in the query as a dimension of interest; well-separated interpretable categories (technology_investment, process_standardization, etc.) that can be grouped and compared against goal achievement."
+      },
+      {
+        "name": "improvement_target_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear, few, well-balanced categories (satisfaction/volume/time/cost/rate) describing the nature of the goal; an external associational variable that supports meaningful segmentation of achievement."
+      },
+      {
+        "name": "target_metric_alignment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary aligned/misaligned split with reasonable balance; highly interpretable and plausibly relates to whether goals are met."
+      },
+      {
+        "name": "target_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-distributed categories (employee/revenue/customer/efficiency/cost) that segment the goal focus and permit comparison of achievement across scopes."
+      },
+      {
+        "name": "stakeholder_impact_span",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Four clear, well-separated categories describing whom the goal affects; a good associational axis for exploring variation in achievement."
+      },
+      {
+        "name": "risk_or_dependency_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable boolean, but strongly skewed (459 true / 91 false); still usable for comparison though the imbalance limits contrast, so weaker than the others."
+      },
+      {
+        "name": "comparison_baseline",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable baseline categories (prior_year, last_quarter, etc.) that can be grouped and compared; a meaningful associational variable for how targets are framed."
+      },
+      {
+        "name": "temporal_scope_window",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear, well-separated time-horizon categories enabling segmentation of achievement by timeframe; interpretable and non-constant."
+      }
+    ],
+    "n_predictors": 8,
+    "relationship_informativeness": 0.85,
+    "rationale": "The set is strongly aligned with the exploratory intent: every column is an external, interpretable, categorical/boolean segmentation variable with well-separated, non-constant values that a human can group on and compare against goal_achievement. Coverage spans the query's explicit axis (management practices) plus complementary framing dimensions (target type, alignment, scope, stakeholder span, baseline, timeframe). None merely restate the focus (goal_achievement itself is not duplicated) and none are opaque scores. Minor weaknesses: risk_or_dependency_indicator is heavily skewed (limiting contrast) and several columns overlap conceptually (scope vs. stakeholder_span vs. target_type), slightly diluting independent informativeness, hence a high but not maximal score."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "eda_achievement",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative IMDb audience satisfaction?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "DirectCondemnation",
+    "EmotionalDistressSignal",
+    "WasteRegretLanguage",
+    "CriticalTargetBreadth",
+    "SystemicFailureAttribution",
+    "direct_condemnation_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6333,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.725,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.6791,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "DirectCondemnation",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures harshness of judgment, a genuine axis for predicting negative satisfaction. Values align well with source text (harsh for negative reviews, absent for positive). Near-even split gives grouping leverage."
+      },
+      {
+        "name": "EmotionalDistressSignal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A distinct emotional-tone axis that could add value. However groundedness is weaker: IMDB-0001 and IMDB-0004 are debatable, and IMDB-0005 ('distress_evident') reflects plot heartache, not reviewer distress, an over-reading of the source."
+      },
+      {
+        "name": "WasteRegretLanguage",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Waste/regret language is a meaningful negative-satisfaction signal. But IMDB-0002 and IMDB-0003 marked 'waste_or_regret_expressed' without clear waste/regret wording in the shown text, suggesting inferred rather than grounded values."
+      },
+      {
+        "name": "CriticalTargetBreadth",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether criticism is broad/systematic vs narrow is a solid analytical axis correlating with dissatisfaction depth. Sample values are reasonable readings of the reviews."
+      },
+      {
+        "name": "SystemicFailureAttribution",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing isolated vs fundamental failure is useful for modeling. Somewhat conceptually overlapping with CriticalTargetBreadth but not a mere restatement. Sample values are defensible readings."
+      },
+      {
+        "name": "direct_condemnation_signal",
+        "analytical_usefulness": 0.1,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "This is essentially a duplicate of DirectCondemnation with identical value vocabulary and matching per-row values in all samples. Redundant restatement adds no analytical leverage, so usefulness is very low despite being grounded."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.72,
+    "rationale": "Most columns provide genuine distinct axes (condemnation harshness, criticism breadth, failure attribution, waste/regret) that plausibly relate to negative IMDb satisfaction and offer real grouping/modeling leverage. The clear weakness is 'direct_condemnation_signal', a near-exact duplicate of 'DirectCondemnation'. Groundedness is generally sound as categorisations of the review text, but EmotionalDistressSignal and WasteRegretLanguage show some over-reading/inferred values (e.g. plot-level heartache read as reviewer distress; waste/regret asserted without supporting wording), pulling the table-level groundedness down modestly."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

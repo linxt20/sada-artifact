@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "writing_plot_issue",
+    "emotional_response_failure"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.875,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.74,
+    "source_groundedness__table_level": 0.74,
+    "b1_overall": 0.8075,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "writing_plot_issue",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "Provides a strong categorical axis directly answering why audiences are dissatisfied, enabling grouping of complaints by writing failure type. Grounding is mostly sound: 'poor_dialogue' for IMDB-0001 (stilted dialogue, insipid writing) and 'not_present' for the positive review IMDB-0004 are well-warranted. However IMDB-0002 is labeled 'weak_plot' though the sample text criticizes the film generally and cats imagery, not plot specifically, and IMDB-0003 as 'weak_plot' overlaps with performance/premise complaints rather than plot per se, so some categorizations are loosely supported."
+      },
+      {
+        "name": "emotional_response_failure",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A genuinely distinct axis from writing issues, useful for modeling a different dimension of dissatisfaction (emotional engagement). Some values are well-grounded: 'not_present' for IMDB-0001 and the positive IMDB-0004. But IMDB-0003 'unbelievable_motivation' is only weakly supported by the 'wooden performances'/'poignant' complaint, and IMDB-0005 'fails_to_move_audience' contradicts a positive review (label_pos=1) that explicitly describes heartache and frustration in an engaged way, an unwarranted reading."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.74,
+    "rationale": "Both added columns give real, complementary analytical leverage for the query 'why are IMDB audiences dissatisfied?', decomposing complaints into writing/plot failures and emotional-engagement failures — distinct groupable axes, not redundant with the raw review_text or label. Values are largely sound readings of the source text, with correct 'not_present' handling of silent/positive rows. Groundedness is dragged down modestly by several stretched or contradictory assignments (e.g., 'fails_to_move_audience' applied to an engaged positive review), indicating occasional over-confident inference beyond what the text supports."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 2
+}

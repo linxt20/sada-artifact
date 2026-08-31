@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "seat_comfort_issue",
+    "food_quality_decline",
+    "service_inconsistency",
+    "customer_service_responsiveness",
+    "booking_operational_failure",
+    "inflight_entertainment_failure",
+    "aircraft_age_condition",
+    "crew_service_attitude",
+    "traveller_segment",
+    "cabin_class"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.695,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.795,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.745,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "seat_comfort_issue",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A boolean flag for seat complaints extracted from review text; useful driver dimension for the query. Partially overlaps with the existing Seat Comfort rating but adds a text-derived issue signal. Samples align well (dreadful seats = True, comfortable = False)."
+      },
+      {
+        "name": "food_quality_decline",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Flags food-related negatives; relevant to satisfaction analysis. Somewhat redundant with Food & Beverages rating but captures a specific 'decline' narrative. Samples correctly False for positive food mentions."
+      },
+      {
+        "name": "service_inconsistency",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Near 50/50 split gives good grouping leverage on a plausible recommendation driver. Sample with 'consistently good' correctly False; interpretation is a warranted reading of text."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Useful multi-level categorical for analysis. However 'responsive' appears assigned even where reviews say nothing about responsiveness (e.g. the seat-complaint review with no service mention was labeled 'responsive'), suggesting a default that overstates a silent source; a 'not stated' would be more grounded."
+      },
+      {
+        "name": "booking_operational_failure",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct operational failure axis not captured by original rating columns; genuinely useful for root-cause of non-recommendation. Samples with no booking issues correctly False."
+      },
+      {
+        "name": "inflight_entertainment_failure",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Overlaps with existing Inflight Entertainment rating but adds a specific failure flag. Sample with dreadful headphones/sound correctly True; well grounded."
+      },
+      {
+        "name": "aircraft_age_condition",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "New physical-product axis relevant to comfort complaints. Interestingly the 'older aircraft ... good condition' sample is False, which is a defensible reading (age noted but condition fine). Grounded."
+      },
+      {
+        "name": "crew_service_attitude",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "Rich multi-level categorical, strong grouping value for service-driven recommendation analysis. Mostly grounded (warm_attentive for welcoming crew), but the seat-complaint review with no crew commentary was labeled 'neutral_efficient', an unwarranted specific where text is silent."
+      },
+      {
+        "name": "traveller_segment",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Useful segmentation, but largely redundant with the original 'Type of Traveller' column. Groundedness is weakened: the 'gave my mom a bday cake' review labeled Solo_Leisure and the excellent-performance review labeled Family_Leisure appear to be unsupported specifics unless sourced from the existing column."
+      },
+      {
+        "name": "cabin_class",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with the existing 'Class' column, adding little new leverage. Grounding is questionable: the 'amazing flight' review labeled Business has no class cue in text, an unwarranted specific for a silent source."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.77,
+    "rationale": "The added columns give several genuinely useful new analytical axes (operational failures, crew attitude, service inconsistency, entertainment/aircraft issues) that let the analyst decompose drivers of non-recommendation beyond the raw numeric ratings. A few columns (traveller_segment, cabin_class) largely duplicate existing original columns and add limited leverage. Groundedness is generally sound for extraction-style flags, but the multi-level categoricals (customer_service_responsiveness, crew_service_attitude) and the class/segment fields show a tendency to assign confident defaults where the source text is silent, which slightly lowers overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 10
+}

@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "symptom_acuity",
+    "clinical_instability_present",
+    "diagnostic_intervention_intensity",
+    "primary_organ_system",
+    "multi_system_involvement",
+    "visit_reason_category",
+    "chronic_disease_component",
+    "intervention_required"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.6825,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.78,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "symptom_acuity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated ordinal categories (chronic/subacute/acute/sudden) derived from reason_for_visit; a natural axis to segment and compare against visit duration and urgency."
+      },
+      {
+        "name": "clinical_instability_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary flag with a reasonable ~57/193 split; supports meaningful grouping (unstable vs stable) against duration."
+      },
+      {
+        "name": "diagnostic_intervention_intensity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct, interpretable categories (none/lab/imaging/procedure) that plausibly drive visit duration; excellent segmentation variable for EDA."
+      },
+      {
+        "name": "primary_organ_system",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable clinical categories usable for segmentation; some categories are very sparse (hematologic=1), slightly limiting comparison, but the top groups are well populated."
+      },
+      {
+        "name": "multi_system_involvement",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary flag with balanced split; interpretable axis for comparing single vs multi-system cases against duration."
+      },
+      {
+        "name": "visit_reason_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories, but this is essentially a recoding/taxonomy of the focus-adjacent reason_for_visit column already present, largely restating the existing predictor rather than adding an external associational variable."
+      },
+      {
+        "name": "chronic_disease_component",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Balanced binary flag; interpretable segmentation (chronic vs not) to compare against urgency and duration, though partially overlaps symptom_acuity/visit_reason_category."
+      },
+      {
+        "name": "intervention_required",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable categories of care action that plausibly relate to duration; strong EDA segmentation variable."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.78,
+    "rationale": "As a set, these columns open up genuinely informative, human-interpretable relationships around visit_duration_min: acuity, instability, diagnostic and intervention intensity, organ system, and chronicity are all external associational axes with clean, well-separated categories suitable for grouping and comparison against urgency, department, and age group. They avoid opaque scores and mechanical features. Deductions: visit_reason_category largely restates the existing reason_for_visit field, several binaries (chronic_disease_component, multi_system_involvement, clinical_instability) overlap conceptually with symptom_acuity and intervention columns, creating redundancy, and primary_organ_system has some near-empty categories limiting comparison. Overall a strong, mostly non-mechanical EDA set."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

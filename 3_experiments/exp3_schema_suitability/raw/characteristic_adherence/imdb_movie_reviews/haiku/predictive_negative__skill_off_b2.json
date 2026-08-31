@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative IMDb audience satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "negative_word_count",
+    "exclamation_count",
+    "caps_word_count",
+    "negation_intensifier_count"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "negative_word_count",
+        "role": "predictor",
+        "rationale": "Count of negative-sentiment words in the review text; lies outside the label, is knowable before the outcome, and plausibly carries strong signal about negative satisfaction. A legitimate lexical predictor."
+      },
+      {
+        "name": "exclamation_count",
+        "role": "predictor",
+        "rationale": "Punctuation-based intensity feature derived from text, independent of the label. Weak-to-moderate but plausible signal (emotional emphasis can associate with polarity), not leakage or restatement."
+      },
+      {
+        "name": "caps_word_count",
+        "role": "predictor",
+        "rationale": "All-caps word count captures emphasis/shouting, a stylistic cue that can correlate with strong (often negative) sentiment. Outside the focus and non-leaky; modest predictive value."
+      },
+      {
+        "name": "negation_intensifier_count",
+        "role": "predictor",
+        "rationale": "Counts negations/intensifiers, which modulate sentiment polarity and intensity; a legitimate text-derived predictor that plausibly helps distinguish negative reviews without restating the label."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.55,
+    "rationale": "All four columns are text-derived features that lie outside the focus variable, are knowable prior to the outcome (no leakage), and none restate label_pos. negative_word_count is the strongest signal for the negative-satisfaction target; negation_intensifier_count adds polarity-modulating signal; exclamation_count and caps_word_count contribute weaker stylistic emphasis cues. As a set they give moderate genuine predictive leverage beyond review_text alone, though they are relatively generic lexical/stylistic counts rather than richly engineered semantic features, capping their utility."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

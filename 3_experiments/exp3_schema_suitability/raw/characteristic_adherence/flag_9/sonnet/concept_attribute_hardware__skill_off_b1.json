@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "hardware_issue_type",
+    "is_hardware_incident"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.925,
+    "source_groundedness__table_level": 0.92,
+    "b1_overall": 0.85,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_issue_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This column directly answers the query by categorizing hardware incidents into specific types (Printer, Monitor/Display, Keyboard, etc.), giving a genuine axis to group and compare kinds of hardware issues. NULL for non-hardware rows (software installation, MySQL connection) is correct behavior. The evidence samples show sound reasoning: software/database issues correctly get NULL. The specific categories appear to be reasonable readings of short_description text."
+      },
+      {
+        "name": "is_hardware_incident",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A binary hardware/not-hardware flag is useful for filtering to the relevant subset for this query, but it is largely redundant with hardware_issue_type (NULL vs non-NULL already encodes this distinction, and the counts align exactly: 418 No = 418 NULL). It adds modest leverage as a convenience filter but is essentially a restatement of the other added column. Groundedness is high: the observed samples correctly classify software and database incidents as 'No'."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.92,
+    "rationale": "The added columns are well-targeted to the query about kinds of hardware issues. hardware_issue_type provides strong analytical leverage with a meaningful taxonomy, and the evidence shows values are soundly grounded in the source text with correct NULL handling for non-hardware rows. is_hardware_incident is well-grounded but largely redundant with the NULL/non-NULL structure of the first column, lowering its incremental usefulness. No hallucinations observed in the samples."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 2
+}

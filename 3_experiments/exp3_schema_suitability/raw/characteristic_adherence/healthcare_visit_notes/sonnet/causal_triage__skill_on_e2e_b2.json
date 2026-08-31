@@ -1,0 +1,128 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can clinics improve triage and scheduling?",
+  "focus_variable": "triage_and_scheduling_efficiency",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "clinical_acuity_level",
+    "visit_type_category",
+    "complexity_driver",
+    "required_diagnostic_workup",
+    "specialty_routing_signal",
+    "care_continuity_type",
+    "in_visit_procedure_performed",
+    "pediatric_age_vulnerability"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "triage_and_scheduling_efficiency",
+    "per_column": [
+      {
+        "name": "clinical_acuity_level",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Clinical acuity is an intrinsic patient/case attribute, not a lever a clinic can set. It plausibly drives both how a case is triaged/scheduled and its efficiency, so it functions as a confounder rather than an intervenable treatment. Related to but richer than the existing 'urgency' column."
+      },
+      {
+        "name": "visit_type_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Type of visit (acute vs chronic vs preventive) is a case characteristic, not something the clinic decides. It affects triage priority and scheduling load, acting as a common cause / case-mix confounder."
+      },
+      {
+        "name": "complexity_driver",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Underlying complexity of the presenting problem is an intrinsic case property affecting both routing and efficiency; a case-mix confounder, not an intervenable lever."
+      },
+      {
+        "name": "required_diagnostic_workup",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether imaging/labs are ordered lies on the pathway between the case and its scheduling/throughput outcome. It is a downstream step of the triage process, so it behaves as a mediator rather than a confounder or a settable treatment."
+      },
+      {
+        "name": "specialty_routing_signal",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Routing/escalation/referral is itself part of the triage-and-scheduling process, sitting between case characteristics and efficiency, hence a mediator."
+      },
+      {
+        "name": "care_continuity_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "New vs established/follow-up status is a case attribute that influences both scheduling pathway and efficiency; a common-cause confounder, not a clinic-settable lever."
+      },
+      {
+        "name": "in_visit_procedure_performed",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A procedure performed during the visit is a downstream event on the visit-processing pathway, affecting duration/throughput; treated as a mediator, not a pre-treatment confounder."
+      },
+      {
+        "name": "pediatric_age_vulnerability",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Derived from age_group; an immutable patient attribute that can influence triage priority and scheduling. Confounder, not intervenable."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "treatment_intervenable": false,
+    "confounders": [
+      {
+        "name": "clinical_acuity_level",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "visit_type_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "complexity_driver",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "care_continuity_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "pediatric_age_vulnerability",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The query asks a genuinely interventional what-if question ('how can clinics improve triage and scheduling') where the actor is the clinic and the outcome is scheduling/triage efficiency. To satisfy the technical claim, the added columns needed at least one INTERVENABLE treatment lever the clinic could set (e.g., staffing level, appointment-slot policy, triage protocol assignment, walk-in vs pre-booked, provider allocation) plus confounders. However, NONE of the added columns is a settable lever: every column is either an intrinsic case/patient attribute (acuity, visit type, complexity, continuity, pediatric vulnerability) or a downstream process step (diagnostic workup, routing signal, in-visit procedure). The intrinsic attributes are case-mix confounders and the process steps are mediators. Because there is no intervenable treatment, the interventional what-if setup fails despite the presence of several plausible, not-named-in-query confounders."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

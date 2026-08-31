@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "completion_gap",
+    "target_achievement_ratio",
+    "priority_rigor",
+    "anomaly_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.782,
+    "focus_coherence": 0.92,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Goal health / at-risk goals worth attention (goals that are underperforming, stalled, or anomalous relative to their targets)",
+    "per_column": [
+      {
+        "name": "completion_gap",
+        "supports_focus": true,
+        "rationale": "Quantifies shortfall between target and actual progress; a direct measure of which goals are lagging and deserve attention."
+      },
+      {
+        "name": "target_achievement_ratio",
+        "supports_focus": true,
+        "rationale": "Normalized attainment metric complementing the raw gap; distinguishes over- vs under-achievers, reinforcing the performance-risk focus."
+      },
+      {
+        "name": "priority_rigor",
+        "supports_focus": true,
+        "rationale": "Escalation-style classification (routine/medium/high concern/delayed_high_priority) that flags which goals warrant scrutiny, tying priority to concern level."
+      },
+      {
+        "name": "anomaly_flag",
+        "supports_focus": true,
+        "rationale": "Explicitly encodes problem types (date_anomaly, stalled_goal, high_target_low_progress, critical_cancelled); the clearest realization of 'what's worth attention'."
+      }
+    ],
+    "focus_coherence": 0.92,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "rationale": "All four columns converge on a single coherent, data-inferable focus: identifying goals that are at risk or otherwise noteworthy. Two continuous performance measures (completion_gap, target_achievement_ratio) provide graded severity, while two categorical classifiers (priority_rigor, anomaly_flag) surface discrete concern types. This forms a sound multi-facet analytical structure — severity magnitude plus qualitative flags — at a useful granularity rather than a single restatement or generic noise. The focus is highly actionable: an analyst can triage stalled/high_target_low_progress/critical_cancelled goals and prioritize investigation. Minor deduction on structure because achievement_ratio and completion_gap are partially redundant (both target-vs-progress), and 'routine' dominates priority_rigor, slightly limiting its discriminating power."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

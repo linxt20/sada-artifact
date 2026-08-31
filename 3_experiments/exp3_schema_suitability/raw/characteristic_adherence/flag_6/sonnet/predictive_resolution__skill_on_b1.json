@@ -1,0 +1,67 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary by agent and issue type?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_type",
+    "issue_symptom",
+    "assigned_agent",
+    "resolver_agent",
+    "reassigned"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.77,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.87,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.82,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Directly provides the issue-type axis the query needs. Categorisations (database_access, vpn_connectivity, network_connectivity, software_application) are sound readings of the short_description text."
+      },
+      {
+        "name": "issue_symptom",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Adds a second, orthogonal grouping axis (symptom) that complements issue_type for resolution-time analysis. Values like connection_failure, no_access, other are well-warranted from the descriptions."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "rationale": "The agent axis is central to the query, but this largely restates the original assigned_to column, limiting new leverage. Values appear grounded (agent names present in table)."
+      },
+      {
+        "name": "resolver_agent",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Distinguishes the resolver from the assignee, a genuinely useful distinction for per-agent resolution-time; likely derived from closed_by. Values plausibly grounded, though closed_by mapping not shown in samples."
+      },
+      {
+        "name": "reassigned",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "A reassignment flag is a meaningful driver of resolution time and a new analytical axis. Derivable by comparing assigned vs resolver, but the sampled derivations (e.g., assigned==resolver yet marked reassigned in some rows) raise mild consistency concerns."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.87,
+    "rationale": "The added columns supply the two grouping axes the query needs (issue type/symptom and agent), plus a reassignment flag that enriches resolution-time analysis. assigned_agent overlaps heavily with the existing assigned_to column, reducing its added value. Values are well grounded in the source text, with only minor concerns about the derivation logic for reassigned/resolver where the mapping is not fully visible in the samples."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

@@ -1,0 +1,119 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "cabin_crew_attitude_complaint",
+    "customer_service_responsiveness_complaint",
+    "food_quality_complaint",
+    "seat_comfort_complaint",
+    "service_recovery_attempted",
+    "traveller_type",
+    "flight_disruption_complaint",
+    "inflight_entertainment_complaint"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "cabin_crew_attitude_complaint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "A cabin-service complaint subtype directly implied by 'the most common cabin-service complaints'. Eliminating it (via improved crew behaviour) is the interventional lever the query is asking about."
+      },
+      {
+        "name": "customer_service_responsiveness_complaint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Another decomposition of the cabin-service complaint treatment named in the query; responsiveness of service is a settable/improvable property, so it is an intervenable part of the treatment."
+      },
+      {
+        "name": "food_quality_complaint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Food/beverage service is part of cabin service; the complaint indicator is a treatment sub-component the airline can act on (mirrors existing 'Food & Beverages' rating)."
+      },
+      {
+        "name": "seat_comfort_complaint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Seat comfort is a configurable cabin property and a plausible member of 'cabin-service complaints'; it is part of the treatment being eliminated, not a common cause of it."
+      },
+      {
+        "name": "service_recovery_attempted",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Service recovery is undertaken in RESPONSE to a complaint, so it lies on the path complaint -> recovery -> rating. It is intervenable but is a mediator/downstream action, not a common cause of the complaint; per instructions it is not counted as a confounder."
+      },
+      {
+        "name": "traveller_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Traveller segment (business vs leisure) plausibly drives both the propensity to file cabin-service complaints (differing expectations) and the Overall Rating independently, so it is a common cause. Not named in the query text, though it merely duplicates the pre-existing 'Type of Traveller' column, so it adds little new information."
+      },
+      {
+        "name": "flight_disruption_complaint",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Flight disruption is NOT cabin service, so it is outside the treatment. A disrupted flight can both raise the rate of cabin-service complaints (frustrated passengers) and depress the Overall Rating, making it a plausible (if weak, since it is a self-reported complaint proxy) common cause to adjust for. Could instead be read as a competing cause rather than a strict confounder."
+      },
+      {
+        "name": "inflight_entertainment_complaint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Inflight entertainment is an in-cabin amenity the airline configures; it is best read as another sub-component of the cabin-service complaints being eliminated rather than a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "cabin_crew_attitude_complaint",
+      "customer_service_responsiveness_complaint",
+      "food_quality_complaint",
+      "seat_comfort_complaint",
+      "inflight_entertainment_complaint"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "traveller_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "flight_disruption_complaint",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The treatment side of the interventional claim is satisfied: the added complaint indicators decompose the query's 'cabin-service complaints' into intervenable levers (crew attitude, responsiveness, food, seat comfort, entertainment) that an airline could actually set/change, so treatment_intervenable holds. However, the confounding side is thin. The bulk of the added columns are treatment decomposition, not common causes. Only traveller_type is a clean confounder not named in the query text, and it merely re-derives the pre-existing 'Type of Traveller' field, so it demonstrates little new capability. flight_disruption_complaint is at best a weak/ambiguous confounder (arguably just a competing cause), and service_recovery_attempted is a mediator (downstream of complaints) that must not be adjusted for. Because the capability under test is surfacing genuine, previously-unnamed confounders, the set only weakly realises it: confounder_quality is low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "whatif_service_complaints",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

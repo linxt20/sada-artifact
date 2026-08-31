@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "issue_theme",
+    "operational_severity",
+    "blast_radius",
+    "root_cause_category",
+    "requires_escalation",
+    "workaround_available",
+    "data_sensitivity_flag",
+    "data_sensitivity_or_compliance_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.725,
+    "analytical_usefulness__table_level": 0.74,
+    "source_groundedness": 0.855,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.79,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.97,
+        "hallucination_observed": false,
+        "rationale": "Directly supplies the 'issue themes' axis the query names. Categorisations across all samples (billing, auth, outage, feature request, bug) are sound readings of the source text."
+      },
+      {
+        "name": "operational_severity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "A distinct severity axis useful for comparing resolution time; somewhat correlated with priority but adds finer granularity. Values (service_down for a full 502, minor for invoice) are well grounded in text."
+      },
+      {
+        "name": "blast_radius",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Scope-of-impact gives a genuine new grouping axis. 'entire_tenant' for the Acme-wide outage and 'single_user' for the invoice are correct extractions; feature request as no_user_impact is reasonable."
+      },
+      {
+        "name": "root_cause_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Useful modeling axis, and NULL/Unknown for silent rows is correct. However some values are confident inferences the text only weakly supports: the invoice duplicate labelled 'data_integrity' and the SSO session-drop labelled 'configuration_error' assert a cause the customer merely suspects, so some over-specification is present."
+      },
+      {
+        "name": "requires_escalation",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "Escalation path is a plausible operational axis. But values are largely inferred; e.g. the routine SSO/session case tagged 'engineering_escalation' is a judgement the text does not clearly establish, giving mild over-assertion."
+      },
+      {
+        "name": "workaround_available",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Reasonable analytical dimension. Grounding is mostly sound (customer_has_workaround for the sed step, not_present for feature request), though 'no_workaround' vs 'not_present' distinction is somewhat inconsistently applied."
+      },
+      {
+        "name": "data_sensitivity_flag",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A compliance/risk flag adds some leverage. Values are grounded (billing_financial_risk for invoice, not_present otherwise), but relevance to a resolution-time query is secondary."
+      },
+      {
+        "name": "data_sensitivity_or_compliance_flag",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Near-duplicate of data_sensitivity_flag with essentially identical distribution and identical per-row values in every sample; it is a mere restatement adding no analytical leverage."
+      }
+    ],
+    "analytical_usefulness": 0.74,
+    "source_groundedness": 0.85,
+    "rationale": "Most added columns supply genuine, query-relevant axes (theme, severity, blast radius, root cause, escalation) that let the analyst slice resolution time in new ways, complementing the existing priority/channel fields. Grounding is generally sound with correct 'unknown'/'not_present' handling, though a few inference-heavy columns (root_cause_category, requires_escalation) over-assert causes the text only hints at. The one clear weakness is the pair of near-identical data_sensitivity columns, the second of which is a redundant restatement."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

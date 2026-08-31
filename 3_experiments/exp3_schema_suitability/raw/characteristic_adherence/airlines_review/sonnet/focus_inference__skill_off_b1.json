@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "n_added_columns": 3,
+  "added_columns": [
+    "dominant_topic",
+    "review_sentiment",
+    "review_length_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.5667,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.84,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.7033,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "dominant_topic",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Directly serves the exploratory query by giving an aspect-level grouping axis over free-text reviews, letting the analyst see which themes dominate. Categories are well-diversified and non-constant. Groundedness is mostly sound: seat_comfort, food, and staff samples map cleanly to their text. One sample (row 4) is dominated by extensive food description yet labeled 'staff', a defensible but weaker reading, and row 1 mentions many topics with 'staff' being reasonable. Minor mislabeling lowers groundedness slightly but no invented facts."
+      },
+      {
+        "name": "review_sentiment",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A bare positive/negative/neutral sentiment flag is fairly generic and partly redundant with existing 'Overall Rating', 'Value For Money', and 'Recommended' columns, limiting new analytical leverage. However for an open-ended 'what's in these reviews' exploration it still offers a text-derived axis crossable with dominant_topic. Values are well-grounded in the sampled source text (positives correctly identified, negative seat review correctly negative)."
+      },
+      {
+        "name": "review_length_category",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Bucketed text length is a generic metadata feature that adds little analytical leverage for understanding review CONTENT; it is close to the 'raw text length' case flagged as low value. Values are broadly derivable from the text but the thresholds appear inconsistent: the row-3 review is comparably short yet the row-1 review, similar in length, is 'medium' while a clearly longer row-4 review is 'long' — buckets are plausible but somewhat arbitrary."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.85,
+    "rationale": "The set centers on one genuinely valuable column (dominant_topic) that gives real aspect-level grouping for an exploratory query, supported by a moderately useful sentiment axis. review_length_category drags usefulness down as generic metadata. Groundedness is strong overall: values are sound readings of source text with no invented facts, only a couple of debatable topic assignments and arbitrary length thresholds. Judged only on usefulness and groundedness, not completeness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

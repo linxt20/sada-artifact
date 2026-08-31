@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category",
+    "asset_brand",
+    "travel_related",
+    "procurement_action_type",
+    "entry_origin",
+    "has_source_id",
+    "ci_identifier_quality",
+    "repeat_user_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.504,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.75,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Characterizing IT asset/procurement expenses by what was purchased and the data-quality/provenance of each record",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "supports_focus": true,
+        "rationale": "Directly typologizes the purchased asset (hardware/cloud/software/travel), a core facet of what the expense is for."
+      },
+      {
+        "name": "asset_brand",
+        "supports_focus": true,
+        "rationale": "Vendor/brand dimension of the asset, a coherent attribute for spend analysis."
+      },
+      {
+        "name": "travel_related",
+        "supports_focus": true,
+        "rationale": "Flags a distinct spend category; complements asset_category, mild redundancy with travel_equipment."
+      },
+      {
+        "name": "procurement_action_type",
+        "supports_focus": true,
+        "rationale": "Classifies the procurement lifecycle action, a meaningful facet of expense type."
+      },
+      {
+        "name": "entry_origin",
+        "supports_focus": true,
+        "rationale": "Provenance/data-quality facet (manual vs auto), useful for judging record reliability."
+      },
+      {
+        "name": "has_source_id",
+        "supports_focus": true,
+        "rationale": "Data-completeness flag; supports the data-quality sub-theme but is somewhat mechanical."
+      },
+      {
+        "name": "ci_identifier_quality",
+        "supports_focus": true,
+        "rationale": "Assesses quality of the CI identifier, a genuine actionable data-quality dimension."
+      },
+      {
+        "name": "repeat_user_flag",
+        "supports_focus": true,
+        "rationale": "Behavioral flag tied to users; loosely related but drifts from the asset/data-quality core (near-constant at 486/14)."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.75,
+    "rationale": "The columns cluster around two related but distinguishable themes: (1) what the expense purchased (asset_category, asset_brand, travel_related, procurement_action_type) and (2) the quality/provenance of the record (entry_origin, has_source_id, ci_identifier_quality). Together they cohere reasonably around 'understanding and enriching IT asset/procurement expense records', giving decent but not tight focus_coherence. The structure is genuinely analytical -- categorical enrichments with useful granularity rather than restatements or token-count noise, and the data-quality facets are directly actionable (fix generic placeholders, review manual entries). Weaknesses: travel_related duplicates a value already inside asset_category, and repeat_user_flag is near-constant (486/14) and thematically peripheral, slightly diluting the single-focus claim. Overall a coherent, actionable inference, not a scattered grab-bag."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

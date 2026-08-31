@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative IMDb audience satisfaction?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "neg_word_ratio",
+    "pos_word_ratio",
+    "neg_minus_pos_ratio",
+    "negation_count",
+    "intensified_neg_count",
+    "exclamation_count",
+    "avg_sentence_length",
+    "caps_ratio",
+    "review_length_log",
+    "negation_before_pos_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.875,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.7625,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "neg_word_ratio",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Density of negative lexicon terms is a direct predictor of negative satisfaction; sample values track source tone well (0.04 for a scathing review, 0.0 for a positive one)."
+      },
+      {
+        "name": "pos_word_ratio",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Positive-term density is a complementary predictive axis; values are consistent with text (0.0235 for the enthusiastic review, 0.0 for pans)."
+      },
+      {
+        "name": "neg_minus_pos_ratio",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A net-polarity signal that is analytically sensible but largely a deterministic restatement of the two prior columns, limiting new leverage."
+      },
+      {
+        "name": "negation_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Negation frequency is a plausible independent predictor (sarcasm, contrasts); counts appear reasonably derived from text."
+      },
+      {
+        "name": "intensified_neg_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Intensified negatives (e.g. 'very bad') are a strong satisfaction signal and add nuance beyond raw negative ratio; sample values are grounded."
+      },
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Exclamation intensity can correlate with emotional reactions; values match text (8 for the exclamation-heavy review). Ambiguous polarity limits usefulness somewhat."
+      },
+      {
+        "name": "avg_sentence_length",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Stylistic feature with weak but plausible link to review type; largely generic and only loosely predictive of satisfaction."
+      },
+      {
+        "name": "caps_ratio",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Capitalization can signal emphasis/emotion; mostly zero, so low variance, but a legitimate stylistic axis grounded in text."
+      },
+      {
+        "name": "review_length_log",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Length is a generic feature with limited direct bearing on negative satisfaction; values are faithfully computed from text."
+      },
+      {
+        "name": "negation_before_pos_count",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures negated-positive constructions (e.g. 'not good'), a sophisticated sentiment-reversal signal; near-constant here but conceptually valuable and grounded."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns form a coherent set of lexical, syntactic, and stylistic sentiment features well aligned with predicting negative satisfaction. The strongest are the polarity ratios, intensified-negation, and negated-positive counts, which give genuine modeling axes; a few (net-ratio, sentence length, review length) are more generic or redundant restatements. Values across the sampled rows are soundly derived from the source review text with no invented facts, so groundedness is high. Scores are held only on necessary conditions, not completeness."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

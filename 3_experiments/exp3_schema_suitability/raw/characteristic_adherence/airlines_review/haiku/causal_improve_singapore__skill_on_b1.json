@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "crew_service_quality_issues",
+    "aircraft_modernization",
+    "price_value_alignment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.85,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.6667,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.7583,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality_issues",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the query: crew service is a leading driver of recommendation. Categorizing specific issue types (inefficiency, inattentiveness, rudeness, disorganization) gives a genuine axis to group non-recommending flights and prioritize fixes. Sample values are sound reads of the source text — positive reviews correctly map to 'no_service_issue'. No negative-issue samples are shown to verify, but the classification logic is warranted for what is visible."
+      },
+      {
+        "name": "aircraft_modernization",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Aircraft condition is a plausible new axis relating to seat comfort and value, useful for the analysis. However groundedness is weak: sample 1 (no aircraft-age cue in text) is labeled 'modern_new_refurbished' — an unwarranted specific; sample 2 (seats 'dreadful') is labeled 'dated_serviceable' rather than 'old_worn_dirty' despite explicit negative condition language; sample 3 and 5 have no aircraft-age evidence yet get 'dated_serviceable' rather than NULL. It assigns confident condition labels where the text is silent, indicating over-assertion."
+      },
+      {
+        "name": "price_value_alignment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Value-for-money framing is highly relevant to recommendation and complements the existing 'Value For Money' column with an interpretive categorization rather than mere restatement. Groundedness is mixed: none of the sample reviews mention price at all, yet all five receive confident labels ('justified_premium_worth', 'acceptable_competitive') with almost no NULLs across the whole column (only 1). Assigning price/value verdicts to price-silent rows is an unsupported inference."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.63,
+    "rationale": "All three columns give genuine, non-trivial analytical axes (crew issues, aircraft condition, price-value) that are well aligned with the query about improving ratings and recommendations for non-recommending flights, so usefulness is strong. Groundedness is the weaker dimension: 'crew_service_quality_issues' is well grounded on the visible samples, but 'aircraft_modernization' and 'price_value_alignment' both assign confident specific labels to rows whose source text is silent (or, for the dreadful-seats row, contradictory), and the near-total absence of NULLs in price_value_alignment suggests systematic over-assertion rather than correct 'not stated' handling."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 3
+}

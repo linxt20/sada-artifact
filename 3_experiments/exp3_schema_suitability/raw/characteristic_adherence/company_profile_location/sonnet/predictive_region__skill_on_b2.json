@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "industry_vertical",
+    "company_type",
+    "cloud_infra_signal",
+    "target_market_segment",
+    "deployment_model",
+    "business_model_type"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.45,
+    "predictor_fraction": 1.0,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Industry composition varies geographically (e.g., semiconductors/enterprise software concentrate in certain hubs), so it plausibly carries signal about regional cluster while lying outside the focus."
+      },
+      {
+        "name": "company_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The mix of large enterprises, startups, and VC firms differs across regional ecosystems, giving predictive signal about region without restating or leaking it."
+      },
+      {
+        "name": "cloud_infra_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Weaker but legitimate: presence of cloud-native infrastructure focus can correlate with tech-hub regions; derived from description, independent of the focus."
+      },
+      {
+        "name": "target_market_segment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "B2B vs B2C vs developer focus can vary by regional ecosystem; a plausible, non-leaking predictor extracted from the description."
+      },
+      {
+        "name": "deployment_model",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "SaaS vs hardware vs services delivery models cluster geographically to some degree; independent feature carrying modest signal."
+      },
+      {
+        "name": "business_model_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Product-led vs services vs capital-allocator models can differ across regional clusters; a legitimate outside-the-focus predictor."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.45,
+    "rationale": "All six columns are semantic attributes extracted from the business description and lie outside the focus variable regional_cluster; none restate or leak it. They plausibly carry correlational signal because industry mix, company stage, and business models do differ across regional ecosystems. However, they are heavily correlated with one another (industry/deployment/business-model overlap strongly) and only indirectly related to geography, so as a set they provide moderate rather than strong incremental predictive leverage. The original table already contains Latitude/Longitude/City which are far more directly predictive; relative to those the added text-derived features add modest but genuine signal."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

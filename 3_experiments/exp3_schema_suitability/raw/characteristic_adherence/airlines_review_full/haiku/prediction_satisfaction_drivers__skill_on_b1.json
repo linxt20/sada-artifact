@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "flight_operational_reliability",
+    "aircraft_condition",
+    "ground_staff_efficiency",
+    "problem_resolution",
+    "value_for_money_perception",
+    "airline_consistency"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.63,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.665,
+    "hallucination_rate": 0.7143
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "Gives a qualitative axis on crew interaction (attentive/rude etc.) that adds grouping leverage beyond the numeric 'Staff Service' rating, though it partly overlaps it. Values are mostly a sound reading of the text (S1/S3/S4/S5 all match crew descriptions), but S2 asserts 'indifferent_rushed' for a review that says NOTHING about crew — an invented crew judgment, so groundedness is dented."
+      },
+      {
+        "name": "flight_operational_reliability",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Delays/cancellations are a strong satisfaction driver absent from any original column, so this is a genuinely useful new axis with real variation. However groundedness is weak: in all five samples the text is silent on timing yet the value is confidently 'on_time_smooth'. Defaulting a specific positive fact onto silent rows (rather than NULL) asserts something the source does not support."
+      },
+      {
+        "name": "aircraft_condition",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "A distinct, useful axis (cabin/aircraft state) not captured by original ratings. Values track the text well — clean/sanitized/well-maintained -> comfortable_clean — and the column correctly uses NULL/Unknown for silent rows (large NULL count, S2 = Unknown). Minor: S2 arguably had negative aircraft cues that were dropped, but Unknown is safe, not a hallucination."
+      },
+      {
+        "name": "ground_staff_efficiency",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Check-in/ground handling is a real, separate driver not in the original columns, giving useful grouping power. In every sample the text is silent on ground staff and the value is correctly 'Unknown' — appropriate abstention. Populated categories exist elsewhere in the distribution; no contradiction observed in samples."
+      },
+      {
+        "name": "problem_resolution",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "How complaints are handled is a meaningful, non-redundant driver. Groundedness is mostly good (S2–S5 correctly Unknown), but S1 labels a review with no problem at all as 'proactive_empathetic', reading a courtesy gesture as problem-handling — a mild over-assertion of a category the text does not warrant."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Largely a categorical restatement of the existing original 'Value For Money' rating, so it adds little new analytical leverage for this query. Groundedness is also modest: none of the five sampled reviews mention price/value, yet specific verdicts like 'poor_overpriced' / 'excellent_worth_premium' are assigned by mirroring overall sentiment — asserting a value-specific claim the text does not state."
+      },
+      {
+        "name": "airline_consistency",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A consistency/decline axis could help explain satisfaction trends, but it requires cross-flight/temporal evidence a single review rarely provides. Only S5 ('service was consistently good') genuinely supports its label; S1/S4 infer 'consistently_excellent' from single positive reviews, and S2 labels a clearly negative review 'standard_reliable' — assertions not grounded in the text."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.6,
+    "rationale": "The added set offers several genuinely useful new axes for explaining Overall Rating that are absent from the original numeric columns — operational reliability (delays), ground staff, aircraft condition, and problem resolution — each providing a real dimension to group and compare airlines on. Two columns are weaker: value_for_money_perception is essentially redundant with the existing 'Value For Money' rating, and airline_consistency is speculative for single-review rows. Groundedness is mixed: aircraft_condition and ground_staff_efficiency read the text soundly and abstain appropriately, but flight_operational_reliability defaults 'on_time_smooth' onto silent rows, value_for_money and airline_consistency infer specific verdicts from bare sentiment, and cabin_crew/problem_resolution each show one clear over-assertion in the samples. Per the scope rule, no score reflects completeness — only the usefulness and groundedness of the columns present."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

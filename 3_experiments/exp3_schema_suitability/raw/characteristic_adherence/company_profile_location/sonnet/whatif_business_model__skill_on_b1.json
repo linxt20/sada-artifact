@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "business_model_type",
+    "delivery_modality",
+    "geographic_reach",
+    "customer_segment",
+    "service_orientation",
+    "localization_dependency",
+    "industry_vertical",
+    "company_maturity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8375,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8125,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.825,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly captures the business model the query pivots on; categorizations (VC, consulting, product software) are well-grounded in the descriptions."
+      },
+      {
+        "name": "delivery_modality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Highly relevant to service/localization shift analysis. Mostly warranted inferences (consulting=in_person, VC=in_person), though some like cloud_only for 23andMe are reasonable but partly inferred."
+      },
+      {
+        "name": "geographic_reach",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Central to regional fit. 'not_stated' for silent rows is correct. But 'national' for 23andMe and Addepar, and 'global' for 5AM, are asserted where text gives no scope cues."
+      },
+      {
+        "name": "customer_segment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A useful axis for regional fit; b2b/b2c reads are sound given descriptions of investors, enterprise reporting, and consumer reports."
+      },
+      {
+        "name": "service_orientation",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly encodes the exact dimension the query asks to shift; readings are largely warranted, though 23andMe as 'primarily_service' is debatable (product reports)."
+      },
+      {
+        "name": "localization_dependency",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "The single most query-relevant axis for regional fit under a localized-model shift; categorizations are reasonable inferences from model type."
+      },
+      {
+        "name": "industry_vertical",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides a genuine grouping axis for regional fit; extractions (healthcare, fintech, VC) are well-grounded, and NULL/Unknown for silent rows is appropriate."
+      },
+      {
+        "name": "company_maturity",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Somewhat relevant to expansion readiness, but only loosely tied to the query. Values like 'established_enterprise' for 23andMe and 'growth_stage' for 5AM are largely unsupported by the descriptions, which state no stage."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns are strongly aligned with the query, which concerns shifting toward service-oriented/localized models and regional fit. service_orientation, localization_dependency, delivery_modality, and geographic_reach directly furnish the axes needed to reason about the counterfactual, while business_model_type, customer_segment, and industry_vertical add real grouping leverage; none are trivial restatements. Groundedness is generally solid: categorizations are sound readings of descriptions and silent rows use not_stated/NULL appropriately. Deductions stem from confidently asserted specifics not supported by the text -- e.g., geographic_reach labels ('national'/'global') and company_maturity stages inferred where descriptions give no scope or stage cues."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 8
+}

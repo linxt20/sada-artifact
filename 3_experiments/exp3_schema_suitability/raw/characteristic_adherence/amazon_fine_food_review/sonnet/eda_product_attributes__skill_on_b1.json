@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "product_category",
+    "flavor_taste_quality",
+    "flavor_intensity_balance",
+    "product_effectiveness",
+    "repeat_purchase_intent",
+    "purchase_motivation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7333,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7667,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "A strong grouping axis for comparing satisfaction across product types. Mostly well-grounded (pet_food, snack, confection correct), but the cherry-soda/root-beer-extract row categorized as condiment_sauce is a questionable stretch given the source describes a beverage/flavoring extract."
+      },
+      {
+        "name": "flavor_taste_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to satisfaction analysis and offers a graded taste axis beyond raw Score. Values are sound readings of the text (excellent for the 'heaven' confection, poor for mislabeled peanuts, off_flavor for medicinal soda)."
+      },
+      {
+        "name": "flavor_intensity_balance",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A plausibly useful attribute axis, with an appropriate not_applicable escape for silent rows. However some values are unsupported inferences: the mislabeled-peanuts text says nothing about flavor intensity yet is tagged too_mild_bland, and the dog food/taffy 'well_balanced' tags are asserted where the text does not clearly discuss balance."
+      },
+      {
+        "name": "product_effectiveness",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Effectiveness is a meaningful axis for supplements/pet food and correlates with satisfaction. But it is over-applied and sometimes contradicts text: labeling the mislabeled-peanuts case 'adverse_effect' and the medicinal-tasting soda 'adverse_effect' conflates dislike/mislabeling with an actual adverse effect, and 'works_as_claimed' is asserted for reviews making no such claim."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Repeat-purchase intent is a valuable behavioral signal for satisfaction. Grounding is weak: many rows are NULL appropriately, but positives are frequently inferred. The dog food review states past purchases but not future intent, and the taffy review's 'will_repurchase' is inferred from general praise rather than a stated intent."
+      },
+      {
+        "name": "purchase_motivation",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A genuine new segmentation axis for the query, with heavy and appropriate use of NULL/Unknown for silent rows. The confection and soda rows plausibly map to curiosity_impulse; most assignments are defensible readings, though motivation is often only loosely implied."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns collectively provide several genuine, non-redundant axes (category, taste quality, effectiveness, motivation, repurchase intent) that let an analyst group and compare against Score to answer what attributes drive satisfaction. None are trivial constants or mere restatements of Score. Groundedness is generally acceptable and silent rows are correctly marked NULL/not_applicable/Unknown, but several inference-heavy columns (product_effectiveness, flavor_intensity_balance, repeat_purchase_intent) assert values the source text does not clearly support, including a contradiction-tinged 'adverse_effect' for mere dislike/mislabeling, lowering overall grounding."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

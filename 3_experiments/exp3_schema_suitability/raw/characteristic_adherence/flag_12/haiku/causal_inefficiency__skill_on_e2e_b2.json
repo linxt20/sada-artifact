@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are some incidents resolved inefficiently, and which underlying issues drive it?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_category",
+    "hardware_failure_pattern",
+    "assigned_technician",
+    "issue_specificity",
+    "repeated_issue_pattern",
+    "caller_type"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The type of underlying issue (printer, software, network, etc.) is a candidate cause whose effect on resolution efficiency is being attributed. This is the 'underlying issue' the query asks about, so it is the treatment of interest rather than a confounder."
+      },
+      {
+        "name": "hardware_failure_pattern",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A finer characterization of the failure mode (mechanical_jam, component_degradation, etc.). It refines the candidate cause rather than being a common cause of another treatment and the outcome; treated as an alternative/complementary treatment dimension."
+      },
+      {
+        "name": "assigned_technician",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Technician skill/workload plausibly affects both which issues get routed to them (treatment assignment) and how efficiently incidents resolve (outcome). If certain technicians handle certain issue categories and are slower, failing to adjust biases the attribution. A genuine common cause surfaced from the data."
+      },
+      {
+        "name": "issue_specificity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How specifically the issue was described can influence both categorization/triage of the underlying issue (treatment) and how quickly it can be resolved (outcome). Plausibly a common cause, though it borders on a proxy for description quality; surfaced from data."
+      },
+      {
+        "name": "repeated_issue_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an issue is recurring plausibly affects both the nature/category of the issue and resolution efficiency (known solutions speed things up, or chronic problems slow them). A plausible common cause not named in the query."
+      },
+      {
+        "name": "caller_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Caller type (named_employee vs itil_user) can affect the kind of issues raised and how they are prioritized/handled, plausibly influencing both treatment and resolution efficiency. Surfaced from data."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "issue_category",
+      "hardware_failure_pattern"
+    ],
+    "confounders": [
+      {
+        "name": "assigned_technician",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "issue_specificity",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "repeated_issue_pattern",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "caller_type",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The set establishes a causal estimation: a clear treatment (the underlying issue type / failure pattern, which the query explicitly targets as the cause) plus several candidate confounders that were surfaced from the data rather than copied from the query (the query names no specific variables). assigned_technician is the strongest genuine common cause of both routing of issues and resolution efficiency. issue_specificity, repeated_issue_pattern, and caller_type are plausible common causes but weaker and somewhat proxy-like, and none are mediators strictly on the treatment->outcome path or colliders. Because all confounders are data-surfaced (named_in_query=false), the set does demonstrate the capability under test, though confounder plausibility is moderate rather than strong."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_inefficiency",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

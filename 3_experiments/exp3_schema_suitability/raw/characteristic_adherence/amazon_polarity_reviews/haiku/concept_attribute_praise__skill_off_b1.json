@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "praise_word_count",
+    "complaint_word_count",
+    "review_detail_level",
+    "emotional_intensity",
+    "aspects_discussed"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.67,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.77,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.72,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "praise_word_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A count of praise words gives a genuine axis to correlate positive language with the label and drives of praise. Sample values are plausible readings of the text (0 for the disappointed doll review, 3 for the enthusiastic film review)."
+      },
+      {
+        "name": "complaint_word_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Complementary to praise_word_count and directly relevant to what drives complaints. Values are mostly sound, though the strongly positive skin-cream review getting 0 and the harshly critical Eamon review getting 0 suggest some inconsistency in extraction, lowering groundedness slightly."
+      },
+      {
+        "name": "review_detail_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A rough measure of how detailed a review is offers a controllable covariate for the analysis, though it is fairly generic and correlates closely with content length. Values track review length reasonably (short doll review 2, long detailed reviews 5)."
+      },
+      {
+        "name": "emotional_intensity",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Emotional intensity is a meaningful new axis for what drives strong praise/complaints. However the fine-grained continuous values (e.g. 2.19, 3.15) imply a precision the text cannot really warrant, and the intensely emotional Eamon rant scoring only 2.19 while a calm cream review scores 2.11 undercuts groundedness."
+      },
+      {
+        "name": "aspects_discussed",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Counting distinct aspects/features discussed is a strong axis for identifying WHAT drives praise vs complaints. Values are defensible (multi-aspect cream review 2, single-focus doll review 0), though the count basis is somewhat opaque."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.77,
+    "rationale": "The added columns each provide a genuine analytical axis (praise vs complaint language, detail, intensity, aspect coverage) relevant to identifying drivers of praise and complaints, and none are purely constant or trivially redundant. Values are generally sound readings of the source text, with no fabricated facts, though the complaint counts and emotional_intensity show some inconsistency and false precision that modestly lower groundedness. Judged on the two necessary conditions only, the set passes."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

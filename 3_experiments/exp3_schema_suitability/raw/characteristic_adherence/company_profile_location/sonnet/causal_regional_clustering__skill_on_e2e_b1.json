@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "industry_sector",
+    "tech_focus_area",
+    "company_stage",
+    "business_model_type",
+    "deep_tech_rd_intensity",
+    "physical_infrastructure_dependency",
+    "specialized_talent_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.8029,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7429,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.7729,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Industry sector is a strong axis for explaining regional clustering (e.g. biotech vs SaaS hubs). Values are well-grounded in the descriptions across all samples."
+      },
+      {
+        "name": "tech_focus_area",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A finer-grained tech axis that adds leverage for location analysis and is not a mere restatement of industry_sector. Values are reasonably read from text, with appropriate Unknown/NULL for silent rows. Assigning 'genomics_and_biotech' to 5AM Ventures (a VC) is a mild stretch but warranted by its life-science focus."
+      },
+      {
+        "name": "company_stage",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Stage is analytically relevant (startups vs enterprises cluster differently). However stage is rarely stated in these descriptions; labels like 'growth_stage' for 280 Group or 'established_enterprise' for 23andMe are confident inferences the text does not directly support, indicating some ungrounded assertion."
+      },
+      {
+        "name": "business_model_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "B2B/B2C/services distinction is a useful grouping axis and only partially overlaps industry_sector. Values are soundly read from descriptions in all samples."
+      },
+      {
+        "name": "deep_tech_rd_intensity",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "R&D intensity is a genuinely strong driver of location (proximity to research universities, talent). But intensity is largely inferred rather than stated; ratings are plausible yet not directly evidenced in the source text, so groundedness is moderate."
+      },
+      {
+        "name": "physical_infrastructure_dependency",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Highly relevant to the location query (fabs, data centers, labs shape siting). Reasonable inferences, though 'none_required' is heavily dominant and 'unknown' would sometimes be more honest; still defensible readings for the samples shown."
+      },
+      {
+        "name": "specialized_talent_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Talent pool requirements are a core explanation for regional siting, giving strong leverage. Values are plausibly inferred from industry cues, with the very dominant 'generalist_software_engineering' being a reasonable default."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.73,
+    "rationale": "The added columns give multiple genuine, non-redundant axes (industry, tech focus, business model, R&D intensity, infrastructure, talent) that are all directly pertinent to explaining regional siting, so analytical usefulness is high. Groundedness is generally solid for extraction/categorisation columns (industry_sector, business_model_type, tech_focus_area), but weaker for inference-heavy columns (company_stage, deep_tech_rd_intensity) where confident labels are asserted despite silent source text. No outright contradictions observed, and Unknown/NULL is used appropriately in places."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

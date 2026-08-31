@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "focus_variable": "high_goal_achievement",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "achievement_score",
+    "status_is_completed",
+    "priority_is_high",
+    "completion_rate_high",
+    "time_spent_ratio"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.02,
+    "predictor_fraction": 0.2,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "predictive_utility": 0.1,
+    "leakage_rate": 0.8
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "high_goal_achievement",
+    "per_column": [
+      {
+        "name": "achievement_score",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A continuous achievement measure is essentially the underlying quantity from which high_goal_achievement is derived; it restates/leaks the outcome rather than predicting it."
+      },
+      {
+        "name": "status_is_completed",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the goal is completed is only knowable at/after the outcome and is nearly deterministic with achievement, constituting post-outcome leakage rather than a predictive signal."
+      },
+      {
+        "name": "priority_is_high",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A binary flag derived from priority is a legitimate ex-ante attribute that lies outside the focus and could plausibly correlate with achievement without restating it."
+      },
+      {
+        "name": "completion_rate_high",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This is a thresholded version of percent_complete, which is essentially the same construct as goal achievement; it is a deterministic restatement/leak of the focus."
+      },
+      {
+        "name": "time_spent_ratio",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Elapsed-time-over-total ratio is only fully known once the goal period concludes and correlates with completion progress; as computed here it reflects outcome-time information (leakage) rather than a clean ex-ante predictor."
+      }
+    ],
+    "n_predictors": 1,
+    "predictive_utility": 0.1,
+    "rationale": "The set is dominated by restatements and post-outcome measures of achievement/completion (achievement_score, status_is_completed, completion_rate_high, time_spent_ratio), which leak the focus rather than predict it. Only priority_is_high is a genuine ex-ante predictor, and it is a single weak binarized feature, so the set provides little legitimate predictive leverage beyond the original columns."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category",
+    "procurement_action_type",
+    "entry_origin",
+    "ci_id_quality",
+    "asset_brand",
+    "is_travel_related",
+    "has_source_id"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable categories of expense type; directly supports discovering which kinds of expenses get declined, the core of the query."
+      },
+      {
+        "name": "procurement_action_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable process-stage categories that can be segmented on and compared against decline rates; associational and external to the focus."
+      },
+      {
+        "name": "entry_origin",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary (manual vs auto) with meaningful balance; a plausible driver of declines and easy to compare across departments."
+      },
+      {
+        "name": "ci_id_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable data-quality tiers with reasonable spread; poor/placeholder identifiers could associate with declines, an informative relationship."
+      },
+      {
+        "name": "asset_brand",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct, human-readable brand categories that can be grouped and compared against decline rates."
+      },
+      {
+        "name": "is_travel_related",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary flag with meaningful split; travel vs non-travel is a natural, interpretable segment for exploring declines by department."
+      },
+      {
+        "name": "has_source_id",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary presence indicator with a usable split; missing source linkage could associate with declines."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.85,
+    "rationale": "The added columns are all external, associational variables with interpretable, well-separated categories or clean binaries, none of which merely restate the state_declined focus. asset_category, is_travel_related, and asset_brand directly enable segmenting 'what kinds of expenses get declined,' while entry_origin, ci_id_quality, and has_source_id surface data-provenance/quality hypotheses that can each be cross-tabulated with department. Categories have usable spread (no near-constant or hyper-fine-grained fields), making them well suited to human-driven relationship discovery. Slight deduction because several columns (procurement_action_type dominated by one value, has_source_id, ci_id_quality) are somewhat process/metadata oriented and moderately imbalanced, limiting comparative power, but as a set they strongly support the exploratory intent."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

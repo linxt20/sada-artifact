@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "incident_category",
+    "incident_symptom_type",
+    "affected_scope",
+    "service_outage_flag",
+    "remote_access_flag",
+    "assigned_agent",
+    "cross_agent_resolution_flag",
+    "ticket_open_status",
+    "opened_hour_of_day",
+    "opened_day_of_week"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.735,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.78,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7575,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents (email, vpn, database, etc.) gives a strong grouping axis to compare resolution times across ticket types. Values are sound readings of short_description (e.g. 'Unable to access the database' -> database)."
+      },
+      {
+        "name": "incident_symptom_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Symptom taxonomy (cannot_connect, access_denied, outage_down) is an orthogonal, useful axis for modeling complexity/duration. Extractions from descriptions are mostly warranted, though some readings are debatable (e.g. 'unable to access database' as access_denied)."
+      },
+      {
+        "name": "affected_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual vs organization-wide) is plausibly predictive of resolution effort. However short descriptions rarely state scope; assignments like 'Internet connection unstable' -> organization_wide, or 'Unable to access the database' -> server_system, are confident inferences the text does not clearly support."
+      },
+      {
+        "name": "service_outage_flag",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "An outage flag is a reasonable severity signal for duration analysis. Values are broadly derivable from wording, though some judgment calls are less certain; samples appear plausible."
+      },
+      {
+        "name": "remote_access_flag",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Flags VPN/remote-access tickets, a distinct axis that may correlate with resolution time. Grounded well (VPN issue -> True; database access -> False)."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "The query is agent-centric, so an agent identifier is relevant; but this largely duplicates the existing assigned_to original column, reducing added leverage. Values match plausibly."
+      },
+      {
+        "name": "cross_agent_resolution_flag",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Whether a ticket was handled by multiple agents is highly relevant to resolution delay. But this cannot be derived from the sampled source fields (single short_description + timestamps); no evidence of reassignment history is present, so the true/false values appear largely invented."
+      },
+      {
+        "name": "ticket_open_status",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Open vs closed status matters for resolution analysis but is essentially a restatement of the original 'state'/'closed_at' fields, limiting new leverage. Derivable from state/closed_at."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Time-of-day bucket (business/extended/off hours) is a genuine signal for slower resolution and is derivable from opened_at. One sample buckets a 08:34 close, but derivation from opened_at is sound."
+      },
+      {
+        "name": "opened_day_of_week",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Weekday vs weekend is a plausible driver of longer resolution and derivable from opened_at timestamp."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.75,
+    "rationale": "Most added columns provide genuine, orthogonal axes (category, symptom, remote-access, timing) directly relevant to explaining resolution duration for agents, and are largely grounded in short_description and timestamps. Weaknesses: assigned_agent and ticket_open_status mostly restate existing original columns, and affected_scope and especially cross_agent_resolution_flag assert facts (scope, multi-agent handling) not supported by the sampled source text, indicating hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

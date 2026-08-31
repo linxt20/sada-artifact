@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined travel expenses?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "travel_expense_relevance",
+    "expense_initiation_method",
+    "documentation_completeness",
+    "asset_cost_tier_signal",
+    "processing_delay_presence",
+    "requestor_department",
+    "requestor_frequency_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.5625,
+    "analytical_usefulness__table_level": 0.57,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.6062,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the ci/short_description into asset types, which is a reasonable read of source text (e.g. Dell Latitude -> hardware_device, AWS EC2 -> service_software). Some analytical leverage for grouping, but the query concerns travel expenses specifically, and hardware asset categories are only tangentially related to declined travel expenses."
+      },
+      {
+        "name": "travel_expense_relevance",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant flag for isolating travel expenses, which is central to the query. However, the sampled rows are all hardware procurement items marked False, and it is unclear how travel relevance is derived from the given fields; the basis for True assignments is not evidenced, weakening groundedness confidence."
+      },
+      {
+        "name": "expense_initiation_method",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Manual vs automated is reasonably read from short_description phrasing ('Automated creation' -> automated, 'Procurement of new' -> manual). Mildly useful for understanding process-driven declines, but only loosely tied to reducing declined travel expenses."
+      },
+      {
+        "name": "documentation_completeness",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly derivable from presence/absence of source_id, a clean deterministic mapping matching samples. Missing documentation is a plausible driver of declined expenses, giving a genuine axis to analyze declines."
+      },
+      {
+        "name": "asset_cost_tier_signal",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Infers cost tier from ci model (laptop -> mid_cost). Reasonable inference, though it labels a generic 'hardware asset' as mid_cost_laptop which is an assumption. Somewhat redundant with asset_category_type and only tangential to travel expense declines."
+      },
+      {
+        "name": "processing_delay_presence",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A delay flag could help explain declines, but the derivation is opaque: it presumably compares opened_at/processed_date, yet a row with processed_date 'nan' is marked False rather than unknown, and the threshold defining 'delay' is unstated, reducing confidence in groundedness."
+      },
+      {
+        "name": "requestor_department",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "This appears near-redundant with the existing original 'department' column, adding little new axis. More concerning, the sampled hardware-procurement rows are assigned to 'Customer_Support' and 'Sales' with no evidence in the provided source text supporting a specific requestor department, suggesting invented specifics."
+      },
+      {
+        "name": "requestor_frequency_pattern",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Submission frequency could be a useful behavioral axis for declines, but it requires aggregating per-user history, and the sampled assignments (rare/occasional/frequent) are not derivable from the single-row source text shown; the 'user' field is not even in the samples, so values look unsupported."
+      }
+    ],
+    "analytical_usefulness": 0.57,
+    "source_groundedness": 0.62,
+    "rationale": "Several columns offer genuine analytical axes for investigating declined expenses (travel_expense_relevance, documentation_completeness, processing_delay_presence), and documentation_completeness in particular is both useful and cleanly grounded. However, a few columns are weak: requestor_department largely duplicates the existing 'department' column and, together with requestor_frequency_pattern, asserts specifics not supported by the provided source text, indicating hallucination. Overall the set is moderately useful but its groundedness is uneven, with confident departmental and frequency assignments lacking evidentiary basis in the sampled rows."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 8
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do expense decline rates differ across departments?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "department_stratification",
+    "asset_category",
+    "asset_specification_clarity",
+    "asset_portability_profile",
+    "requester_experience_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.39,
+    "analytical_usefulness__table_level": 0.4,
+    "source_groundedness": 0.49,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.44,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "department_stratification",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "The query is explicitly about differences across departments, but the original table already has a 'department' column, making this largely redundant. Worse, the produced values contradict the source: 'Dell Laptop' assigned to product_management, 'iPod touch service' to sales, etc., appear invented rather than read from the row's department field. If it merely restates the existing department it adds no leverage; if it invents departments it is ungrounded."
+      },
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A clean categorical axis (hardware/service/travel/misc) derivable from short_description and ci, giving a genuine grouping dimension that could correlate with decline rates. Samples are sound readings (Dell Laptop->hardware, ISP Services->service). Only mild concern: 'Miscellaneous hardware component' -> miscellaneous is defensible."
+      },
+      {
+        "name": "asset_specification_clarity",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing specific_model vs generic descriptions is a reasonable, well-grounded read of ci/short_description text and could plausibly relate to why expenses are declined (vague requests rejected). Moderate usefulness for THIS decline-rate query; not directly a spend-decline driver but a plausible new axis."
+      },
+      {
+        "name": "asset_portability_profile",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Portability is a novel axis, but several values are poorly grounded: 'iPod touch/ISP Services' -> cloud_service and a 'RAM Component' -> mobile_accessory are unsupported or contradictory readings of the text. The confident specific classification where the text is thin lowers groundedness."
+      },
+      {
+        "name": "requester_experience_signal",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.15,
+        "hallucination_observed": true,
+        "rationale": "Frequent/occasional/new requestor cannot be derived from a single row's short_description/ci; it would require aggregating the 'user' column, which is not evidenced. The per-row samples assign frequency labels (e.g. 'frequent_requestor' for a Dell laptop row) with no textual support, indicating invented values."
+      }
+    ],
+    "analytical_usefulness": 0.4,
+    "source_groundedness": 0.5,
+    "rationale": "asset_category and asset_specification_clarity provide grounded, genuinely new axes to explain cross-department decline differences. However department_stratification is redundant with the existing 'department' column and its sample values contradict the source; asset_portability_profile shows several unsupported classifications; and requester_experience_signal asserts per-user frequency that is not derivable from a single row. Overall the set is moderately useful but has notable groundedness problems on three of five columns."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

@@ -1,0 +1,53 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "problem_domain",
+    "incident_scope",
+    "resolution_complexity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.5667,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6583,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_domain",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Directly answers the query about recurring problem types by categorizing tickets into meaningful domains. Values are well-grounded in short_description text: 'VPN connection issue'→connectivity, 'Cannot connect to database'→database, 'Email system not working'→email are all sound readings."
+      },
+      {
+        "name": "incident_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "rationale": "Provides a useful secondary grouping axis (system-wide vs individual vs departmental) to characterize problem patterns. However groundedness is weaker: 'WiFi connectivity issue in the sales department'→department_group and 'Marketing Department'→department_group are supported, but 'VPN connection issue'→individual_user and 'Email system not working properly'→individual_user assert a scope the terse text does not clearly state. The dominant 'system_wide' label (314) is often not derivable from short descriptions, suggesting some inference beyond evidence."
+      },
+      {
+        "name": "resolution_complexity",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.2,
+        "rationale": "The concept of resolution type/complexity could aid analysis, but the values appear invented. The source samples contain only timestamps and a short_description with no resolution or work-notes text. Assigning 'infrastructure_change' to a VPN issue or 'server_restart' to a database connection issue is not warranted by any visible field; these are confident specifics the text is silent on. Strong hallucination signal."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.55,
+    "rationale": "problem_domain is the strongest column and directly serves the query with well-grounded categorization. incident_scope adds a useful grouping axis but overreaches on many rows where scope isn't stated. resolution_complexity is the weakest: its values cannot be derived from the available fields (only timestamps and a short description are present) and read as fabricated resolution categories. Overall the added set is analytically useful but groundedness is dragged down by unsupported scope and resolution inferences."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

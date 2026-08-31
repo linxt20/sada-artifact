@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What factors explain low review scores?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "misleading_description",
+    "ingredient_health_risk"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.875,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.825,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "misleading_description",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorises the type of misleading/deceptive-product complaint, a strong causal axis for explaining low scores; it lets the analyst group and compare complaint types. Values are well-grounded: the 'Not as Advertised' peanuts row correctly gets 'mislabeled_size_content', and non-complaint rows are correctly NULL. The 'chemical_additive' style specificity of the sibling column raises mild concern that some categories may over-read, but observed samples are sound."
+      },
+      {
+        "name": "ingredient_health_risk",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Health/ingredient concern is a plausible independent driver of dissatisfaction and gives a genuine grouping axis distinct from misleading_description. Grounding is weaker: the Robitussin/root-beer row is labeled 'chemical_additive', but the text only says the flavor is 'medicinal' and never asserts a chemical additive—an over-confident inference. NULLs on silent rows are correct. Categories like 'pesticide_contamination' risk asserting specifics text may not support."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.77,
+    "rationale": "Both columns provide genuine, non-redundant categorical axes directly relevant to explaining low review scores (product misrepresentation and health/ingredient concerns), so usefulness is high. Groundedness is mostly solid—correct extractions and correct NULLs on non-complaint rows—but ingredient_health_risk shows a mild over-reading (labeling a 'medicinal'-tasting flavor as 'chemical_additive'), lowering its groundedness. Not judging completeness; scores reflect only usefulness and grounding of the columns present."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 2
+}

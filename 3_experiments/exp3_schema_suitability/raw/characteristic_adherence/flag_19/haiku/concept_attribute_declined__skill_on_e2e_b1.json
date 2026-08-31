@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_type_category",
+    "provisioning_mechanism",
+    "resource_purpose_intent",
+    "departmental_context",
+    "documentation_completeness",
+    "travel_asset_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.3,
+    "analytical_usefulness__table_level": 0.3,
+    "source_groundedness": 0.6333,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.4667,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.85,
+        "rationale": "Categorises the asset from short_description/ci, which is well-grounded in the samples. But the query concerns declined-expense reasons and compliance risks; asset type gives little leverage on WHY expenses are declined.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "provisioning_mechanism",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.6,
+        "rationale": "How the record was provisioned is only loosely inferable from text and orthogonal to decline reasons/compliance risk. Some values (e.g. auto_generated) are hard to derive from the shown fields, weakening groundedness.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "resource_purpose_intent",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.55,
+        "rationale": "Purpose (business/travel/infrastructure) is partly inferable but 'infrastructure' for a generic 'Deployed service-related asset' is a confident guess. Weakly relevant to compliance/decline analysis.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "departmental_context",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.3,
+        "rationale": "Largely redundant with the existing 'department' column, and the sample assignments (e.g. 'sales', 'product_management') are not supported by any visible source text, suggesting invented values.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "documentation_completeness",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "rationale": "Whether source_id/processed_date are present is a genuine compliance/documentation-risk axis directly relevant to the query, and derivable from actual field presence. Good grounding.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "travel_asset_flag",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.7,
+        "rationale": "Boolean travel flag is derivable from description but near-redundant with resource_purpose_intent's travel value and only marginally tied to decline reasons.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.3,
+    "source_groundedness": 0.6,
+    "rationale": "The query asks about reasons and compliance risks in DECLINED expenses. Only documentation_completeness offers a real compliance-risk axis; the asset/provisioning/purpose columns describe what was purchased rather than why it was declined, and several restate each other (travel flag vs travel purpose; departmental_context vs department). Groundedness is mixed: description-based categorisations (asset_type, documentation_completeness) read soundly from the text, but departmental_context and some provisioning/purpose values assert specifics the shown source text does not support, indicating hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 2,
+  "added_columns": [
+    "traveller_type_segment",
+    "route_or_aircraft_type_exposure"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.45,
+    "analytical_usefulness__table_level": 0.45,
+    "source_groundedness": 0.525,
+    "source_groundedness__table_level": 0.52,
+    "b1_overall": 0.4875,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "traveller_type_segment",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "This largely restates the existing 'Type of Traveller' original column, offering little new analytical leverage for explaining non-recommendation. It also introduces groundedness problems: the Doha-to-London review shows no evidence of family travel yet is labelled 'family_leisure', and the JFK bag-loss review gives no indication of leisure vs business, yet is asserted as 'solo_leisure'. Some labels (couple via 'my wife') are well warranted, but several are unsupported inferences."
+      },
+      {
+        "name": "route_or_aircraft_type_exposure",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A route/haul-length axis could genuinely help group complaints (e.g. long-haul seat issues), giving some new leverage beyond the raw Route string. However, the values are near-constant ('long_haul_premium_routes' dominates all five samples including a shorter Auckland-Doha leg and generic bag-loss cases), reducing discriminative power. Groundedness is mixed: haul length is loosely inferable from routes, but 'premium' and any aircraft/fleet claims are not derivable from the source text, and the flattening of all rows into one bucket masks real variation."
+      }
+    ],
+    "analytical_usefulness": 0.45,
+    "source_groundedness": 0.52,
+    "rationale": "Both columns provide plausible grouping axes for the non-recommendation query, but their value adds are limited: 'traveller_type_segment' mostly duplicates an existing original column, and 'route_or_aircraft_type_exposure' collapses toward a near-constant dominant value. Groundedness is only moderate because several produced values assert specifics the source text does not support (invented family/solo leisure framing, 'premium'/aircraft-type claims), rather than reading silence as unknown."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 2
+}

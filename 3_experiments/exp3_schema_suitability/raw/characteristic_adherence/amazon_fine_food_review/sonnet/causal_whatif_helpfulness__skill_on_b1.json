@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How would HelpfulnessNumerator change if reviews provided more detailed product information?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "product_detail_depth",
+    "comparative_reference",
+    "usage_instruction",
+    "sensory_description_depth",
+    "review_narrative_type",
+    "review_sentiment_valence",
+    "reviewer_expertise_signal",
+    "product_category",
+    "use_case_context",
+    "purchase_or_delivery_detail"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.744,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.838,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.791,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_detail_depth",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.82,
+        "rationale": "Directly operationalizes the query's core concept (detail depth of product info); strong grouping axis for modeling helpfulness. Values are mostly sound readings, though 'comparative_context' for the peanut complaint row is a shaky fit.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "comparative_reference",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.8,
+        "rationale": "A specific detail-type flag useful for the query. Row 4 correctly flags the Robitussin/Root Beer comparison as True; row 2 (Jumbo vs actual) arguably contains an implicit comparison but marked False, minor tension but defensible.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "usage_instruction",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "rationale": "Meaningful sub-facet of detailed information; distinct grouping axis. Sample values are consistent with texts. Partially overlaps with product_detail_depth's 'usage_instruction' category but not a mere restatement.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "sensory_description_depth",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.82,
+        "rationale": "Captures richness of sensory detail, relevant to 'more detailed information'. Well grounded in sample texts (multi_sensory, flavor_focused). Some overlap with product_detail_depth but adds a distinct sensory axis.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "review_narrative_type",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.88,
+        "rationale": "Categorizes review purpose/structure, a genuine grouping axis for comparing helpfulness across review styles. Sample values (taste_only, complaint_report) align well with source text.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "review_sentiment_valence",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.92,
+        "rationale": "Well grounded, but a bare sentiment valence flag adds limited leverage for THIS query about detail depth vs helpfulness; generic control at best. Row 4 'negative' for a mostly neutral/mildly critical text is defensible.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "reviewer_expertise_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "rationale": "Expertise plausibly mediates both detail depth and helpfulness, a valuable axis. Groundedness slightly lower because the signal is often inferential and most rows default to 'general_consumer' where text is silent (reasonable but sometimes assertive).",
+        "hallucination_observed": false
+      },
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.85,
+        "rationale": "Useful control/grouping variable; helpfulness and detail norms differ by category. Sample categorizations are sound (pet_food, snack_or_candy), though 'condiment_or_sauce' for an extract/soda item is loose.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "use_case_context",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.82,
+        "rationale": "A distinct usage-context axis that could correlate with informativeness and helpfulness. Sample values reasonable, with appropriate 'not_specified' for silent rows.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "purchase_or_delivery_detail",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "rationale": "Flags presence of non-product (logistics) detail, a reasonable complement distinguishing product info from delivery info. Row 5 True (delivery mentioned) and row 2 False are defensible; row 2 mentions a shipping/labeling issue so False is slightly questionable.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.84,
+    "rationale": "The added columns collectively decompose the query's central notion of 'detailed product information' into multiple grounded axes (detail depth, sensory depth, comparative/usage/logistics flags, narrative type) plus sensible controls (category, use case, expertise). Most give genuine grouping/modeling leverage for relating detail depth to HelpfulnessNumerator; only review_sentiment_valence is largely generic for this query, and there is mild redundancy between product_detail_depth and its sub-facets. Source groundedness is solid across sampled rows: values are sound readings of the text with appropriate 'not_specified'/NULL for silent rows, and no clear invented facts observed, though a few categorizations (comparative_context, condiment_or_sauce) are loose fits."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_whatif_helpfulness",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 10
+}

@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit reasons point to different departments?",
+  "focus_variable": "department",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "presentation_type",
+    "acute_vs_chronic",
+    "primary_system",
+    "severity_level",
+    "population_context"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "department",
+    "per_column": [
+      {
+        "name": "presentation_type",
+        "role": "predictor",
+        "rationale": "Categorizes the clinical presentation (acute symptoms, chronic management, injury/trauma, etc.) derived from the visit reason. This is a distinct clinical dimension that plausibly steers routing to departments without restating department directly."
+      },
+      {
+        "name": "acute_vs_chronic",
+        "role": "predictor",
+        "rationale": "Onset/temporality of the condition. This carries signal about department (e.g., acute onset -> emergency/acute care) and is not a component or restatement of department."
+      },
+      {
+        "name": "primary_system",
+        "role": "predictor",
+        "rationale": "Organ/body-system involved (cardiac, musculoskeletal, dermatologic, etc.). This is the strongest legitimate predictor since specialty departments map closely to body systems, yet it is a separate clinical attribute, not the department label itself."
+      },
+      {
+        "name": "severity_level",
+        "role": "predictor",
+        "rationale": "Clinical severity (mild, moderate, urgent, life-threatening). Provides predictive signal for triage/department assignment and is independent of the department label. Overlaps somewhat with existing urgency but adds granularity."
+      },
+      {
+        "name": "population_context",
+        "role": "predictor",
+        "rationale": "Patient population/age band. Relevant to department (e.g., pediatric vs adult), though it largely duplicates the existing age_group column, reducing incremental value; still a legitimate non-leaking predictor."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.7,
+    "rationale": "All five columns are legitimate, non-leaking predictors derived from the clinical presentation rather than restatements or deterministic functions of department. primary_system and presentation_type carry the most department-discriminating signal; acute_vs_chronic and severity_level add triage-relevant dimensions; population_context is valid but partly redundant with the existing age_group column. As a set they provide substantial genuine predictive leverage beyond the original columns, discounted modestly for overlap with existing urgency/age_group and the coarse severity/urgency correlation."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

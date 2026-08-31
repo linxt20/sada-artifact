@@ -1,0 +1,135 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.82,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 3,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Hardware accounts for 406 tickets (81.2%)",
+        "why": "concrete counts and percentages"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "System-updated tickets take longest to resolve (avg 198.9 hours)",
+        "why": "numeric comparison"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Critical tickets resolve similarly to high-priority ones",
+        "why": "some comparative reasoning"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "critical density here (14/42 = 33%) vastly exceeds printers (0/203 = 0%)",
+        "why": "cross-group stratified comparison"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "96% have urgency_signal=True (highest among all problem types)",
+        "why": "rate-based tables"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Use urgency_signal as a validation metric for priority assignment",
+        "why": "decision-ready recommendation"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "203 tickets (41% of all incidents) are printer-related",
+        "why": "precise segmentation"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "urgency_signal",
+        "quote": "96% have urgency_signal=True",
+        "dependent": true
+      },
+      {
+        "column": "recurring_pattern",
+        "quote": "100% classified as recurring (recurring_pattern=True)",
+        "dependent": true
+      },
+      {
+        "column": "problem_type",
+        "quote": "When problem_type='failure', the ticket is always escalated",
+        "dependent": true
+      },
+      {
+        "column": "incident_category",
+        "quote": "Span 4 incident categories: network (18), database (15)",
+        "dependent": true
+      },
+      {
+        "column": "device_component",
+        "quote": "71 monitors, 56 keyboards, 14 mice",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B offers deeper stratified segmentation and stronger numeric evidence tied to semantic facets.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

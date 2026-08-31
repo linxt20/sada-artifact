@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "resolution_action_type",
+    "failure_symptom",
+    "reassignment_occurred",
+    "caller_type",
+    "software_trigger"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.8333
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean, human-readable categorical (printer, monitor, network, etc.) with well-separated, well-populated categories. Segmenting resolution efficiency by concrete incident category is directly informative and refines the coarse original 'category' field."
+      },
+      {
+        "name": "resolution_action_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories (repair, investigation, update_install, configuration, replacement) that plausibly relate to how long/efficiently incidents are resolved. Good separation and populated buckets make it a strong exploratory segmentation."
+      },
+      {
+        "name": "failure_symptom",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Meaningful, interpretable symptom categories (not_responding, display_issue, paper_jam, etc.). Some tail categories are tiny (service_failed_to_start=1) but the main buckets are populated enough to compare efficiency across symptoms."
+      },
+      {
+        "name": "reassignment_occurred",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A crisp binary with a healthy split (303/193). Reassignment is a classic, highly interpretable process variable expected to correlate with resolution efficiency, enabling clear grouped comparison."
+      },
+      {
+        "name": "caller_type",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Despite its name suggesting a type, the values are individual person names (David_Loo, Don_Goodliffe) mixed with a role (ITIL_user). This is a mislabelled identifier-like field, not a coherent 'type' segmentation, and offers little interpretable relationship to efficiency."
+      },
+      {
+        "name": "software_trigger",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary flag with a usable split (440/60). Whether an incident was software-triggered is interpretable and can be compared against efficiency, though the minority class is somewhat small."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.72,
+    "rationale": "As a set, the added columns strongly support interpretable, well-separated segmentations of resolution efficiency: incident_category, resolution_action_type, failure_symptom, reassignment_occurred, and software_trigger are all external, associational variables with human-readable categories or clean binaries. They meaningfully extend the requested category/priority/assignment_group breakdown. The main weakness is caller_type, which is effectively a person-identifier rather than a genuine 'type' and adds little groupable signal, and a couple of columns have very small minority/tail categories. Overall the set realises the exploratory-relationship claim well."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

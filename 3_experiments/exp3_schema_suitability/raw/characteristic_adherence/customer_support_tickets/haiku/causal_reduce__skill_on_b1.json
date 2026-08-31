@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can support teams reduce ticket resolution time?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_type_category",
+    "has_blocker_or_dependency",
+    "urgency_indicator",
+    "technical_root_cause_domain",
+    "resolution_action_required"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.88,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.84,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_type_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Gives a strong grouping axis to compare resolution times across issue kinds. Categorizations across the samples (billing_error, auth_failure, feature_request, bug_functional) are sound readings of the source text. CS-0003 as 'performance_degradation' is defensible for a 502 outage though arguably an integration/infra failure; still warranted."
+      },
+      {
+        "name": "has_blocker_or_dependency",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Dependency/blocker status is highly relevant to resolution time and offers a genuine modeling axis. Values are mostly warranted; 'not_present' for the enhancement row and 'requires_customer_action' for the billing case (customer paid, wants corrected invoice) are reasonable, though the billing case leans more toward internal action. Minor interpretive stretch, not invention."
+      },
+      {
+        "name": "urgency_indicator",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Urgency is useful for prioritization analysis but partly overlaps with the existing 'priority' column, slightly reducing new leverage. Values are mostly grounded (critical_outage for the 502, enhancement_only for the pin request). 'revenue_at_risk' for a 49-dollar duplicate line item is a mild overreach given the small dollar amount, but the finance-close deadline offers some basis."
+      },
+      {
+        "name": "technical_root_cause_domain",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Root-cause domain is a valuable axis for targeting systemic fixes. However several values assert causes the text does not establish. CS-0001 labeled 'data_corruption' when the text describes a duplicate line item (billing logic, not corruption). CS-0003 labeled 'infrastructure_scaling' though the text only states a 502 with no scaling evidence. CS-0005 'schema_validation' for a BOM character is a stretch. These are confident specifics where the text is silent about the true cause."
+      },
+      {
+        "name": "resolution_action_required",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Directly actionable for the query about reducing resolution time by routing tickets correctly. Most values are reasonable (bug_fix for the BOM issue, platform escalation for the outage). CS-0001 as 'direct_support_configuration' is defensible, and CS-0002 'engineering_bug_fix' is a plausible inference. Some assignments over-specify a resolution path the text does not confirm, but they are warranted inferences overall."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.8,
+    "rationale": "All five columns add genuine grouping/comparison/routing axes relevant to reducing ticket resolution time, with only mild redundancy between 'urgency_indicator' and the existing 'priority'. Groundedness is generally sound for categorization columns, but 'technical_root_cause_domain' notably asserts specific root causes the source text does not support (data_corruption for a billing duplicate, infrastructure_scaling for a bare 502), and 'resolution_action_required' occasionally over-specifies. 'not_present' values on silent rows are correct and not penalized."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

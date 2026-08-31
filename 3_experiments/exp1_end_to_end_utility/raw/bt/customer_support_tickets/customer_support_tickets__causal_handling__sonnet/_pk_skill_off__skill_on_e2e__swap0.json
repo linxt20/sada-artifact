@@ -1,0 +1,130 @@
+{
+  "var_a": "skill_off",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.85,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 3,
+    "actionability": 3,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "email is still ~2× slower than chat (58.8 vs. 27.8 min)",
+        "why": "numeric within-priority comparison"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "High > Critical anomaly is driven by routing",
+        "why": "consistent caveat"
+      },
+      {
+        "dimension": "depth",
+        "quote": "strong channel–priority confounding",
+        "why": "identifies confounding but shallow mechanism"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "complexity-5 adds ~82 min over complexity-1",
+        "why": "quantified driver"
+      },
+      {
+        "dimension": "depth",
+        "quote": "even controlling for escalation, email is 4× slower than chat",
+        "why": "controlled comparison isolating channel effect"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "degraded_performance is the slowest severity class (136.5 min)",
+        "why": "concrete severity magnitude"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "technical_complexity",
+        "quote": "technical_complexity is scored 1–5",
+        "dependent": true
+      },
+      {
+        "column": "requires_engineering_escalation",
+        "quote": "Escalated tickets take twice as long",
+        "dependent": true
+      },
+      {
+        "column": "operational_severity",
+        "quote": "degraded_performance is the slowest severity class",
+        "dependent": true
+      },
+      {
+        "column": "workaround_available",
+        "quote": "workaround_available = no_workaround",
+        "dependent": true
+      },
+      {
+        "column": "scope_blast_radius",
+        "quote": "Wider blast radius → longer handling",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B provides deeper mechanistic evidence with controlled comparisons and richer causal chains.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

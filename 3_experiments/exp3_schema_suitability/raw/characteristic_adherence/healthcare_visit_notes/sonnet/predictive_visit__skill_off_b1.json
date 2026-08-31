@@ -1,0 +1,53 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit reasons point to different departments?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "reason_category",
+    "departments_for_reason_category",
+    "reason_category_dept_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.5667,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.5167,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.5417,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "reason_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Categorizing free-text visit reasons into clinical categories is exactly the axis needed to map reasons to departments. Sample values (Preventive/Wellness for annual physical, Respiratory/Infection for cough/fever, Injury/Trauma for knee injury) are sound readings of the source text."
+      },
+      {
+        "name": "departments_for_reason_category",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.3,
+        "rationale": "This appears to aggregate which departments a category maps to across the dataset, but as a per-row value it is a derived/global list not grounded in the individual row's text. Values are questionable: a follow-up MI visit or an acne visit listing Orthopedics/Pediatrics etc. is not warranted by that row's source text, and the actual department for the row is already known. It leaks a dataset-level mapping into each row, which is largely redundant with grouping on reason_category + department directly."
+      },
+      {
+        "name": "reason_category_dept_count",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.3,
+        "rationale": "A count of the departments in the previous column. It inherits the same groundedness weakness (not derivable from the row's text) and is a near-restatement/cardinality of departments_for_reason_category, offering little independent analytical leverage."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.55,
+    "rationale": "reason_category is a strong, well-grounded new axis that directly serves the query of linking visit reasons to departments. The other two columns encode a dataset-level reason-to-department mapping into each row; they are only weakly grounded in individual row text (the same category yields identical department lists regardless of the row's actual content), are mutually redundant (count is derived from the list), and add limited leverage beyond a groupby of reason_category against department. No blatant fabricated facts, but the per-row department assertions are not supported by the row's own source text."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 3
+}

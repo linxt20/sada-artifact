@@ -1,0 +1,144 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do resolution duration values vary across tickets?",
+  "n_added_columns": 14,
+  "added_columns": [
+    "resolution_hours",
+    "priority_numeric",
+    "is_network",
+    "is_database",
+    "is_software",
+    "is_hardware",
+    "duration_category",
+    "priority_avg_duration",
+    "category_avg_duration",
+    "duration_vs_priority_avg",
+    "duration_vs_category_avg",
+    "assignee_avg_duration",
+    "duration_vs_assignee_avg",
+    "has_round_duration"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 14,
+    "n_judged_columns": 14,
+    "analytical_usefulness": 0.7364,
+    "analytical_usefulness__table_level": 0.76,
+    "source_groundedness": 0.8821,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.8093,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is the target variable itself (opened_at/closed_at derived). Directly central to explaining duration variation. Values are consistent with the timestamp columns present."
+      },
+      {
+        "name": "priority_numeric",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Numeric encoding of the original priority column enables grouping/modeling duration by priority. Slightly redundant with existing priority but adds modeling leverage."
+      },
+      {
+        "name": "is_network",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Binary category flag derived from short_description/category; samples (WiFi/VPN=1) are correctly grounded. Useful axis to compare durations by issue type."
+      },
+      {
+        "name": "is_database",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Database flag correctly set for 'online database' row. Valid grouping dimension for duration analysis."
+      },
+      {
+        "name": "is_software",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Software flag, grounded in text/category. Useful category dimension though somewhat redundant with the set of is_* flags."
+      },
+      {
+        "name": "is_hardware",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Hardware flag correctly set for 'printing issues' row. Valid grouping dimension."
+      },
+      {
+        "name": "duration_category",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Bucketed version of resolution_hours; largely a restatement of the target but useful for coarse grouping. Buckets match sample values correctly."
+      },
+      {
+        "name": "priority_avg_duration",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Group-mean duration per priority; a genuine analytical aggregate directly relevant to explaining variance by priority. Derived from in-table values."
+      },
+      {
+        "name": "category_avg_duration",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Group-mean duration per category; useful for attributing variance to category. Grounded in derived values."
+      },
+      {
+        "name": "duration_vs_priority_avg",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Deviation of a ticket's duration from its priority mean directly answers 'why durations vary'. Consistent arithmetic with the two source columns."
+      },
+      {
+        "name": "duration_vs_category_avg",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Deviation from category mean; a strong residual-style axis for explaining variance. Values check out arithmetically."
+      },
+      {
+        "name": "assignee_avg_duration",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Mean duration per assignee, derived from assigned_to and duration. Useful to test whether assignee explains variation."
+      },
+      {
+        "name": "duration_vs_assignee_avg",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Deviation from assignee mean; directly relevant residual axis. Arithmetic consistent with the underlying columns."
+      },
+      {
+        "name": "has_round_duration",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Constant 0 across all 500 rows, providing zero analytical leverage for explaining duration variance. Grounded but useless."
+      }
+    ],
+    "analytical_usefulness": 0.76,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns form a coherent, highly relevant set for the query 'why do durations vary': the target (resolution_hours), grouping dimensions (priority, category flags, assignee) and their group means, plus residual deviation columns that directly decompose variance. Values in the row_evidence_samples are arithmetically and categorically consistent with the source text and timestamps, so groundedness is strong. Weaknesses: has_round_duration is a dead constant with no value, and duration_category is largely a restatement of the target; several is_* flags and the paired avg/deviation columns are somewhat redundant among themselves. Per scope rule, no penalty for any missing columns."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 14
+}

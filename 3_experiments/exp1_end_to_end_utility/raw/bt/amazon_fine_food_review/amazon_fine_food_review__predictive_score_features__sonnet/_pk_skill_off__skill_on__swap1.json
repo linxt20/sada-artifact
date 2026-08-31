@@ -1,0 +1,109 @@
+{
+  "var_a": "skill_on",
+  "var_b": "skill_off",
+  "swap": true,
+  "winner": "A",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.8,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 5,
+    "depth": 3,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "`positive` → mean 4.85; `negative` → 1.56",
+        "why": "group means tied to feature values"
+      },
+      {
+        "dimension": "depth",
+        "quote": "`vague` → 4.69 vs `highly_specific` → 3.86",
+        "why": "counterintuitive segmentation with reasoning"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "High | overall_sentiment, expectation_match... | Augmented categorical",
+        "why": "prioritized feature set"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "may introduce label leakage",
+        "why": "consistent caveats"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "`negative_keyword_count` | −0.335",
+        "why": "explicit correlations"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "1-star (9.3%), 4-star (14.3%)",
+        "why": "class distribution detail"
+      },
+      {
+        "dimension": "depth",
+        "quote": "dissatisfied reviewers write slightly longer reviews",
+        "why": "some causal reasoning but mostly per-feature description"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "A gives richer segmentation, prioritization, and per-category means while B is solid but shallower.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

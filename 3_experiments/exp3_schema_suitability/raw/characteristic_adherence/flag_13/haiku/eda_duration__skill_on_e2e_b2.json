@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "resolution_complexity",
+    "incident_severity_signal",
+    "incident_repeat_pattern",
+    "affected_service_domain"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.576,
+    "predictor_fraction": 0.8,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "The original table already contains a 'category' column; this largely duplicates the focus's existing segmentation dimension rather than opening a new external relationship. It is interpretable and well-separated, but the analytical query already names incident category, so it restates a given axis rather than adding new associational insight."
+      },
+      {
+        "name": "resolution_complexity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary reassigned vs single_assignment is an external, interpretable, well-balanced segmentation plausibly associated with how long resolution takes. Good for grouped comparison against duration."
+      },
+      {
+        "name": "incident_severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Severity-like categories (server_outage_level, performance_degradation, etc.) form an interpretable associational axis that can be segmented and compared against resolution duration. Some sparse buckets, but overall usable."
+      },
+      {
+        "name": "incident_repeat_pattern",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Recurring vs isolated is a clean, interpretable binary segmentation external to the focus and plausibly associated with duration."
+      },
+      {
+        "name": "affected_service_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Service-domain grouping (network, data platform, identity_access...) is interpretable and well-separated. It correlates conceptually with category but offers a distinct higher-level service lens for comparing duration; partial overlap with incident_category lowers its independent value slightly."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.72,
+    "rationale": "As a set, most columns are interpretable, well-separated categorical segmentations that a human can group on and compare against resolution_duration, satisfying the EDA claim. resolution_complexity and incident_repeat_pattern are especially strong clean binaries; incident_severity_signal adds an ordinal-like severity lens. Weaknesses: incident_category restates an existing dimension already named in the query, and affected_service_domain heavily overlaps with the category axis, creating redundancy rather than fully independent relationships. No opaque scores are present, so the columns support genuine human understanding, but the redundancy among the category/service/severity columns caps the set's informativeness below excellent."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

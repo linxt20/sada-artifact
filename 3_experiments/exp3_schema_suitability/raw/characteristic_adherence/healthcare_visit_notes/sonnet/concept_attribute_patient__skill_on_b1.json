@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What patient needs appear in visit notes?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "visit_purpose_category",
+    "clinical_problem_type",
+    "acuity_complexity_level",
+    "care_continuity_stage",
+    "intervention_need_type",
+    "specialist_referral_need",
+    "diagnostic_workup_need",
+    "preventive_or_screening_need"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8375,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8187,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8281,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "visit_purpose_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Provides a clean categorical axis (acute vs chronic vs preventive vs emergency) directly relevant to 'what patient needs appear.' Samples map soundly: annual physical->preventive_wellness, cough->acute_complaint, post-MI->chronic_disease_management. Well grounded."
+      },
+      {
+        "name": "clinical_problem_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "Body-system categorization gives a strong grouping axis for patient needs. Mostly sound (URI->infectious, acne->dermatologic, knee->musculoskeletal). The annual-physical row labeled endocrine_metabolic is a slight stretch (fatigue + HbA1c warrant it, but weakly), and NULLs are handled appropriately. Generally grounded."
+      },
+      {
+        "name": "acuity_complexity_level",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "rationale": "A 1-5 severity scale offers a useful ordinal axis distinct from the existing urgency column. Values are plausible inferences but somewhat subjective and only loosely warranted by text (e.g. 2 vs 3 assignments not sharply justified). Reasonable but softer grounding."
+      },
+      {
+        "name": "care_continuity_stage",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "New vs ongoing vs surveillance is a genuine analytical axis for needs, and it is well grounded: 'Follow-up after MI'->ongoing_followup, injury 'yesterday'->new_problem, annual exam->surveillance_monitoring are sound readings."
+      },
+      {
+        "name": "intervention_need_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "rationale": "Captures what care was delivered/needed, a core dimension of the query. Mostly sound (adapalene/doxycycline->medication_initiated; supportive care->conservative_management). However knee visit labeled 'procedure_performed' when text only shows MRI ordered, no procedure done—an over-assertion. Otherwise reasonable."
+      },
+      {
+        "name": "specialist_referral_need",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "Referral need is relevant to patient needs. Silent rows correctly 'not_present.' But the knee row labeled 'orthopedics' referral is questionable since the visit is already in Orthopedics and no referral is stated—a possible unwarranted inference. Mostly grounded otherwise."
+      },
+      {
+        "name": "diagnostic_workup_need",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Imaging/lab/multimodal categorization is directly extractable and useful. Samples align well (lipid+HbA1c->multiple_modalities, MRI->imaging_ordered, repeat lipid->lab_ordered, viral URI->not_present). Well grounded."
+      },
+      {
+        "name": "preventive_or_screening_need",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Preventive/screening axis is relevant and mostly grounded; silent acute rows correctly 'not_present.' Labeling the annual-exam lipid/HbA1c as metabolic_screening is a sound reading. Some overlap with visit_purpose_category (preventive_wellness) but adds finer granularity."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns collectively provide multiple distinct, non-redundant axes (purpose, body system, acuity, continuity, intervention, referral, workup, prevention) that all genuinely serve the query about patient needs in visit notes. None are trivial constants or bare token-count/sentiment features. Grounding is generally strong: extractions and categorizations track the source text, and silent rows are handled with 'not_present'/NULL appropriately. Minor over-assertions exist (knee 'procedure_performed' and 'orthopedics' referral where text supports neither, and some subjective acuity assignments), keeping groundedness just short of top marks, but no systematic hallucination."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

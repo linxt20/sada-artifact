@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "review_sentiment",
+    "weakest_attribute",
+    "service_score_gap",
+    "hub_route",
+    "rating_vs_class_avg",
+    "priority_action"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6833,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7167,
+    "hallucination_rate": 0.1667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "review_sentiment",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A bare positive/negative/neutral flag is fairly generic and largely redundant with existing Overall Rating and Recommended fields, giving limited new leverage for a route-optimisation model. Values are well grounded in the review text across all samples."
+      },
+      {
+        "name": "weakest_attribute",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Identifying the weakest service dimension per review is directly actionable for prioritising service fixes. However groundedness is shaky: sample 1 (a story about being stranded, no food/reply) is labelled 'Value For Money' though the text points to staff/support; sample 4 explicitly complains about legroom/seat cramping yet is labelled 'Value For Money' rather than Seat Comfort. Several labels don't track the strongest textual signal, though it can also derive from the numeric sub-scores."
+      },
+      {
+        "name": "service_score_gap",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A derived spread/gap across service sub-scores gives a genuine new axis to model consistency of experience. Values are plausibly computed from the existing numeric rating columns; not directly verifiable from text but not contradicted."
+      },
+      {
+        "name": "hub_route",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Flagging Hong Kong hub routing is relevant for a Cathay route model, but the value is near-constant (714 vs 30), so it offers little discriminating power in practice. Values are well grounded in the Route field."
+      },
+      {
+        "name": "rating_vs_class_avg",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Deviation of a review's Overall Rating from its class average is a strong analytical feature for spotting under/over-performing routes within comparable cabins. Computable from existing Class and Overall Rating columns; values are internally plausible though not textually checkable."
+      },
+      {
+        "name": "priority_action",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "A categorical action bucket (high_impact/on_track/borderline) directly serves the optimisation query by triaging where to act. Values largely follow sentiment/rating signals, though the derivation logic is opaque and the 'borderline_inconsistent' assignment in sample 5 is only loosely justified by the mixed text."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.72,
+    "rationale": "Most added columns give genuine new axes (weakest_attribute, service_score_gap, rating_vs_class_avg, priority_action) for a route/service optimisation model, while review_sentiment and hub_route add less leverage due to redundancy and near-constancy respectively. Groundedness is generally acceptable and derivable from the text or existing numeric sub-scores, but weakest_attribute shows clear misreadings (legroom complaint and stranded-passenger story both tagged 'Value For Money'), which pulls the overall groundedness down."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

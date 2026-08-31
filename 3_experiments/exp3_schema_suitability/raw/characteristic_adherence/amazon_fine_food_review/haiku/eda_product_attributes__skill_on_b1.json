@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "taste_quality",
+    "product_quality_assessment",
+    "freshness_delivery_condition",
+    "ingredient_quality_naturalness",
+    "value_for_money_perception",
+    "product_consistency_reliability",
+    "competitive_product_standing",
+    "repeat_purchase_intent"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7375,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.6625,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "A clear ordinal taste axis to correlate with Score; useful for the query. Values track source text well (excellent for the confection, poor for medicinal cherry soda). Overlaps somewhat with product_quality_assessment but is a distinct sensory dimension."
+      },
+      {
+        "name": "product_quality_assessment",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "rationale": "Overall quality grade is relevant, but largely redundant with taste_quality (near-identical values across samples), reducing added leverage. Values are well-grounded in the text."
+      },
+      {
+        "name": "freshness_delivery_condition",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "rationale": "Delivery/freshness is a genuine separate attribute and appropriately NULL when unmentioned (~39% null is fine). However, assigning 'fresh_good_condition' to the confection and 'acceptable' to the mislabeled-peanuts and cough-medicine rows where condition is not discussed is an unwarranted specific rather than NULL, weakening groundedness."
+      },
+      {
+        "name": "ingredient_quality_naturalness",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "rationale": "Ingredient/naturalness is a plausible new axis. But several values overreach: the mislabeled peanuts (a labeling complaint) marked 'quality_positive', and the powdered-sugar confection also 'quality_positive' though naturalness is not addressed. Some values assert positives not supported by text."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "rationale": "Price/value is a distinct and useful attribute (taffy explicitly praises price). However, many rows lack any price mention yet receive confident values (dog food 'good_value', confection 'good_value', cough soda 'fair_value'), which are invented specifics where NULL was warranted."
+      },
+      {
+        "name": "product_consistency_reliability",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "rationale": "Consistency across batches is a valid axis, but most single-review texts give no basis for a consistency judgment; defaulting to 'mostly_consistent' for the confection, taffy, and cough soda is unsupported inference. Groundedness is weak."
+      },
+      {
+        "name": "competitive_product_standing",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "rationale": "Competitive positioning would be useful if grounded, but most reviews make no competitor comparison; assigning 'comparable_to_competitors' by default to the confection, cough soda, and taffy asserts information absent from the text. Frequently ungrounded specifics."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "rationale": "A binary repurchase-intent signal is a reasonable modeling axis and correlates plausibly with satisfaction. Values are defensible sentiment reads (recommend->True, complaints->False), though inferred rather than explicit in some rows."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.65,
+    "rationale": "The columns collectively offer several genuine attribute axes (taste, value, freshness, repurchase intent) directly relevant to relating product attributes to satisfaction, with only mild redundancy between taste_quality and product_quality_assessment. Groundedness is the weaker dimension: freshness, value, consistency, and especially competitive_standing frequently emit confident specific values for rows whose text is silent on those aspects, where NULL would have been correct, indicating a tendency to assert unsupported specifics rather than abstain."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

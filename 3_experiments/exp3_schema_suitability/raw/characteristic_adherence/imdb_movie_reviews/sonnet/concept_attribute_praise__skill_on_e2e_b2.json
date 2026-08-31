@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "focus_variable": "audience_praise_and_complaints",
+  "concept": "audience_praise_and_complaints",
+  "n_added_columns": 6,
+  "added_columns": [
+    "overall_sentiment_polarity",
+    "praise_dimension",
+    "complaint_dimension",
+    "emotional_engagement",
+    "comparative_reference_type",
+    "audience_recommendation_stance"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.4282,
+    "facet_fraction": 0.6667,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.75,
+    "mece": 0.6423,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "audience_praise_and_complaints",
+    "per_column": [
+      {
+        "name": "overall_sentiment_polarity",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Overall positive/negative/mixed polarity is a summary aggregate of the whole praise-and-complaints concept, not a distinct part of it. It restates the net valence rather than isolating a constituent aspect."
+      },
+      {
+        "name": "praise_dimension",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The specific dimension being praised (acting, story, writing, direction, etc.) is a genuine constitutive part of what 'praise' consists of within the concept."
+      },
+      {
+        "name": "complaint_dimension",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The specific dimension being complained about is a genuine constitutive part of the 'complaints' half of the concept, and is meronymically 'an aspect of' the concept."
+      },
+      {
+        "name": "emotional_engagement",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Emotional engagement (strongly engaging / off-putting / flat) is a substantive experiential aspect that reviews praise or complain about; it is a part-of the audience reaction rather than an external predictor."
+      },
+      {
+        "name": "comparative_reference_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How a review frames praise/complaint via comparison (favorable/unfavorable, sequel, genre benchmark) is a rhetorical facet of how praise and complaints are expressed."
+      },
+      {
+        "name": "audience_recommendation_stance",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "The recommend/avoid stance is a downstream summary conclusion that follows from the praise and complaints rather than a constitutive part of them; it restates the net evaluative outcome."
+      }
+    ],
+    "facet_columns": [
+      "praise_dimension",
+      "complaint_dimension",
+      "emotional_engagement",
+      "comparative_reference_type"
+    ],
+    "non_facet_columns": [
+      "overall_sentiment_polarity",
+      "audience_recommendation_stance"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.75,
+    "rationale": "Four of six columns are genuine facets that carve the concept into non-overlapping constitutive aspects: what is praised, what is complained about, emotional engagement, and comparative framing. Two columns fail the meronymy test: overall_sentiment_polarity and audience_recommendation_stance are summary/restatement aggregates of the whole concept rather than parts of it. Mutual exclusivity is weakened because praise_dimension and complaint_dimension share nearly identical category vocabularies (acting, writing, story, direction, pacing, production_values) and emotional_engagement overlaps with the 'emotional_resonance' praise dimension and with the restatement columns' valence signal. Exhaustiveness is reasonably good for the praise/complaint content axes but the facet coverage is diluted rather than extended by the two non-facet summary columns."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

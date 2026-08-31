@@ -1,0 +1,60 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "food_quality_sentiment",
+    "service_attentiveness",
+    "atmosphere_vibe",
+    "staff_professionalism"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7375,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.7375,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7375,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "food_quality_sentiment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "A genuine aspect axis directly relevant to 'what aspects are reviewers talking about'. Values well-grounded: 'excellent' for the enthusiastic Oliveo review, 'good' for the pizza review, and correct NULLs for the real-estate and nightclub reviews where food isn't discussed. 'poor' for YLP-0002 is a mild inference (that review is about service, not food explicitly), but reasonable."
+      },
+      {
+        "name": "service_attentiveness",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "Distinct, useful aspect. 'neglectful' for the forgotten-twice review is sound; NULL for the nightclub is appropriate. Slight weakness: 'attentive' for YLP-0003 where service was merely 'good' (fine) and 'attentive' for the real-estate review is an extrapolation from 'great service', still warranted."
+      },
+      {
+        "name": "atmosphere_vibe",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.65,
+        "rationale": "Atmosphere is a legitimate aspect, but this column reads as a near-proxy for overall sentiment (positive/negative vibe tracks label_pos almost exactly, and few reviews actually describe physical atmosphere), reducing analytical leverage and making it partly redundant with label_pos. Groundedness is moderate: values like 'positive_vibe' for the real-estate review assert atmosphere the text does not describe, and it often infers vibe from overall tone rather than actual atmosphere cues."
+      },
+      {
+        "name": "staff_professionalism",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "rationale": "Overlaps substantially with service_attentiveness, offering a narrower new axis. Groundedness hurt by a clear contradiction: YLP-0002 (staff who forgot customers twice) is labeled 'professional_friendly', which the text does not support and arguably contradicts. Other rows (rude/professional distinctions) are reasonable."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns decompose review text into concrete experiential aspects (food, service, atmosphere, staff), which directly serves the query about what aspects reviewers discuss, and NULLs are appropriately used for silent rows. Food and service columns are strong and well-grounded. Atmosphere trends toward a redundant overall-sentiment proxy, and staff_professionalism overlaps service and shows at least one contradictory value (YLP-0002 'professional_friendly'). Overall solid but with observed groundedness lapses and some redundancy."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

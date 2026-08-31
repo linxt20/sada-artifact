@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit-note signals suggest a longer visit?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "number_of_distinct_problems",
+    "primary_problem_category",
+    "new_treatment_initiated",
+    "in_visit_procedure_or_intervention",
+    "critical_or_life_threatening_status",
+    "imaging_or_lab_testing_scope",
+    "specialist_referral_or_consultation"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.8,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.8,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "number_of_distinct_problems",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of problems addressed is extractable from the note and plausibly drives longer visits; it is a distinct variable from duration, not a restatement or component of it."
+      },
+      {
+        "name": "primary_problem_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The clinical nature of the primary problem (trauma, procedural, chronic, etc.) is a legitimate covariate that carries signal about how long a visit takes, independent of the duration itself."
+      },
+      {
+        "name": "new_treatment_initiated",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a new treatment was started reflects visit content and plausibly correlates with duration; it is not deterministically the duration nor a mere restatement of it."
+      },
+      {
+        "name": "in_visit_procedure_or_intervention",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The type of procedure performed during the visit is a substantive activity variable that strongly and plausibly predicts duration without being a component or deterministic function of it."
+      },
+      {
+        "name": "critical_or_life_threatening_status",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Acuity/severity is a legitimate predictor of visit length, distinct from the duration measure; it carries signal but is not a restatement or leakage."
+      },
+      {
+        "name": "imaging_or_lab_testing_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope of testing ordered is a workflow-content variable that plausibly extends visits and is distinct from the focus; a valid predictor."
+      },
+      {
+        "name": "specialist_referral_or_consultation",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a referral/consult occurred is a distinct visit-content variable plausibly associated with longer visits; not a component or restatement of duration."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.8,
+    "rationale": "All seven columns are semantically distinct visit-content variables extractable from the note, each lying outside the focus (visit_duration_min) and none restating, componentially decomposing, or leaking it. Collectively they capture problem complexity, acuity, procedures, testing scope, treatment initiation, and referrals -- a coherent and largely non-redundant set of plausible drivers of visit length that add substantial predictive leverage beyond the original columns (department, urgency, age_group, reason). Some overlap exists (e.g., procedure vs. testing scope vs. treatment), slightly reducing marginal information, hence 0.8 rather than higher."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

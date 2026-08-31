@@ -1,0 +1,98 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do handling times differ by channel and priority?",
+  "focus_variable": "handling_time_gap",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_category",
+    "system_scope",
+    "resolution_path",
+    "issue_complexity",
+    "blocking_factor"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "handling_time_gap",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Issue category plausibly drives both which channel/priority a ticket enters through (e.g. security_incident routed as high priority) and how long handling takes, making it a common cause not mentioned in the query."
+      },
+      {
+        "name": "system_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (platform_wide vs single_user) plausibly affects priority assignment (broad-impact incidents escalated) and directly lengthens handling time, a genuine common cause surfaced from data."
+      },
+      {
+        "name": "resolution_path",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The resolution path (code_fix, infrastructure_escalation) is chosen after routing and lies on the causal path from treatment/issue to handling time; it is a mechanism through which time is incurred, so adjusting for it would be a mistake."
+      },
+      {
+        "name": "issue_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity plausibly influences the assigned priority (complex issues prioritised) and independently increases handling time; a genuine unobserved common cause not named in the query."
+      },
+      {
+        "name": "blocking_factor",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Blocking factors (awaiting_deploy, awaiting_customer_action) arise during handling and are the immediate mechanism prolonging time; they sit on the causal path rather than being an antecedent common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "channel",
+      "priority"
+    ],
+    "confounders": [
+      {
+        "name": "issue_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "system_scope",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "issue_complexity",
+        "named_in_query": false,
+        "plausibility": 0.8
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The treatments (channel, priority) come from the original table and are named in the query. The system surfaced several new variables from the issue text. Three of them (issue_category, system_scope, issue_complexity) are plausible common causes of both routing/priority and handling time, none named in the query, demonstrating genuine confounder discovery. However two columns (resolution_path, blocking_factor) are mediators/post-treatment mechanisms on the causal path to handling time; treating them as adjustment variables would bias the estimate, which lowers overall quality. So the set partially realises the causal-attribution claim but mixes in post-treatment variables."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "teaching_approach",
+    "innovative_curriculum_adaptation",
+    "student_engagement_level",
+    "subject_remote_fit",
+    "instructor_responsiveness"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "teaching_approach",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "External pedagogical variable extracted from open responses with well-separated, interpretable categories (lecture, project-based, flipped, etc.) that can be segmented and compared against satisfaction. Distribution is reasonably spread."
+      },
+      {
+        "name": "innovative_curriculum_adaptation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal three-level scale (high/moderate/minimal) that is interpretable and well-balanced, enabling meaningful grouping against satisfaction. Associational to the theme of adaptation rather than a restatement of satisfaction."
+      },
+      {
+        "name": "student_engagement_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear three-way engagement categories with good spread; a plausible correlate of satisfaction distinct from it, supporting interpretable segmentation."
+      },
+      {
+        "name": "subject_remote_fit",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated fit categories (high/moderate/low) that provide an associational, interpretable dimension to compare against satisfaction across subjects."
+      },
+      {
+        "name": "instructor_responsiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable ordinal responsiveness levels usable for grouping; borders on being a near-proxy of satisfaction, but responsiveness is a distinct external theme. Some NULLs but categories remain comparable."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.85,
+    "rationale": "All five added columns are external, associational themes derived from the open responses, each with a small number of interpretable, well-separated categories that can be grouped and cross-tabulated against satisfaction as well as role, grade level, and subject. None merely restates satisfaction, and none is so fine-grained or near-constant as to preclude comparison. instructor_responsiveness and student_engagement_level trend close to satisfaction conceptually, but remain distinct explorable dimensions. As a set they strongly support discovering interpretable relationships with the focus."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

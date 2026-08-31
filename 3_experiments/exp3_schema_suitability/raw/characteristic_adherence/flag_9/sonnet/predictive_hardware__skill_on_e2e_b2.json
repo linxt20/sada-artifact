@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals indicate a hardware incident is in the anomaly window?",
+  "focus_variable": "is_hardware_anomaly_window",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "symptom_severity_signal",
+    "resolution_lag_band",
+    "affected_scope",
+    "opener_to_closer_match",
+    "software_update_related"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.2857,
+    "predictor_fraction": 0.5714,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.5,
+    "leakage_rate": 0.2857
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "is_hardware_anomaly_window",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "The focus is whether an incident is a hardware anomaly. incident_category directly encodes 'hardware' vs 'software'/'network'/etc., which is essentially the hardware-ness of the incident restated as a category. Knowing category=hardware largely determines the hardware side of the focus, so it leaks/restates rather than serving as an external predictor."
+      },
+      {
+        "name": "failure_mode",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Failure modes like not_turning_on, overheating, physical_damage, flickering_display are characteristic of hardware faults while connection_failure/not_responding lean software/network. It is an external, non-deterministic descriptor plausibly carrying signal about hardware involvement without simply restating the focus label."
+      },
+      {
+        "name": "symptom_severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Symptom/severity categories (crash_shutdown, outage, error_message, performance_degradation) are observable descriptors that correlate differentially with hardware vs non-hardware causes. Not a component or deterministic function of the focus; plausibly predictive."
+      },
+      {
+        "name": "resolution_lag_band",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Resolution lag is only knowable after the incident is resolved (post-outcome), so using it to predict whether it is in the anomaly window constitutes temporal leakage rather than an a-priori predictor."
+      },
+      {
+        "name": "affected_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope (individual_device, peripheral_device, server_room, building) is an external contextual variable that plausibly correlates with hardware incidents (physical devices/peripherals) without restating or being a deterministic function of the focus."
+      },
+      {
+        "name": "opener_to_closer_match",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "rationale": "Whether the opener equals the closer is a generic process/administrative attribute with no plausible mechanistic link to hardware-ness or the anomaly window; no meaningful predictive signal for the focus."
+      },
+      {
+        "name": "software_update_related",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A software-update flag is an external indicator that inversely signals hardware involvement (update-related issues lean software). It is not a restatement of the focus and plausibly carries discriminative signal."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.5,
+    "rationale": "The set mixes legitimate external predictors (failure_mode, symptom_severity_signal, affected_scope, software_update_related) with problematic columns: incident_category effectively restates/leaks the hardware label, resolution_lag_band is post-outcome leakage, and opener_to_closer_match is irrelevant. The genuine predictors give moderate, plausibly independent leverage on hardware-ness, but the strongest-looking column (incident_category) fails the test, and leakage inflates apparent utility. Net incremental predictive value beyond original columns is moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "predictive_hardware",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

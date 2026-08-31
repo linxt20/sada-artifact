@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Which clinical factors best explain longer visit durations?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "clinical_complexity",
+    "acuity_level",
+    "diagnostic_workload",
+    "intervention_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7875,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.7625,
+    "source_groundedness__table_level": 0.76,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.75
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "clinical_complexity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A strong new axis (acute vs chronic vs preventive) that plausibly drives visit length, orthogonal to existing columns. Most values are sound readings, but the annual physical with fatigue and labs is labeled 'chronic_disease_management' when the text reads as preventive/wellness screening, indicating occasional over-reading of the source."
+      },
+      {
+        "name": "acuity_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A reasonable severity axis, but it substantially overlaps the existing 'urgency' column, reducing its analytical leverage as a genuinely new grouping dimension. Values are generally well grounded (e.g., the tennis knee injury mapped to urgent_acute matches the Urgent flag and text)."
+      },
+      {
+        "name": "diagnostic_workload",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Captures whether imaging/labs/procedures occurred, which is a credible driver of duration. Labs/MRI rows are correctly grounded, but the acne row labeled 'procedure_performed_today' is unsupported—prescribing topical/oral medication is not a procedure, so a specific value is asserted where the text does not warrant it."
+      },
+      {
+        "name": "intervention_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A useful axis for what action was taken, giving a distinct modeling dimension. Medication and referral rows are well grounded, but the annual physical (labs ordered, no medication mentioned) labeled 'medication_adjustment_or_initiation' overstates what the text supports."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.76,
+    "rationale": "The added columns collectively provide genuine new analytical axes (complexity, workload, intervention) beyond the original schema, well-targeted to explaining visit duration; acuity_level is weaker due to redundancy with 'urgency'. Groundedness is generally solid extraction/categorisation, but several rows show confident specifics not supported by the source text (annual physical coded as chronic + medication; acne coded as a procedure), lowering overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_long_visit",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 4
+}

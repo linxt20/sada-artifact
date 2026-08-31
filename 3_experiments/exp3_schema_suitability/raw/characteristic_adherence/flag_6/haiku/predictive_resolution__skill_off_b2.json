@@ -1,0 +1,54 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary by agent and issue type?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "resolution_time_hours",
+    "issue_type_category"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.225,
+    "predictor_fraction": 0.5,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.45,
+    "interpretable_fraction": 0.5
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is simply the focus variable expressed in hours (with some erroneous negative values). It restates resolution_time rather than providing an external, associational variable to segment on. As a continuous, fine-grained measure it cannot serve as a grouping dimension against the focus."
+      },
+      {
+        "name": "issue_type_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Provides well-separated, interpretable categories (Network, Database, Software, Hardware) with meaningful non-degenerate distribution. Directly answers the 'by issue type' part of the query and supports grouped comparison of resolution_time across categories."
+      }
+    ],
+    "n_predictors": 1,
+    "relationship_informativeness": 0.45,
+    "rationale": "Only one of the two added columns realises the EDA claim. issue_type_category is a strong, interpretable segmentation variable enabling comparison of resolution time across issue types. However, resolution_time_hours merely restates the focus variable and adds no relational information; it also contains invalid negative values. The query also asks about variation 'by agent', but no agent-related segmentation column was added (agent info exists only in the original table). As a set, the additions partially support interpretable relationship discovery but leave a key requested dimension uncovered and include a redundant restatement."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "mentions_food_quality",
+    "mentions_service",
+    "mentions_ambiance",
+    "mentions_price",
+    "mentions_cleanliness",
+    "mentions_wait_time",
+    "num_aspects_mentioned",
+    "review_length"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.765,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The experiential aspects/dimensions of a dining experience that Yelp reviewers mention (food, service, ambiance, price, cleanliness, wait time)",
+    "per_column": [
+      {
+        "name": "mentions_food_quality",
+        "supports_focus": true,
+        "rationale": "A concrete experiential aspect of the dining experience -- directly a facet of the inferred focus."
+      },
+      {
+        "name": "mentions_service",
+        "supports_focus": true,
+        "rationale": "Service is a core aspect of the reviewer experience; coherent facet."
+      },
+      {
+        "name": "mentions_ambiance",
+        "supports_focus": true,
+        "rationale": "Ambiance is a recognized experience dimension; on-focus."
+      },
+      {
+        "name": "mentions_price",
+        "supports_focus": true,
+        "rationale": "Price/value is a standard aspect reviewers discuss; on-focus."
+      },
+      {
+        "name": "mentions_cleanliness",
+        "supports_focus": true,
+        "rationale": "Cleanliness is a distinct experiential facet; on-focus."
+      },
+      {
+        "name": "mentions_wait_time",
+        "supports_focus": true,
+        "rationale": "Wait time is a specific experience aspect; on-focus."
+      },
+      {
+        "name": "num_aspects_mentioned",
+        "supports_focus": true,
+        "rationale": "Aggregates breadth of aspects covered per review; a coherent summary variable over the aspect set."
+      },
+      {
+        "name": "review_length",
+        "supports_focus": false,
+        "rationale": "Bare text length is a generic mechanical metric that does not encode any experiential aspect; off-focus filler."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.85,
+    "rationale": "The columns overwhelmingly centre on one clear, data-inferable focus: the aspects of the dining experience reviewers discuss. Six binary mention flags form a well-differentiated facet set at a useful granularity, and num_aspects_mentioned provides a coherent breadth summary derived from them -- a sound analytical structure directly answering the query. This is genuine aspect decomposition, not a restatement or noise, and an analyst can act on it (e.g., prioritize which aspects drive positive/negative sentiment). The lone weakness is review_length, a generic mechanical metric that does not realise the focus, but it is a single peripheral column and does not undermine the otherwise strong, coherent structure."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

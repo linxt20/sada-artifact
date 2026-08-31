@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category",
+    "asset_brand",
+    "travel_related",
+    "procurement_action_type",
+    "entry_origin",
+    "has_source_id",
+    "ci_identifier_quality",
+    "repeat_user_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6312,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7031,
+    "hallucination_rate": 0.125
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizing spend into hardware/software/cloud/travel types gives a strong grouping axis for expense analysis. Values are well-grounded in short_description and ci; the iPod/ISP row mapped to software_service and the RAM row to peripheral are reasonable readings."
+      },
+      {
+        "name": "asset_brand",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Brand extraction supports vendor-level spend analysis, a genuinely actionable axis. Values (Dell, Other) are sound extractions from ci/description text, with 'Other' correctly used when brand is not stated."
+      },
+      {
+        "name": "travel_related",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A travel flag helps segment expense types and is actionable, though it partly overlaps with asset_category (travel_equipment). Samples correctly mark False for hardware/service rows."
+      },
+      {
+        "name": "procurement_action_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Classifying the action (acquisition, provisioning, assignment) gives a useful lifecycle axis. Samples map plausibly from description verbs ('Asset assignment' -> allocation_assignment). The dominant 'registration_addition' default is somewhat generic but grounded."
+      },
+      {
+        "name": "entry_origin",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Manual vs auto-generated is only weakly derivable from the given source fields; the basis for labeling a row 'manually_entered' vs 'auto_generated' is not evident in the sampled text, making values partly speculative. Analytical value for the spend query is modest."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "This is a trivial presence flag mechanically restating the existing source_id column, adding little analytical leverage. It is fully grounded but near-redundant."
+      },
+      {
+        "name": "ci_identifier_quality",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Data-quality classification of the ci field (model name vs serial vs placeholder) is a reasonable governance axis and grounded in the ci text ('ISP Services' -> service_name, 'OptiPlex 7050' -> descriptive_model_name)."
+      },
+      {
+        "name": "repeat_user_flag",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Identifying repeat users could support per-user spend analysis, but the flag is near-constant (486 true / 14 false), sharply limiting analytical leverage. Groundedness is moderate since it derives from cross-row user frequency not visible in single samples."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.78,
+    "rationale": "The added set offers several genuinely actionable axes for expense analysis (asset_category, asset_brand, procurement_action_type, travel), mostly well-grounded in short_description and ci text. Weaker members are has_source_id (redundant restatement of an existing column), repeat_user_flag (near-constant), and entry_origin (labels not clearly supported by the source fields). Overall the columns are useful and largely grounded, with one flag showing speculative values."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 8
+}

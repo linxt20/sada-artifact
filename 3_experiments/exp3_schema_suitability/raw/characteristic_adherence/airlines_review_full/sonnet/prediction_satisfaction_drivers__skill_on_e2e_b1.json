@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "staff_attitude",
+    "service_consistency_pattern",
+    "food_quality_signal",
+    "hard_product_condition",
+    "flight_disruption_type",
+    "disruption_handling_quality",
+    "overbooking_seat_assignment_issue",
+    "customer_service_resolution_quality",
+    "value_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.71,
+    "analytical_usefulness__table_level": 0.71,
+    "source_groundedness": 0.7089,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7094,
+    "hallucination_rate": 0.4444
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "staff_attitude",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.58,
+        "hallucination_observed": true,
+        "rationale": "Gives a genuine qualitative axis on crew demeanour that goes beyond the numeric 'Staff Service' rating, useful for driver analysis. However, only 9 NULLs across ~8100 rows means nearly every row was assigned an attitude even when the text is silent. Sample 2 mentions nothing about staff yet was labelled 'indifferent_unhelpful' — an invented reading. Well-supported labels appear in samples 1, 3, 4, 5."
+      },
+      {
+        "name": "service_consistency_pattern",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A potentially interesting grouping axis, but 'consistency' (mixed_within_flight, declining_vs_past) is hard to derive from a single short review and requires temporal/contrastive signals rarely present. Only 4 NULLs indicates heavy inference. Sample 2, which complains solely about seats/IFE, was labelled 'consistently_poor' for service though service is never discussed — over-reach beyond the source."
+      },
+      {
+        "name": "food_quality_signal",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "Adds specific failure modes (special_meal_failure, not_served_adequately) beyond the numeric 'Food & Beverages' rating and appropriately uses 3340 NULLs for silent rows. But samples 2 and 5 do not mention food at all yet were labelled 'adequate' rather than NULL, asserting a fact the text does not support and undermining consistency."
+      },
+      {
+        "name": "hard_product_condition",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Physical cabin condition (worn vs new, broken) is a distinct axis from 'Seat Comfort' and uses NULLs sensibly (3311). Groundedness is hurt by sample 2, where seats explicitly described as 'dreadful' with 'poor padding' were labelled 'acceptable' — a contradiction of the source. Other samples are reasonable readings."
+      },
+      {
+        "name": "flight_disruption_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Clean categorical axis (delay, cancellation, missed connection, etc.) that is directly relevant to satisfaction drivers and easy to group on. 'no_disruption' is a defensible default since disruptions are the kind of thing reviewers surface; all five samples correctly map to no_disruption."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Complements disruption_type with a quality dimension that can reveal whether recovery, not just occurrence, drives ratings. 'not_applicable' correctly dominates and matches the no-disruption samples. Somewhat correlated with disruption_type but adds a distinct handling axis."
+      },
+      {
+        "name": "overbooking_seat_assignment_issue",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A narrow boolean (only 327 true) that partially overlaps with the 'overbooking_or_itinerary_change' value already in flight_disruption_type, limiting its added leverage. Values are well grounded — all samples correctly False given no such issue is mentioned."
+      },
+      {
+        "name": "customer_service_resolution_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures post-contact resolution outcome, a plausible and distinct satisfaction driver that is not the same as in-flight staff attitude. 'not_contacted' correctly dominates and matches the samples where no service interaction is described."
+      },
+      {
+        "name": "value_perception",
+        "analytical_usefulness": 0.42,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Largely a categorical restatement of the existing numeric 'Value For Money' column, so it adds little independent analytical leverage for this query. Values are reasonable sentiment readings (positive review -> good_value, negative -> poor_value), but with only 15 NULLs it is essentially a re-encoding of an original column."
+      }
+    ],
+    "analytical_usefulness": 0.71,
+    "source_groundedness": 0.68,
+    "rationale": "Most added columns supply genuinely new qualitative axes for analysing satisfaction drivers (staff attitude, disruption type and handling, food and hard-product condition, service resolution) that a numeric-rating table cannot easily provide, so table-level usefulness is fairly high. value_perception is mostly redundant with 'Value For Money' and overbooking_seat_assignment_issue is a narrow flag overlapping flight_disruption_type. On groundedness, the disruption/handling/resolution family handles silent rows well via large default buckets, but there is a systematic over-inference pattern in the sentiment-style columns: staff_attitude (9 NULLs) and service_consistency_pattern (4 NULLs) assign values to nearly every row, and the samples show concrete problems — a silent row labelled 'indifferent_unhelpful', 'dreadful' seats labelled 'acceptable', and unmentioned food labelled 'adequate'. This drags source_groundedness to a moderate level."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

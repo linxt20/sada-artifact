@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "assigned_technician",
+    "primary_issue_domain",
+    "incident_closure_status",
+    "issue_complexity_signal",
+    "issue_severity_signal",
+    "same_person_closure_flag",
+    "caller_frequency_indicator"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.6171,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.8571
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "assigned_technician",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Individual technician identity is an associational variable that could relate to resolution time, but with many distinct high-cardinality names it forms fine-grained categories that are hard to compare cleanly; overlaps with existing assigned_to. Marginally useful but not well-separated segmentation."
+      },
+      {
+        "name": "primary_issue_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated interpretable categories (connectivity, email, database, etc.) that can be grouped and compared against resolution time; a strong EDA segmentation axis, though somewhat correlated with category."
+      },
+      {
+        "name": "incident_closure_status",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Open/closed status largely restates the existing 'state' field and is intertwined with whether resolution_time is even defined; not an external explanatory variable for how long resolution takes."
+      },
+      {
+        "name": "issue_complexity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated buckets (infrastructure_systemic, application_focused, user_access, endpoint_device) that plausibly associate with resolution time and support meaningful segmentation."
+      },
+      {
+        "name": "issue_severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Severity levels (outage_complete, partial_access, performance_degradation) are interpretable categories strongly associable with resolution time; good EDA axis, partially overlapping with priority."
+      },
+      {
+        "name": "same_person_closure_flag",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean binary flag (opener==closer) that can be compared against resolution time and reflects a workflow characteristic; interpretable segmentation with reasonable balance."
+      },
+      {
+        "name": "caller_frequency_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal, well-separated caller-frequency bands offer an external behavioral dimension to segment resolution time by; interpretable and balanced."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.72,
+    "rationale": "Most added columns are external, interpretable, well-separated categorical segmentations (issue domain, complexity, severity, caller frequency, same-person closure flag) that let a human explorer group and compare resolution_time along meaningful dimensions. Weaknesses: incident_closure_status essentially restates the existing state and conditions whether resolution_time exists, and assigned_technician is high-cardinality and duplicative of assigned_to. Some signals overlap with existing category/priority axes, but as a set they open genuine informative relationships around the focus, warranting a fairly strong but not top score."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

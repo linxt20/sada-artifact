@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_type",
+    "severity_indicator",
+    "root_cause_hint",
+    "assignment_consistency",
+    "assigned_to_technician",
+    "caller_category",
+    "temporal_recurrence"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.4896,
+    "focus_coherence": 0.68,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Characterizing and triaging incidents by their nature (type, severity, likely root cause, and recurrence) to identify what warrants attention",
+    "per_column": [
+      {
+        "name": "incident_type",
+        "supports_focus": true,
+        "rationale": "Classifies the substantive nature of each incident from its description -- a core facet of what the incident is about."
+      },
+      {
+        "name": "severity_indicator",
+        "supports_focus": true,
+        "rationale": "Captures impact level (outage vs degraded vs blocked access), directly relevant to prioritizing attention."
+      },
+      {
+        "name": "root_cause_hint",
+        "supports_focus": true,
+        "rationale": "Infers likely causal layer, adding an explanatory facet to the incident characterization."
+      },
+      {
+        "name": "temporal_recurrence",
+        "supports_focus": true,
+        "rationale": "Distinguishes recurring vs isolated issues, a strong signal for what is worth attention."
+      },
+      {
+        "name": "assignment_consistency",
+        "supports_focus": false,
+        "rationale": "A process/ops quality flag about assignment, orthogonal to characterizing the incident content itself."
+      },
+      {
+        "name": "assigned_to_technician",
+        "supports_focus": false,
+        "rationale": "Largely restates the existing assigned_to field; a routing attribute, not a facet of incident nature."
+      },
+      {
+        "name": "caller_category",
+        "supports_focus": false,
+        "rationale": "Describes who reported the incident (human vs automation), tangential to the incident's substance and severity."
+      }
+    ],
+    "focus_coherence": 0.68,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.8,
+    "rationale": "A clear plurality of columns (incident_type, severity_indicator, root_cause_hint, temporal_recurrence) coherently centre on a single inferable focus: characterizing incidents by their nature and impact to surface what deserves attention. These form a genuine multi-facet analytical structure (type / severity / cause / recurrence) at a useful granularity, and the focus is highly actionable for triage. However, coherence is diluted by three columns that drift onto adjacent, non-incident-nature themes (process assignment quality, technician identity that duplicates existing data, and caller provenance). This scatter across ops-hygiene and routing dimensions keeps the set from being a tightly unified focus, and one column is largely a restatement of an existing field, so structure and coherence fall short of full marks."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

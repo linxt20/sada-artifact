@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "issue_theme",
+    "urgency_and_blocker_status",
+    "issue_type"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.8,
+    "predictor_fraction": 1.0,
+    "n_predictors": 3,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.8,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly realises the 'issue themes' dimension of the query. Categories (functionality, performance, billing, integration, etc.) are interpretable and well-separated, with balanced counts allowing meaningful grouping of resolution_minutes across themes."
+      },
+      {
+        "name": "urgency_and_blocker_status",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "An associational segmentation (user_friction, customer_blocked, high_impact_outage, revenue_risk) that is external to resolution time and interpretable. It plausibly correlates with resolution_minutes and offers a distinct lens from the existing 'priority' column, supporting exploratory comparison."
+      },
+      {
+        "name": "issue_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A finer taxonomy (bug_functionality, bug_performance, infrastructure_outage, api_auth_error, etc.) with interpretable, well-separated categories and reasonable counts. Overlaps somewhat with issue_theme but adds actionable granularity for segmenting resolution time; not a restatement of the focus."
+      }
+    ],
+    "n_predictors": 3,
+    "relationship_informativeness": 0.8,
+    "rationale": "All three columns are external categorical variables with interpretable, well-separated categories and adequately balanced value distributions, enabling grouped comparison of resolution_minutes. issue_theme squarely addresses the requested 'issue themes' axis; urgency_and_blocker_status adds an orthogonal severity lens beyond the existing priority; issue_type offers finer bug/feature/infrastructure segmentation. issue_theme and issue_type partially overlap semantically, slightly reducing the incremental information as a set, but none restate the focus and none are near-constant or opaque scores. Strong support for discovering interpretable relationships."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

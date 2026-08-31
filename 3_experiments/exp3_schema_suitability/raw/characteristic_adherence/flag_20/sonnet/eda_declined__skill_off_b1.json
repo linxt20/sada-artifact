@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "has_travel_keyword",
+    "has_auto_generated_language",
+    "has_expense_keyword",
+    "has_equipment_keyword",
+    "is_travel_category",
+    "desc_word_count",
+    "amount_tier",
+    "travel_expense_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6375,
+    "analytical_usefulness__table_level": 0.63,
+    "source_groundedness": 0.8938,
+    "source_groundedness__table_level": 0.89,
+    "b1_overall": 0.7656,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "has_travel_keyword",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Directly targets the query's interest in travel signals in the description; derivable from short_description text. Samples correctly show 0 for non-travel hardware rows.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "has_auto_generated_language",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Auto-generated phrasing ('Automated creation', 'Automatically generated') is a plausible decline signal and is grounded in the text. Samples correctly flag those rows.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "has_expense_keyword",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Reasonable text-derived flag relevant to expense/decline analysis; sample values consistent with source.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "has_equipment_keyword",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "rationale": "Equipment vs travel distinction gives a useful contrast axis; grounded in description text. Slightly less central to the travel-decline query.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "is_travel_category",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "rationale": "Category-based travel flag is useful for grouping, but partly redundant with the original 'category' column and with has_travel_keyword. Derivable from existing fields.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "desc_word_count",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 1.0,
+        "rationale": "Raw word count is a generic surface feature with weak analytical leverage for predicting declines, though perfectly grounded and correctly computed.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "amount_tier",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "rationale": "Binning the original amount into tiers gives a usable grouping axis for decline analysis; derived from an existing column, so mildly redundant but adds a categorical modeling handle.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "travel_expense_signal",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "rationale": "Values (359/141) are identical to has_travel_keyword across all evidence, making it a near-restatement of an existing added column with little new leverage.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.63,
+    "source_groundedness": 0.89,
+    "rationale": "Most columns extract genuine text-based signals (travel/auto-generated/expense/equipment keywords, amount tiers) that give real grouping and modeling axes for predicting declines, and values are soundly derived from the source text with no hallucinations observed. Usefulness is dragged down by desc_word_count (generic surface feature) and travel_expense_signal (a near-duplicate of has_travel_keyword), plus mild redundancy between is_travel_category and the original category column."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "topic",
+    "is_high_frequency_topic",
+    "attention_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.663,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.82,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Which incident topics/themes warrant analyst attention (attention-worthiness derived from incident short_description)",
+    "per_column": [
+      {
+        "name": "topic",
+        "supports_focus": true,
+        "rationale": "Infers the semantic theme of each incident from its description, establishing the categorical basis of 'what' the incident is about -- the core substrate for identifying what's worth attention."
+      },
+      {
+        "name": "is_high_frequency_topic",
+        "supports_focus": true,
+        "rationale": "Derives whether a topic is common vs. rare, a facet of attention (volume-driven prioritization) that builds directly on the topic dimension."
+      },
+      {
+        "name": "attention_flag",
+        "supports_focus": true,
+        "rationale": "Directly operationalizes the attention-worthiness concept into a graded signal (Routine/Medium/High/Low-Anomaly), which is the explicit target the query asks about."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.82,
+    "rationale": "The three columns centre coherently on a single inferable focus: attention-worthiness of incidents grounded in their descriptive topic. 'topic' extracts the theme, 'is_high_frequency_topic' adds a volume facet, and 'attention_flag' synthesizes the priority signal -- a sound theme -> frequency -> attention structure rather than a grab-bag. Structure is slightly weakened because 'is_high_frequency_topic' is a coarse binary largely redundant with topic frequency, and 'attention_flag' bundles anomaly and severity into one label without exposing its drivers, limiting analytical granularity. Still, the implied focus is genuinely actionable: an analyst can triage High/Low-Anomaly incidents and investigate high-frequency topics, so it is neither vacuous nor a mere restatement. It is derived from real content (descriptions) rather than mechanical text metrics."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

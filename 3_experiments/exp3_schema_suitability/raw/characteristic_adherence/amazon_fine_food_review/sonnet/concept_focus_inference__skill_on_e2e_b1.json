@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "taste_flavor_satisfaction",
+    "flavor_strength_mismatch",
+    "health_dietary_fit",
+    "product_efficacy_outcome",
+    "product_category",
+    "use_context"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7667,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8333,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "taste_flavor_satisfaction",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A graded taste sentiment axis is directly relevant to identifying drivers of low scores and correlating with Score. Sample readings are sound (positive for good taffy, negative for medicinal soda). Slightly more than a bare sentiment flag because it is domain-specific to taste and 3-way graded."
+      },
+      {
+        "name": "flavor_strength_mismatch",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes actionable failure modes (too_weak/too_strong/not_as_described) which map to concrete product actions to raise scores. Samples are well grounded (peanuts 'not_as_described', medicinal 'too_strong'). High NULL rate is appropriate silence, not penalised."
+      },
+      {
+        "name": "health_dietary_fit",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Gives a distinct dietary/health axis useful for segmenting concerns, though dominated by 'not_relevant' (~66%) which limits leverage for many rows. Sample values reasonably read the source (all 'not_relevant' where diet is unmentioned)."
+      },
+      {
+        "name": "product_efficacy_outcome",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether product claims are confirmed is a strong actionable axis for score improvement. Mostly grounded, but some mappings are loose: a general 'good quality dog food' review has no explicit claim yet is labeled 'claim_confirmed', and 'not as advertised' -> 'claim_not_confirmed' conflates labeling error with efficacy. Minor over-assertion."
+      },
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A clean grouping axis enabling per-category score analysis and prioritisation, a natural new dimension not present in originals. Sample categorisations are accurate (taffy->snack, dog food->pet_food)."
+      },
+      {
+        "name": "use_context",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Usage context (gift, cooking, pet, medical) adds a useful segmentation axis. Grounded where text is explicit, but the default 'personal_consumption' appears assigned even when the text does not state consumption context (e.g. the confection review), a mild over-confident default."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns provide several genuinely distinct, actionable axes (taste satisfaction, strength/mismatch failure modes, efficacy, category, use context) that let an analyst group by Score and locate concrete improvement levers, directly serving the query. Values are largely sound readings of the source text with appropriate NULL/not_relevant handling for silent rows. Deductions are minor: some efficacy and use_context labels over-assert where the text is thin or silent, and health_dietary_fit is heavily skewed to 'not_relevant'. No completeness penalties applied."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

@@ -1,0 +1,67 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary by agent and issue type?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_category",
+    "assigned_agent",
+    "severity_signal",
+    "technical_system_type",
+    "closing_agent_match"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.71,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.78,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Directly provides the issue-type axis the query needs for grouping resolution time. Values are sound readings of short_description (database access, VPN, intranet). Partly derivable from existing 'category' but adds finer granularity."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "rationale": "The agent axis is central to the query, but this appears largely redundant with the existing 'assigned_to' original column. Values are grounded/consistent, but it mostly restates existing data."
+      },
+      {
+        "name": "severity_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Offers a new axis (severity/nature of failure) to explain resolution-time variation. Mostly well grounded in descriptions; some mappings are looser (e.g., 'connectivity_loss' for a database access issue is a mild stretch), and a correct 'Unknown' for silent rows is appropriate."
+      },
+      {
+        "name": "technical_system_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Provides a system-level grouping distinct from issue_category, useful for comparison. Somewhat overlaps issue_category conceptually but at a coarser system axis. Values are reasonable readings, though some (intranet -> infrastructure vs network_vpn) are debatable."
+      },
+      {
+        "name": "closing_agent_match",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.7,
+        "rationale": "A boolean of whether closing agent equals assigned agent gives a plausible operational signal for resolution behavior. Derivable from closed_by vs assigned_to, but those fields are not shown in the evidence samples, so the specific true/false values cannot be verified from the provided source text."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.86,
+    "rationale": "The added columns supply genuine axes (issue type, severity, system type) that support grouping resolution time, directly serving the query. assigned_agent is largely redundant with the existing assigned_to column, lowering its leverage. Values are generally sound readings of the source text with appropriate 'Unknown' handling; a few categorizations are mild stretches and closing_agent_match values are not fully verifiable from the shown evidence, but no clear invented facts or contradictions were observed."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

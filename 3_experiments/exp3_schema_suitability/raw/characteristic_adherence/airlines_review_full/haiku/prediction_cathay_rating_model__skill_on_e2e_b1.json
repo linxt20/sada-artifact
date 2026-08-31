@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 9,
+  "added_columns": [
+    "service_consistency_issue",
+    "seating_comfort_problem",
+    "food_quality_decline",
+    "operational_reliability_disruption",
+    "ground_service_reliability",
+    "value_perception_mismatch",
+    "crew_engagement_level",
+    "route_distance_category",
+    "traveller_segment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.5778,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.5611,
+    "source_groundedness__table_level": 0.52,
+    "b1_overall": 0.5695,
+    "hallucination_rate": 0.4444
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_consistency_issue",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "The 'consistency' framing is a semi-interesting axis for a route/service model, but the category set is muddled (mixes cross-route, over-time, regional, and 'consistent_positive'). Groundedness is weak: single-experience complaints (Manchester diversion, HK-Tokyo delay) are labeled 'inconsistent_across_routes' though those reviews describe one flight and say nothing about variation across routes. Only the Beijing-Bangkok review (flight 1 good, flight 2 poor) genuinely supports an inconsistency label. Positive reviews mapped to 'consistent_positive' are reasonable."
+      },
+      {
+        "name": "seating_comfort_problem",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Largely redundant with the existing 'Seat Comfort' rating column; a binary flag adds limited new leverage. Values are grounded: the cramped-legspace review is correctly True, silent rows are null. However it missed a clear cue (Beijing-Bangkok 'seats hardly recline' -> null), which is a false negative rather than a fabrication, so no hallucination."
+      },
+      {
+        "name": "food_quality_decline",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Overlaps heavily with the original 'Food & Beverages' rating and the 'decline' temporal framing is rarely evidenced. No fabricated positives in the samples (nulls used for silent rows), but it under-detects explicit mentions (e.g. 'Dinner poor' -> null). Modest added value."
+      },
+      {
+        "name": "operational_reliability_disruption",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Highly relevant to a route/service optimization model — delays, cancellations and reroutes are prime operational levers. But bucketing is unreliable: a '2 hours delay' review is placed in 'major_delays_5plus_hours', directly contradicting the stated duration. The weather diversion -> 'cancellations_reroutes' is sound. Silent rows default to 'on_time_smooth', a mild assumption."
+      },
+      {
+        "name": "ground_service_reliability",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A useful, distinct axis (airport/ground handling) not captured by inflight ratings. However the column never uses null and assigns confident specifics to rows that only discuss cabin crew: reviews praising in-flight crew get 'efficient_helpful'/'standard_adequate' for ground service though the text is silent on it. The 'no staff to help' -> 'absent_neglectful' case is well grounded."
+      },
+      {
+        "name": "value_perception_mismatch",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Effectively tracks overall sentiment and overlaps with the existing 'Value For Money' rating, so it is close to a generic positive/negative flag with limited new modeling leverage. Values follow the review sentiment sensibly (negative experiences -> True, praise -> False), so it is a reasonable inference even if shallow."
+      },
+      {
+        "name": "crew_engagement_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Adds qualitative texture to staff service that the numeric 'Staff Service' rating lacks, useful for service design. Grounded when crew is described (genuine/friendly -> 'attentive_proactive'), but it invents states where crew isn't discussed (ground/delay complaints -> 'disengaged_tired'/'rushed_mechanical') and even contradicts a 'staff excellent' review by labeling 'adequate_basic'."
+      },
+      {
+        "name": "route_distance_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Very useful: a clean grouping axis derivable from the Route column via geography, directly serving route optimization. Inference is mostly warranted but has calibration errors (HK-Melbourne ~9h labeled 'medium_haul_4_8hrs'; Manchester-Sydney labeled 'long_haul' rather than ultra-long). These are estimation slips from world knowledge, not invented facts."
+      },
+      {
+        "name": "traveller_segment",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Nearly a duplicate of the existing 'Type of Traveller' original column (solo/couple/business/family), so it provides little new grouping leverage for the model. Values appear plausible but some look questionable (a Manchester-Sydney holiday-style trip labeled 'business_traveler'); without the source it reads as largely a restatement of an existing field."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.52,
+    "rationale": "The set contributes several genuinely useful modeling axes for the route/service-optimization query — route_distance_category, operational_reliability_disruption, ground_service_reliability and crew_engagement_level give new dimensions to group and compare on. Others are weak: traveller_segment duplicates the original 'Type of Traveller', seating_comfort_problem and food_quality_decline largely restate existing numeric ratings as binaries, and value_perception_mismatch is close to a generic sentiment flag. Groundedness is the bigger concern: multiple columns assign confident specific categories to rows whose text is silent on that facet (ground service and crew states inferred from unrelated complaints), one delay of '2 hours' is miscoded as '5+ hours', and single-flight complaints are labeled cross-route inconsistency. Null usage on genuinely silent rows (seat/food) is appropriate and correctly not penalized. Net: moderate usefulness, mixed-to-weak groundedness due to over-assertion."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

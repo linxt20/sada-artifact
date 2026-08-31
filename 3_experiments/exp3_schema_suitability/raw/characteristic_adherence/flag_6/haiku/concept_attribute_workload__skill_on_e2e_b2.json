@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "focus_variable": "agent_workload_burden",
+  "concept": "agent_workload_burden",
+  "n_added_columns": 3,
+  "added_columns": [
+    "incident_category",
+    "resolution_pattern",
+    "ticket_reassignment_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3528,
+    "facet_fraction": 0.6667,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.4,
+    "mece": 0.5292,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "agent_workload_burden",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The type of incident (email, VPN, database) is an attribute of the ticket that may drive workload, but it is not itself an aspect OF workload burden. It is an external categorical predictor, not a constitutive part of the burden concept."
+      },
+      {
+        "name": "resolution_pattern",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether a ticket is a quick fix, needs prolonged investigation, or carries infrastructure/access dependencies directly characterizes the effort/time dimension of the burden itself. Values like 'quick_fix_expected' vs 'prolonged_investigation' are genuine aspects of how heavy the workload is."
+      },
+      {
+        "name": "ticket_reassignment_pattern",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Reassignment/handoff behavior (assigned different from closer, same agent, no assignment) is a constitutive aspect of workload burden -- coordination/handoff overhead is a real part of the effort a ticket imposes on agents."
+      }
+    ],
+    "facet_columns": [
+      "resolution_pattern",
+      "ticket_reassignment_pattern"
+    ],
+    "non_facet_columns": [
+      "incident_category"
+    ],
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.4,
+    "rationale": "Only two of three columns are true meronymic facets of agent_workload_burden. 'incident_category' is an external predictor/driver of burden, not an aspect of it, so it fails the part-of test. The two genuine facets (effort/resolution complexity and reassignment/handoff overhead) are largely non-overlapping, giving moderate-to-good mutual exclusivity, though 'infrastructure_dependency' in resolution_pattern partly overlaps with category-driven causes. Exhaustiveness is limited: key constitutive dimensions of workload burden such as raw time-to-resolve, number of interactions/touches, communication volume, and cognitive difficulty are not captured, so the facets cover only part of the concept."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

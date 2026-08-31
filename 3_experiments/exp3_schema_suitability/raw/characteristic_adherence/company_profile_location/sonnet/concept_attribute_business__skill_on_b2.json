@@ -1,0 +1,90 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What business models and customers do these companies describe?",
+  "focus_variable": "company_business_profile",
+  "concept": "company_business_profile",
+  "n_added_columns": 6,
+  "added_columns": [
+    "business_model_type",
+    "primary_customer_segment",
+    "industry_vertical",
+    "product_delivery_mode",
+    "company_stage_type",
+    "core_value_proposition"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6185,
+    "facet_fraction": 1.0,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.85,
+    "mece": 0.6185,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "company_business_profile",
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How a company creates and captures value (SaaS, marketplace, professional services) is a core constitutive aspect of its business profile."
+      },
+      {
+        "name": "primary_customer_segment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Who the company serves (B2B, B2C, developers, investors) is an intrinsic aspect of the business profile and directly tied to the query."
+      },
+      {
+        "name": "industry_vertical",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The market/domain a company operates in is a legitimate descriptive facet of its business profile."
+      },
+      {
+        "name": "product_delivery_mode",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How the offering is delivered (cloud SaaS, physical product, staffing) is an aspect of the profile, but it overlaps heavily with business_model_type (cloud_SaaS mirrors SaaS, staffing mirrors staffing_recruiting)."
+      },
+      {
+        "name": "company_stage_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Lifecycle/maturity stage is an aspect of a company's profile, though it is more about corporate maturity than the business model/customer focus of the query; still a legitimate facet."
+      },
+      {
+        "name": "core_value_proposition",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The central benefit offered is a constitutive aspect of the business profile, but it substantially overlaps with industry_vertical and business_model_type (e.g., infrastructure_and_platform vs cloud_infrastructure/SaaS, financial_services vs fintech)."
+      }
+    ],
+    "facet_columns": [
+      "business_model_type",
+      "primary_customer_segment",
+      "industry_vertical",
+      "product_delivery_mode",
+      "company_stage_type",
+      "core_value_proposition"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.85,
+    "rationale": "All six columns are genuine facets (parts-of) of a company business profile rather than external predictors or causes, so the meronymy claim holds. However, mutual exclusivity is weak: product_delivery_mode is largely a projection of business_model_type (cloud_SaaS/SaaS, staffing, investment_capital all co-vary), and core_value_proposition overlaps with both industry_vertical and business_model_type (infrastructure_and_platform, financial_services, security_and_compliance restate vertical/model categories). These redundancies mean several columns capture the same underlying aspect under different names. Exhaustiveness is fairly strong: business model, customer segment, vertical, delivery mode, stage, and value proposition together cover the main constitutive aspects of the profile, well addressing the query's business-model-and-customer focus, though geographic/scale dimensions are omitted."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_business",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

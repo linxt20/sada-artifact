@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can clinics improve triage and scheduling?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "estimated_resource_intensity",
+    "follow_up_required",
+    "specialist_referral_needed",
+    "has_comorbidity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8375,
+    "analytical_usefulness__table_level": 0.84,
+    "source_groundedness": 0.82,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8287,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "estimated_resource_intensity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "A genuine new axis for triage/scheduling: grouping visits by resource load directly supports capacity planning. Values are reasonable inferences from clinical detail (labs, MRI, supportive care). Some subjectivity, e.g. MRI-ordered knee visit rated 'high' vs MI follow-up 'medium', but all readings are warranted by the text."
+      },
+      {
+        "name": "follow_up_required",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to scheduling downstream appointments. Values track text: MI follow-up with 'repeat lipid panel in 3 months' = yes; viral URI 'return if worse' = yes (defensible); annual exam = no. Sound readings overall."
+      },
+      {
+        "name": "specialist_referral_needed",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful for routing decisions in triage. Sampled values are consistent with text (none of the sampled visits explicitly initiate a new referral, so 'no' is a sound reading). Not redundant with other columns."
+      },
+      {
+        "name": "has_comorbidity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Comorbidity burden is a legitimate axis for triage risk stratification. Sampled 'no' values are defensible: prior MI is historical and arguably a comorbidity but text frames it as resolved; BMI 27 is not clearly flagged. Values are cautious rather than invented, so groundedness holds."
+      }
+    ],
+    "analytical_usefulness": 0.84,
+    "source_groundedness": 0.82,
+    "rationale": "All four added columns provide distinct, non-redundant axes (resource load, follow-up scheduling, referral routing, comorbidity risk) that meaningfully support the triage-and-scheduling query. Produced values in the evidence samples are sound readings or cautious inferences from the reason_for_visit text, with no invented facts or contradictions observed. Minor subjectivity in intensity/comorbidity labeling slightly tempers groundedness but does not amount to hallucination."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

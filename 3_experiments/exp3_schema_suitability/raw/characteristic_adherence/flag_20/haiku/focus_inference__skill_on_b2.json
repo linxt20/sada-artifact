@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category",
+    "creation_mode",
+    "business_purpose",
+    "asset_specificity",
+    "department_span",
+    "processing_lag_signal",
+    "source_tracking_completeness",
+    "asset_lifecycle_stage"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.3025,
+    "focus_coherence": 0.55,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.5,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature and provenance of procured assets underlying the travel-expense records (asset acquisition/lifecycle profiling)",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "supports_focus": true,
+        "rationale": "Classifies what kind of asset the expense represents -- a core facet of an asset-centric focus."
+      },
+      {
+        "name": "creation_mode",
+        "supports_focus": true,
+        "rationale": "Describes how the record/asset entry was generated (automated vs manual), a provenance facet of asset acquisition."
+      },
+      {
+        "name": "business_purpose",
+        "supports_focus": true,
+        "rationale": "Ties each asset to why it was acquired; coheres with an acquisition-purpose framing."
+      },
+      {
+        "name": "asset_specificity",
+        "supports_focus": true,
+        "rationale": "Granularity of asset identification (named model vs generic vs service) -- an attribute of the asset concept."
+      },
+      {
+        "name": "department_span",
+        "supports_focus": false,
+        "rationale": "Essentially restates the existing department column; a spend/owner dimension, only loosely about the asset focus."
+      },
+      {
+        "name": "processing_lag_signal",
+        "supports_focus": false,
+        "rationale": "Derived timing metric from processed vs opened dates; a data-quality/process facet, not an asset attribute."
+      },
+      {
+        "name": "source_tracking_completeness",
+        "supports_focus": false,
+        "rationale": "Bare presence/absence flag on source_id -- a generic data-completeness check, not asset-focused."
+      },
+      {
+        "name": "asset_lifecycle_stage",
+        "supports_focus": true,
+        "rationale": "Places the asset in acquisition/registration/maintenance stages -- a genuine lifecycle facet of the asset focus."
+      }
+    ],
+    "focus_coherence": 0.55,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.5,
+    "rationale": "A majority of columns (asset_category, asset_specificity, asset_lifecycle_stage, creation_mode, business_purpose) do centre on a coherent asset-acquisition/provenance concept, so an implied focus is inferable and the set is not a pure grab-bag. However, coherence is diluted by three off-theme additions: department_span merely restates an existing column, while processing_lag_signal and source_tracking_completeness are generic process/data-quality flags that pull toward a different (data-hygiene) axis. Structurally the asset facets form a reasonable multi-faceted decomposition (type, specificity, lifecycle, purpose, provenance), but the mixing of asset facets with completeness/timing signals weakens it as a clean predictor/attribute set. The focus is somewhat actionable -- an analyst could investigate what assets drive travel expenses and how they are procured -- but there is notable tension because the operator reframed 'travel-expense records' as an asset-procurement problem, which may not match the spend/cost focus the query most naturally invites, capping actionability."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

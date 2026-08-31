@@ -1,0 +1,111 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which clinical factors best explain longer visit durations?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "condition_category",
+    "multisystem_involvement",
+    "clinical_severity",
+    "procedure_performed",
+    "imaging_or_diagnostic_workup",
+    "disposition_complexity",
+    "visit_type"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "condition_category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The clinical condition being treated is a candidate cause of visit duration ('clinical factors'), and it plausibly drives severity, workup and procedures. Serves as a primary treatment/candidate cause."
+      },
+      {
+        "name": "multisystem_involvement",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Involvement of multiple body systems plausibly drives both the choice/intensity of treatment (procedures, workup) and independently lengthens visits; a genuine common-cause not named in the query."
+      },
+      {
+        "name": "clinical_severity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Severity plausibly causes both more intensive treatment/workup and longer duration. A classic common cause; not explicitly named (query only says 'clinical factors')."
+      },
+      {
+        "name": "procedure_performed",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Procedures lie on the causal path: a condition leads to a procedure which then consumes time. Adjusting for it would block part of the effect; it is a mediator, not a confounder."
+      },
+      {
+        "name": "imaging_or_diagnostic_workup",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Diagnostic workup is a downstream consequence of the condition/severity and directly consumes visit time; it sits on the causal path (mediator), not a common cause."
+      },
+      {
+        "name": "disposition_complexity",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Disposition (admission/ICU) is determined by the visit's course and severity and occurs at/after the outcome; it is downstream, effectively a collider/outcome-descendant, not something to adjust for."
+      },
+      {
+        "name": "visit_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether a visit is new/acute vs chronic follow-up vs preventive plausibly shapes both the clinical activity performed and baseline expected duration; a plausible common cause not named in query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "condition_category"
+    ],
+    "confounders": [
+      {
+        "name": "clinical_severity",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "multisystem_involvement",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "visit_type",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "There is a plausible treatment (condition_category) and several genuine, query-surfaced confounders (clinical_severity, multisystem_involvement, visit_type) that are common causes of both the intensity of care and duration, all of which were surfaced from the data rather than named in the query. However, nearly half the added columns (procedure_performed, imaging_or_diagnostic_workup, disposition_complexity) are mediators/downstream descendants on the causal path from condition to duration; conditioning on these would bias the attribution. The set thus shows real causal reasoning but also a clear failure to distinguish confounders from mediators/colliders, lowering confounder_quality."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_long_visit",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

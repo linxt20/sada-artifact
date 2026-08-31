@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category_type",
+    "asset_specificity",
+    "expense_purpose_signal",
+    "request_justification_clarity",
+    "high_value_indicator",
+    "department_procurement_profile",
+    "request_automation_indicator"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.6171,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.8571
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable categories of what is being expensed (hardware, cloud, travel, etc.); a strong external axis to segment decline rates against."
+      },
+      {
+        "name": "asset_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Named-model vs generic-category is an interpretable, well-balanced dimension that plausibly associates with declines and supports meaningful grouping."
+      },
+      {
+        "name": "expense_purpose_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Purpose of expense (routine refresh, maintenance, travel, new-employee) gives clear, comparable segments to cross with decline outcomes."
+      },
+      {
+        "name": "request_justification_clarity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clarity of justification is an interpretable ordinal-ish segmentation that plausibly relates to approval/decline and can be grouped on."
+      },
+      {
+        "name": "high_value_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean binary cost-tier flag; interpretable and a classic dimension to compare decline rates, though it partially derives from the existing amount column."
+      },
+      {
+        "name": "department_procurement_profile",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Values are literally department names (customer_support, sales, it, ...), duplicating the existing department column rather than adding an external associational variable."
+      },
+      {
+        "name": "request_automation_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Automated vs manual request is an interpretable, reasonably balanced binary segment that could plausibly correlate with decline outcomes."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.72,
+    "rationale": "Most added columns are interpretable, well-separated categorical dimensions that open genuine associational axes around declines (asset type, specificity, purpose, justification clarity, value tier, automation), directly enabling exploration of what gets declined and cross-tabbing by segment. One column (department_procurement_profile) merely restates the existing department field and adds no new relationship, and high_value_indicator partly derives from amount. As a set they support discovering interpretable relationships with the focus reasonably well, but the redundancy prevents a top score."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "primary_cabin_service_complaint",
+    "complaint_recurrence_signal",
+    "service_gap_category",
+    "traveler_segment_susceptibility",
+    "class_quality_gap",
+    "positive_offset_factor",
+    "expectation_gap",
+    "service_inconsistency",
+    "class_of_service_quality_gap"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.5167,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.5333,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.525,
+    "hallucination_rate": 0.7778
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_cabin_service_complaint",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly identifies the complaint type per review, which is exactly the grouping axis the query needs to estimate rating improvement from eliminating common complaints. Samples show sound extraction: seat_comfort_issue for the dreadful-seats review, Unknown for purely positive reviews."
+      },
+      {
+        "name": "complaint_recurrence_signal",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A bare boolean whose meaning (whether a complaint recurs) is not derivable from a single review's source text. It largely restates whether a complaint exists and asserts recurrence the text cannot support, adding little leverage for the query."
+      },
+      {
+        "name": "service_gap_category",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A coarser categorisation of the complaint provides a useful higher-level grouping axis. However groundedness is weak: purely positive reviews (e.g. 'flight was amazing', 'excellent performance') are labelled crew_interpersonal or product_quality despite having no service gap, defaulting rather than reading the text."
+      },
+      {
+        "name": "traveler_segment_susceptibility",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Segmenting travellers could help, but values appear largely invented: reviews with no stated traveller type are confidently assigned solo_leisure or leisure_family, and it overlaps the existing Type of Traveller column without clear grounding."
+      },
+      {
+        "name": "class_quality_gap",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A boolean about whether class-level quality gap exists is only sometimes supported; positive reviews get False reasonably, but the notion is often asserted without textual basis and near-duplicates class_of_service_quality_gap."
+      },
+      {
+        "name": "positive_offset_factor",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Identifying the standout positive helps model net rating effects if complaints were removed. Samples are reasonably grounded (crew_excellence, food_quality match praise in the text), though it forces a value even on complaint-heavy reviews."
+      },
+      {
+        "name": "expectation_gap",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A generic boolean largely tracking whether a complaint exists; adds little independent analytical leverage and asserts an expectation-vs-reality gap not explicitly present in the text."
+      },
+      {
+        "name": "service_inconsistency",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Categories like varies_by_aircraft_type or varies_by_cabin_crew cannot be inferred from a single review, which describes one flight. The 'consistent' default is plausible but the varying categories are unsupported inferences."
+      },
+      {
+        "name": "class_of_service_quality_gap",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Near-duplicate of class_quality_gap (a mere restatement with inverted default distribution), providing no new axis and resting on unsupported class-comparison assertions."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.55,
+    "rationale": "The primary_cabin_service_complaint column is strongly useful and well-grounded, directly serving the query's need to group reviews by complaint type and estimate rating lift; positive_offset_factor and service_gap_category add moderate value. However several columns are generic booleans (complaint_recurrence_signal, expectation_gap) or near-duplicates (class_quality_gap vs class_of_service_quality_gap) that add little leverage, and multiple columns assert inferences the single-review source text cannot support (recurrence, cross-cabin/aircraft inconsistency, traveller segment), producing observable hallucinations. Overall a mixed set anchored by one excellent column."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 9
+}

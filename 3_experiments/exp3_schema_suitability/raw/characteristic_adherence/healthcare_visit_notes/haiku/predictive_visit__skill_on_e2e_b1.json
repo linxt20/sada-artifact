@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit reasons point to different departments?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "life_threat_status",
+    "organ_system_focus",
+    "presenting_symptom_type",
+    "diagnostic_or_procedural_escalation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.855,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.88,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.8675,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "life_threat_status",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "An acuity axis derived from clinical detail; useful for cross-tabbing against department but somewhat parallel to the existing urgency column. Values are sound readings, though the pediatric URI row labeled 'mild_stable_chronic' is a slightly odd fit for an acute illness, a minor mismatch."
+      },
+      {
+        "name": "organ_system_focus",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Directly targets the query: mapping visit reasons to organ systems is the natural bridge to departments. Values are well-grounded extractions from the reason text (cardiovascular for MI follow-up, respiratory for cough, etc.). The endocrine_metabolic tag for the annual exam is a reasonable inference given HbA1c/lipid labs.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "presenting_symptom_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A distinct symptom-oriented axis complementing organ_system_focus; strong grouping leverage for the query. Mostly well-grounded, but the MI follow-up row (explicitly 'no angina') tagged 'pain_chest_cardiac' asserts a symptom the text denies, a minor grounding slip."
+      },
+      {
+        "name": "diagnostic_or_procedural_escalation",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Captures the care-action dimension, a genuinely different axis that can differentiate departments (e.g. imaging for Orthopedics, medication for Dermatology). Values track the source text well (MRI->imaging_complex, adapalene/doxycycline->medication_initiation).",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.9,
+    "rationale": "The added columns provide multiple genuinely useful axes (organ system, symptom type, care escalation, acuity) for relating visit reasons to departments, which is precisely what the query asks. Values are consistently well-grounded extractions or warranted inferences from the reason_for_visit text, with only minor slips (a denied chest-pain tagged as pain_chest_cardiac; an acute URI labeled mild_stable_chronic). life_threat_status overlaps partially with the existing urgency column, slightly reducing its marginal value, but the set overall is strong on both dimensions."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 4
+}

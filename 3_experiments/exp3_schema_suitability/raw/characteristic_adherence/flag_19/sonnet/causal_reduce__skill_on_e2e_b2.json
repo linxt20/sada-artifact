@@ -1,0 +1,128 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce declined expense submissions?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "submission_origin",
+    "submission_action_type",
+    "source_id_present",
+    "ci_specificity",
+    "asset_brand_family",
+    "submitting_department",
+    "is_high_cost_asset_type"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 0.75,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category of asset (hardware, travel, software) is a property of the submission that plausibly affects both how it is submitted and whether it is declined; not intervenable itself, functions as a common-cause covariate."
+      },
+      {
+        "name": "submission_origin",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether a submission is manual, auto-generated, or provisioned is a configurable process lever an actor could set/change, and could plausibly affect decline rates."
+      },
+      {
+        "name": "submission_action_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The action/workflow used (registration, auto-creation, acquisition, etc.) is a process choice that can be assigned or changed, making it an intervenable lever on decline outcomes."
+      },
+      {
+        "name": "source_id_present",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether a source_id is attached is a settable data-completeness requirement (a policy could mandate it), and plausibly influences whether a submission is declined."
+      },
+      {
+        "name": "ci_specificity",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How specifically the configuration item is described is a controllable submission-quality property that could be enforced, so it is intervenable and plausibly affects decline."
+      },
+      {
+        "name": "asset_brand_family",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Vendor/brand is largely a fixed attribute of the item, not something set to reduce declines; serves as a covariate that may correlate with both submission practices and outcome."
+      },
+      {
+        "name": "submitting_department",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Department already exists in the original table and is implied context; it is a common cause of both submission practices and decline rates but is not the interventional lever here."
+      },
+      {
+        "name": "is_high_cost_asset_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the asset type is high-cost is an intrinsic property that plausibly drives both scrutiny (submission handling) and decline likelihood; a non-intervenable common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "submission_origin",
+      "submission_action_type",
+      "source_id_present",
+      "ci_specificity"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "asset_category_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "asset_brand_family",
+        "named_in_query": false,
+        "plausibility": 0.45
+      },
+      {
+        "name": "submitting_department",
+        "named_in_query": true,
+        "plausibility": 0.65
+      },
+      {
+        "name": "is_high_cost_asset_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The added columns include several genuinely intervenable treatments (submission origin/action type, requiring source_id, enforcing CI specificity) that set up an interventional 'what could we change to reduce declines' question, satisfying claim (a). Claim (b) is partially met: multiple plausible confounders (asset category, brand family, high-cost flag) are added that were NOT named in the query and are common causes of both submission practice and decline, though some (brand) are weak and one (department) merely duplicates existing context. The set realises a legitimate what-if intervention design, but confounder adjustment is only moderately strong because the added covariates are process/asset descriptors rather than clearly established common causes of both the specific treatments and the outcome."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

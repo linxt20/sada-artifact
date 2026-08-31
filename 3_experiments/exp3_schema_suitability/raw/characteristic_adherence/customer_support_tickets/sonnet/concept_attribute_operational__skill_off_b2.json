@@ -1,0 +1,58 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What customer issues create the most support burden?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 2,
+  "added_columns": [
+    "issue_category",
+    "burden_score"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.0,
+    "exhaustiveness": 0.0,
+    "mece": 0.0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The category/type of issue is a driver or classifier of what generates burden, not an aspect OF the burden itself. Operational burden is constituted by facets like handling time, effort, volume, escalation, and reopen rate -- not by the taxonomy of the issue that causes it. It is a predictor of burden, failing the meronymy test."
+      },
+      {
+        "name": "burden_score",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A single aggregate burden score is a restatement of the whole focus concept, not a decomposition into constitutive parts. A faceted decomposition requires breaking burden into non-overlapping component aspects; a composite score collapses the concept back into one number rather than carving it up."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "issue_category",
+      "burden_score"
+    ],
+    "mutual_exclusivity": 0.0,
+    "exhaustiveness": 0.0,
+    "rationale": "Neither added column is a constitutive facet (part-of) of operational_burden. 'issue_category' is an external predictor/classifier of what causes burden, and 'burden_score' is a restatement of the whole concept rather than one of its parts. With no genuine facets present, the set does not carve the concept into non-overlapping aspects (mutual exclusivity trivially 0) and covers none of its constitutive dimensions such as time-on-task, escalation, reopens, or agent effort (exhaustiveness 0). The faceted decomposition claim is not realised."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

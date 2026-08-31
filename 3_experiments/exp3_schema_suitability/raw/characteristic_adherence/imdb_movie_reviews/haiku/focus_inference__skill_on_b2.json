@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "production_quality_focus",
+    "performance_quality_focus",
+    "plot_coherence_focus",
+    "technical_craft_focus",
+    "emotional_resonance_focus",
+    "thematic_depth_focus",
+    "genre_expectation_focus",
+    "entertainment_level_focus"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.8075,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The specific cinematic aspects/dimensions of a film that reviewers evaluate and focus on (e.g., production, performance, plot, craft, emotion, theme, genre, entertainment)",
+    "per_column": [
+      {
+        "name": "production_quality_focus",
+        "supports_focus": true,
+        "rationale": "Captures whether reviewers focus on production quality — a distinct evaluative facet of the film aspect focus."
+      },
+      {
+        "name": "performance_quality_focus",
+        "supports_focus": true,
+        "rationale": "Acting/performance is a coherent, commonly reviewed film aspect with graded evaluative values."
+      },
+      {
+        "name": "plot_coherence_focus",
+        "supports_focus": true,
+        "rationale": "Plot/narrative coherence is a clear film aspect reviewers focus on."
+      },
+      {
+        "name": "technical_craft_focus",
+        "supports_focus": true,
+        "rationale": "Technical craft is a valid facet, though it overlaps somewhat with production_quality."
+      },
+      {
+        "name": "emotional_resonance_focus",
+        "supports_focus": true,
+        "rationale": "Emotional impact is a distinct reviewer focus dimension."
+      },
+      {
+        "name": "thematic_depth_focus",
+        "supports_focus": true,
+        "rationale": "Thematic substance is a coherent evaluative aspect of films."
+      },
+      {
+        "name": "genre_expectation_focus",
+        "supports_focus": true,
+        "rationale": "Genre fulfillment/subversion is a legitimate aspect reviewers attend to."
+      },
+      {
+        "name": "entertainment_level_focus",
+        "supports_focus": true,
+        "rationale": "Entertainment value is a recognizable reviewer focus dimension."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "rationale": "The columns collectively and tightly centre on ONE coherent, data-inferable focus: the specific film aspects reviewers focus on. Each column is a categorical facet with a 'not_present' level plus differentiated evaluative values, which directly operationalises 'what aspects are reviewers focusing on' — the exact query. This is a faceted decomposition, not a grab-bag or a bare-sentiment restatement, so structure_quality is high; the only mild deduction is that production_quality_focus and technical_craft_focus overlap conceptually, slightly blurring facet boundaries. The focus is highly actionable: an analyst can quantify aspect prevalence, compare focus frequency across aspects, and relate them to the label_pos sentiment. The set avoids mechanical proxies (length, token counts) and instead encodes semantically meaningful, mutually reinforcing facets, strongly realising the focus-inference claim."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

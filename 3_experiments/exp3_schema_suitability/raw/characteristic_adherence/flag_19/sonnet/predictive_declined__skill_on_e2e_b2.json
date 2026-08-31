@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "asset_form_factor",
+    "asset_vendor",
+    "is_premium_or_nonstandard_asset",
+    "is_travel_related",
+    "has_source_id",
+    "has_processed_date",
+    "description_specificity",
+    "ci_identifier_quality",
+    "submitting_department"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5333,
+    "predictor_fraction": 0.8889,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.1111
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_form_factor",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of asset being expensed is knowable at submission and plausibly correlates with decline rates (e.g., premium hardware vs. accessories); a legitimate external predictor."
+      },
+      {
+        "name": "asset_vendor",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Vendor is known pre-decision and may carry signal (approved vendor lists, cost profiles), so a valid predictor of decline."
+      },
+      {
+        "name": "is_premium_or_nonstandard_asset",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Non-standard/premium items are plausibly more likely to be declined; known at submission and outside the focus, hence a strong candidate predictor."
+      },
+      {
+        "name": "is_travel_related",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the expense is travel-related is known upfront and category-level decline patterns are plausible; legitimate predictor."
+      },
+      {
+        "name": "has_source_id",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of a source_id is a metadata/completeness indicator available at submission; missing linkage could plausibly raise decline likelihood. Valid predictor, though risk of proxying process state is mild."
+      },
+      {
+        "name": "has_processed_date",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "processed_date is populated as part of processing the expense to its final state; its presence is largely determined by the outcome workflow and only known after adjudication, making it post-outcome leakage rather than a pre-decision signal."
+      },
+      {
+        "name": "description_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Quality/specificity of the description is known at submission and vague requests plausibly get declined more; a genuine external predictor."
+      },
+      {
+        "name": "ci_identifier_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Quality of the configuration-item identifier is submission-time metadata; poor identification could raise decline risk. Legitimate predictor."
+      },
+      {
+        "name": "submitting_department",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Department is known before adjudication and decline rates plausibly vary by department; valid predictor (partially overlaps existing 'department' column, but framed as submitting department)."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.6,
+    "rationale": "Most added columns are submission-time attributes of the expense (asset type, vendor, premium flag, travel flag, description/CI quality, department) that lie outside the focus and plausibly carry predictive signal about decline, giving the set solid predictive leverage. 'has_processed_date' is flagged as leakage because processed_date presence is driven by the adjudication workflow and known only after the outcome. 'submitting_department' partially duplicates an existing column, slightly limiting incremental gain. Overall a coherent, mostly legitimate feature set with moderate-to-good utility."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "technical_craft_focus",
+    "narrative_substance_focus",
+    "performance_evaluation_focus",
+    "emotional_response_focus",
+    "genre_convention_focus",
+    "thematic_message_focus"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8083,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7417,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "technical_craft_focus",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly captures which technical aspects reviewers focus on, a core axis for the query. Values are fine-grained and reasonably grounded; 'not_present' correctly used for the many silent samples."
+      },
+      {
+        "name": "narrative_substance_focus",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful axis on plot/character/dialogue focus. Row 1 tagging 'dialogue_quality' is well grounded ('stilted dialogue'). But row 5, a plot-summary with no explicit character-craft comment, being labeled 'character_development' is a weak/overreaching read, and row 2 'plot_coherence' is a soft inference. Mostly warranted but some ungrounded specifics."
+      },
+      {
+        "name": "performance_evaluation_focus",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Acting focus is highly relevant. Rows 3 ('performances are wooden') and 4 ('acting is pretty good') are well grounded, and 'not_present' used appropriately. However row 2 shows 'acting_quality' where the sampled text contains no acting comment, suggesting occasional overreach."
+      },
+      {
+        "name": "emotional_response_focus",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Has no 'not_present' value and 'viewer_satisfaction' dominates (149), functioning nearly as a restatement of overall sentiment/label_pos rather than a distinct focus axis, reducing leverage. Values are also assigned to every row, forcing a categorization even where the text only implies liking/disliking."
+      },
+      {
+        "name": "genre_convention_focus",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Cliche/originality is a meaningful aspect axis. Grounded where text says 'predictable/well-trodden'. But row 5 (a plot summary) tagged 'cliche_or_derivative' has no textual support, and 'cliche_or_derivative' appearing as a default-like tag across many rows signals some ungrounded assignment."
+      },
+      {
+        "name": "thematic_message_focus",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures moral/social/cultural themes, a genuine focus axis distinct from craft and performance. Well grounded: row 5 'moral_or_philosophical_theme' fits the migration/exploitation content; 'not_present' correctly dominates for silent rows."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.73,
+    "rationale": "The added columns collectively decompose 'what aspects reviewers focus on' into meaningful, groupable axes (technical craft, narrative, performance, genre convention, theme), giving strong analytical leverage for the query. Most columns appropriately use 'not_present' for silent rows and extract warranted categories. Groundedness is moderate: several samples show forced or overreaching labels (e.g., row 5 tagged with character_development and cliche_or_derivative, row 2 with acting_quality, none clearly supported by the shown text), and the emotional_response_focus column both overlaps with overall sentiment and lacks a 'not_present' option, forcing a label on every row. These are quality concerns, not completeness ones."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 5,
+  "added_columns": [
+    "Expectation_Gap",
+    "Airline_Avg_Rating",
+    "Review_Sentiment",
+    "Review_Detail_Level",
+    "Value_Perception"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0447,
+    "facet_fraction": 0.2,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.1,
+    "mece": 0.2236,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "Expectation_Gap",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A signed numeric difference (positive/negative decimals) that reads as (perceived quality − expectation), i.e., a disconfirmation/satisfaction gap. This is a derived summary of overall quality relative to a baseline, not a distinct aspect OF service quality. It re-expresses the whole judgment rather than carving out a constitutive part."
+      },
+      {
+        "name": "Airline_Avg_Rating",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "An airline-level aggregate (average of the overall rating across reviews). It is a contextual attribute attached to each row that co-varies with / predicts the individual quality judgment; it is not an aspect that partitions a single review's service-quality experience. It sits at a different unit of analysis than a facet."
+      },
+      {
+        "name": "Review_Sentiment",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Mixed/Positive/Negative/Neutral is a bare sentiment label over the review text. It reflects the reviewer's overall affective evaluation of quality rather than isolating a specific constitutive aspect (comfort, staff, food, etc.). Per the criteria, bare sentiment does not realise a facet; it restates the global judgment."
+      },
+      {
+        "name": "Review_Detail_Level",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Detailed/Moderate/Brief is metadata about the length/verbosity of the review text. It describes the artifact (the review) and not any aspect of the airline's service quality. This is a generic text-length proxy and is irrelevant to the decomposition."
+      },
+      {
+        "name": "Value_Perception",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Fair/Good Value/Overpriced captures the value-for-money dimension, which is a genuine constitutive aspect of airline service quality (an 'aspect OF' the concept). Note it largely re-buckets the existing 'Value For Money' rating, so its added value as a facet is weak, but semantically it is a legitimate part."
+      }
+    ],
+    "facet_columns": [
+      "Value_Perception"
+    ],
+    "non_facet_columns": [
+      "Expectation_Gap",
+      "Airline_Avg_Rating",
+      "Review_Sentiment",
+      "Review_Detail_Level"
+    ],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.1,
+    "rationale": "Airline service quality decomposes into concrete experiential facets (seat comfort, staff/crew service, food & beverage, inflight entertainment, boarding/check-in, punctuality, cleanliness, value for money, etc.). Of the five added columns, only Value_Perception is a true part-of the concept — and it merely re-buckets an already-present dimension. Expectation_Gap and Review_Sentiment restate the global quality judgment (a signed satisfaction gap and an overall affect label), Airline_Avg_Rating is an airline-level aggregate that acts as an external/contextual predictor at the wrong unit of analysis, and Review_Detail_Level is irrelevant text metadata. Because effectively a single (and redundant) facet is present, coverage of the concept's constitutive aspects is very poor, so exhaustiveness is very low. Mutual exclusivity among the facet set is only nominally clean since there is essentially one facet with no other facets to overlap with, but the decomposition as a whole fails the meronymy test."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_key_focus_points",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

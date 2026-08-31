@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an expense will be declined?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "missing_source_id",
+    "missing_processed_date",
+    "is_pending",
+    "is_submitted",
+    "is_it_department",
+    "is_travel_category",
+    "amount_is_low",
+    "amount_is_high",
+    "processing_delay_days",
+    "risk_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.63,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7275,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A missingness flag on source_id is a plausible new axis for correlating with declines and is directly derivable from the presence/absence of source_id. Somewhat speculative as a decline signal but not trivial."
+      },
+      {
+        "name": "missing_processed_date",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Grounded directly in the nan processed_date values shown. Missing processing may correlate with non-completed/declined states, giving modest analytical leverage; partly overlaps with is_pending/is_submitted."
+      },
+      {
+        "name": "is_pending",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "State-derived flag directly relevant to decline analysis and derivable from the state column. Useful grouping axis, though a simple restatement of one state value."
+      },
+      {
+        "name": "is_submitted",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Another state-derived flag; submitted-but-not-processed items plausibly precede declines. Grounded in state; adds a distinct grouping axis."
+      },
+      {
+        "name": "is_it_department",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly derived from department; department-level decline rates are a legitimate comparison axis. Useful but a single one-hot slice."
+      },
+      {
+        "name": "is_travel_category",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Derived from category; travel expenses are a well-motivated decline-risk segment for expense approval. Grounded and a useful group-by."
+      },
+      {
+        "name": "amount_is_low",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Threshold flag on amount, a reasonable axis for decline risk. Slightly weak due to unspecified threshold, but derivable from amount."
+      },
+      {
+        "name": "amount_is_high",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "High-amount flag is a strong candidate decline signal and derivable from amount. Threshold is arbitrary but the value is grounded in the numeric field."
+      },
+      {
+        "name": "processing_delay_days",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Delay from opened_at to processed_date is a genuinely useful continuous signal. However the sentinel 999 for missing processed_date conflates 'unknown' with an extreme numeric value, which can corrupt modeling and misrepresents silent rows as a specific large delay."
+      },
+      {
+        "name": "risk_score",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A composite risk score is analytically appealing, but the values are an opaque, unexplained aggregation; the specific numbers (e.g., 8.0, 6.5) are not clearly warranted by any single source field and assert a confident quantification the text does not support, risking circularity with the target."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.75,
+    "rationale": "Most added columns are grounded one-hot/missingness flags derived from existing structured fields (state, department, category, amount, dates) and provide legitimate group-by axes for decline analysis. Weaknesses: processing_delay_days uses a 999 sentinel that misencodes unknowns as a specific value, and risk_score is an unexplained composite whose specific numeric values are not clearly derivable from the source text and may leak the target. These lower groundedness for those two columns, while overall usefulness remains moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

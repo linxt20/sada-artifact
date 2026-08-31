@@ -1,0 +1,104 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can clinics improve triage and scheduling?",
+  "focus_variable": "triage_and_scheduling_efficiency",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "clinical_severity_level",
+    "workup_and_diagnostic_demand",
+    "treatment_intervention_complexity",
+    "time_criticality_for_intervention",
+    "visit_type_and_slot_profile"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 0.75,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "triage_and_scheduling_efficiency",
+    "per_column": [
+      {
+        "name": "clinical_severity_level",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Clinical severity is an intrinsic patient-state attribute, not something a clinic can set. It plausibly drives both scheduling decisions (treatment) and efficiency (outcome), making it a common cause / confounder rather than an intervenable lever."
+      },
+      {
+        "name": "workup_and_diagnostic_demand",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The amount of diagnostic workup a case requires is largely dictated by the underlying condition, not a free clinic choice. It affects both how a visit is slotted and how efficiently triage/scheduling proceeds, so it functions as a common cause."
+      },
+      {
+        "name": "treatment_intervention_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Intervention complexity is determined by the clinical need, not settable by the clinic. It influences resource allocation/scheduling and efficiency simultaneously, acting as a confounder rather than a manipulable treatment."
+      },
+      {
+        "name": "time_criticality_for_intervention",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Time-criticality is a property of the medical situation (related to existing 'urgency' column), not a lever the clinic chooses. It jointly drives triage priority and efficiency, so it is a common cause."
+      },
+      {
+        "name": "visit_type_and_slot_profile",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The visit type and slot allocation is genuinely configurable by the clinic (assigning brief follow-up vs extended procedure slots), which is an intervenable scheduling lever plausibly affecting efficiency."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "visit_type_and_slot_profile"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "clinical_severity_level",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "workup_and_diagnostic_demand",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "treatment_intervention_complexity",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "time_criticality_for_intervention",
+        "named_in_query": true,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "Exactly one column (visit_type_and_slot_profile) is a genuinely intervenable clinic-controllable lever (slot assignment), satisfying part (a). The remaining columns are clinical-need attributes that are not settable by the clinic but plausibly cause both the slotting decision and efficiency, so they function as confounders and satisfy part (b). Most of these confounders are not named in the query (only time_criticality overlaps with the existing 'urgency' concept), so the set does demonstrate the capability under test to some degree. However, the treatment is thin (a single lever) and several 'confounders' verge on being determinants of demand rather than clearly distinguished common causes, so confounder quality is moderate rather than high."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

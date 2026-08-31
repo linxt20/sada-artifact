@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "Average_Service_Rating",
+    "Service_Consistency",
+    "Lowest_Rated_Dimension",
+    "Poor_Dimensions_Count",
+    "Review_Length",
+    "Review_Word_Count",
+    "Is_Premium_Class",
+    "Traveler_Category",
+    "Review_Verified"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0667,
+    "predictor_fraction": 0.3333,
+    "n_predictors": 3,
+    "redundancy": 0.0,
+    "predictive_utility": 0.2,
+    "leakage_rate": 0.4444
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "Average_Service_Rating",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This is the mean of the sub-rating dimensions (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment, Value For Money). Overall Rating is effectively a summary of these same dimensions, so this is a near-deterministic aggregate of the focus rather than an independent predictor."
+      },
+      {
+        "name": "Service_Consistency",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "The standard deviation across the same sub-rating dimensions used to form the overall rating. It is a derived function of the ratings that constitute the outcome, so it restates in-focus information rather than supplying external signal."
+      },
+      {
+        "name": "Lowest_Rated_Dimension",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Derived directly from the component sub-ratings that determine the overall rating. Knowing which dimension is lowest is a function of the same rating vector, so it leaks the outcome."
+      },
+      {
+        "name": "Poor_Dimensions_Count",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A count of sub-dimensions below a threshold, computed from the very ratings that compose the overall score. Highly collinear with and derived from the outcome, hence leakage."
+      },
+      {
+        "name": "Review_Length",
+        "role": "predictor",
+        "is_predictor": false,
+        "rationale": "A generic, mechanical text-length feature. It lies outside the focus but carries only weak, non-substantive signal; treated as irrelevant per the conservative rule on bare length/token features."
+      },
+      {
+        "name": "Review_Word_Count",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "rationale": "Redundant mechanical token count, essentially collinear with Review_Length. Generic surface statistic that does not realise genuine predictive feature engineering."
+      },
+      {
+        "name": "Is_Premium_Class",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from the pre-existing Class field but represents an external, causally plausible driver of satisfaction (cabin quality) that is not a component or function of the overall rating. Legitimate predictor."
+      },
+      {
+        "name": "Traveler_Category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Traveller type is an independent contextual attribute plausibly associated with rating differences (e.g., business vs solo expectations) and is not derived from the outcome. Legitimate predictor."
+      },
+      {
+        "name": "Review_Verified",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Verification status is external to the rating and can plausibly correlate with rating behavior/credibility. Not a restatement or leak of the focus, so a valid weak predictor."
+      }
+    ],
+    "n_predictors": 3,
+    "predictive_utility": 0.2,
+    "rationale": "Four of the strongest-looking columns (Average_Service_Rating, Service_Consistency, Lowest_Rated_Dimension, Poor_Dimensions_Count) are all deterministic aggregates of the sub-rating dimensions that essentially constitute the Overall Rating, so they leak the focus rather than predict it. Two columns (Review_Length, Review_Word_Count) are generic mechanical text statistics with negligible engineered signal. Only Is_Premium_Class, Traveler_Category, and Review_Verified are legitimate external predictors, and these are mostly light recodings of already-present columns, adding only modest new predictive leverage."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

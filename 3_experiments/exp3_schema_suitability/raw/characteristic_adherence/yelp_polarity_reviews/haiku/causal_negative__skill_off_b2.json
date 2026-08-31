@@ -1,0 +1,106 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "service_factor",
+    "food_quality_factor",
+    "cleanliness_factor",
+    "price_factor",
+    "ambiance_factor",
+    "num_complaint_factors",
+    "emotional_intensity",
+    "emotional_language"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "service_factor",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause (service quality mentioned in review) whose effect on the positive/negative label is being attributed."
+      },
+      {
+        "name": "food_quality_factor",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause of the review outcome; the query asks which factors explain experiences, so this is one of the competing treatments."
+      },
+      {
+        "name": "cleanliness_factor",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of the outcome, surfaced from text; a competing explanatory factor."
+      },
+      {
+        "name": "price_factor",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of the outcome, another explanatory factor."
+      },
+      {
+        "name": "ambiance_factor",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of the outcome."
+      },
+      {
+        "name": "num_complaint_factors",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Count of complaint factors is derived from and lies on the path between the underlying factors and the negative label; it aggregates the treatments rather than acting as a common cause. Likely a collider/mediator, not a confounder."
+      },
+      {
+        "name": "emotional_intensity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Emotional intensity of the review is a downstream expression of a negative experience, on the causal path to the label rather than a common cause of the factors and the outcome."
+      },
+      {
+        "name": "emotional_language",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Presence of emotional language reflects the reviewer's reaction; downstream of the experience, a mediator/collider, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "service_factor",
+      "food_quality_factor",
+      "cleanliness_factor",
+      "price_factor",
+      "ambiance_factor"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply multiple candidate treatments (service, food, cleanliness, price, ambiance) whose effects on label_pos could be attributed. However, the technical claim requires CONFOUNDERS -- variables that plausibly cause BOTH a treatment and the outcome and must be adjusted for to avoid bias. No such common-cause variables were surfaced. The remaining columns (num_complaint_factors, emotional_intensity, emotional_language) are aggregations or downstream emotional expressions of the negative experience, making them mediators/colliders, not confounders. Adjusting for them would be a mistake. There are no confounders of any kind, let alone ones surfaced beyond the query, so the causal-estimation setup is incomplete and the decisive test fails."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

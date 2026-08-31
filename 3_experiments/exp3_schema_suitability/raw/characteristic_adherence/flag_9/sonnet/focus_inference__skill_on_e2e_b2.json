@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "hardware_failure_mode",
+    "affected_device_scope",
+    "hardware_problem_involves_replacement"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.7176,
+    "focus_coherence": 0.92,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Hardware problem type/failure characterization in incidents",
+    "per_column": [
+      {
+        "name": "hardware_failure_mode",
+        "supports_focus": true,
+        "rationale": "Directly categorizes the kind of hardware failure (connectivity, power, overheating, physical damage), which is the core of 'kinds of hardware problems'."
+      },
+      {
+        "name": "affected_device_scope",
+        "supports_focus": true,
+        "rationale": "Identifies which hardware device class is affected, a coherent facet distinguishing types of hardware problems by their locus."
+      },
+      {
+        "name": "hardware_problem_involves_replacement",
+        "supports_focus": true,
+        "rationale": "A remediation/severity attribute of the hardware problem; coherent with the focus though nearly constant (597 false / 3 true), so of limited discriminative value."
+      }
+    ],
+    "focus_coherence": 0.92,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "rationale": "All three columns cluster tightly on one inferable focus -- characterizing hardware problems in incidents -- rather than a grab-bag, giving high coherence. The structure offers two complementary, well-differentiated facets (failure mode = what went wrong; device scope = what hardware) at a useful granularity, plus a remediation attribute. This is a sound predictor/attribute set for the query. Structure is docked slightly because the replacement flag is almost degenerate (99.5% false) and adds little analytical differentiation, and both categorical columns carry heavy NULL rates. The implied focus is genuinely actionable: an analyst can profile failure-mode distributions across device classes to prioritize investigation, so actionability is high."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

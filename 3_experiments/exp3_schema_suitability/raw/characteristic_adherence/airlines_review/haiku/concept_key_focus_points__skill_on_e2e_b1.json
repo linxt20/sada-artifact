@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "service_quality_assessment",
+    "seat_comfort_experience",
+    "food_beverage_quality",
+    "operational_reliability",
+    "crew_professionalism",
+    "sentiment_direction"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6583,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.7417,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_quality_assessment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A categorical service-quality axis is useful for grouping and comparison, and partly redundant with existing Staff Service / Overall Rating but adds a synthesized read. Groundedness is mostly sound for the clear cases, but sample 5 (an itinerary/scheduling complaint with no service description) is labeled 'poor' as a proxy for negativity rather than actual service evidence, a mild over-assertion."
+      },
+      {
+        "name": "seat_comfort_experience",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Largely a restatement of the existing Seat Comfort column, reducing novel leverage, though a text-derived categorization can add nuance. NULL/Unknown for silent rows is correct behavior. However sample 3, whose text is about seat allocation/logistics not comfort, is labeled 'uncomfortable', an unwarranted inference."
+      },
+      {
+        "name": "food_beverage_quality",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Overlaps with existing Food & Beverages column but a text-grounded categorical read is still usable. Values align with source: 'good/excellent' for praised meals, 'poor' for the syrupy-drink complaint, Unknown for silent rows — appropriate abstention."
+      },
+      {
+        "name": "operational_reliability",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Genuinely new axis not present in original columns (delays, cancellations, punctuality) — high analytical value for identifying pain points. Grounding is mixed: on-time and landing samples are correct, but sample 5 (a route/aircraft swap, arguably a schedule change) is labeled 'cancellation', and the delay/cancellation distinctions are sometimes stronger than the text supports."
+      },
+      {
+        "name": "crew_professionalism",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A finer-grained crew behavior axis beyond the numeric Staff Service score, useful for qualitative grouping. But grounding is weak on several rows: samples 3, 4 and 5 describe reservation/scheduling issues with friendly or unmentioned crew, yet all are labeled 'indifferent_lazy' — in sample 4 the text explicitly says 'friendly employees', so the label contradicts the source."
+      },
+      {
+        "name": "sentiment_direction",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A bare positive/negative/mixed flag is largely redundant with the existing Recommended / Overall Rating fields and offers little new analytical leverage for this query. Values are well grounded in the review text."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns collectively give useful qualitative axes for a 'what to concentrate on' review analysis, with operational_reliability and crew_professionalism providing the most genuine new leverage beyond the existing numeric ratings; seat and food columns partly restate original columns and sentiment_direction is a generic redundant flag. Groundedness is generally acceptable — NULL/Unknown abstention on silent rows is handled correctly — but the crew_professionalism and, to a lesser extent, service_quality_assessment columns over-assert negative labels on rows whose text is about logistics/reservations rather than crew, including one direct contradiction ('friendly employees' labeled indifferent_lazy)."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

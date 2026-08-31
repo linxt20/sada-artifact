@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "sentiment_label",
+    "helpfulness_ratio",
+    "review_length_bucket",
+    "issue_flags",
+    "repeat_buy_signal",
+    "exclamation_count",
+    "caps_ratio"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.33,
+    "focus_coherence": 0.6,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Identifying actionable, attention-worthy signals in food-product reviews — i.e. what customers care about (issues) and how much a review matters/warrants attention",
+    "per_column": [
+      {
+        "name": "sentiment_label",
+        "supports_focus": true,
+        "rationale": "Polarity is a core facet of what's worth attention (negative reviews flag problems); directly relevant to actionability."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "supports_focus": true,
+        "rationale": "Proxy for how much a review matters to other users — a legitimate attention/prioritisation facet."
+      },
+      {
+        "name": "review_length_bucket",
+        "supports_focus": false,
+        "rationale": "Bucketed text length is a generic surface metric, not a substantive attention/issue facet."
+      },
+      {
+        "name": "issue_flags",
+        "supports_focus": true,
+        "rationale": "Multi-label extraction of concrete concerns (taste, shipping, quality, value, health) is the strongest actionable facet — directly names what's worth attention."
+      },
+      {
+        "name": "repeat_buy_signal",
+        "supports_focus": true,
+        "rationale": "Repeat-purchase intent is a meaningful, actionable outcome signal tied to product quality."
+      },
+      {
+        "name": "exclamation_count",
+        "supports_focus": false,
+        "rationale": "Raw punctuation count is a mechanical surface metric; only weak, undifferentiated proxy for intensity."
+      },
+      {
+        "name": "caps_ratio",
+        "supports_focus": false,
+        "rationale": "Capitalisation ratio is a generic stylistic/noise metric, not a substantive facet of what's actionable."
+      }
+    ],
+    "focus_coherence": 0.6,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.8,
+    "rationale": "A coherent actionability-focused core exists: issue_flags, sentiment_label, repeat_buy_signal, and helpfulness_ratio collectively centre on 'what's worth attention/action in reviews' — issue_flags in particular is a rich, well-structured, directly actionable decomposition of customer concerns. However coherence and structure are diluted by three mechanical surface metrics (review_length_bucket, exclamation_count, caps_ratio) that add generic text-statistics noise rather than facets of the implied focus, pulling the set partway toward a grab-bag. The implied focus is genuinely actionable (an analyst can triage by issue type, sentiment, and helpfulness), so actionability scores high, but the mix of substantive and mechanical columns caps focus_coherence and structure_quality in the middle range."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_category",
+    "entry_origin",
+    "asset_lifecycle_action",
+    "source_id_present",
+    "ci_id_quality",
+    "travel_related"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.4667,
+    "analytical_usefulness__table_level": 0.45,
+    "source_groundedness": 0.7333,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.6,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Categorising the asset type gives a genuine grouping axis, but it is only tangential to the query about decline reasons/compliance risks in declined expenses. Values are mostly grounded in short_description/ci, though 'Miscellaneous hardware component' + RAM mapped to 'hardware_peripheral' is a loose/arguable read."
+      },
+      {
+        "name": "entry_origin",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Manual vs auto_generated could plausibly correlate with data-quality compliance risks, so mild leverage. However the source basis is unclear; all sampled rows are labelled 'manual' with no visible field indicating origin, suggesting an unsupported inference."
+      },
+      {
+        "name": "asset_lifecycle_action",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Adds a process-stage axis that could relate to expense justification. Values are loosely inferable from short_description verbs (provision->provisioning, assignment->allocation), though several mappings are interpretive and not tightly tied to the decline/compliance question."
+      },
+      {
+        "name": "source_id_present",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A presence flag on an existing original column (source_id) is largely mechanical and near-redundant, offering weak analytical leverage for compliance reasoning, but it is trivially and correctly derivable from the data."
+      },
+      {
+        "name": "ci_id_quality",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Assessing the quality/type of the ci label (named model vs opaque code vs generic placeholder) is a plausible data-quality/compliance signal and derivable from the ci field. Relevance to declined expenses is indirect but real."
+      },
+      {
+        "name": "travel_related",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A travel flag gives a useful categorical split for expense-policy analysis and is derivable from description/category. Sampled values are consistent with the source text."
+      }
+    ],
+    "analytical_usefulness": 0.45,
+    "source_groundedness": 0.73,
+    "rationale": "The added columns describe asset type, lifecycle, and data-quality characteristics. They provide some grounded grouping axes but are largely oriented toward asset/ITSM cataloguing rather than the query's focus on decline reasons and compliance risks in declined expenses; none directly captures a decline reason. Most values are soundly readable from short_description and ci, with a few loose mappings (peripheral for RAM) and one weakly-supported inferred column (entry_origin) where the source basis is not visible."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

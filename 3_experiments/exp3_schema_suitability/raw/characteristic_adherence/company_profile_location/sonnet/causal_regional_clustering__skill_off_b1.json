@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "industry_sector",
+    "is_venture_capital",
+    "is_life_science",
+    "talent_density_proxy",
+    "founding_stage_focus",
+    "proximity_cluster"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6667,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.655,
+    "source_groundedness__table_level": 0.66,
+    "b1_overall": 0.6608,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "A genuine grouping axis for comparing why sectors cluster in regions. Mostly well-read from descriptions (23andMe->Life Sciences, 5AM->VC/Finance), but Accel, clearly a VC ('partner with exceptional founders'), is mislabeled 'Other Tech', a misreading. Large 'Other Tech' bucket dilutes leverage somewhat but still useful."
+      },
+      {
+        "name": "is_venture_capital",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A VC flag is relevant to location analysis (e.g., Sand Hill Road clustering), giving a clean axis. However Accel, an unambiguous VC, is coded 0, contradicting the source text, and this partly restates industry_sector. Correctly flags 5AM as 1."
+      },
+      {
+        "name": "is_life_science",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Life-science flag can help explain biotech-region proximity. Values are well grounded (23andMe=1, 5AM=1). Somewhat redundant with industry_sector, and highly imbalanced (7 positives), limiting analytical leverage."
+      },
+      {
+        "name": "talent_density_proxy",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A talent-density signal is conceptually relevant to why firms locate somewhere. But the source text (short descriptions + address) does not support a Low/Medium/High talent rating; values appear invented or inferred from location, an unwarranted confident specific where text is silent."
+      },
+      {
+        "name": "founding_stage_focus",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Startup vs enterprise focus is a plausible axis, but is dominated by 'Mixed' (172) making it near-constant and low leverage. Accel->'Startup-Focused' is a fair reading; most rows lack text to justify a stage, though 'Mixed' functions acceptably as an unknown-like default."
+      },
+      {
+        "name": "proximity_cluster",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Directly central to a query about regional location; sub-regional clustering is the key grouping axis. Derivable from Address/City/lat-long. Sand Hill Road->Peninsula-North is sound; '280 Group' at Santa Cruz Ave->East-Bay is questionable, otherwise well grounded."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.66,
+    "rationale": "The added columns give several real axes (sector, VC flag, geographic cluster) for explaining regional location, with proximity_cluster and industry_sector being the strongest. Groundedness is mixed: geographic and sector categories are largely sound extractions, but the VC flag contradicts a clear VC (Accel), and talent_density_proxy asserts ratings the short source text cannot support. Some redundancy (is_life_science/is_venture_capital vs industry_sector) and one near-constant column (founding_stage_focus) modestly reduce leverage but do not fail the necessary conditions."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

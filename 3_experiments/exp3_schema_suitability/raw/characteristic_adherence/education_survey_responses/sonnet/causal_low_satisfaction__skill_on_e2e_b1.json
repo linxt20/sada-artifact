@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "pedagogy_adaptation_quality",
+    "peer_social_interaction_loss",
+    "teacher_feedback_and_responsiveness",
+    "async_format_benefit",
+    "student_engagement_level",
+    "subject_remote_format_fit"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.855,
+    "analytical_usefulness__table_level": 0.86,
+    "source_groundedness": 0.8617,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8583,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "pedagogy_adaptation_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A genuine driver axis for satisfaction; categorises how teaching was adapted. Samples map well (ED-0002 innovative kitchen-chemistry, ED-0003 absent). ED-0005 'passive_or_unchanged' is a defensible reading though the text is more about student non-participation than teacher pedagogy, a mild stretch."
+      },
+      {
+        "name": "peer_social_interaction_loss",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct social-dimension driver relevant to satisfaction. ED-0003 'zero peer interaction' and ED-0004 'not_present' are well grounded. ED-0001 'significant_loss_of_community' is inferred from 'miss raising my hand' — reasonable but somewhat generous."
+      },
+      {
+        "name": "teacher_feedback_and_responsiveness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Useful responsiveness axis. ED-0004 'timely_and_detailed' and ED-0003 'slow_or_minimal' are supported. ED-0005 'slow_or_minimal' is weak — the text describes participation issues, not teacher feedback speed, a minor overreach."
+      },
+      {
+        "name": "async_format_benefit",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Captures a specific benefit (self-paced/recorded) distinguishing high satisfaction. ED-0004 'strong_benefit' from 'pause and take notes' is well grounded; 'not_present' for silent rows is correct behaviour. Skewed distribution reduces leverage slightly but still discriminating."
+      },
+      {
+        "name": "student_engagement_level",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Engagement is a core plausible driver of satisfaction. Samples align well (ED-0002 actively engaged, ED-0005 disengaged). Slight risk of proxying satisfaction itself but distinct enough to model on."
+      },
+      {
+        "name": "subject_remote_format_fit",
+        "analytical_usefulness": 0.87,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Good axis to group by subject/remote suitability. ED-0001 algebra low_fit and ED-0004 history high_fit are reasonable. Some values may partly track overall sentiment rather than subject-specific fit, a mild grounding concern."
+      }
+    ],
+    "analytical_usefulness": 0.86,
+    "source_groundedness": 0.85,
+    "rationale": "All six columns supply genuine, distinct analytical axes (pedagogy, peer loss, feedback, async benefit, engagement, subject fit) directly relevant to explaining low learning satisfaction and its drivers; none are near-constant or trivial restatements. Values are generally sound readings of the source text, with a few generous inferences (e.g., ED-0005 feedback/pedagogy labels, ED-0001 community loss) but no invented facts or contradictions, and 'not_present' is used appropriately for silent rows."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

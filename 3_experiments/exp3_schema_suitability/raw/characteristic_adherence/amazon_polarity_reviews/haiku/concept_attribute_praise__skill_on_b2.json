@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "focus_variable": "praise_and_complaint_drivers",
+  "concept": "praise_and_complaint_drivers",
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_concern",
+    "quality_or_durability_judgment",
+    "problem_scope",
+    "failure_pattern_or_cause",
+    "usage_expectation_alignment",
+    "satisfaction_outcome"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3127,
+    "facet_fraction": 0.6667,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.55,
+    "mece": 0.469,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "praise_and_complaint_drivers",
+    "per_column": [
+      {
+        "name": "primary_concern",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Captures the topical dimension (quality, durability, functionality, design, value, service) that a review's praise/complaint is ABOUT. This is a genuine aspect-of the driver concept."
+      },
+      {
+        "name": "quality_or_durability_judgment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The valence/evaluative-verdict facet (poor..excellent) on the quality/durability dimension. It is an aspect of what drives praise vs complaint, though it overlaps semantically with primary_concern's quality/durability values."
+      },
+      {
+        "name": "problem_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Characterizes the extent/severity of a problem (early_failure, immediate_failure, partial_failure). A legitimate sub-aspect of the complaint side, but it overlaps heavily with failure_pattern_or_cause."
+      },
+      {
+        "name": "failure_pattern_or_cause",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "Explicitly encodes the CAUSE of failure (material_defect, design_flaw, manufacturing_flaw). This is the underlying reason behind a complaint, i.e. an external/causal explanation, not a constitutive part of the driver concept itself."
+      },
+      {
+        "name": "usage_expectation_alignment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The expectation-vs-reality facet (falls_short, exceeds_expectation, misrepresented) is a genuine aspect of what drives praise/complaint."
+      },
+      {
+        "name": "satisfaction_outcome",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "high_satisfaction / regret / would_not_recommend is the OUTCOME/summary sentiment the drivers produce, i.e. the whole restated, not a constitutive part of the drivers."
+      }
+    ],
+    "facet_columns": [
+      "primary_concern",
+      "quality_or_durability_judgment",
+      "problem_scope",
+      "usage_expectation_alignment"
+    ],
+    "non_facet_columns": [
+      "failure_pattern_or_cause",
+      "satisfaction_outcome"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.55,
+    "rationale": "Several columns are constitutive facets of the driver concept: primary_concern (topic dimension), quality_or_durability_judgment (evaluative verdict), problem_scope (severity), and usage_expectation_alignment (expectation gap). However two columns fail the meronymy test: failure_pattern_or_cause encodes the CAUSE behind complaints (causal, not part-of), and satisfaction_outcome restates the overall result the drivers produce rather than a part of them. Mutual exclusivity is weak: primary_concern already contains quality/durability/expectation_mismatch values that are re-expressed by quality_or_durability_judgment and usage_expectation_alignment, and problem_scope overlaps failure_pattern_or_cause. Exhaustiveness is moderate: product-related praise/complaint drivers (quality, durability, expectation, functionality) are covered, but non-product drivers such as service, delivery/shipping, price/value, and packaging are only marginally represented, leaving important constitutive aspects thin."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

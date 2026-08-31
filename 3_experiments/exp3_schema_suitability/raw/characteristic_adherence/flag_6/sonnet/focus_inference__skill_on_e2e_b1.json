@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "affected_component",
+    "symptom_type",
+    "scope_indicator",
+    "self_resolved",
+    "recurrence_signal",
+    "remote_access_context"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.72,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.68,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "affected_component",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the affected system from short_description, giving a strong grouping axis for incident analysis. Samples map soundly (database->database_server, VPN->vpn_gateway). 'intranet'->lan_network is a defensible reading. NULLs for silent rows are appropriate."
+      },
+      {
+        "name": "symptom_type",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "A distinct symptom taxonomy orthogonal to component, useful for pattern analysis. Mostly well-grounded; 'Unable to access the database'->access_denied is a slight stretch versus a generic access issue, but reasonable. Unknown for ambiguous 'Software update issue' is correct restraint."
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Impact scope is a genuinely useful analytical axis. However groundedness is weak: short descriptions like 'Unable to access the database' or 'VPN issue' rarely state whether one user or the whole infrastructure is affected, yet the column confidently asserts individual_user vs infrastructure_wide. 'Internet connection unstable'->infrastructure_wide is an unwarranted specific. Many values appear inferred beyond the text."
+      },
+      {
+        "name": "self_resolved",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Whether an incident self-resolved could be useful, but the short_description almost never states this. 'Unable to access the company's intranet'->True has no textual basis. State/closed fields exist but do not indicate self-resolution. Values look largely fabricated, though NULLs are used for some rows."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Near-constant (472 true / 28 false), which sharply limits analytical leverage as a grouping variable. Groundedness is questionable: 'Unable to access the database' and 'Internet connection unstable' are marked recurrence True with no textual recurrence cue, while 'frequent disconnection' legitimately supports True. Overwhelming True skew suggests an unsupported default."
+      },
+      {
+        "name": "remote_access_context",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Flags remote-access-related incidents, a meaningful segment given the VPN volume. Well-grounded in samples (VPN->True, others->False). Reasonable, if somewhat correlated with affected_component=vpn_gateway."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.68,
+    "rationale": "The set offers several genuinely useful analytical axes (affected_component, symptom_type, remote_access_context) derived soundly from short_description. However scope_indicator and self_resolved assert impact and resolution facts the terse descriptions do not support, and recurrence_signal is both near-constant (low leverage) and largely defaulted to True without textual warrant. Groundedness is mixed overall, with the extraction-style columns strong and the inferred-state columns weak."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

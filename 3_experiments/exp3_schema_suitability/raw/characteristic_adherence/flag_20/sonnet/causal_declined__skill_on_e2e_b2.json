@@ -1,0 +1,112 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "is_travel_related",
+    "asset_category",
+    "expense_entry_origin",
+    "has_source_id",
+    "processing_lag_category",
+    "department_group",
+    "asset_action_type"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "is_travel_related",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "Flags travel-related expenses, which the query already scopes to ('travel expenses'). It functions as a scoping/filter indicator rather than a treatment or confounder cause of declines."
+      },
+      {
+        "name": "asset_category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The type/category of expense item is a candidate cause whose effect on decline could be attributed (some categories may be more likely declined)."
+      },
+      {
+        "name": "expense_entry_origin",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How the expense entered the system (automated vs manual/explicit) could plausibly influence both the category/handling of the expense and its likelihood of being declined."
+      },
+      {
+        "name": "has_source_id",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Presence of a source reference could affect both entry origin/completeness and the decline decision, potentially a common cause; but it is closer to a data-completeness proxy and its role is weakly justified."
+      },
+      {
+        "name": "processing_lag_category",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Processing delay likely lies on the path between how/when an expense is handled and the final decline decision (or is itself downstream of processing), so it is a mediator/outcome-adjacent variable, not a clean common cause."
+      },
+      {
+        "name": "department_group",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Department plausibly causes both the type/pattern of expenses submitted and the decline rate (different policies/scrutiny), a genuine common cause surfaced from data."
+      },
+      {
+        "name": "asset_action_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The kind of action (new acquisition, procurement, etc.) is another candidate cause whose effect on declines could be attributed."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "asset_category",
+      "asset_action_type"
+    ],
+    "confounders": [
+      {
+        "name": "expense_entry_origin",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "department_group",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "has_source_id",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The added columns do supply candidate treatments (asset_category, asset_action_type) and several confounders surfaced from the data rather than the query (department_group is the strongest genuine common cause; expense_entry_origin and has_source_id are plausible but weaker). However, the set is muddied: is_travel_related merely restates the query scope, processing_lag_category is a mediator/outcome-adjacent variable that would bias attribution if adjusted for, and much of the schema appears oriented to asset/procurement rather than a clean treatment-vs-confounder separation around declines. The causal-estimation structure is partially realised but confounder quality is moderate at best."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

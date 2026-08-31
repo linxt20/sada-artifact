@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "issue_type_or_category",
+    "assigned_agent_or_resolver",
+    "issue_scope_or_impact_scale",
+    "root_cause_mechanism_or_failure_pattern",
+    "is_recurring_or_duplicate_issue",
+    "single_agent_ownership_or_no_reassignment",
+    "extended_time_to_final_closure_or_last_update_lag",
+    "infrastructure_dependency"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.2812,
+    "predictor_fraction": 0.625,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.375
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "issue_type_or_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Issue type is knowable at ticket creation and plausibly correlates with how long resolution takes; a legitimate predictor outside the focus variable."
+      },
+      {
+        "name": "assigned_agent_or_resolver",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The assigned agent is known at/near intake and different agents/teams have different throughput; directly relevant to the query about agent-level signals. Legitimate predictor."
+      },
+      {
+        "name": "issue_scope_or_impact_scale",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope/impact (system-wide vs single-user) is determinable early and plausibly drives resolution effort and duration. Valid predictor, not a function of resolution_time."
+      },
+      {
+        "name": "root_cause_mechanism_or_failure_pattern",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Root cause is typically established during/after diagnosis, not reliably known before resolution. Using confirmed failure mechanism risks post-outcome leakage rather than a pre-outcome predictor."
+      },
+      {
+        "name": "is_recurring_or_duplicate_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Recurrence/duplication status can be assessed at intake and plausibly relates to resolution speed (known fixes vs novel problems). Legitimate predictor."
+      },
+      {
+        "name": "single_agent_ownership_or_no_reassignment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether a ticket had no reassignment is only fully known once the ticket is worked/closed; reassignment history unfolds over the ticket lifetime and correlates mechanically with duration. Leakage."
+      },
+      {
+        "name": "extended_time_to_final_closure_or_last_update_lag",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This is essentially a thresholded version of the elapsed time to closure/last update -- a restatement/deterministic function of resolution_time itself. Direct leakage."
+      },
+      {
+        "name": "infrastructure_dependency",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The dependent infrastructure is known at intake and plausibly affects resolution time, though it largely duplicates issue_type_or_category. Still a valid (if redundant) predictor."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.45,
+    "rationale": "Five columns (issue type, assigned agent, scope/impact, recurrence, infrastructure dependency) are legitimate pre-outcome predictors, and the agent field is especially on-point for the query. However issue_type_or_category and infrastructure_dependency are near-duplicates, reducing independent leverage. Three columns are problematic: extended_time_to_final_closure is a direct restatement of resolution_time, single_agent_ownership/no_reassignment depends on lifecycle history that unfolds with duration, and root_cause_mechanism is generally established only during resolution -- all leakage. The valid set gives moderate genuine leverage but is diluted by redundancy and contaminated by clear leakage columns."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

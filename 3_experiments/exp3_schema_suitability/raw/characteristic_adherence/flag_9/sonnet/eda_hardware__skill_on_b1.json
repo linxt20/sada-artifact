@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "affected_system_domain",
+    "software_keyword_present",
+    "description_action_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.74,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8933,
+    "source_groundedness__table_level": 0.89,
+    "b1_overall": 0.8166,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "affected_system_domain",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents into system domains (hardware_device, software_application, database, network) is directly central to the query about hardware signals, giving a clean grouping axis. Sample values are sound readings of the short_description (software installation -> software_application; MySQL connection -> database)."
+      },
+      {
+        "name": "software_keyword_present",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean keyword flag is fairly generic and partly redundant with affected_system_domain; it offers limited independent leverage. However, as a complementary signal for isolating non-software (potentially hardware) incidents it retains some value. Values match the source text well."
+      },
+      {
+        "name": "description_action_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Action-type categories (failure_malfunction, connectivity_issue, installation_request, etc.) provide a distinct behavioral axis that complements the domain column and can help distinguish hardware-typical failure/connectivity language. Sample values are well-grounded in the descriptions; NULL for unclear rows is acceptable."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.89,
+    "rationale": "Two of the three columns (affected_system_domain, description_action_type) provide genuine, distinct grouping axes that directly serve the hardware-signal query, and all values are well-grounded in the short_description text with no observed hallucination. The software_keyword_present flag is more generic and partially redundant, lowering the holistic usefulness slightly but not the groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 3
+}

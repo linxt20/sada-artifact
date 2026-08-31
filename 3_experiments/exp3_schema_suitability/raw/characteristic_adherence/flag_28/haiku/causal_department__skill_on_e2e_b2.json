@@ -1,0 +1,109 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do goal achievement rates differ across departments?",
+  "focus_variable": "department_goal_achievement",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "goal_outcome_type",
+    "outcome_measurement_mechanism",
+    "metric_misalignment",
+    "intervention_complexity",
+    "target_realism_assessment",
+    "resource_dependency_scope"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "department_goal_achievement",
+    "per_column": [
+      {
+        "name": "goal_outcome_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of goal (revenue vs satisfaction vs cost) plausibly differs by department AND affects achievability, so it can jointly influence both departmental composition and achievement rates. Not named in query. However it functions more as a categorical stratifier than a clear treatment."
+      },
+      {
+        "name": "outcome_measurement_mechanism",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How the goal is measured (survey vs financial vs operational) can correlate with department type and independently affect measured achievement rates. Plausible common cause, not named in query."
+      },
+      {
+        "name": "metric_misalignment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the metric is aligned/misaligned is a candidate cause whose effect on achievement is being attributed -- a defensible treatment variable."
+      },
+      {
+        "name": "intervention_complexity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Number/coordination of interventions is a downstream action taken to reach the goal, lying on the path between department context and achievement; adjusting for it as a confounder would be a mistake."
+      },
+      {
+        "name": "target_realism_assessment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How aggressive the target is set can differ by department culture AND directly affects the achievement rate (aggressive targets are harder to hit), making it a plausible common cause. Not named in query."
+      },
+      {
+        "name": "resource_dependency_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether a goal depends on a single team vs cross-functional/organizational resources can vary by department AND affect achievement likelihood, a plausible common cause. Not named in query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "metric_misalignment"
+    ],
+    "confounders": [
+      {
+        "name": "goal_outcome_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "outcome_measurement_mechanism",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "target_realism_assessment",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "resource_dependency_scope",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "A defensible causal setup exists: metric_misalignment reads as the treatment whose effect on department_goal_achievement is being attributed, and several columns (target_realism_assessment, resource_dependency_scope, goal_outcome_type, outcome_measurement_mechanism) are plausible common causes of both goal characteristics/department and achievement, none copied from the query text (which only names departments and achievement). This demonstrates surfacing of unnamed confounders. Weaknesses: the treatment is somewhat implicit rather than explicitly framed, and intervention_complexity is a mediator that should not be adjusted for, lowering overall confounder quality."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

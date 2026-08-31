@@ -1,0 +1,112 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "resolution_hours",
+    "issue_type",
+    "assignment_group_mismatch",
+    "resolver_is_assignee",
+    "resolution_hours_vs_group_median",
+    "opened_hour",
+    "opened_on_weekend"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A recomputation/operationalization of resolution_time itself, the focus outcome, not a cause."
+      },
+      {
+        "name": "issue_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A candidate underlying cause of longer resolution; can also relate to which team/priority handles it, plausibly a common cause. Surfaced from short_description text, not named in query."
+      },
+      {
+        "name": "assignment_group_mismatch",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause (routing error) whose effect on resolution time is being attributed; an operational driver surfaced from data."
+      },
+      {
+        "name": "resolver_is_assignee",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause: whether the assignee actually resolved the ticket (handoffs). A plausible driver of longer resolution, surfaced from data."
+      },
+      {
+        "name": "resolution_hours_vs_group_median",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A transformation of the outcome (deviation from group median resolution hours); it is a re-expression of resolution_time, not a cause."
+      },
+      {
+        "name": "opened_hour",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Time-of-day of opening plausibly affects staffing/response and could correlate with issue type/priority; a common-cause-type contextual driver surfaced from opened_at."
+      },
+      {
+        "name": "opened_on_weekend",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Weekend opening plausibly affects both which resources handle a ticket and resolution duration; contextual driver surfaced from opened_at, not in query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "assignment_group_mismatch",
+      "resolver_is_assignee"
+    ],
+    "confounders": [
+      {
+        "name": "issue_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "opened_hour",
+        "named_in_query": false,
+        "plausibility": 0.45
+      },
+      {
+        "name": "opened_on_weekend",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The query asks for underlying causes of longer resolution time while controlling for priority and category (both already in the table and named in the query, so not credited). The system supplies genuine candidate treatments surfaced from data (assignment_group_mismatch, resolver_is_assignee) plus contextual variables (issue_type, opened_hour, opened_on_weekend) that were NOT named in the query and could act as common causes of both the operational treatments and resolution time, demonstrating some real confounder surfacing. However, several of these are arguably weak or partly mediators (mismatch/resolver relationships), and resolution_hours and resolution_hours_vs_group_median are just re-expressions of the outcome rather than causes. The confounders are plausible but not strongly justified as adjusting for common causes of the treatments, so confounder quality is moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

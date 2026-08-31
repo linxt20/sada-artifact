@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "resolution_time_hours",
+    "priority_level",
+    "priority_category"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.1,
+    "interpretable_fraction": 0.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is simply the focus variable (resolution_time) expressed in hours. It restates the focus rather than providing an external associational variable to segment on. Its continuous, highly fine-grained values (many distinct floats) also make it unusable as an interpretable grouping dimension."
+      },
+      {
+        "name": "priority_level",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Priority is already present in the original table and is one of the query's stated grouping dimensions. This column merely re-encodes existing priority as a numeric level, adding no external relationship not already available."
+      },
+      {
+        "name": "priority_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A label-mapped version of the existing priority field (High/Critical/Moderate). While it has clean, well-separated categories, it is a redundant restatement of an original column that the query already names, not a newly opened associational variable."
+      }
+    ],
+    "n_predictors": 0,
+    "relationship_informativeness": 0.1,
+    "rationale": "None of the added columns introduce a new external, associational dimension to explore against resolution_time. resolution_time_hours is a direct restatement of the focus (and too fine-grained to segment on), while priority_level and priority_category merely re-encode the existing priority column, which is already a grouping variable in the query. No new interpretable relationships (e.g., time-of-day, reassignment counts, caller department, SLA breach flags) are opened up, so the set fails the exploratory-analysis claim."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

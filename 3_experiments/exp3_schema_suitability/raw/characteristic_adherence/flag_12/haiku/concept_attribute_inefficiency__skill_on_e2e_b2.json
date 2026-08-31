@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "focus_variable": "incident_inefficiency_reasons",
+  "concept": "incident_inefficiency_reasons",
+  "n_added_columns": 8,
+  "added_columns": [
+    "hardware_device_category",
+    "incident_type",
+    "resource_assignment_pattern",
+    "description_specificity_level",
+    "issue_scope_impact",
+    "resolution_path_hint",
+    "caller_persistence",
+    "reopened_or_chronic_issue"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.2345,
+    "facet_fraction": 0.5,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.4,
+    "mece": 0.469,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_inefficiency_reasons",
+    "per_column": [
+      {
+        "name": "hardware_device_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The type of device involved is a contextual attribute of the incident, not an aspect of WHY resolution was inefficient. It may correlate with inefficiency but is not itself a reason for it."
+      },
+      {
+        "name": "incident_type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Categorizes the nature of the incident, not the constitutive reasons for inefficiency. A functionality_failure is not an inefficiency reason; it is a descriptor of the problem being resolved."
+      },
+      {
+        "name": "resource_assignment_pattern",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Transfers between resolvers (single_resolver vs transferred) is a genuine aspect OF resolution inefficiency -- routing/ownership churn is a constitutive contributor to inefficient resolution."
+      },
+      {
+        "name": "description_specificity_level",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Poor or generic problem descriptions are a constitutive facet of inefficiency: inadequate information at intake directly hampers resolution. This is an aspect of the reasons, not an external attribute."
+      },
+      {
+        "name": "issue_scope_impact",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The scope/impact of the issue characterizes severity of the incident, not a reason resolution was inefficient. It is a driver/correlate rather than a part of the inefficiency itself."
+      },
+      {
+        "name": "resolution_path_hint",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The likely resolution route describes the remedy needed, not a reason for inefficiency. It is a property of the fix rather than a constitutive aspect of why resolution was inefficient."
+      },
+      {
+        "name": "caller_persistence",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Repeat reporting reflects unresolved/recurring interaction overhead, a plausible aspect of inefficiency, though it partially overlaps with chronic/reopened issues."
+      },
+      {
+        "name": "reopened_or_chronic_issue",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Reopened/chronic incidents are a direct constitutive facet of resolution inefficiency: rework and failure-to-resolve-first-time are core inefficiency aspects. Overlaps somewhat with caller_persistence."
+      }
+    ],
+    "facet_columns": [
+      "resource_assignment_pattern",
+      "description_specificity_level",
+      "caller_persistence",
+      "reopened_or_chronic_issue"
+    ],
+    "non_facet_columns": [
+      "hardware_device_category",
+      "incident_type",
+      "issue_scope_impact",
+      "resolution_path_hint"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.4,
+    "rationale": "Half the added columns are contextual descriptors of the incident (device, type, scope, resolution path) that predict or characterize incidents rather than decompose the reasons for inefficiency; these fail the meronymy test. Only four columns (assignment churn, description quality, caller persistence, reopened/chronic) are genuine facets of inefficiency. Among these, caller_persistence and reopened_or_chronic_issue overlap substantially (both capture recurrence/unresolved-issue signal), lowering mutual exclusivity. As a facet set they also miss key constitutive aspects of resolution inefficiency such as SLA/time delays, wait/idle states, knowledge/skill gaps, and priority-handling mismatches, so exhaustiveness is limited."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

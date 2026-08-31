@@ -1,0 +1,118 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "visit_type",
+    "primary_clinical_category",
+    "symptom_acuity",
+    "condition_complexity",
+    "injury_mechanism",
+    "diagnostic_workup_intensity",
+    "treatment_intensity",
+    "disposition_signal",
+    "patient_age_proxy",
+    "injury_or_illness_mechanism"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.56,
+    "predictor_fraction": 0.8,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.7,
+    "interpretable_fraction": 0.8
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "visit_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear, well-separated categories (acute, chronic, preventive, emergency, etc.) that can be grouped and compared against visit duration and urgency; interpretable and informative."
+      },
+      {
+        "name": "primary_clinical_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Meaningful clinical domains (cardiovascular, musculoskeletal, etc.) enable segmentation; slightly fragmented but still interpretable and useful for exploring duration differences."
+      },
+      {
+        "name": "symptom_acuity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordered severity scale (asymptomatic through life_threatening) is highly interpretable and directly relatable to urgency and duration."
+      },
+      {
+        "name": "condition_complexity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated categories describing condition state; supports interpretable comparison against duration."
+      },
+      {
+        "name": "injury_mechanism",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable mechanism categories that can be segmented on, though it is nearly duplicated by injury_or_illness_mechanism."
+      },
+      {
+        "name": "diagnostic_workup_intensity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordered intensity levels are interpretable and plausibly co-vary with duration; the large NULL fraction (~40%) weakens comparison but categories remain meaningful."
+      },
+      {
+        "name": "treatment_intensity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct escalating treatment categories that segment cleanly and relate strongly to visit duration."
+      },
+      {
+        "name": "disposition_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear discharge/admission outcome categories; interpretable and associational with duration and urgency."
+      },
+      {
+        "name": "patient_age_proxy",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Essentially restates the existing age_group focus dimension; adds no new external relationship and is heavily dominated by 'adult' (near-constant)."
+      },
+      {
+        "name": "injury_or_illness_mechanism",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Near-duplicate of injury_mechanism with almost identical value distribution; redundant and adds no distinct relationship."
+      }
+    ],
+    "n_predictors": 8,
+    "relationship_informativeness": 0.7,
+    "rationale": "The set is largely strong for EDA: most added columns are external, interpretable categorical variables with well-separated levels (visit_type, symptom_acuity, treatment_intensity, disposition_signal, condition_complexity, clinical_category) that can be grouped and compared against visit_duration_min alongside urgency, department, and age group. Weaknesses lower the score: patient_age_proxy merely restates the existing age_group dimension, and injury_or_illness_mechanism is a near-exact duplicate of injury_mechanism, adding redundancy rather than new relationships; diagnostic_workup_intensity is diluted by a large NULL share. Overall the columns realise the exploratory-relationship claim well but not fully due to redundancy and restatement."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

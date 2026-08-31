@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "goal_outcome_domain",
+    "improvement_mechanism",
+    "targeted_improvement_scope",
+    "implementation_timeline_clarity",
+    "financial_impact_quantified",
+    "goal_scope_breadth",
+    "execution_complexity_estimate"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.68,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature and substance of each goal — what it aims to improve, how, at what scope, and how well-specified/actionable it is — i.e., characterizing goals to identify which merit attention.",
+    "per_column": [
+      {
+        "name": "goal_outcome_domain",
+        "supports_focus": true,
+        "rationale": "Classifies the substantive outcome area of the goal, a core facet of what the goal is about."
+      },
+      {
+        "name": "improvement_mechanism",
+        "supports_focus": true,
+        "rationale": "Captures the 'how' — the lever used to achieve the goal, a coherent facet of goal substance."
+      },
+      {
+        "name": "targeted_improvement_scope",
+        "supports_focus": true,
+        "rationale": "Identifies the specific object being improved; complements outcome domain, though partially redundant with it (parallel value counts)."
+      },
+      {
+        "name": "implementation_timeline_clarity",
+        "supports_focus": true,
+        "rationale": "Measures specificity of timing, a well-specification facet relevant to whether a goal is actionable/worth attention."
+      },
+      {
+        "name": "financial_impact_quantified",
+        "supports_focus": true,
+        "rationale": "Flags whether financial impact is quantified — a facet of goal rigor/attention-worthiness."
+      },
+      {
+        "name": "goal_scope_breadth",
+        "supports_focus": true,
+        "rationale": "Distinguishes single-function vs enterprise-wide reach, a meaningful facet of goal significance."
+      },
+      {
+        "name": "execution_complexity_estimate",
+        "supports_focus": true,
+        "rationale": "Estimates difficulty of execution, directly relevant to what merits attention and risk."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The columns cohere around a single inferable focus: characterizing the substance and attention-worthiness of each goal. They form a sound multi-faceted structure spanning what (outcome domain, targeted scope), how (mechanism), significance (scope breadth), rigor/specification (timeline clarity, financial quantification), and effort/risk (complexity). This is neither a single restatement nor generic noise, and the facets are data-inferable from description/dates/metric fields. Minor deductions: goal_outcome_domain and targeted_improvement_scope are near-duplicates (identical observed counts suggest parallel derivation, weakening differentiation), and execution_complexity_estimate is a somewhat coarse/derived judgment. The implied focus is genuinely actionable — an analyst could triage goals by significance, rigor, and complexity to decide what merits attention."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

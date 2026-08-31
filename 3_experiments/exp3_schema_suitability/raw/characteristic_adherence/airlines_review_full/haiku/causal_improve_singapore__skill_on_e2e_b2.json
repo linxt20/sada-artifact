@@ -1,0 +1,154 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 12,
+  "added_columns": [
+    "seat_comfort_deficiency",
+    "crew_service_quality",
+    "food_beverage_quality_deficiency",
+    "operational_reliability",
+    "ground_service_failure",
+    "customer_service_responsiveness",
+    "service_recovery_adequacy",
+    "communication_failure",
+    "product_quality",
+    "passenger_segment",
+    "service_class",
+    "route_complexity_and_transfer_risk"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.65,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.65,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "overall_rating_recommendation (Overall Rating / Recommended)",
+    "per_column": [
+      {
+        "name": "seat_comfort_deficiency",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause/actionable lever on the outcome (poor seat comfort depresses rating and recommendation). Query only names the outcome, not seat comfort, so it is a surfaced treatment dimension."
+      },
+      {
+        "name": "crew_service_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of overall rating (attentive vs cold_robotic crew). Not named in query; a treatment lever."
+      },
+      {
+        "name": "food_beverage_quality_deficiency",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of the rating; a service-quality treatment dimension, not named in query."
+      },
+      {
+        "name": "operational_reliability",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Delays/cancellations/baggage failures are a plausible cause of low rating and non-recommendation; a treatment lever not referenced in the query."
+      },
+      {
+        "name": "ground_service_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of the outcome (check-in/gate handling), a treatment dimension surfaced from text."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause (responsive vs dismissive handling) of dissatisfaction; treatment lever."
+      },
+      {
+        "name": "service_recovery_adequacy",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Recovery after a failure is a lever on the outcome. Note it sits partly on a mediating path (failure -> recovery -> outcome) among the other causes, but relative to the focus outcome it is treated as an actionable cause."
+      },
+      {
+        "name": "communication_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of dissatisfaction; a treatment dimension, not named in query."
+      },
+      {
+        "name": "product_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Cabin/product condition as a candidate cause of the rating; treatment lever."
+      },
+      {
+        "name": "passenger_segment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Type of traveller (solo/couple/family/business) plausibly drives BOTH the service exposure/perception (treatments) and baseline expectations that determine the rating/recommendation. A pre-treatment common cause that must be adjusted for; not named in the query."
+      },
+      {
+        "name": "service_class",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Cabin class is upstream of both the service quality actually received (seat/food/crew treatments) and the outcome rating, so it is a genuine common cause requiring adjustment. Not named in the query text."
+      },
+      {
+        "name": "route_complexity_and_transfer_risk",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Route/transfer complexity plausibly causes operational_reliability (a treatment) and independently affects the outcome, making it a common cause to adjust for. Not named in query (the 'istanbul' value hints at template contamination but the semantic role is a confounder)."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "seat_comfort_deficiency",
+      "crew_service_quality",
+      "food_beverage_quality_deficiency",
+      "operational_reliability",
+      "ground_service_failure",
+      "customer_service_responsiveness",
+      "service_recovery_adequacy",
+      "communication_failure",
+      "product_quality"
+    ],
+    "confounders": [
+      {
+        "name": "service_class",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "passenger_segment",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "route_complexity_and_transfer_risk",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.65,
+    "rationale": "The set clearly supplies (a) treatments: multiple actionable candidate causes of the overall rating/recommendation (crew service, seat comfort, food, operational reliability, ground service, customer-service responsiveness, recovery, communication, product quality). It also supplies (b) genuine confounders that are pre-treatment common causes of both the service experience and the outcome: service_class (class determines both amenities/service received and satisfaction), passenger_segment (traveller type shapes both exposure and expectations), and route_complexity_and_transfer_risk (drives operational reliability and independently the rating). Crucially, NONE of these confounders are named or clearly implied in the query, which only references the outcome (overall rating / Recommended=no) -- so they were surfaced from the data/text, satisfying the decisive test. Confounder quality is good but not perfect: class is a strong common cause, while segment and route complexity are weaker/somewhat ambiguous (segment could partly reflect self-selection; the stray 'hub_transfer_istanbul_risk' value signals template contamination, and one could argue class/route also act as treatments in places). No column was mislabelled a confounder while actually being a pure mediator or collider. Overall the columns realise the causal-attribution claim."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 12
+}

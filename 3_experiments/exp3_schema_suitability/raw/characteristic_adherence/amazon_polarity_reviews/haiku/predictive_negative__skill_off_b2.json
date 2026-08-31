@@ -1,0 +1,122 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 12,
+  "added_columns": [
+    "negative_sentiment_words",
+    "positive_sentiment_words",
+    "allcaps_word_count",
+    "exclamation_mark_count",
+    "question_mark_count",
+    "repeated_punctuation_count",
+    "title_word_count",
+    "content_word_count",
+    "comparative_language_count",
+    "investment_complaint_words",
+    "product_failure_words",
+    "durability_complaint_words"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.7,
+    "predictor_fraction": 1.0,
+    "n_predictors": 12,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "negative_sentiment_words",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of negative sentiment tokens is derived from review text, not from the label; higher counts plausibly signal negative satisfaction. Legitimate predictor computable before knowing the outcome."
+      },
+      {
+        "name": "positive_sentiment_words",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Positive lexicon count carries signal toward positive labels; a valid text-derived feature that does not restate the label."
+      },
+      {
+        "name": "allcaps_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "All-caps usage often correlates with strong emotion/frustration; a legitimate stylistic predictor of satisfaction polarity."
+      },
+      {
+        "name": "exclamation_mark_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Exclamation frequency reflects emotional intensity (positive or negative) and is a plausible, non-leaking predictor derived from text."
+      },
+      {
+        "name": "question_mark_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Questions may signal confusion/dissatisfaction; weak but legitimate text-derived signal, not a restatement of the label."
+      },
+      {
+        "name": "repeated_punctuation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Repeated punctuation (!!!, ???) indexes emotional intensity; a valid stylistic predictor independent of the outcome."
+      },
+      {
+        "name": "title_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Title length is a generic structural feature with weak but non-leaking predictive potential; permissible predictor."
+      },
+      {
+        "name": "content_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Review length can correlate with satisfaction (e.g., detailed complaints); generic but legitimate predictor, not a restatement of the label."
+      },
+      {
+        "name": "comparative_language_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Comparative phrasing (better/worse than) is a meaningful content signal about relative satisfaction; valid text-derived predictor."
+      },
+      {
+        "name": "investment_complaint_words",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Domain-specific complaint lexicon count is derived from text and plausibly predicts negative satisfaction; not leakage since it precedes/derives independently of the label."
+      },
+      {
+        "name": "product_failure_words",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Failure-term count is a strong, semantically targeted predictor of dissatisfaction, computed from the review content rather than the label."
+      },
+      {
+        "name": "durability_complaint_words",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Durability complaint lexicon is a domain-relevant predictor of negative satisfaction; text-derived and non-leaking."
+      }
+    ],
+    "n_predictors": 12,
+    "predictive_utility": 0.7,
+    "rationale": "All added columns are text-derived features computed from title/content and none restate, decompose, or leak the label_pos outcome, so each qualifies as a legitimate predictor. The set combines targeted sentiment/complaint lexicons (negative/positive sentiment, comparative, investment/product-failure/durability complaints) that carry genuine semantic signal about satisfaction, plus stylistic intensity cues (allcaps, exclamation, repeated punctuation). A cluster of generic length/count features (title/content word counts, question marks) adds only marginal leverage. As a set they provide substantial, non-leaking predictive signal beyond the raw id/title/content, warranting a solidly-above-average utility score rather than a top score, since several features are redundant or weak."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 12
+}

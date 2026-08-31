@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "affected_system_component",
+    "failure_symptom",
+    "recurrence_signal",
+    "ticket_resolved",
+    "assignment_status"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.5567,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.7283,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.6425,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by giving a groupable taxonomy of problem types. Sample categorizations (vpn, database, email, network_connectivity from wifi/internet) are sound readings of the short_description text. Some overlap with the original 'category' column, but the derived values appear more descriptive and query-aligned."
+      },
+      {
+        "name": "affected_system_component",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.82,
+        "hallucination_observed": true,
+        "rationale": "Provides a finer axis (client vs server, wifi vs internet) that adds real leverage for identifying recurring problem loci. Mostly well-grounded, but component granularity like 'database_server' or 'email_server' vs 'email_client' is sometimes an inference beyond what a terse description states (e.g. 'Email system not working' -> email_server is plausible but not certain). NULLs for silent rows are handled correctly."
+      },
+      {
+        "name": "failure_symptom",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "A useful orthogonal axis (symptom vs system) for characterizing recurring problems. Extractions like 'cannot_connect' for 'Cannot connect to database' are well grounded, but assigning specific symptoms such as 'service_down' to vague text like 'Email system not working properly' is a somewhat confident inference where the text is under-specified."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.02,
+        "source_groundedness": 0.1,
+        "hallucination_observed": true,
+        "rationale": "Constant 'true' across all 500 rows: zero analytical leverage and cannot support grouping or comparison. It also asserts recurrence for every ticket, which is not derivable from any single row's source text, making it both useless and ungrounded."
+      },
+      {
+        "name": "ticket_resolved",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Derivable from closed_at/state, so largely redundant with existing original columns and only weakly relevant to a query about problem TYPES. Values are grounded (closed_at present implies resolved), but it adds little new axis for this specific analysis."
+      },
+      {
+        "name": "assignment_status",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A boolean restatement derivable from the existing assigned_to/assignment_group columns, so it is trivially redundant and only marginally useful for identifying recurring problem types. Values are plausibly grounded but low leverage for this query."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.72,
+    "rationale": "The three semantic columns (incident_category, affected_system_component, failure_symptom) directly and effectively serve the query, giving multiple groupable axes for recurring problem types with mostly well-grounded values, though component/symptom granularity occasionally over-specifies terse descriptions. The remaining three columns weaken the set: recurrence_signal is a constant, ungrounded flag with no leverage, while ticket_resolved and assignment_status are booleans largely redundant with existing original columns and only tangentially relevant to problem-type analysis."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

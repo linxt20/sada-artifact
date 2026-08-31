@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "acting_performance_assessment",
+    "script_writing_assessment",
+    "direction_filmmaking_assessment",
+    "plot_narrative_structure_focus",
+    "genre_tone_execution",
+    "entertainment_engagement_verdict",
+    "comparison_or_adaptation_reference"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.855,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The specific craft/experiential dimensions of a film that reviewers evaluate (acting, writing, direction, plot, genre/tone, entertainment value, and comparative framing)",
+    "per_column": [
+      {
+        "name": "acting_performance_assessment",
+        "supports_focus": true,
+        "rationale": "A distinct filmmaking facet reviewers assess; directly a review-focus aspect."
+      },
+      {
+        "name": "script_writing_assessment",
+        "supports_focus": true,
+        "rationale": "Writing quality is a coherent, separable aspect of what reviewers focus on."
+      },
+      {
+        "name": "direction_filmmaking_assessment",
+        "supports_focus": true,
+        "rationale": "Direction is another well-differentiated craft facet."
+      },
+      {
+        "name": "plot_narrative_structure_focus",
+        "supports_focus": true,
+        "rationale": "Narrative structure captured with descriptive value levels; a genuine review-focus facet."
+      },
+      {
+        "name": "genre_tone_execution",
+        "supports_focus": true,
+        "rationale": "Genre/tone execution is a coherent evaluative dimension distinct from the others."
+      },
+      {
+        "name": "entertainment_engagement_verdict",
+        "supports_focus": true,
+        "rationale": "Engagement/entertainment is an experiential aspect reviewers emphasize."
+      },
+      {
+        "name": "comparison_or_adaptation_reference",
+        "supports_focus": true,
+        "rationale": "Captures whether reviewers frame via comparison/adaptation, a real focus mode though slightly more meta than the craft facets."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "rationale": "The columns collectively centre on one clear inferred focus: the distinct aspects/dimensions of films that reviewers concentrate on. Each column is a well-separated facet (acting, writing, direction, plot, genre/tone, engagement, comparison) at a useful granularity, and the value spaces are descriptive rather than mechanical restatements (not bare token counts or generic sentiment). This directly realises the query 'what aspects are reviewers focusing on' by decomposing review content into actionable, investigable facets, each including a 'not_present' level that lets an analyst quantify attention distribution. Structure is sound and non-redundant, with only minor heterogeneity (comparison is a framing mode rather than a craft aspect), so it falls just short of perfect. The implied focus is clearly actionable: an analyst can tabulate which aspects dominate reviews and how they correlate with sentiment/label_pos."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

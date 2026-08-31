@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a travel expense will be declined?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "expense_category",
+    "ci_asset_type",
+    "is_miscellaneous_ci",
+    "entry_origin",
+    "has_source_id",
+    "has_processed_date",
+    "expense_action_type",
+    "department_group"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.5625,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.8375,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.125
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "expense_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing entries into travel vs. hardware vs. cloud lets the analyst isolate travel expenses, the exact subject of the query. Values are well-grounded in short_description and ci text."
+      },
+      {
+        "name": "ci_asset_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A finer typing of the CI, soundly derived from ci strings (Dell Latitude->laptop, etc.). Partially redundant with expense_category but adds a travel_item axis; moderate leverage for a travel-decline query."
+      },
+      {
+        "name": "is_miscellaneous_ci",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Near-constant flag (16 of 500 true) that merely restates a bucket already present in ci_asset_type/expense_category. Little new grouping power for this query."
+      },
+      {
+        "name": "entry_origin",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes manual vs automated vs travel-report origin, a plausible signal for decline likelihood. Grounded in phrasing like 'Automated creation' vs 'Procurement'. Some inference but warranted."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A presence flag on an existing column; missing source_id could plausibly correlate with declined/incomplete records, giving some modeling leverage. Values directly and correctly derived."
+      },
+      {
+        "name": "has_processed_date",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Presence flag over processed_date (nan->False). Unprocessed entries may relate to declines, offering some signal. Directly grounded and correct."
+      },
+      {
+        "name": "expense_action_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Action lifecycle (registration/new_procurement/tracking) derived from short_description verbs; provides a distinct grouping axis. Somewhat overlaps entry_origin but adds action semantics."
+      },
+      {
+        "name": "department_group",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Original table already has a 'department' column, making this largely redundant. More concerning, values look inconsistent with source text: identical hardware-procurement rows map to different groups (Customer_Support vs Sales) with no visible basis, suggesting the mapping is not soundly grounded."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.82,
+    "rationale": "Most added columns give genuine grouping/modeling axes relevant to predicting travel-expense declines (expense_category, entry_origin, presence flags, action type), and their values are largely sound readings of short_description, ci, and date fields. Weak spots: is_miscellaneous_ci is near-constant and redundant, and department_group both duplicates an existing column and shows values not clearly warranted by the source text (identical rows assigned different groups). Overall the set meets both necessary conditions at a moderate-to-good level, with department_group the main groundedness concern."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

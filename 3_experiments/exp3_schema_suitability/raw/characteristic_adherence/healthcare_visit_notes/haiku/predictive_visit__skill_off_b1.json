@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit reasons point to different departments?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "primary_reason",
+    "condition_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.81,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.705,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_reason",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is essentially a truncated restatement of the existing reason_for_visit column, extracting the leading clause. Values are faithfully grounded in the source text (e.g. 'Annual physical exam', 'Follow-up after MI 6 months ago'). However, as a near-verbatim slice of an original column with extremely high cardinality (mostly unique values), it offers little new axis to group departments by, so its analytical leverage for the query is limited."
+      },
+      {
+        "name": "condition_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "A categorical grouping of visit reasons into clinical domains is directly useful for the query, giving a clean axis to relate reasons to departments. Most values are well grounded (Cardiovascular for MI follow-up, Dermatological for acne, Musculoskeletal for knee injury, Infectious_Disease for viral URI). However there is a clear misclassification: an 'Annual physical exam' with fatigue and lipid/HbA1c labs was tagged 'Musculoskeletal_Issue', which contradicts the source text and points to unreliable categorization. A large 'Other_Clinical_Issue' bucket also dilutes precision."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.8,
+    "rationale": "condition_category provides a genuine new grouping axis that directly serves the query about which visit reasons map to which departments, and its values are mostly sound readings of the source text, though at least one clear misclassification (annual physical -> Musculoskeletal) reveals categorization errors. primary_reason is faithfully grounded but is largely a truncated restatement of the existing reason_for_visit column with near-unique values, limiting its standalone analytical value. Overall the added set is moderately useful and reasonably grounded."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 2
+}

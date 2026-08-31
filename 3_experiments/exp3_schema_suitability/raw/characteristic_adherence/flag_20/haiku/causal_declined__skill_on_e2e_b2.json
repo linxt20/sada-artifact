@@ -1,0 +1,97 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "asset_category",
+    "acquisition_driver",
+    "travel_expense_indicator",
+    "department_origin",
+    "source_id_presence"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of asset/expense category plausibly affects both whether an expense is travel-related (treatment) and whether it gets declined (policy scrutiny varies by category). Surfaced from data, not named in query."
+      },
+      {
+        "name": "acquisition_driver",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How the expense was generated (automated vs manual vs standard procurement) can drive both the classification as travel-related and the likelihood of decline (automated entries may face different validation). A common cause plausibly surfaced from data."
+      },
+      {
+        "name": "travel_expense_indicator",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "This is the candidate cause -- being a travel expense -- whose effect on decline the query explicitly asks about ('travel expenses get declined')."
+      },
+      {
+        "name": "department_origin",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Department both influences the volume/type of travel spending (treatment exposure) and the decline rate (budget policies differ by department). A genuine common cause surfaced from data, though it duplicates an existing original column."
+      },
+      {
+        "name": "source_id_presence",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Whether a source_id is populated is a record-provenance/data-quality flag. It is more plausibly a consequence of the entry channel or a collider on completeness than a common cause of both travel-status and decline; weak as a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "travel_expense_indicator"
+    ],
+    "confounders": [
+      {
+        "name": "asset_category",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "acquisition_driver",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "department_origin",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "The set does supply an explicit treatment (travel_expense_indicator) matching the query's causal focus, and several confounders (acquisition_driver, department_origin, asset_category) were surfaced from data rather than named in the query and are plausible common causes of both travel-status and decline. This is partial evidence of genuine causal reasoning. However, quality is only moderate: source_id_presence is a provenance/data-quality flag rather than a true common cause, department_origin merely re-labels an existing column, and none of the confounders are strongly justified via described mechanisms. No mediators are mislabelled, but the confounding structure is loosely motivated."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

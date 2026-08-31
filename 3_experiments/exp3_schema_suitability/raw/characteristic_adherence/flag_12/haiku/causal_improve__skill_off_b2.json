@@ -1,0 +1,109 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we improve incident resolution efficiency?",
+  "focus_variable": "incident_resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "resolution_speed",
+    "priority_level",
+    "is_critical",
+    "assignee_caseload",
+    "category_volume"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "incident_resolution_efficiency",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Continuous measure of resolution time; this is an operationalization of the focus outcome (efficiency), not a treatment or confounder."
+      },
+      {
+        "name": "resolution_speed",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Categorical binning (Slow/Fast/Moderate) of resolution_hours; another encoding of the outcome itself."
+      },
+      {
+        "name": "priority_level",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Priority is assignable and affects both routing/handling decisions and resolution time. It is a common cause but is essentially a restatement of an existing original column (priority), so weak as a newly surfaced confounder."
+      },
+      {
+        "name": "is_critical",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Derived criticality flag from priority; affects handling intensity and resolution time. Common cause but largely redundant with priority."
+      },
+      {
+        "name": "assignee_caseload",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Workload of the assignee is a plausible common cause: it can drive both what gets assigned/handled and how fast incidents are resolved, and it is a genuinely new variable not present in the original table or query. It is also itself a plausible intervenable lever (staffing/load balancing)."
+      },
+      {
+        "name": "category_volume",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Volume of a category can affect both which categories/incidents get resourced and resolution speed; a plausible unnamed common cause, though could also act as a proxy for category mix."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "treatment_intervenable": false,
+    "confounders": [
+      {
+        "name": "priority_level",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "is_critical",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "assignee_caseload",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "category_volume",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The added columns operationalize the OUTCOME (resolution_hours, resolution_speed) and add several plausible common-cause covariates (caseload, category volume, priority/criticality). However, the set FAILS the decisive interventional test: no column encodes an intervenable TREATMENT lever whose effect on resolution efficiency could be estimated. No candidate action/policy/assignment is set up as the thing an actor would change (e.g., staffing level, assignment strategy, SLA policy). Without an explicit treatment, the confounders are not adjusting for anything, and the counterfactual effect cannot be read off. assignee_caseload is the strongest genuinely new, unnamed covariate and is itself potentially settable, but it is framed as a confounder rather than as the treatment. Overall this realizes attribution/covariate-adjustment at best, not a what-if intervention."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

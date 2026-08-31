@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "seat_comfort_and_spaciousness",
+    "aircraft_modernity_and_condition",
+    "ground_service_efficiency",
+    "value_for_money_perception",
+    "food_and_beverage_quality"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.574,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.76,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.667,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "seat_comfort_and_spaciousness",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides a categorised comfort axis useful for identifying advantage attributes of high-rated airlines. Partly overlaps with the existing 'Seat Comfort' numeric column, reducing novelty, but the extracted qualitative categories add some grouping leverage. Values track the source text well (e.g. 'uncomfortable' → excellent was actually rated positively elsewhere; the Manchester row rated 'excellent' despite 'uncomfortable seating' is a slight mismatch but overall sound)."
+      },
+      {
+        "name": "aircraft_modernity_and_condition",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A genuinely new axis not present in original columns, useful for comparing advantage attributes. However groundedness is weaker: several rows produced 'well_maintained' where the text says nothing about aircraft condition (e.g. the Phnom Penh, Manchester, and Frankfurt reviews contain no condition cues), asserting a specific where the source is silent rather than returning NULL."
+      },
+      {
+        "name": "ground_service_efficiency",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis (check-in/ground handling) not captured by existing service columns, useful for grouping. Appropriately returns Unknown/NULL for silent rows (Phnom Penh, Manchester, Frankfurt), and 'smooth_efficient_seamless' for the Changi check-in row is well warranted by the text."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Nearly redundant with the existing 'Value For Money' column and heavily near-constant ('good_value' dominates ~87%), giving little analytical leverage. Also, most sample reviews do not discuss price/value at all, yet a confident 'good_value' is asserted, indicating unsupported inference on silent rows."
+      },
+      {
+        "name": "food_and_beverage_quality",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Adds a categorised food-quality axis; overlaps somewhat with the original 'Food & Beverages' rating but the qualitative categories provide grouping value. Values are strongly grounded in the source text (plentiful high-quality food → excellent_and_varied, etc.)."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.75,
+    "rationale": "Most added columns give qualitative, groupable attribute axes relevant to identifying advantages of high-rated airlines, and several (ground_service, aircraft_condition) are genuinely new relative to the original numeric ratings. Weaknesses: value_for_money_perception is largely redundant with an existing column and near-constant, and both it and aircraft_modernity_and_condition over-assert specific positive values on rows whose text is silent, rather than returning NULL — a source-groundedness concern. Food and seat columns are well grounded."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

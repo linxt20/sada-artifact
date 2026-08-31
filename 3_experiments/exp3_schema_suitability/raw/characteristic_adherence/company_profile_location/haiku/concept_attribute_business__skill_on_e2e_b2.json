@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What business models and customers do these companies describe?",
+  "focus_variable": "company_business_profile",
+  "concept": "company_business_profile",
+  "n_added_columns": 4,
+  "added_columns": [
+    "business_model_type",
+    "customer_segment_primary",
+    "industry_vertical_served",
+    "value_prop_primary_mechanism"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.8142,
+    "facet_fraction": 1.0,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.78,
+    "exhaustiveness": 0.85,
+    "mece": 0.8142,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "company_business_profile",
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The business model is a core constitutive aspect of a company's business profile -- how the company structures and monetizes its offering is an integral part-of the profile, not an external predictor."
+      },
+      {
+        "name": "customer_segment_primary",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Who the company serves (its customers) is directly named in the query and is an integral aspect of the business profile; a genuine part-of relationship."
+      },
+      {
+        "name": "industry_vertical_served",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The industry vertical addressed is a distinct dimension of the company's market focus and thus a constitutive aspect of its business profile. It is distinct from the customer segment (buyer type vs. sector)."
+      },
+      {
+        "name": "value_prop_primary_mechanism",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The value proposition / mechanism by which the company creates value is a core aspect of what the business is, making it a legitimate facet rather than an external cause or predictor."
+      }
+    ],
+    "facet_columns": [
+      "business_model_type",
+      "customer_segment_primary",
+      "industry_vertical_served",
+      "value_prop_primary_mechanism"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.78,
+    "exhaustiveness": 0.85,
+    "rationale": "All four added columns are genuine constitutive facets of 'company_business_profile' -- business model, customer segment, industry vertical, and value proposition each capture a distinct aspect OF the concept via a part-of relationship, none being an external predictor or cause. Mutual exclusivity is strong but not perfect: customer_segment_primary and industry_vertical_served overlap on their edges (e.g., 'healthcare_provider'/'financial_services' appear as both segment and vertical values), and business_model_type contains vertical-flavored values (e.g., 'security_infrastructure', 'analytics_intelligence') that blur into industry_vertical. Exhaustiveness is high for the query's stated focus (business models + customers) and adds value-creation and market coverage; the main uncovered constitutive aspects are geographic/scale scope and revenue/pricing structure, which prevent a perfect score."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_business",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

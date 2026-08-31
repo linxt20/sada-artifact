@@ -1,0 +1,68 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "disappointment_signal",
+    "frustration_or_annoyance_tone",
+    "waste_or_resource_loss_framing",
+    "personal_inconvenience_or_burden",
+    "explicit_product_comparison"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.79,
+    "analytical_usefulness__table_level": 0.81,
+    "source_groundedness": 0.84,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.815,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "disappointment_signal",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "rationale": "A binary disappointment flag is a strong, well-balanced (129/121) predictor axis for negative satisfaction. Samples are soundly read: explicit disappointment/dissatisfaction correctly flagged true, positive skincare/film reviews flagged false. Slightly generic but directly on-query."
+      },
+      {
+        "name": "frustration_or_annoyance_tone",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.83,
+        "rationale": "Graded frustration/annoyance/sarcasm categories give a richer emotional-intensity axis than a raw flag, useful for modeling negativity gradients. Row readings are largely warranted (high_frustration for the venting Eamon and doll reviews). Some subjectivity in moderate vs high boundaries, but no clear contradiction."
+      },
+      {
+        "name": "waste_or_resource_loss_framing",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "rationale": "Captures a distinct 'wasted money/time' framing (31/250) that is a plausible independent driver of dissatisfaction and not redundant with generic sentiment. Fairly rare but not near-constant. Sample false values are consistent with texts lacking waste framing."
+      },
+      {
+        "name": "personal_inconvenience_or_burden",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.85,
+        "rationale": "Multi-valued burden taxonomy (effort, incompatibility, logistics, health/safety) offers a genuine new axis to group complaints by concrete harm type. not_present for the sampled rows is defensible. Categorization requires inference but samples are reasonable, not invented specifics."
+      },
+      {
+        "name": "explicit_product_comparison",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "rationale": "Comparison type (expectations/competitor/prior model) is a useful, non-redundant axis for predicting dissatisfaction. Grounding is weaker in samples: AMZ-0003 labeled comparison_to_competitor, but the text mocks a namesake artist rather than making an explicit product comparison, an overreach. AMZ-0002 'comparison_to_expectations' is a defensible read."
+      }
+    ],
+    "analytical_usefulness": 0.81,
+    "source_groundedness": 0.83,
+    "hallucination_observed": false,
+    "rationale": "All five added columns provide genuine, largely non-redundant axes (disappointment, frustration intensity, waste framing, burden type, comparison type) directly targeting predictors of negative satisfaction, with reasonable value distributions and balanced signal. Grounding is generally sound with defensible 'not_present' defaults; the main weakness is occasional over-confident categorization (e.g., labeling a namesake-artist rant as a competitor comparison), which modestly lowers groundedness for the comparison column but does not amount to systematic hallucination."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

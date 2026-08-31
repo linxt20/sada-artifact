@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce incident resolution time?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "affected_system_tier",
+    "recurrence_signal",
+    "is_assigned",
+    "resolved_by_assignee",
+    "is_open_incident",
+    "assigned_agent",
+    "caller_id_group"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.6111,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.8111,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7111,
+    "hallucination_rate": 0.1111
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents (email, vpn, database) from short_description gives a strong grouping axis to compare resolution times by type. Values match the source text well."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Failure mode adds an orthogonal axis (connection vs access vs crash) useful for targeting resolution improvements. Mostly warranted readings, though some ('unresponsive_service' for 'not working properly') are reasonable but slightly inferred."
+      },
+      {
+        "name": "affected_system_tier",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "System tier (server/network/application/client) is a useful lens for routing and resolution analysis. Largely inferable from category, though a bit correlated with incident_category, and tier assignments are reasonable inferences."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Recurrence would be valuable for resolution analysis, but it is marked True for 383/500 including one-line descriptions with no evidence of recurrence in the source text. The specific True/False assignments appear largely unsupported."
+      },
+      {
+        "name": "is_assigned",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Derivable directly from the existing assigned_to column, so largely redundant; useful but adds little new leverage. Values are well grounded."
+      },
+      {
+        "name": "resolved_by_assignee",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Comparing assigned_to vs closed_by is a genuinely useful signal for handoff overhead affecting resolution time. Derivable from original columns; NULLs for silent rows are acceptable."
+      },
+      {
+        "name": "is_open_incident",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Restates the existing 'state'/'closed_at' fields; useful for filtering but largely redundant. Values grounded in state/closed_at."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Essentially a copy/normalization of the existing assigned_to column, so redundant. Could support per-agent resolution comparison but adds little over the original."
+      },
+      {
+        "name": "caller_id_group",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Appears to be a restatement/relabel of the existing caller_id column; provides little new analytical axis for reducing resolution time. Values grounded."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.78,
+    "rationale": "The strongest additions (incident_category, failure_mode, affected_system_tier) give genuine new grouping axes to diagnose where resolution time is spent, and resolved_by_assignee adds a handoff signal. Several columns (is_assigned, is_open_incident, assigned_agent, caller_id_group) largely restate existing original columns and add limited leverage. Groundedness is generally solid except recurrence_signal, which asserts recurrence for most rows without support in the source text."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 9
+}

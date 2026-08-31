@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "burden_type",
+    "resolution_duration_minutes",
+    "is_top_burden"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "burden_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Categorizes the operational burden described in the text, which is the lever whose elimination the query asks about. Directly the 'operational burdens' named in the query."
+      },
+      {
+        "name": "resolution_duration_minutes",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the focus/outcome (resolution duration) quantified in minutes, not a treatment or confounder."
+      },
+      {
+        "name": "is_top_burden",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "A binary indicator flagging whether the record's burden is among the most common ones. This operationalizes the exact intervention ('most common operational burdens eliminated'), a settable flag derived from burden_type. It is the query's own condition, not a new confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "burden_type",
+      "is_top_burden"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns identify an intervenable treatment (burden_type / is_top_burden), which represents the operational burden that could plausibly be eliminated or reduced, and re-encode the outcome (resolution_duration_minutes). However, the what-if claim requires CONFOUNDERS -- common causes of both the treatment (which burden type occurs / whether it is a top burden) and the outcome (resolution duration) -- to be adjusted for so the counterfactual effect can be read off. NO confounder columns were added at all. Plausible confounders such as priority, category, assignment_group, or caller/agent workload already exist in the original table but were not surfaced or newly introduced by the augmentation, and none of the added columns adjust for anything. Because the operator produced only the treatment and a restated outcome, it fails the decisive test: there are zero confounders (named or unnamed), so the counterfactual effect cannot be isolated. The intervention is well-posed but the identification requirement is entirely unmet."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

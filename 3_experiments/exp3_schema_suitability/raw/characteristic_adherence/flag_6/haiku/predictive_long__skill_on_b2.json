@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_domain",
+    "infrastructure_scope",
+    "technical_severity_signal",
+    "assigned_agent",
+    "resolution_complexity_indicator",
+    "agent_handoff_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.3333
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "issue_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from short_description, categorizes the type of issue (email, VPN, database). Issue type plausibly influences how long resolution takes and is knowable at ticket creation, so it is a legitimate leading predictor."
+      },
+      {
+        "name": "infrastructure_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Indicates whether the affected system is shared, multi-user, single-device, or location-specific. Scope reflects coordination/impact and is available up front; it plausibly carries signal about resolution duration without being a function of it."
+      },
+      {
+        "name": "technical_severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Characterizes the nature of the problem (outage vs degraded vs config). This is a property of the issue itself, knowable at intake, and severity plausibly predicts resolution time. Not a restatement or leakage."
+      },
+      {
+        "name": "assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The agent handling the ticket. Since the query explicitly asks which AGENTS' tickets take longer, agent identity is the core predictor of interest, known when work begins, and lies outside the focus variable."
+      },
+      {
+        "name": "resolution_complexity_indicator",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Categories like 'requires_vendor_escalation' and 'multi_step_troubleshooting' describe the resolution process itself and are largely only determinable through/after resolving the ticket. This is close to a deterministic correlate of resolution effort and risks encoding the outcome, i.e., leakage."
+      },
+      {
+        "name": "agent_handoff_pattern",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Distinguishes whether the assignee differs from the closer/was reassigned. 'assigned_different_closer' is only known once the ticket is closed and derives from closed_by/assigned_to at closure time, so it is post-outcome information and constitutes leakage."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.6,
+    "rationale": "Four columns (issue_domain, infrastructure_scope, technical_severity_signal, assigned_agent) are legitimate pre-resolution predictors that add signal beyond the raw text/priority fields, with assigned_agent directly serving the agent-focused query. Two columns (resolution_complexity_indicator, agent_handoff_pattern) describe how the ticket was ultimately handled/closed and are only knowable at or after resolution, making them leakage rather than genuine predictors. As a set they provide moderate, but not full, predictive leverage."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

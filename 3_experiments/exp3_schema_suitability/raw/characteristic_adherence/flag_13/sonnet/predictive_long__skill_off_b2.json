@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals are linked to longer resolution duration values?",
+  "focus_variable": "duration_like_resolution_value",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "resolution_duration_seconds",
+    "resolution_duration_tier",
+    "priority_numeric",
+    "opened_hour",
+    "is_off_hours_open",
+    "assignee_avg_resolution_seconds",
+    "category_avg_resolution_seconds",
+    "is_high_severity"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.15,
+    "predictor_fraction": 0.5,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.3,
+    "leakage_rate": 0.25
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "duration_like_resolution_value",
+    "per_column": [
+      {
+        "name": "resolution_duration_seconds",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is the resolution duration itself expressed in seconds -- a direct restatement of the focus variable, not an external predictor."
+      },
+      {
+        "name": "resolution_duration_tier",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "A binned/discretized version of the focus duration (short/medium/long/very_long). It is a deterministic function of the outcome, not a predictor."
+      },
+      {
+        "name": "priority_numeric",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Numeric encoding of priority, known at open time and plausibly correlated with how long resolution takes. Legitimate external predictor."
+      },
+      {
+        "name": "opened_hour",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Hour of day the ticket was opened, known before resolution; can carry signal about staffing/load affecting duration."
+      },
+      {
+        "name": "is_off_hours_open",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the ticket opened outside business hours, known at open time; plausibly linked to longer resolution due to reduced coverage."
+      },
+      {
+        "name": "assignee_avg_resolution_seconds",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Average resolution time of the assignee is computed FROM the resolution duration outcomes (aggregating the focus variable itself), so it leaks the target rather than being an independent predictor."
+      },
+      {
+        "name": "category_avg_resolution_seconds",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Category-level mean of the focus variable; a target-derived aggregate that leaks the outcome unless carefully out-of-fold constructed, which is not evidenced here."
+      },
+      {
+        "name": "is_high_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Severity flag derived from priority, known at open time and plausibly associated with resolution duration. Legitimate predictor (though near-constant here)."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.3,
+    "rationale": "Half the added columns fail the technical claim: resolution_duration_seconds and resolution_duration_tier are restatements/discretizations of the focus, and the two *_avg_resolution_seconds columns are target-derived aggregates that leak the outcome. The genuine external predictors -- priority_numeric, opened_hour, is_off_hours_open, is_high_severity -- are plausible but weak and largely redundant with existing priority/opened_at columns (is_high_severity is near-constant at 474/26 and overlaps priority_numeric). As a set they add only modest legitimate predictive leverage beyond the original table."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

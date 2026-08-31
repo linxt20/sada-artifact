@@ -1,0 +1,102 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "visit_type",
+    "primary_clinical_category",
+    "symptom_acuity",
+    "condition_complexity",
+    "injury_mechanism",
+    "diagnostic_workup_intensity",
+    "treatment_intensity",
+    "disposition_signal",
+    "patient_age_proxy",
+    "injury_or_illness_mechanism"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.715,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.84,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.7775,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "visit_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "rationale": "A clean categorization of the reason for visit (preventive, acute, chronic, emergency) that directly relates reasons to urgency/duration. Values match source text well (annual exam→preventive, cough→acute, MI follow-up→chronic)."
+      },
+      {
+        "name": "primary_clinical_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Organ-system/clinical grouping gives a strong new axis for grouping reasons. Values are well-grounded; the annual-exam row mapped to endocrine_metabolic is defensible given HbA1c/lipid focus though arguably preventive."
+      },
+      {
+        "name": "symptom_acuity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Severity gradient is a useful mediator between reason and urgency/duration and distinct from the original urgency field. Values track the text (mild fatigue→mild, asymptomatic follow-up→asymptomatic, moderate acne→moderate)."
+      },
+      {
+        "name": "condition_complexity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "New vs known/stable/worsening adds analytical leverage for duration/urgency modeling. Well grounded (stable MI→known_stable, worsening acne→known_worsening)."
+      },
+      {
+        "name": "injury_mechanism",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Etiology axis is useful, but this is essentially duplicated by injury_or_illness_mechanism, reducing marginal value. Values are reasonable readings of the text."
+      },
+      {
+        "name": "diagnostic_workup_intensity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Workup level plausibly correlates with duration, a useful axis. High NULL count is acceptable as 'not stated'. Values grounded (labs→basic_labs, MRI→imaging_ordered)."
+      },
+      {
+        "name": "treatment_intensity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "rationale": "Useful for duration/urgency, but somewhat inferential and prone to overreach. The tennis-knee row labeled procedural_in_office is not supported by the text, which only mentions MRI ordered—an invented treatment."
+      },
+      {
+        "name": "disposition_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "rationale": "Disposition is a reasonable outcome axis, but often not stated in the text and thus inferred. 'discharge_with_followup' for the acne row is plausible but not explicit; some confident specifics exceed source support."
+      },
+      {
+        "name": "patient_age_proxy",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.75,
+        "rationale": "Largely redundant with the original age_group column and heavily dominated by 'adult' (near-constant), giving little new analytical leverage. Values are mostly reasonable but partly inferred from department (Pediatrics→toddler)."
+      },
+      {
+        "name": "injury_or_illness_mechanism",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "rationale": "Near-duplicate of injury_mechanism with nearly identical distribution; a mere restatement adding minimal new leverage. Values themselves are well grounded."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.83,
+    "rationale": "Most added columns provide genuine new axes (visit_type, clinical_category, symptom_acuity, condition_complexity, workup intensity) that directly serve the query relating reasons to urgency and duration across department/age. Groundedness is generally solid, matching source readings. Weaknesses: two mechanism columns are near-duplicates, patient_age_proxy is largely redundant with the existing age_group and near-constant, and the inferential columns (treatment_intensity, disposition_signal) occasionally assert specifics beyond what the text supports (e.g., a procedural treatment for a knee row that only mentions MRI ordered). Per scope rules, no penalty applied for missing columns."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 10
+}

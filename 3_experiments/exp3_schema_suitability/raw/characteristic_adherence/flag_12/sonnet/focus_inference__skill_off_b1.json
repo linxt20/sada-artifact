@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "device_type",
+    "description_vague",
+    "self_resolved"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.45,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.625,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Resolution time is a strong analytical axis for incident tickets. However, the source rows show sys_updated_on == closed_at (identical timestamps), which cannot yield values like 161.13 or 384.32 hours; these would require opened_at, and the produced values do not match the visible timestamp deltas (zero). The values appear invented or derived from fields not shown consistently, and the heavy spike at exactly '24' (57 rows) suggests defaulting. Poorly grounded."
+      },
+      {
+        "name": "device_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing tickets by device/system type gives a genuine grouping axis distinct from the free-text short_description. Values (printer, database, network) are well-supported readings of the source text in every sample."
+      },
+      {
+        "name": "description_vague",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Flagging vague descriptions is useful for data-quality analysis and could correlate with resolution outcomes. Grounding is mixed: 'Printer not working properly' as vague is defensible, but 'Internet connectivity lost on floor 3' = no and equally terse printer entries labeled yes show inconsistent, somewhat subjective application of the criterion."
+      },
+      {
+        "name": "self_resolved",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.15,
+        "hallucination_observed": true,
+        "rationale": "Whether a ticket self-resolved is an interesting axis, but nothing in the visible source (short_description, timestamps) indicates self-resolution. The 'yes' for 'Internet connectivity lost on floor 3' is an unsupported confident assertion; the flag appears invented rather than derived from present evidence."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.45,
+    "rationale": "The added columns offer genuinely useful new analytical axes (device categorization, resolution time, description quality, self-resolution) beyond the original fields, so table-level usefulness is high. However, groundedness is weak for the derived-numeric and inferred-flag columns: resolution_time_hours produces large hour values despite identical visible timestamps and shows suspicious defaulting to 24, and self_resolved asserts outcomes the source text does not support. device_type is well grounded; description_vague is inconsistently applied."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

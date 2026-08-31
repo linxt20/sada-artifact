@@ -1,0 +1,76 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which clinical factors best explain longer visit durations?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "clinical_complexity_score",
+    "procedure_needed",
+    "medication_adjustment",
+    "clinical_detail_level"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "clinical_complexity_score",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate clinical cause of longer visits; can act as the treatment being attributed. It is not itself a common cause set up alongside a distinct treatment, so it functions as a candidate cause of the outcome."
+      },
+      {
+        "name": "procedure_needed",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether a procedure is required plausibly increases visit duration directly; it is a candidate cause (treatment), not a common cause adjusted for another treatment."
+      },
+      {
+        "name": "medication_adjustment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A clinical action that lengthens the visit; another candidate cause of the outcome rather than a confounder of a separate treatment."
+      },
+      {
+        "name": "clinical_detail_level",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "The recorded level of clinical detail is plausibly a consequence of both complexity and visit length (more time/more complexity yields more documentation), so it is downstream, not a common cause; adjusting for it would be a mistake."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "clinical_complexity_score",
+      "procedure_needed",
+      "medication_adjustment"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply several plausible candidate causes (treatments) of visit duration -- complexity, procedure need, medication adjustment -- so requirement (a) is met. However, requirement (b) is NOT satisfied: none of the columns are genuine confounders, i.e., variables that cause BOTH one of these treatments AND the outcome and must be adjusted to de-bias the attribution. The columns are a bundle of parallel candidate causes with no common-cause adjustment set; a true confounder would be something like patient comorbidity burden, provider/staffing level, or clinic time-of-day load that drives both whether a procedure/complexity occurs and how long the visit runs. clinical_detail_level is downstream (collider/consequence), not a confounder. Because the system surfaced zero real, non-query-named confounders, the causal-attribution capability under test is not demonstrated."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_long_visit",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

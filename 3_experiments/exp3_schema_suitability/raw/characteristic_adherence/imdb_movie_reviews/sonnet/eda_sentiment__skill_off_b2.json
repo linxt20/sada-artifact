@@ -1,0 +1,150 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 14,
+  "added_columns": [
+    "aspect_acting",
+    "aspect_plot",
+    "aspect_direction",
+    "aspect_music",
+    "aspect_humor",
+    "aspect_emotion",
+    "aspect_special_effects",
+    "aspect_nostalgia",
+    "dominant_theme",
+    "positive_word_count",
+    "negative_word_count",
+    "sentiment_word_ratio",
+    "sarcasm_signal",
+    "review_length_words"
+  ],
+  "metrics": {
+    "n_added_columns": 14,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.5828,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 12,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.68,
+    "interpretable_fraction": 0.8571
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "aspect_acting",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable count of acting-related mentions; can be segmented (present/absent, low/high) and compared across sentiment to reveal theme differences."
+      },
+      {
+        "name": "aspect_plot",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Plot-mention intensity is a meaningful, groupable aspect variable directly relevant to comparing themes by sentiment."
+      },
+      {
+        "name": "aspect_direction",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Direction-mention counts are interpretable and support aspect-vs-sentiment comparison."
+      },
+      {
+        "name": "aspect_music",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable though sparse (mostly 0); presence/absence segmentation still informative for theme contrast."
+      },
+      {
+        "name": "aspect_humor",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Humor mentions form an interpretable aspect segment usable against sentiment."
+      },
+      {
+        "name": "aspect_emotion",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Emotion aspect, though skewed toward 0, gives an interpretable presence/absence grouping."
+      },
+      {
+        "name": "aspect_special_effects",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Very sparse (93% zero) but still an interpretable binary-ish aspect signal for theme comparison."
+      },
+      {
+        "name": "aspect_nostalgia",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Nostalgia mentions form a clean, interpretable theme segment."
+      },
+      {
+        "name": "dominant_theme",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categorical dominant theme with well-separated, human-readable classes; ideal for cross-tabulation against sentiment. Strongest EDA column."
+      },
+      {
+        "name": "positive_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable count that can be grouped and compared against sentiment, though partly restates polarity."
+      },
+      {
+        "name": "negative_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable count usable for segmentation; some overlap with the label itself."
+      },
+      {
+        "name": "sentiment_word_ratio",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Essentially a proxy for sentiment polarity; restates the focus rather than opening an external relationship."
+      },
+      {
+        "name": "sarcasm_signal",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Near-constant (248/250 are 0); no meaningful comparison can be drawn."
+      },
+      {
+        "name": "review_length_words",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "External stylistic variable that can be binned and compared against sentiment; interpretable though fine-grained."
+      }
+    ],
+    "n_predictors": 12,
+    "relationship_informativeness": 0.68,
+    "rationale": "The set is strongly aligned with the EDA intent: it decomposes 'review themes' into interpretable, groupable aspect variables plus a well-separated categorical dominant_theme, which is exactly the segmentation needed to compare themes across positive/negative sentiment. Several aspect columns are sparse (music, emotion, special_effects, nostalgia) limiting comparison power, and a few columns weaken the set: sentiment_word_ratio and the pos/neg word counts partly restate the sentiment focus, and sarcasm_signal is near-constant and non-informative. Overall it enables meaningful relationship discovery, but with redundancy and sparsity dragging the informativeness below excellent."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 14
+}

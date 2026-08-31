@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "theme_food_quality",
+    "theme_service",
+    "theme_ambiance",
+    "theme_price_value",
+    "theme_wait_time",
+    "theme_repeat_visit",
+    "themes_present",
+    "theme_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8063,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8438,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.8251,
+    "hallucination_rate": 0.125
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "theme_food_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binary food-quality theme flag is a genuine axis to compare positive vs negative reviews. Sample readings are sound (e.g. YLP-0003 pizza/crust marked 1; YLP-0001 arguably food but reasonable)."
+      },
+      {
+        "name": "theme_service",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Service theme is central to the query and well-grounded: YLP-0002 'worst service' =1, YLP-0004 'great service' =1, YLP-0005 no explicit service mention =0 is defensible."
+      },
+      {
+        "name": "theme_ambiance",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct thematic axis useful for the comparison. Values align with source text where ambiance is silent (all sampled rows =0)."
+      },
+      {
+        "name": "theme_price_value",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful pricing axis. YLP-0003 discusses $20/single-serve pricing yet marked 0, a slight miss, but overall grounded."
+      },
+      {
+        "name": "theme_wait_time",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Wait-time theme is a valid grouping axis. Sampled rows lack explicit wait mentions and are marked 0, consistent with the text."
+      },
+      {
+        "name": "theme_repeat_visit",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Reasonable axis, but grounding is weaker: YLP-0005 marked repeat_visit=1 has only 'would not recommend', a stretch; YLP-0002 =1 is defensible from 'ready to leave'. Some values assert intent the text does not clearly support."
+      },
+      {
+        "name": "themes_present",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A concatenated summary of the per-theme flags; largely redundant with the binary columns but convenient for grouping. Inherits their grounding, so mildly discounted."
+      },
+      {
+        "name": "theme_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Aggregate count of themes; a modest new axis (breadth of review coverage) but fully derived from the other flags, hence limited independent leverage."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.84,
+    "rationale": "The per-theme binary columns provide directly relevant, groundable axes for comparing themes across positive vs negative sentiment, which is exactly what the query asks. Values in samples are mostly sound readings of the source text. Main weaknesses: theme_repeat_visit is over-asserted on rows with only weak cues (e.g. YLP-0005), and themes_present/theme_count are derivative summaries with lower independent analytical leverage. Overall the added columns satisfy both necessary conditions well."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

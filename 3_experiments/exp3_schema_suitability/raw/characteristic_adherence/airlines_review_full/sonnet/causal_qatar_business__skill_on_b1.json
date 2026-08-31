@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "seat_product_downgrade",
+    "aircraft_age_and_condition",
+    "cabin_crew_service_quality",
+    "food_beverage_quality",
+    "service_consistency_across_legs",
+    "ffp_elite_status_handling"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.5333,
+    "analytical_usefulness__table_level": 0.56,
+    "source_groundedness": 0.6333,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.5833,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "seat_product_downgrade",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Highly on-target for the query: whether the promised seat product was delivered or downgraded (with/without notice) is a direct plausible driver of a 'no' recommendation, and gives a genuine grouping axis beyond the numeric Seat Comfort rating. Groundedness is mixed: 'qsuite_delivered' in sample 4 is explicitly warranted, and downgrade buckets appear reserved for rows that mention it. However 'flat_bed_delivered' functions as a default catch-all (samples 1,2,3,5) even where the text never states the seat type; distinguishing flat-bed vs QSuite when the source is silent is a soft inference rather than an extraction, and in sample 1 a malfunctioning seat is still labeled a clean delivery. Defensible domain inference overall but not fully evidenced."
+      },
+      {
+        "name": "aircraft_age_and_condition",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Condition/age is a plausible-but-indirect axis for dissatisfaction, and nearly half the rows are NULL, weakening leverage for the query. Groundedness is the bigger problem: sample 1 asserts 'new_well_maintained' with no textual basis (and arguably contra the self-reclining broken seat), and sample 4 also asserts 'new_well_maintained' from a review that never discusses aircraft age or condition. Sample 3 ('very clean plane') and the correct 'Unknown' on silent rows (2,5) are fine, but the column confidently invents condition on silent rows, which is a hallucination pattern."
+      },
+      {
+        "name": "cabin_crew_service_quality",
+        "analytical_usefulness": 0.62,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Service quality is central to recommendation outcomes, and the categorical scale (esp. the 'inconsistent' bucket) adds a modest new angle, though it substantially overlaps the original 'Staff Service' numeric column. Groundedness is strong: sample 2 ('good on my aisle / extremely slow where my wife was') maps well to 'inconsistent', samples 3-4 ('kind professional', 'nothing but praises') to 'excellent', sample 5 to 'good'. Sample 1's 'poor' is a slight inference from overall negativity rather than an explicit crew description, but it is defensible."
+      },
+      {
+        "name": "food_beverage_quality",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Relevant to the query but largely redundant with the existing 'Food & Beverages' rating, and 200 rows are NULL. Groundedness is mixed: samples 3 ('great tasting food') and 4 ('food outstanding, wine list outstanding') are well grounded and sample 5 correctly abstains ('Unknown'), but sample 1 outputs 'poor' and sample 2 outputs 'good' when neither review mentions food or drink at all — unsupported specifics where 'Unknown' was correct behaviour."
+      },
+      {
+        "name": "service_consistency_across_legs",
+        "analytical_usefulness": 0.58,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Consistency across legs is a reasonable analytical axis for multi-segment dissatisfaction, though it is partly derivable from the Route field. Groundedness is uneven: single-leg calls in samples 1-3 match the routes, but sample 5 ('New York to Johannesburg via Doha') is clearly multi-leg yet labeled 'single_leg', contradicting the route, and sample 4's uniformly praised trip is labeled 'variable_high_low' when the flights read as consistently high. Two of the multi-leg cases are mishandled."
+      },
+      {
+        "name": "ffp_elite_status_handling",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Near-constant boolean (571 false vs 21 true) that offers almost no discriminating leverage for explaining non-recommendations; effectively a rare-mention flag. Groundedness is acceptable: none of the sample reviews mention frequent-flyer/elite handling and all are correctly 'False', so the silent-row default behaves like a proper 'not stated'. Low usefulness rather than low grounding."
+      }
+    ],
+    "analytical_usefulness": 0.56,
+    "source_groundedness": 0.6,
+    "rationale": "The set contains a couple of genuinely query-relevant axes — seat_product_downgrade (with/without-notice downgrades directly bear on why a flight is not recommended) and the 'inconsistent'/consistency framings of crew and cross-leg service. However usefulness is diluted: cabin_crew and food_beverage columns largely restate the existing Staff Service and Food & Beverages ratings, aircraft_age_and_condition is ~half NULL, and ffp_elite_status_handling is near-constant (21/592 true) with negligible leverage. On groundedness, correct extractions and appropriate 'Unknown' abstentions appear (samples 3-4, and several correct NULLs), but there is a recurring pattern of confidently filling silent rows with specific values: sample 1 asserts 'new_well_maintained' and food 'poor' with no basis, sample 4 asserts aircraft condition unsupported, and service_consistency mislabels a via-Doha itinerary as 'single_leg' and a uniformly praised trip as 'variable_high_low'. These are real hallucinations that pull the table-level grounding to a middling level."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

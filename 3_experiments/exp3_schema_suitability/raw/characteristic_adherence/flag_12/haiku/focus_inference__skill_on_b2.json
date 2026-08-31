@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_device_type",
+    "problem_severity_level",
+    "assigned_technician",
+    "caller_identity",
+    "description_detail_level",
+    "systemic_recurrence",
+    "assignee_closure_alignment",
+    "resolution_approach",
+    "business_impact_domain"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.39,
+    "focus_coherence": 0.6,
+    "structure_quality": 0.65,
+    "focus_actionability": 0.75,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature and resolution of IT incidents -- characterizing what breaks (device/problem type), how severe/impactful it is, and how it gets resolved.",
+    "per_column": [
+      {
+        "name": "incident_device_type",
+        "supports_focus": true,
+        "rationale": "Classifies the affected asset, a core facet of characterizing the incident."
+      },
+      {
+        "name": "problem_severity_level",
+        "supports_focus": true,
+        "rationale": "Captures the failure mode/severity, central to understanding incident nature."
+      },
+      {
+        "name": "assigned_technician",
+        "supports_focus": false,
+        "rationale": "Largely duplicates existing assigned_to; an operational actor field, not a facet of the incident-nature focus."
+      },
+      {
+        "name": "caller_identity",
+        "supports_focus": false,
+        "rationale": "Duplicates existing caller_id; identity restatement, not a focus facet."
+      },
+      {
+        "name": "description_detail_level",
+        "supports_focus": true,
+        "rationale": "A meta-attribute of the ticket describing symptom specificity, relevant to characterizing incidents."
+      },
+      {
+        "name": "systemic_recurrence",
+        "supports_focus": true,
+        "rationale": "Recurring vs first-occurrence is a meaningful analytical facet of incident nature."
+      },
+      {
+        "name": "assignee_closure_alignment",
+        "supports_focus": false,
+        "rationale": "A process/handoff metric orthogonal to the incident-characterization focus; adds a different concern (workflow integrity)."
+      },
+      {
+        "name": "resolution_approach",
+        "supports_focus": true,
+        "rationale": "How the incident was resolved, a coherent facet tied to incident type and outcome."
+      },
+      {
+        "name": "business_impact_domain",
+        "supports_focus": true,
+        "rationale": "Impact facet, directly supports prioritizing what's worth analyzing."
+      }
+    ],
+    "focus_coherence": 0.6,
+    "structure_quality": 0.65,
+    "focus_actionability": 0.75,
+    "rationale": "A clear majority of the added columns (device_type, problem_severity, description_detail_level, systemic_recurrence, resolution_approach, business_impact_domain) cohere around one inferable focus: characterizing IT incidents by their nature, resolution, and impact -- a genuinely useful analytical structure with differentiated facets at good granularity. This is neither a single restatement nor pure noise, and the focus is actionable (an analyst could investigate recurring device failures, high-impact categories, or resolution patterns). However, coherence is diluted by three columns: assigned_technician and caller_identity merely restate existing assigned_to/caller_id (identity fields, not focus facets), and assignee_closure_alignment injects a separate process-integrity concern. This grab-bag element and the redundancy prevent higher marks on coherence and structure."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

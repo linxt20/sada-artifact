@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What operational burdens appear in incident descriptions?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 3,
+  "added_columns": [
+    "operational_burden_type",
+    "severity_indicator",
+    "root_infrastructure"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0816,
+    "facet_fraction": 0.3333,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.2,
+    "mece": 0.2449,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "operational_burden_type",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is a multi-label categorization of the burden itself (connectivity/infrastructure/software/outage/performance), which restates the whole concept as a typology rather than isolating a single non-overlapping aspect OF it. The overlapping pipe-delimited multi-values also show it is not carving out a distinct MECE facet but re-labeling the whole."
+      },
+      {
+        "name": "severity_indicator",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Severity is a genuine aspect of an operational burden -- how heavy/impactful the burden is is a constitutive dimension (magnitude/intensity) of the burden concept."
+      },
+      {
+        "name": "root_infrastructure",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "The underlying/root infrastructure component (Network, Database, Software, Hardware) identifies the source or origin of the burden, i.e. what causes it, not a constitutive part of the burden itself."
+      }
+    ],
+    "facet_columns": [
+      "severity_indicator"
+    ],
+    "non_facet_columns": [
+      "operational_burden_type",
+      "root_infrastructure"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.2,
+    "rationale": "Only one of the three added columns (severity_indicator) qualifies as a constitutive facet capturing the magnitude/intensity dimension of operational burden. operational_burden_type is a restatement/typology of the whole concept (and its overlapping multi-label values undermine mutual exclusivity), while root_infrastructure identifies the causal source rather than an aspect of the burden. The type column heavily overlaps in meaning with the concept and with root_infrastructure (e.g. 'software'/'infrastructure' categories vs. Software/Hardware sources), lowering mutual exclusivity. As a facet set, exhaustiveness is poor: dimensions such as effort/labor cost, duration, breadth of impact, and recurrence are not covered, leaving the burden concept only partially decomposed."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

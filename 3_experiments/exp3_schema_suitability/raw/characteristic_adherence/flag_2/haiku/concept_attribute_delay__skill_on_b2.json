@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Why do some incidents take longer to resolve?",
+  "focus_variable": "incident_delay_reasons",
+  "concept": "incident_delay_reasons",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_type",
+    "incident_recurrence",
+    "incident_scope",
+    "description_clarity",
+    "assigned_technician",
+    "closure_status"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.05,
+    "facet_fraction": 0.1667,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.15,
+    "mece": 0.3,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_delay_reasons",
+    "per_column": [
+      {
+        "name": "incident_type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The technical category of the incident (connectivity, email, etc.) is an attribute of the incident that may correlate with delay, but it is not an aspect OF the delay reason itself. It describes what the incident is, not why it was delayed."
+      },
+      {
+        "name": "incident_recurrence",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the incident recurred is a property of the incident that could predict delay, not a constitutive part of the delay-reason concept."
+      },
+      {
+        "name": "incident_scope",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Scope (infrastructure-wide vs individual user) characterizes impact/breadth of the incident, a predictor of resolution time, not a facet decomposing the reasons for delay."
+      },
+      {
+        "name": "description_clarity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Poor description clarity is genuinely a constitutive cause-aspect OF delay reasons: unclear/generic descriptions are one of the reasons resolution is slowed. It represents an information-quality facet of why delays occur."
+      },
+      {
+        "name": "assigned_technician",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The individual technician assigned is an attribute of the incident/assignment that may influence delay, but naming a person is not an aspect OF the delay-reason concept."
+      },
+      {
+        "name": "closure_status",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A boolean of whether the incident is closed is an outcome/state indicator, not a facet of the reasons for delay."
+      }
+    ],
+    "facet_columns": [
+      "description_clarity"
+    ],
+    "non_facet_columns": [
+      "incident_type",
+      "incident_recurrence",
+      "incident_scope",
+      "assigned_technician",
+      "closure_status"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.15,
+    "rationale": "The concept to decompose is 'incident_delay_reasons' -- the constitutive aspects of WHY incidents take longer (e.g., diagnostic complexity, resource/staffing availability, dependency on third parties, information/description quality, escalation/handoff friction, waiting-on-requester time). Only 'description_clarity' is a genuine facet-of-a-delay-reason (an information-quality aspect). The remaining columns are external predictors or attributes of the incident (type, recurrence, scope, technician) or an unrelated outcome flag (closure_status); they may correlate with delay but are not PARTS of the delay-reason concept. Because five of six columns are external predictors, the set largely conflates 'attributes that predict delay' with 'facets of delay reasons.' Mutual exclusivity among the few semantically distinct dimensions is moderate, but exhaustiveness of the delay-reason concept is very low since core delay drivers (complexity, resourcing, dependencies, wait states) are absent."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are some incidents resolved inefficiently, and which underlying issues drive it?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_category",
+    "hardware_failure_pattern",
+    "assigned_technician",
+    "issue_specificity",
+    "repeated_issue_pattern",
+    "caller_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6417,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.5917,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.6167,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorising incidents by issue type gives a strong grouping axis to find which categories are resolved inefficiently. Values map soundly from short_description (printer->printer, connectivity->network)."
+      },
+      {
+        "name": "hardware_failure_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A useful failure-mode axis for driving root-cause analysis, with sensible NULL for silent rows. However 'mechanical_jam' is asserted from generic text like 'Printer not working properly' and 'The office printer is not functioning', which do not indicate a jam. That confident specific where the text is silent is a hallucination that weakens groundedness."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Technician identity could matter for resolution efficiency, but the table already has 'assigned_to'/'closed_by', making this largely redundant. More critically, the sample source text only exposes short_description/timestamps; the specific person names appear invented for the given rows rather than clearly derived, and identical descriptions get different technicians without visible source support."
+      },
+      {
+        "name": "issue_specificity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether a description is generic vs specific is directly relevant to inefficient resolution (vague tickets take longer). Values are a sound reading of the text: 'not working properly'->generic_malfunction, 'on floor 3'->location_context, 'connect to the database'->specific_symptom."
+      },
+      {
+        "name": "repeated_issue_pattern",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A recurring-issue flag is a genuinely useful driver axis. But per-row 'true'/'false' is not supportable from a single row's source text alone; it requires cross-row comparison, and the near-50/50 split with no visible evidence in samples suggests the flag is not clearly grounded for individual rows."
+      },
+      {
+        "name": "caller_type",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Distinguishing itil_user vs named_employee could offer a minor grouping axis, but is largely derivable from the existing caller_id and adds limited leverage for THIS efficiency query. The sample source text shown does not include caller_id, so the assigned values (e.g. itil_user for the connectivity row) are not visibly grounded and appear partly asserted."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.6,
+    "rationale": "The set provides several strong new axes for diagnosing inefficient resolution: issue_category and issue_specificity are both useful and well grounded in the short_description text. hardware_failure_pattern adds a good failure-mode dimension but over-specifies failure causes (e.g. mechanical_jam) from generic text. assigned_technician and caller_type are partly redundant with existing columns and their per-row values are not visibly derivable from the shown source text. repeated_issue_pattern is analytically relevant but a per-row boolean is hard to justify from single-row evidence. Overall useful, with moderate groundedness concerns from confident specifics unsupported by the text."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_inefficiency",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

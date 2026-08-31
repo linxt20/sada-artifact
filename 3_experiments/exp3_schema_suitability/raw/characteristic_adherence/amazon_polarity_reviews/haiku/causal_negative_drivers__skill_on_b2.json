@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "product_quality_failure",
+    "performance_misalignment",
+    "design_flaw_type",
+    "customer_experience_failure",
+    "value_mismatch_type",
+    "reviewer_emotional_intensity"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "product_quality_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause (product quality defects) whose effect on review sentiment is being attributed. This is a plausible driver of negative reviews and functions as a treatment/causal factor surfaced from the text."
+      },
+      {
+        "name": "performance_misalignment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause (product underperforming claims) contributing to negative sentiment; a treatment-like factor extracted from content."
+      },
+      {
+        "name": "design_flaw_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate causal factor (design flaws) attributed to negative reviews; a treatment-like driver."
+      },
+      {
+        "name": "customer_experience_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause capturing value/usability problems driving negative sentiment; another treatment factor."
+      },
+      {
+        "name": "value_mismatch_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "This overlaps with and refines customer_experience_failure's 'value_mismatch' category; it lies on the same causal path (a sub-type of an already-added cause) rather than being a distinct common cause of both a treatment and the outcome."
+      },
+      {
+        "name": "reviewer_emotional_intensity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Emotional intensity is an expression of dissatisfaction that sits on the path between the underlying failures and the negative label, not a common cause of both a treatment and the outcome; it is a mediator/proxy of the outcome, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "product_quality_failure",
+      "performance_misalignment",
+      "design_flaw_type",
+      "customer_experience_failure"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns enumerate multiple candidate CAUSES of negative reviews (quality failures, performance misalignment, design flaws, customer-experience failures), so a TREATMENT is clearly present. However, the operator supplies NO confounders -- there is no variable that plausibly causes BOTH one of these treatments AND the outcome and would need adjustment (e.g., product category, price tier, brand, reviewer strictness, purchase channel). The remaining columns are either sub-types of existing causes (value_mismatch_type) or expressions/proxies of the outcome (reviewer_emotional_intensity), which are mediators, not confounders. Because the decisive test is whether the system surfaced genuine confounders from the data, and none were provided, the causal-attribution claim is not satisfied: the setup allows a set of parallel causes to be measured but does not enable unbiased attribution via confounder adjustment."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

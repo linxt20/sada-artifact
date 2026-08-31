@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What patient needs appear in visit notes?",
+  "focus_variable": "patient_needs",
+  "concept": "patient_needs",
+  "n_added_columns": 5,
+  "added_columns": [
+    "clinical_problem_type",
+    "acuity_and_threat",
+    "intervention_required",
+    "anatomic_system_focus",
+    "care_coordination_requirement"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.7483,
+    "facet_fraction": 1.0,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.8,
+    "mece": 0.7483,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "patient_needs",
+    "per_column": [
+      {
+        "name": "clinical_problem_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The nature of the clinical problem (acute, chronic, preventive, etc.) is a constitutive aspect of what a patient needs -- it characterizes the underlying need itself, not an external correlate."
+      },
+      {
+        "name": "acuity_and_threat",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The urgency/severity dimension of a patient's need is a genuine aspect of the need (how pressing the need is). It is a part-of decomposition, though it overlaps somewhat with the existing 'urgency' column and with clinical_problem_type's acute/chronic split."
+      },
+      {
+        "name": "intervention_required",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "What intervention the patient requires (pharmaceutical, procedural, counseling) directly expresses the substance of the need -- what must be done for the patient. A legitimate facet."
+      },
+      {
+        "name": "anatomic_system_focus",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Which body system/domain the need concerns is an aspect of the need (its clinical locus). Constitutive, though values mixing anatomic systems with 'mental_health' and 'pediatric_developmental' blur the facet's basis."
+      },
+      {
+        "name": "care_coordination_requirement",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The coordination/follow-up a patient's care requires is a real aspect of the need -- the ongoing/logistical dimension. A distinct part-of facet."
+      }
+    ],
+    "facet_columns": [
+      "clinical_problem_type",
+      "acuity_and_threat",
+      "intervention_required",
+      "anatomic_system_focus",
+      "care_coordination_requirement"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.8,
+    "rationale": "All five columns are genuine part-of facets of 'patient_needs' (problem nature, acuity, required intervention, anatomic locus, and coordination requirement), so the meronymy test is satisfied across the board. Mutual exclusivity is good but not perfect: acuity_and_threat partly overlaps with the acute/chronic distinction embedded in clinical_problem_type, and anatomic_system_focus imports a 'mental_health' value that also appears in clinical_problem_type, creating cross-facet redundancy. Exhaustiveness is strong -- the set spans the problem, its severity, its treatment, its bodily domain, and its downstream coordination -- though patient-experienced/psychosocial or informational needs (e.g., patient understanding, social/support needs) are underrepresented, leaving some constitutive aspects only partially covered."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

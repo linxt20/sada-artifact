@@ -1,0 +1,140 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do goal achievement rates differ across departments?",
+  "focus_variable": "department_goal_achievement",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "primary_intervention_type",
+    "goal_specificity",
+    "goal_has_baseline",
+    "metric_alignment",
+    "time_horizon",
+    "initiative_scope",
+    "measurement_approach",
+    "resource_lever",
+    "technology_dependency"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 6,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 6,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "department_goal_achievement",
+    "per_column": [
+      {
+        "name": "primary_intervention_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The type of intervention chosen to pursue a goal is a candidate cause whose effect on achievement can be attributed; it is a manipulable treatment surfaced from the data, not named in the query."
+      },
+      {
+        "name": "goal_specificity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How specifically a goal is defined can plausibly influence both which intervention is pursued (treatment) and how likely it is to be achieved (outcome), making it a common cause rather than a mediator on the intervention->outcome path."
+      },
+      {
+        "name": "goal_has_baseline",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Presence of a baseline reflects goal maturity/measurability that can affect both intervention choice and achievability; largely redundant with goal_specificity but plausibly a common cause."
+      },
+      {
+        "name": "metric_alignment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the metric is an outcome vs activity/proxy metric shapes both how a goal is pursued and whether it registers as achieved; a design characteristic upstream of both."
+      },
+      {
+        "name": "time_horizon",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The time frame allotted can influence both the intervention selected and the probability of completion within the window, so it plausibly causes both treatment and outcome."
+      },
+      {
+        "name": "initiative_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (company-wide vs team) affects both the kind of intervention undertaken and the difficulty of achieving it, acting as a common cause."
+      },
+      {
+        "name": "measurement_approach",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How achievement is measured (financial vs survey vs KPI) can affect both intervention design and recorded achievement; largely overlaps with metric_alignment/measurement dimension."
+      },
+      {
+        "name": "resource_lever",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The resource lever engaged is more plausibly part of HOW an intervention is enacted, sitting on the causal path between the intervention and the outcome, so treating it as a confounder is questionable."
+      },
+      {
+        "name": "technology_dependency",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Degree of technology dependence is largely a consequence/component of the chosen intervention rather than a prior common cause, placing it on the treatment->outcome path."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_intervention_type"
+    ],
+    "confounders": [
+      {
+        "name": "goal_specificity",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "goal_has_baseline",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "metric_alignment",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "time_horizon",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "initiative_scope",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "measurement_approach",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "A plausible treatment (primary_intervention_type) is present and, crucially, none of the added variables are copied from the query, which asks only vaguely 'why do rates differ across departments'. Several columns (goal_specificity, time_horizon, initiative_scope, metric_alignment) are genuine data-surfaced candidate common causes of both intervention choice and achievement, satisfying the decisive test. However the set is weakened by (1) heavy redundancy among the goal-definition/measurement columns and (2) two columns (resource_lever, technology_dependency) that are better read as mediators on the intervention->outcome path, which should not be adjusted for. Notably, 'department'—the axis the query centers on—is not added as it already exists, and no confounder was lifted from the query text. Overall this shows real but imperfect causal reasoning, warranting a moderate confounder_quality."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

@@ -1,0 +1,98 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "focus_acting",
+    "focus_plot_story",
+    "focus_directing",
+    "focus_visuals_cinematography",
+    "focus_music_sound",
+    "focus_dialogue",
+    "focus_effects_technical",
+    "focus_atmosphere_tone",
+    "focus_entertainment_humor",
+    "primary_focus"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.9215,
+    "focus_coherence": 0.97,
+    "structure_quality": 0.95,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The film aspect/dimension a review focuses on (acting, plot, directing, visuals, music, dialogue, effects, atmosphere, humor)",
+    "per_column": [
+      {
+        "name": "focus_acting",
+        "supports_focus": true,
+        "rationale": "Binary flag for whether the review focuses on acting -- a coherent facet of the film-aspect focus."
+      },
+      {
+        "name": "focus_plot_story",
+        "supports_focus": true,
+        "rationale": "Facet flag for plot/story focus."
+      },
+      {
+        "name": "focus_directing",
+        "supports_focus": true,
+        "rationale": "Facet flag for directing focus."
+      },
+      {
+        "name": "focus_visuals_cinematography",
+        "supports_focus": true,
+        "rationale": "Facet flag for visuals/cinematography focus."
+      },
+      {
+        "name": "focus_music_sound",
+        "supports_focus": true,
+        "rationale": "Facet flag for music/sound focus."
+      },
+      {
+        "name": "focus_dialogue",
+        "supports_focus": true,
+        "rationale": "Facet flag for dialogue focus."
+      },
+      {
+        "name": "focus_effects_technical",
+        "supports_focus": true,
+        "rationale": "Facet flag for effects/technical focus."
+      },
+      {
+        "name": "focus_atmosphere_tone",
+        "supports_focus": true,
+        "rationale": "Facet flag for atmosphere/tone focus."
+      },
+      {
+        "name": "focus_entertainment_humor",
+        "supports_focus": true,
+        "rationale": "Facet flag for entertainment/humor focus."
+      },
+      {
+        "name": "primary_focus",
+        "supports_focus": true,
+        "rationale": "Categorical roll-up naming the single dominant aspect per review; directly names the inferred focus variable and ties the binary facets together."
+      }
+    ],
+    "focus_coherence": 0.97,
+    "structure_quality": 0.95,
+    "focus_actionability": 0.9,
+    "rationale": "All added columns centre tightly on ONE coherent, data-inferable focus concept: which aspect of the film a reviewer emphasizes. The nine binary facet flags enumerate a well-differentiated, mutually consistent set of film dimensions at a useful granularity, and primary_focus provides a categorical roll-up that both names the proposed focus and resolves the dominant aspect per review. This is a genuine multi-facet decomposition rather than a single restatement or generic noise (no bare length/token/sentiment padding). The focus is directly actionable: an analyst can quantify which aspects dominate reviews and cross them with label_pos. Minor deductions: some facet-flag distributions are thin (e.g. effects_technical=12), and a 'general' catch-all in primary_focus slightly dildilutes sharpness, but the structure is strong."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

@@ -1,0 +1,106 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "subject_format_alignment",
+    "hands_on_requirement",
+    "peer_interaction_impact",
+    "teacher_instructional_adaptation",
+    "family_support_availability",
+    "student_prior_engagement"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "subject_format_alignment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Alignment between subject and delivery format is a candidate cause whose effect on satisfaction can be attributed; a plausible driver."
+      },
+      {
+        "name": "hands_on_requirement",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The degree to which a subject needs hands-on work plausibly affects both format alignment (treatment) and satisfaction, making it a common cause worth adjusting for."
+      },
+      {
+        "name": "peer_interaction_impact",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Peer interaction is itself a candidate driver of satisfaction/engagement; framed as impact on engagement it reads more as a treatment/mediator than a common cause."
+      },
+      {
+        "name": "teacher_instructional_adaptation",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How much the teacher adapts instruction is another candidate cause of satisfaction rather than a common cause of another treatment."
+      },
+      {
+        "name": "family_support_availability",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Family support capacity plausibly affects both student engagement/exposure to adapted instruction and satisfaction; a genuine background common cause surfaced from data, not on the causal path itself."
+      },
+      {
+        "name": "student_prior_engagement",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Baseline/prior engagement plausibly drives both current teacher adaptation received and later satisfaction, and precedes the treatments, so it is a pre-treatment common cause rather than a mediator."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "subject_format_alignment",
+      "teacher_instructional_adaptation",
+      "peer_interaction_impact"
+    ],
+    "confounders": [
+      {
+        "name": "hands_on_requirement",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "family_support_availability",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "student_prior_engagement",
+        "named_in_query": false,
+        "plausibility": 0.75
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The query names no specific factors, so every added column is surfaced rather than copied. The set supplies clear candidate treatments (subject_format_alignment, teacher_instructional_adaptation, peer_interaction_impact) and several plausible background common causes (student_prior_engagement, family_support_availability, and to a lesser extent hands_on_requirement) that precede or drive both treatments and satisfaction. This realises a genuine causal-attribution setup: treatment(s) plus non-query-named confounders. The main weakness is that some columns (peer_interaction_impact) are framed in outcome-tainted terms and blur the treatment/mediator line, so confounder quality is good but not excellent."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

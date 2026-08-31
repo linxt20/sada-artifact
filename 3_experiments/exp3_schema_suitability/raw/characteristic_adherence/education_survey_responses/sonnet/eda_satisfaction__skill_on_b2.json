@@ -1,0 +1,118 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "teacher_responsiveness",
+    "instructional_format_adaptation",
+    "student_engagement_level",
+    "hands_on_lab_loss_severity",
+    "peer_interaction_loss",
+    "virtual_community_building_success",
+    "async_format_benefit",
+    "digital_resource_enrichment",
+    "equity_access_barrier",
+    "parent_instructional_burden"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 10,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "teacher_responsiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordered, well-separated theme (unresponsive/adequate/highly_responsive) that is external to satisfaction and can be segmented against it."
+      },
+      {
+        "name": "instructional_format_adaptation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear ordinal categories (minimal/partial/strong) capturing an open-response theme distinct from the focus; groupable and interpretable."
+      },
+      {
+        "name": "student_engagement_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "High/moderate/low is a canonical interpretable segmentation strongly associable with satisfaction without restating it."
+      },
+      {
+        "name": "hands_on_lab_loss_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable severity scale; though 187/240 are not_applicable, the remaining severe/partial/mitigated categories still permit meaningful comparison within affected subjects."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated ordered categories of a distinct theme; readily segmentable against satisfaction."
+      },
+      {
+        "name": "virtual_community_building_success",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Absent/partial/strong is an interpretable scale for a distinct experiential theme, comparable against the focus."
+      },
+      {
+        "name": "async_format_benefit",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "No_benefit/some/strong is an interpretable ordinal theme external to satisfaction and groupable."
+      },
+      {
+        "name": "digital_resource_enrichment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear enrichment scale; distinct associational theme with balanced categories."
+      },
+      {
+        "name": "equity_access_barrier",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Not_present/moderate/severe is an interpretable, well-separated barrier scale that can be compared against satisfaction."
+      },
+      {
+        "name": "parent_instructional_burden",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable burden scale; somewhat skewed (189 not_present) but retains a usable graded tail for comparison."
+      }
+    ],
+    "n_predictors": 10,
+    "relationship_informativeness": 0.82,
+    "rationale": "The added columns are extracted open-response themes rendered as interpretable, well-separated ordinal/categorical scales, exactly matching the query's aim to relate themes to satisfaction across role, grade, and subject. Each is external to the focus (none restate satisfaction) and can be grouped/segmented for human understanding rather than opaque scoring. Minor weaknesses: a few columns (hands_on_lab_loss_severity, parent_instructional_burden) are heavily dominated by not_present/not_applicable, thinning the comparison in the tail, and inconsistent 'absent' vs 'not_present' labels add slight noise. Overall a strong, interpretable segmentation set for exploratory analysis."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 10
+}

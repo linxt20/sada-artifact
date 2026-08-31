@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "focus_variable": "inefficient_resolution",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "problem_category",
+    "issue_specificity_level",
+    "assignee_workload_signal",
+    "closed_by_expertise_turnover",
+    "inter_update_delay_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.36,
+    "predictor_fraction": 0.8,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.2
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "inefficient_resolution",
+    "per_column": [
+      {
+        "name": "problem_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from issue content/short_description, this categorizes the nature of the problem. Certain categories (e.g., systemic vs printer) plausibly carry predictive signal about resolution efficiency and are knowable at intake, before the outcome."
+      },
+      {
+        "name": "issue_specificity_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures how well-defined the reported issue is (generic symptom vs specific failure). Vague/generic issues plausibly predict slower, less efficient resolution; it is available up front and does not restate the focus."
+      },
+      {
+        "name": "assignee_workload_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Reflects the assignee's volume/load, a legitimate exogenous predictor: overloaded assignees plausibly resolve less efficiently. It is a characteristic of the handler, not a restatement or component of the efficiency outcome."
+      },
+      {
+        "name": "closed_by_expertise_turnover",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "rationale": "Derived from closed_by, information only fully known once the incident is closed, risking leakage; moreover it is a constant (false for all 500 rows), so it carries zero discriminative signal regardless."
+      },
+      {
+        "name": "inter_update_delay_signal",
+        "role": "leakage",
+        "is_predictor": true,
+        "rationale": "A flag based on delays between updates is essentially a temporal component of resolution duration itself; since inefficiency is largely a function of elapsed/handling time, this restates/leaks the outcome rather than serving as an independent predictor."
+      }
+    ],
+    "n_predictors": 3,
+    "predictive_utility": 0.45,
+    "rationale": "Three columns (problem_category, issue_specificity_level, assignee_workload_signal) are legitimate exogenous predictors knowable before the outcome and plausibly carrying signal about resolution efficiency, adding leverage beyond the raw original columns. However, closed_by_expertise_turnover is a degenerate constant with no discriminative value and depends on post-closure information, and inter_update_delay_signal leaks the outcome because inter-update delays are effectively a component of resolution duration, which is what 'inefficient_resolution' measures. The set therefore provides moderate but partially compromised predictive leverage."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

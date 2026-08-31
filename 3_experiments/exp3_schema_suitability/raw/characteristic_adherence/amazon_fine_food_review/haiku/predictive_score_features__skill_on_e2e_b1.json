@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "sentiment_polarity",
+    "product_quality_assessment",
+    "taste_flavor_quality",
+    "product_effectiveness_or_functionality",
+    "price_value_perception",
+    "repeat_purchase_intent",
+    "comparison_to_alternatives",
+    "health_dietary_concern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8063,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8375,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8219,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "sentiment_polarity",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Sentiment is the single strongest predictor of review score; a 4-way polarity is more informative than a bare positive/negative flag. Sample readings (positive for praise, negative for mislabeled peanuts, mixed for the medicinal cherry soda) are well grounded in the text."
+      },
+      {
+        "name": "product_quality_assessment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "A quality ordinal gives a genuine axis correlated with score and is only partially redundant with sentiment. Values are sound readings (good, poor, excellent). 'acceptable' for the medicinal soda is a defensible inference though somewhat generous."
+      },
+      {
+        "name": "taste_flavor_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Food-specific flavor appraisal is a distinct and useful axis for this food-review dataset. Extractions (delicious, unpleasant medicinal, flavor_mismatch for wrong peanuts) track the text well; NULL used appropriately when taste is not discussed."
+      },
+      {
+        "name": "product_effectiveness_or_functionality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.65,
+        "rationale": "Effectiveness is a plausible predictive axis but 'works_as_claimed' dominates heavily (7174) and is often asserted where the text says nothing about function—e.g. the confection review and taffy review are labeled works_as_claimed with no functional claim in the source. This inflates a default and weakens groundedness."
+      },
+      {
+        "name": "price_value_perception",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Price/value perception is a real driver of satisfaction and thus a useful feature. Groundedness is strong: 'good_value' for the great-price taffy, and correct 'Unknown' for rows silent on price (peanuts, cherry soda). Note the dog-food row was labeled good_value despite no price mention—a minor over-assertion."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "rationale": "Repurchase intent correlates with score and is a distinct axis. However it is frequently inferred rather than stated: 'will_repurchase' for the confection/taffy rows reflects positive sentiment more than any explicit intent, so values partly restate polarity and over-specify silent rows."
+      },
+      {
+        "name": "comparison_to_alternatives",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Whether a review compares to alternatives is a useful, non-redundant feature with a large 'no_comparison' class handled sensibly. Sample labels are mostly grounded, though 'better_than_alternatives' for the dog-food ('better than most') is warranted while the taffy label is a weaker inference."
+      },
+      {
+        "name": "health_dietary_concern",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.9,
+        "rationale": "Relevant for a food dataset and offers a distinct dietary axis, but it is near-constant here (no_concern dominates ~6410) limiting leverage. Values are well grounded—no_concern correctly applied to all samples where diet/health is not raised."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns give multiple genuine, largely non-redundant axes (sentiment, quality, flavor, value, comparison, repurchase, health) that would materially help predict review score, going well beyond trivial length/token flags. Groundedness is generally good with appropriate NULL/Unknown handling for silent rows. The main weaknesses are default-heavy columns—effectiveness ('works_as_claimed') and repurchase intent—where a dominant value is asserted even when the source text does not explicitly support it, and health_dietary_concern is near-constant, reducing its analytical leverage. No hard hallucinations of invented facts were observed; over-assertions are the primary concern."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

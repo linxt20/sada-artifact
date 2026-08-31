@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "service_domain",
+    "assigned_technician",
+    "self_assigned_resolution",
+    "recurring_incident_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.56,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.61,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.585,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Provides a clean categorical axis derived from short_description, enabling grouping and volume analysis. Sample values (database_access, vpn_connectivity, network_connectivity, software_issue) are sound readings of the source text."
+      },
+      {
+        "name": "service_domain",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A higher-level rollup of incident_category; adds a coarser grouping axis but is largely derivable from and redundant with incident_category. Values are well grounded in the description text."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "The table already contains assigned_to and closed_by, making this largely redundant. More critically, source_text samples show no person names, yet specific technicians are confidently produced per row; unless copied from an existing column, these values are not grounded in the shown evidence."
+      },
+      {
+        "name": "self_assigned_resolution",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Comparing whether the assignee resolved their own ticket could be a useful axis, but it requires assigned_to vs closed_by which aren't in the shown source samples. The provided evidence (only description/timestamps) does not support the true/false assertions, suggesting unwarranted specificity."
+      },
+      {
+        "name": "recurring_incident_pattern",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Potentially useful for spotting repeat problems, but the value is 'true' for 469/500 rows (near-constant), sharply limiting analytical leverage. Rows like 'Unable to access the database' are flagged recurring with no textual support for recurrence, indicating largely inferred/invented values."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.55,
+    "rationale": "The categorical columns (incident_category, service_domain) are the strongest: well-grounded in short_description and offering real grouping axes, though the second is somewhat redundant with the first. The remaining three are weaker: assigned_technician duplicates existing assigned_to/closed_by fields, and self_assigned_resolution and recurring_incident_pattern assert row-level facts (specific names, recurrence flags) not supported by the shown source text, with recurring_incident_pattern also near-constant. Overall the set provides moderate analytical value but carries notable groundedness concerns from confidently produced values the evidence does not substantiate."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

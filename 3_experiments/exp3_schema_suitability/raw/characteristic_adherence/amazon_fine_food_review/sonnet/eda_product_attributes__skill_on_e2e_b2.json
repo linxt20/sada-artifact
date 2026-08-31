@@ -1,0 +1,126 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "focus_variable": "satisfaction_score",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "flavor_taste_quality",
+    "flavor_intensity_match",
+    "product_quality_consistency",
+    "expectation_mismatch",
+    "product_defect_mention",
+    "product_efficacy",
+    "adverse_health_reaction",
+    "repeat_purchase_intent",
+    "product_category",
+    "use_case_fit",
+    "convenience_availability"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.7091,
+    "predictor_fraction": 0.9091,
+    "n_predictors": 10,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.78,
+    "interpretable_fraction": 0.9091
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_score",
+    "per_column": [
+      {
+        "name": "flavor_taste_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Positive/mixed/negative taste categories are interpretable, well-separated attribute segments that can be compared against satisfaction."
+      },
+      {
+        "name": "flavor_intensity_match",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "just_right/too_weak/too_strong is a clear ordinal-ish attribute segmentation, though heavy NULL (3427) weakens some cells."
+      },
+      {
+        "name": "product_quality_consistency",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "consistent vs batch_defect vs declined are interpretable quality categories groupable against satisfaction."
+      },
+      {
+        "name": "expectation_mismatch",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Boolean whether product met expectations; clean well-populated split strongly relatable to satisfaction."
+      },
+      {
+        "name": "product_defect_mention",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary defect flag; reasonably populated minority (1017) allows comparison."
+      },
+      {
+        "name": "product_efficacy",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "effective/partially/ineffective is a clear ordinal attribute segment comparable to satisfaction."
+      },
+      {
+        "name": "adverse_health_reaction",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Interpretable but near-constant (149 true / 9851 false); too rare to draw robust comparisons, borderline uninformative."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Repeat-purchase intent is essentially a downstream proxy of satisfaction rather than an external product attribute; largely restates the focus."
+      },
+      {
+        "name": "product_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, human-readable category segmentation ideal for grouping satisfaction by product type."
+      },
+      {
+        "name": "use_case_fit",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable usage-context segments (daily_staple, gifting, dietary_need) support meaningful satisfaction comparisons."
+      },
+      {
+        "name": "convenience_availability",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary convenience attribute; interpretable and adequately populated for comparison."
+      }
+    ],
+    "n_predictors": 9,
+    "relationship_informativeness": 0.78,
+    "rationale": "Most added columns are genuine external product attributes with interpretable, well-separated categories that a human can group satisfaction by, directly serving the query. flavor_taste_quality, product_category, use_case_fit, efficacy, expectation_mismatch and quality_consistency are strong segmentation variables. Weaknesses: repeat_purchase_intent is a satisfaction proxy (restatement) rather than an attribute, and adverse_health_reaction is near-constant and thus weakly informative. Overall a strong, mostly non-mechanical set supporting interpretable relationship discovery."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 11
+}

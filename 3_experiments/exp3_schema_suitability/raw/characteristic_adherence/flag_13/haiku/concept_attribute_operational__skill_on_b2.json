@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What operational burdens appear in incident descriptions?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_type",
+    "severity_signal",
+    "infrastructure_component",
+    "operational_burden_aspect",
+    "scope_of_impact",
+    "resolution_pattern",
+    "recurrent_issue_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.268,
+    "facet_fraction": 0.5714,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.55,
+    "mece": 0.469,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "incident_type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Classifies the technical category of the incident (email, database, network). This describes WHAT KIND of incident occurred, not an aspect of the burden it imposes. It is a predictor/context variable, not a part-of operational_burden."
+      },
+      {
+        "name": "severity_signal",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Severity/impact magnitude (single_user to widespread_impact) is a genuine constitutive aspect of how burdensome an incident is; the intensity dimension of operational burden."
+      },
+      {
+        "name": "infrastructure_component",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Identifies the affected component (vpn, server, wifi). This is the object involved, a contextual descriptor, not an aspect of the burden itself. It also largely duplicates incident_type."
+      },
+      {
+        "name": "operational_burden_aspect",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Named as 'aspect' but its values (connectivity_loss, data_access_blocked, service_degradation) describe the symptom/failure type of the incident, effectively restating the incident nature rather than decomposing burden into a distinct facet; it overlaps heavily with incident_type/infrastructure_component."
+      },
+      {
+        "name": "scope_of_impact",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Breadth of affected population (individual to company_wide) is a legitimate constitutive facet of operational burden (its reach/extent). However it substantially overlaps with severity_signal, which encodes essentially the same impact-breadth dimension."
+      },
+      {
+        "name": "resolution_pattern",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Effort/handling pattern (cross_team_handoff, reassigned, self_resolved) reflects the workload/coordination cost aspect of operational burden, a valid constitutive facet capturing effort intensity."
+      },
+      {
+        "name": "recurrent_issue_flag",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Recurrence is a genuine dimension of burden (chronic/repeated load vs one-off), constituting the persistence aspect of operational burden."
+      }
+    ],
+    "facet_columns": [
+      "severity_signal",
+      "scope_of_impact",
+      "resolution_pattern",
+      "recurrent_issue_flag"
+    ],
+    "non_facet_columns": [
+      "incident_type",
+      "infrastructure_component",
+      "operational_burden_aspect"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.55,
+    "rationale": "Only four of seven columns are true constitutive facets of operational_burden. incident_type and infrastructure_component are external/context descriptors (what/where the incident is, not the burden), and they duplicate each other. operational_burden_aspect, despite its name, restates the incident symptom type rather than adding a distinct facet, again overlapping with the two type columns. Among the genuine facets, severity_signal and scope_of_impact both encode impact breadth, reducing mutual exclusivity. The facet set covers severity, scope, effort, and recurrence but omits aspects like duration/downtime and business/cost impact, so exhaustiveness is only moderate. The heavy conceptual overlap and presence of predictors/restatements yield low MECE scores."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

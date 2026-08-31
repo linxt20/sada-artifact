@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "facet_taste",
+    "facet_texture",
+    "facet_freshness",
+    "facet_smell_aroma",
+    "facet_appearance",
+    "facet_ingredients_nutrition",
+    "facet_packaging_quantity",
+    "facet_consistency_brand",
+    "primary_quality_facet"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.8333,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.8056,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.8195,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "facet_taste",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Taste is a core food-quality axis directly answering the query; flags in samples (taffy, confection 'very flavorful', 'medicinal flavor') are well grounded. Dog food row correctly 0."
+      },
+      {
+        "name": "facet_texture",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis. Confection 'light, pillowy... not too chewy' correctly flagged 1; other rows correctly 0. Sound readings."
+      },
+      {
+        "name": "facet_freshness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Legitimate quality facet; all sampled rows are 0, consistent with texts that do not mention freshness. Reasonable silence handling."
+      },
+      {
+        "name": "facet_smell_aroma",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Valid distinct axis. Dog food text explicitly says 'it smells better' yet flagged 0 — a missed positive, minor grounding lapse, but not an invented value."
+      },
+      {
+        "name": "facet_appearance",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis. Dog food 'looks more like a stew' reasonably maps to appearance=1. Peanuts 'small sized' size mismatch arguably appearance but left 0; defensible."
+      },
+      {
+        "name": "facet_ingredients_nutrition",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful axis, but flagging tends to be loose: confection with 'nuts' and cherry soda with 'secret ingredient' get 1, which is stretched — closer to flavor than nutrition. Somewhat overextended mapping."
+      },
+      {
+        "name": "facet_packaging_quantity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Relevant axis but very high positive rate (4834) and questionable calls: taffy row flagged 1 with only 'price'/'delivery' mentioned, not packaging/quantity. Peanuts row (mislabeled size) plausibly qualifies yet is 0. Inconsistent grounding."
+      },
+      {
+        "name": "facet_consistency_brand",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Conflates two loosely related notions (consistency, brand), weakening interpretability, but still a usable axis. Sampled 0s are consistent with texts."
+      },
+      {
+        "name": "primary_quality_facet",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Single-label roll-up is highly useful for grouping the query. Grounding mostly reasonable, but inherits weaker facet calls (e.g., confection labeled 'ingredients_nutrition' over the stronger taste/texture signals) and taffy 'packaging_quantity' from a shaky flag."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns decompose food quality into genuinely distinct, query-relevant facets (taste, texture, freshness, smell, appearance, ingredients, packaging, consistency/brand) plus a primary-facet roll-up, giving strong analytical leverage for 'what aspects reviewers focus on' with real grouping and comparison power. None are near-constant restatements of original columns. Grounding is generally sound with correct silence handling, but several flags are loose or overextended (packaging_quantity flagged from price/delivery mentions, ingredients_nutrition stretched to include flavor/nuts, and a missed explicit 'smells better' signal), which mildly depresses groundedness. Judged only on usefulness and groundedness, the set passes both necessary conditions."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 9
+}

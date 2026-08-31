@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "focus_variable": "inefficient_resolution",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "resolution_hours",
+    "hours_to_last_update",
+    "assignee_changed",
+    "is_high_priority",
+    "inefficiency_score"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.1,
+    "predictor_fraction": 0.4,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "predictive_utility": 0.25,
+    "leakage_rate": 0.4
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "inefficient_resolution",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Resolution time is the primary basis on which 'inefficient resolution' is defined; it is only known once the incident is closed (post-outcome) and is effectively the outcome itself, so it leaks the focus rather than predicting it."
+      },
+      {
+        "name": "hours_to_last_update",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Measured from open to the last update, this is a post-hoc duration highly collinear with total resolution time (identical value distribution here), knowable only after the incident progresses; it restates/leaks the inefficiency signal."
+      },
+      {
+        "name": "assignee_changed",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Reassignment (ping-ponging) is an antecedent process characteristic that plausibly precedes and predicts inefficient handling without being a deterministic function of the outcome definition; a legitimate predictor, though it can partly reflect an already-troubled ticket."
+      },
+      {
+        "name": "is_high_priority",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Priority is set at/near intake, lies outside the resolution-efficiency outcome, and plausibly carries predictive signal about handling effort and resolution efficiency."
+      },
+      {
+        "name": "inefficiency_score",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "A composite named directly after inefficiency is a derived restatement/label of the focus construct (likely built from resolution_hours and reassignment), not an independent external predictor; it circularly encodes the target."
+      }
+    ],
+    "n_predictors": 2,
+    "predictive_utility": 0.25,
+    "rationale": "Three of five columns (resolution_hours, hours_to_last_update, inefficiency_score) either leak or restate the outcome that defines inefficient resolution and would be unavailable before the outcome or circularly derived from it. Only assignee_changed and is_high_priority are genuine ex-ante predictors external to the focus, giving modest but real predictive leverage beyond the original schema."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

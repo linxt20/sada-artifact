@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "crew_professionalism_assessment",
+    "seat_physical_comfort",
+    "value_for_money_perception",
+    "service_consistency_reliability"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.275,
+    "focus_coherence": 0.55,
+    "structure_quality": 0.5,
+    "focus_actionability": 0.7,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Perceived airline experience quality — a qualitative, review-derived assessment of the flight across a few evaluative dimensions (crew/service, seat comfort, value, service reliability).",
+    "per_column": [
+      {
+        "name": "crew_professionalism_assessment",
+        "supports_focus": true,
+        "rationale": "Qualitative categorization of staff conduct (exceptional/indifferent/rude/standard) — a clear service facet of the experience-quality framing, going beyond the numeric 'Staff Service' rating by naming behavioural modes."
+      },
+      {
+        "name": "seat_physical_comfort",
+        "supports_focus": true,
+        "rationale": "Categorizes the physical seating experience (comfortable/adequate/cramped/broken) — a distinct comfort facet, adding a 'broken_defective' state absent from the numeric 'Seat Comfort' rating."
+      },
+      {
+        "name": "value_for_money_perception",
+        "supports_focus": true,
+        "rationale": "Qualitative value judgement (poor/good/excellent/not_worth_premium) — a value facet, largely re-encoding the existing 'Value For Money' rating but with a premium-expectation nuance."
+      },
+      {
+        "name": "service_consistency_reliability",
+        "supports_focus": true,
+        "rationale": "Assesses reliability/consistency of service (reliable/unpredictable/declining) — a service facet, but conceptually overlaps heavily with crew_professionalism, so it does not cleanly add an independent dimension."
+      }
+    ],
+    "focus_coherence": 0.55,
+    "structure_quality": 0.5,
+    "focus_actionability": 0.7,
+    "rationale": "The four columns are not noise — they are all qualitative, text-inferable evaluative dimensions of the flying experience, so they share a broad theme of 'perceived airline experience quality.' However, the focus-inference mandate is to PROPOSE ONE coherent focus, and here the system instead spread across several top-level aspects (crew, seat, value, reliability) rather than committing to a single focus and decomposing IT. This reads more like a menu of candidate aspects — the very indecision the analyst expressed — than a sharply centred focus, so coherence is only moderate. Structurally the facets are useful in granularity (they add nuanced categories like 'broken_defective', 'declining', 'not_worth_premium'), but three of them (crew, seat, value) essentially re-encode existing numeric columns (Staff Service, Seat Comfort, Value For Money), and crew_professionalism vs service_consistency are near-duplicative on the service dimension, weakening the differentiation and novelty of the structure. The implied focus (experience/service quality) is genuinely actionable — an analyst could investigate its drivers and link to Overall Rating / Recommended — hence the higher actionability score, though it is somewhat blunted by the redundancy with pre-existing ratings."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

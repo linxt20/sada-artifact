@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "n_added_columns": 8,
+  "added_columns": [
+    "avg_rating",
+    "rating_consistency",
+    "lowest_rated_aspect",
+    "satisfaction_gap",
+    "review_length",
+    "is_verified",
+    "traveler_type",
+    "is_business_class"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.4938,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.5719,
+    "hallucination_rate": 0.625
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "avg_rating",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A row-level average of the aspect ratings is a genuine summary axis useful for ranking/grouping reviews. However the values are poorly grounded against the review text: a review saying 'Excellent performance on all fronts' yields 2.8 and a strongly positive 'amazing' review yields 4.0 while a mediocre one yields 5.0, indicating the underlying aspect values are misaligned with the actual sentiment. Derivable arithmetically from the numeric columns, but the mapping appears unreliable."
+      },
+      {
+        "name": "rating_consistency",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Dispersion (std dev) across aspect ratings is a legitimate new analytical axis (measures how uniform an experience was). But grounding is questionable: uniformly praising reviews get 0.0 while others get high spread inconsistent with the text, and a review with a single dominant complaint about seats produces implausible consistency, mirroring the misalignment seen in avg_rating."
+      },
+      {
+        "name": "lowest_rated_aspect",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Identifying the weakest aspect per review is highly useful for deciding which aspect to analyze — directly answers the query. But values contradict the text: a review that explicitly praises the seat ('seat was comfortable') and complains about nothing gets 'Seat Comfort' as lowest; the dreadful-seats review is labeled 'Value For Money' rather than seat comfort. Strongly ungrounded."
+      },
+      {
+        "name": "satisfaction_gap",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A gap metric (e.g., between best and worst aspect) is a plausible analytical construct, but its derivation is opaque and values are inconsistent with the text — an 'Excellent on all fronts' review shows a 7.2 gap while a mediocre one shows 5.0. Poorly grounded and hard to interpret."
+      },
+      {
+        "name": "review_length",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw character count is generic and adds little analytical leverage for deciding which aspect to analyze; the scope rule aside, it is a bare length feature. Values are accurately derivable from the Reviews text."
+      },
+      {
+        "name": "is_verified",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Trivially redundant with the existing 'Verified' column, merely recoded to 0/1. Fully grounded but adds essentially no new axis."
+      },
+      {
+        "name": "traveler_type",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Restatement of the existing 'Type of Traveller' column. Grounding mostly sound, though one sample labels a review 'Solo Leisure'/'Family Leisure' with no textual support (the original column, not text, is the source). Redundant with an existing column."
+      },
+      {
+        "name": "is_business_class",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A binary business-class flag derived from the existing 'Class' column could aid segmentation, but it is largely redundant and at least one sample (economy explicitly stated in text) appears mislabeled as business class, undermining grounding."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.55,
+    "rationale": "The set mixes two kinds of columns. The derived aspect-summary columns (avg_rating, rating_consistency, lowest_rated_aspect, satisfaction_gap) offer genuinely useful analytical axes for choosing which aspect to focus on, but their values are repeatedly inconsistent with the review text — glowing reviews receive low averages and reviews praising seats are flagged as worst on seat comfort — signaling a systematic misalignment that hurts groundedness. The remaining columns (review_length, is_verified, traveler_type, is_business_class) are largely restatements of existing original columns and add limited analytical leverage, though they are generally well grounded except for an apparent business-class mislabel of an explicitly economy review."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 8
+}

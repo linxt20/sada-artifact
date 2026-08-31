@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "writing_quality_issue",
+    "complaint_multiplicity",
+    "counterbalancing_positive_elements"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7667,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8084,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "writing_quality_issue",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly categorizes the type of writing complaint, which is the core axis for the query about addressing common complaints and their sentiment impact. Values are well-grounded: 'poor_dialogue' for a review lambasting 'stilted dialogue' and 'weak_script' for a 'terrible movie'/'worst movies' review are sound readings. Minor risk in distinguishing weak_script vs incoherent categories, but samples are warranted and silent/positive rows correctly get 'not_present'."
+      },
+      {
+        "name": "complaint_multiplicity",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A boolean for whether multiple complaints exist adds some leverage for weighting how many issues a film would need to address, giving a secondary grouping axis. However it partly restates/correlates with the presence of a writing_quality_issue and sentiment label, reducing independent value. Values track the source reasonably: negative multi-flaw reviews are True, positive reviews are False."
+      },
+      {
+        "name": "counterbalancing_positive_elements",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures what positive aspects offset complaints, which is genuinely useful for estimating how much fixing complaints would move sentiment (a film already carrying strong positives has different headroom). Values are grounded: 'good_visuals_compensate' for the 'visual pleasure'/'atmospheric' review and 'emotional_resonance_present' for the 'heartache' review are sound extractions; 'none_noted' for the harsh negative reviews is correct."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns collectively give real analytical leverage for the query: they name the specific complaint type, flag whether multiple complaints stack, and identify counterbalancing positives that condition potential sentiment gains. The multiplicity flag is the weakest, being partly redundant with the issue column, but still contributes. Values across the evidence samples are sound readings of the source text with correct 'not_present'/'none_noted' handling for silent or positive rows, and no invented facts were observed."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do goal achievement rates differ across departments?",
+  "focus_variable": "department_goal_achievement",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "department_avg_completion",
+    "exceeds_dept_avg",
+    "exceeds_overall_avg",
+    "status_numeric"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "department_goal_achievement",
+    "per_column": [
+      {
+        "name": "department_avg_completion",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "This is a department-level aggregate of the outcome itself (average completion per department). It restates the outcome at group level rather than supplying a candidate cause. It is neither a treatment nor a common cause of a treatment; it is a summary of the outcome, so it cannot serve as a confounder."
+      },
+      {
+        "name": "exceeds_dept_avg",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "A binary flag derived from comparing a record's completion to its department average. This is a re-encoding/discretization of the outcome, not an independent cause. It offers no treatment or confounder for causal estimation."
+      },
+      {
+        "name": "exceeds_overall_avg",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "Also a binary derivative of the outcome (completion vs overall average). Another outcome re-expression, not a treatment or confounder."
+      },
+      {
+        "name": "status_numeric",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A numeric encoding of state/status. State is largely a downstream reflection of achievement (post-treatment) or a re-encoding of progress, so it functions more as a mediator/outcome proxy than a genuine exogenous cause. It is not established as a common cause of any treatment and the outcome."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query asks WHY goal achievement differs across departments, requiring a candidate cause (treatment) whose effect on achievement is estimated, plus surfaced confounders that jointly cause treatment and outcome. None of the added columns supply a treatment: they are all derivatives of the outcome (department_avg_completion, exceeds_dept_avg, exceeds_overall_avg) or a status re-encoding (status_numeric) that is at best a mediator/outcome proxy. No variable plausibly causes both a treatment and the outcome, and nothing was surfaced from the data as a confounder. The operator constructed comparative outcome metrics rather than a causal estimation setup, so the technical claim for causal attribution is not satisfied."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

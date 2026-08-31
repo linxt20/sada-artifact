@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "food_quality_rating",
+    "service_issue_type",
+    "staff_attitude",
+    "ambiance_atmosphere_mention",
+    "overall_recommendation_stance"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.828,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.884,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.856,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "food_quality_rating",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly names a core aspect reviewers discuss (food), giving a groupable quality axis. Samples align well: pita/fries review -> good, pizza review -> good, non-food realtor review -> not_present. Silent rows sensibly marked not_present."
+      },
+      {
+        "name": "service_issue_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Captures a distinct failure-mode axis useful for aggregating complaints. Grounded: forgotten-twice review -> ignored_forgotten, cabana/denied-entry -> rude_dismissive, positive reviews -> not_present. Categories are warranted readings of the text."
+      },
+      {
+        "name": "staff_attitude",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "A relevant experience aspect somewhat overlapping service_issue_type but with a distinct positive/negative attitude axis (warm vs hostile). Mostly grounded; however pizza review labeled neutral_professional despite text only saying 'service was good' with no staff-attitude cue, a slightly over-specific read, and the 'forgot us twice' review labeled rude_hostile though text describes forgetfulness rather than hostility."
+      },
+      {
+        "name": "ambiance_atmosphere_mention",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.93,
+        "hallucination_observed": false,
+        "rationale": "Adds a separate atmosphere axis relevant to the query. Heavily not_present but that reflects the data faithfully rather than a defect; samples correctly marked not_present where no ambiance is discussed."
+      },
+      {
+        "name": "overall_recommendation_stance",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a recommendation-intensity axis with more granularity than the existing label_pos, so not purely redundant. Some overlap with label_pos reduces leverage. Grounded readings: 'would not recommend'/'none' -> strongly_avoid, enthusiastic pita review -> strong_recommend, pizza with price caveat -> recommend_with_caveats."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns decompose 'what aspects reviewers discuss' into genuinely distinct, groupable axes (food, service issues, staff attitude, ambiance, recommendation), each giving real analytical leverage for the query. Values are sound readings of the source text with sensible not_present handling for silent rows; only minor over-specific attitude reads and mild recommendation/label_pos overlap slightly temper the scores. No fabricated facts observed."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

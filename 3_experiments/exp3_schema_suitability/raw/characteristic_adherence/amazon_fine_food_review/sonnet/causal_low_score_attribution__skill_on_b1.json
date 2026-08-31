@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What factors explain low review scores?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "product_consistency_change",
+    "product_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.675,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.475,
+    "source_groundedness__table_level": 0.48,
+    "b1_overall": 0.575,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_consistency_change",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A flag for whether the product changed/was inconsistent (e.g. formulation change, mislabeling) is a plausibly useful axis for explaining low scores. However it is near-constant (98% false) which limits leverage, and its grounding is questionable: the 'Not as Advertised' peanut review clearly describes a product-vs-representation mismatch yet is marked False, suggesting the flag does not reliably capture what its name implies. The near-total false skew combined with this apparent miss indicates the values are not soundly derived from the source text."
+      },
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Product category is a genuinely useful grouping axis for comparing review scores across product types. Grounding is mixed: pet_food_treat and beverage_other are well-read from the text, but the citrus-gelatin confection ('Delight') and taffy are both labeled 'snack_chip_baked', which misrepresents their type, and the mislabeled-peanut review is also forced into 'snack_chip_baked'. The categorisation captures broad food domain but assigns overly specific and sometimes incorrect subcategories not supported by the text."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.48,
+    "rationale": "Both columns offer legitimate analytical axes for explaining low scores: category enables cross-type comparison, and a consistency/mislabeling flag targets a common driver of dissatisfaction. However groundedness is the weak point. The consistency flag is near-constant and fails to fire on a clear 'Not as Advertised' case. The category column mis-slots several items into 'snack_chip_baked' (a gelatin confection and taffy), showing the subcategories are asserted more specifically than the text warrants. Useful in principle, but the produced values show recurring grounding errors."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 2
+}

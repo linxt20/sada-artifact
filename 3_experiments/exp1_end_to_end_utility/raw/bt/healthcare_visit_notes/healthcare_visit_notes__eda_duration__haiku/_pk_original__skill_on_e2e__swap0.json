@@ -1,0 +1,150 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.62,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "Emergency 28 45.5 min ... Routine 141 22.6 min",
+        "why": "numeric urgency-duration table"
+      },
+      {
+        "dimension": "depth",
+        "quote": "age shows minimal independent effect... reflects age-driven department routing",
+        "why": "confounding/causal reasoning"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Urgent triage tier does not reliably predict extended visit time",
+        "why": "decision-ready recommendation"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Emergency vs. non-Emergency shows clear 2× separation",
+        "why": "consistent framing throughout"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "60+ years (n=12): mean 52.9 min",
+        "why": "concrete subgroup magnitudes"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "33.7 / 21.2 = 1.59×",
+        "why": "explicit ratio computation"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Multi-System Involvement... predicted 27.2 min vs. 23.0 min",
+        "why": "controlled cross-check"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "47% of unstable visits were triaged as Urgent (not Emergency)",
+        "why": "slight repetition/awkward wording but consistent"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "visit_reason_category",
+        "quote": "The TAPP-generated `visit_reason_category` perfectly separates Emergency visits",
+        "dependent": true
+      },
+      {
+        "column": "symptom_acuity",
+        "quote": "Symptom Acuity provides orthogonal semantic signal",
+        "dependent": true
+      },
+      {
+        "column": "multi_system_involvement",
+        "quote": "Multi-System Involvement... 33.7",
+        "dependent": true
+      },
+      {
+        "column": "clinical_instability_present",
+        "quote": "Clinical instability was present in 57 visits",
+        "dependent": true
+      },
+      {
+        "column": "intervention_required",
+        "quote": "Procedure (Urgent/Inpatient) 44 37.6",
+        "dependent": true
+      },
+      {
+        "column": "diagnostic_intervention_intensity",
+        "quote": "Imaging Ordered 69 31.4",
+        "dependent": true
+      },
+      {
+        "column": "chronic_disease_component",
+        "quote": "Chronic Disease Present 89 27.1",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "A directly addresses reason×urgency×duration×department×age with tight causal reasoning, while B is strong but leans heavily on augmented facets and drifts from the core cross-tabulation.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

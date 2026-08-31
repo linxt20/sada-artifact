@@ -1,0 +1,129 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "cabin_service_complaint_type",
+    "crew_attitude_quality",
+    "crew_responsiveness",
+    "food_quality_judgment",
+    "cabin_cleanliness_issue",
+    "complaint_severity",
+    "cabin_complaint_is_sole_driver",
+    "cabin_class_expectation_gap",
+    "flight_haul_type",
+    "covid_cost_cutting_attributed"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 7,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "cabin_service_complaint_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "This is the core treatment: the presence/type of cabin-service complaint. Eliminating it (setting to 'no_complaint') is exactly the intervention the query poses, and it is intervenable (airlines can change staffing, catering, cleaning to remove the complaint). Explicitly named in the query ('cabin-service complaints')."
+      },
+      {
+        "name": "crew_attitude_quality",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "A sub-dimension of the cabin-service experience that lies on the path from service delivery to the rating. It is a component/mechanism of the treatment, not a common cause of treatment and outcome, so it is a mediator, not a confounder. Implied by 'cabin-service'."
+      },
+      {
+        "name": "crew_responsiveness",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "Another service sub-dimension on the causal path (service → responsiveness perception → rating). It decomposes the treatment rather than adjusting for a common cause. Implied by 'cabin-service'."
+      },
+      {
+        "name": "food_quality_judgment",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "Food is one of the enumerated complaint categories; this column expresses the service quality on that dimension, sitting between the treatment and the outcome. Mediator/treatment component, not a confounder. Implied by 'cabin-service'."
+      },
+      {
+        "name": "cabin_cleanliness_issue",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "A specific cabin-service dimension (cleanliness). It is part of what would be 'fixed' under the intervention, i.e. a mechanism/component of the treatment rather than a common cause. Implied by 'cabin-service'."
+      },
+      {
+        "name": "complaint_severity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Encodes the intensity/dose of the complaint. It is a property of the treatment on the path to the rating (more severe complaint → lower rating), not a common cause of both. Treats the treatment's magnitude, so mediator-like, not a confounder."
+      },
+      {
+        "name": "cabin_complaint_is_sole_driver",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "This is a downstream attribution judgment jointly determined by the complaint AND the low rating ('was the cabin complaint the only reason the score is low?'). Conditioning on it would open a spurious path; it is a collider/meta-attribution artifact, not a confounder."
+      },
+      {
+        "name": "cabin_class_expectation_gap",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Bundles class-based expectation with the actually-received experience ('below/meets/exceeds expectation'). Although class is a genuine common cause, the column encodes the experienced gap, which is downstream of the service (treatment) and directly feeds the rating, making it predominantly a mediator/collider rather than a clean confounder."
+      },
+      {
+        "name": "flight_haul_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Haul length plausibly causes BOTH the treatment (long-haul flights have more meals, more crew interaction, more opportunities for cabin-service complaints) AND the outcome (rating norms differ by trip length). It is a common cause not on the mechanism path, and it is NOT named in the query — the kind of confounder that demonstrates the capability under test."
+      },
+      {
+        "name": "covid_cost_cutting_attributed",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A period/cost-cutting factor that can drive both degraded cabin service (more complaints) and lower ratings, so it can act as a common cause. Not named in the query. Its 'attributed'/self-report framing weakens it (partly perception-driven), so plausibility is only moderate, but it counts as an unnamed confounder attempt."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "cabin_service_complaint_type"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "flight_haul_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "covid_cost_cutting_attributed",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The augmentation genuinely sets up an interventional what-if: it defines an intervenable treatment (cabin_service_complaint_type — airlines can eliminate the complaint by changing staffing, catering, cleaning, etc.) with a clean 'no_complaint' counterfactual level, and it decomposes that treatment into concrete service dimensions (crew attitude, responsiveness, food, cleanliness, severity). Part (a) of the claim is satisfied. Part (b) is only weakly met. Most added columns are mediators/treatment components (the service sub-dimensions and severity) or a collider (cabin_complaint_is_sole_driver, and largely cabin_class_expectation_gap), none of which are confounders and some of which would bias the estimate if conditioned on. Only two columns behave as common causes of both treatment and outcome — flight_haul_type (a solid, unnamed confounder) and covid_cost_cutting_attributed (a plausible but self-report/perception-tainted, unnamed confounder). Both being unnamed is positive for the capability test, but coverage is thin: obvious confounders such as airline identity and type of traveller are not added (they exist in the base table but are not introduced as adjustment variables), and no covering set is assembled. Hence moderate confounder quality."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "whatif_service_complaints",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 10
+}

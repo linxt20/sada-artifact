@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_attitude",
+    "food_quality_rating",
+    "seat_comfort_issue",
+    "disruption_handling_quality",
+    "class_product_value_gap",
+    "special_service_handling",
+    "route_haul_type"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5571,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.65,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "cabin_crew_attitude",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A qualitative service dimension (warm/proactive vs rude/dismissive) that describes an aspect of the flight experience rather than the overall verdict. It lies outside the focus, is actionable for the airline, and plausibly carries strong signal about whether a reviewer rates the flight >7. Some circularity exists because it is text-derived and contemporaneous with the rating, but it is not a deterministic function of the outcome."
+      },
+      {
+        "name": "food_quality_rating",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Aspect-level food assessment with granular failure modes (poor_taste, poor_quantity, special_meal_failure). Predictive of overall satisfaction and outside the focus. Note it partly duplicates the existing numeric 'Food & Beverages' column, so its incremental leverage is limited, but the failure-mode granularity adds some signal."
+      },
+      {
+        "name": "seat_comfort_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorical seat-comfort failure modes (narrow_cramped, broken_defective, etc.) describing an experiential driver of satisfaction, distinct from and not a function of the overall rating. Overlaps with the existing numeric 'Seat Comfort' column, so incremental value is modest, but still a legitimate predictor."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a disruption occurred and how well it was handled is a strong, actionable driver of satisfaction that is NOT captured by any original column. It lies outside the focus and plausibly carries substantial predictive signal — a genuinely valuable added feature."
+      },
+      {
+        "name": "class_product_value_gap",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Categories like exceeded/meets/significant_shortfall vs class expectations are themselves an overall evaluative satisfaction judgment, essentially re-expressing the reviewer's global verdict rather than an independent operational driver. It is nearly collinear with / a restatement of the overall rating, so it contributes little independent predictive leverage."
+      },
+      {
+        "name": "special_service_handling",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How special requests/assistance were handled (ignored_refused, well_handled) is an operational service dimension not present in the original columns. Mostly 'not_applicable' limits its coverage, but for the affected subset it is a legitimate, actionable predictor outside the focus."
+      },
+      {
+        "name": "route_haul_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Objective flight attribute (short/medium/long haul) derived from Route. Fully independent of the rating, directly relevant to the 'optimise routes' objective, and plausibly associated with satisfaction patterns. A clean, non-circular predictor."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.65,
+    "rationale": "As a set these are mostly legitimate, actionable predictors of overall_rating_gt7. The strongest incremental leverage comes from disruption_handling_quality, special_service_handling, and route_haul_type, none of which are captured by the original columns; route_haul_type is also fully objective and non-circular. The qualitative crew/food/seat features carry signal but overlap with existing numeric sub-ratings, reducing incremental value, and being text-derived they share some circularity with the rating (though not strict leakage). class_product_value_gap is an evaluative expectation-gap judgment that largely restates the overall satisfaction verdict and adds little independent signal. Net: solid but not exceptional predictive leverage beyond the original columns."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

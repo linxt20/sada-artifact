@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict low Yelp user satisfaction?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "service_inattention",
+    "service_rudeness"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.825,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.825,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_inattention",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binary flag for inattentive service is a genuine, query-relevant signal for predicting low satisfaction and offers a real axis to group/model on. Values are well-grounded: YLP-0002 (repeatedly forgotten) correctly True; positive/neutral reviews correctly False. YLP-0005 (gave away cabana, denied entry) is arguably a service failure but labeling it False is a defensible reading since the complaints are more about policy/discrimination than inattention. No invented facts observed."
+      },
+      {
+        "name": "service_rudeness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Rudeness of staff is a distinct and useful predictor of dissatisfaction, complementary to inattention rather than a mere restatement. However groundedness is weaker: YLP-0002 explicitly describes employees as apologetic/forgetful, not rude, yet it is marked True, which overreads the text. Other rows are grounded (friendly staff -> False). The True on YLP-0002 conflates inattention with rudeness."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.82,
+    "rationale": "Both columns provide genuine, non-trivial service-quality signals directly relevant to predicting low Yelp satisfaction, giving new categorical axes to group and model on beyond the raw sentiment label. They are distinct from each other and from the original columns. Groundedness is generally sound (clear True/False readings align with source text), with the main weakness being service_rudeness marking YLP-0002 True when the text portrays staff as forgetful and apologetic rather than rude. Not judging completeness or naming."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "predictive_low",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 2
+}

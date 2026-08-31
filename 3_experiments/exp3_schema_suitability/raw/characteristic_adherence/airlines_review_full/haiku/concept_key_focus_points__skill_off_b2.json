@@ -1,0 +1,75 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 4,
+  "added_columns": [
+    "Rating_Category",
+    "Key_Issues",
+    "Sentiment_Gap",
+    "Route_Type"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0866,
+    "facet_fraction": 0.25,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.4,
+    "mece": 0.3464,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "Rating_Category",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Buckets the overall evaluation into 'Very Positive/Positive/Mixed/Negative'. This is a summary label of the WHOLE quality judgment, not an aspect OF it — it restates the concept rather than carving out a constitutive part."
+      },
+      {
+        "name": "Key_Issues",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Enumerates the specific dimensions along which service is judged (Seating, Food, Service, Entertainment, Pricing, Delay, Baggage). These are genuine part-of aspects of service quality. However it is a single compound multi-label field packing many facets into one column rather than one facet per column, which undermines clean MECE decomposition."
+      },
+      {
+        "name": "Sentiment_Gap",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A derived numeric difference metric (e.g., gap between sub-ratings and overall/expectation). A computed gap is an analytic artifact about the quality signal, not a constitutive aspect that the concept is composed of."
+      },
+      {
+        "name": "Route_Type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Short/Medium/Long-haul is a contextual attribute of the flight that may correlate with or drive perceived service quality, but route length is not an aspect OF service quality itself — it is an external segmentation variable."
+      }
+    ],
+    "facet_columns": [
+      "Key_Issues"
+    ],
+    "non_facet_columns": [
+      "Rating_Category",
+      "Sentiment_Gap",
+      "Route_Type"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.4,
+    "rationale": "Only one of four columns (Key_Issues) is a true meronymic facet of airline_service_quality; the rest are a whole-concept restatement (Rating_Category), a derived metric (Sentiment_Gap), and an external contextual predictor (Route_Type). Mutual exclusivity is low: the sole facet column is a compound multi-label field bundling many distinct aspects together, and Rating_Category and Sentiment_Gap both re-express the overall sentiment signal, so the added columns do not cleanly partition the concept into non-overlapping aspects. Exhaustiveness is moderate-to-low: although Key_Issues internally touches many constitutive dimensions (seating, food, service, entertainment, pricing, punctuality, baggage), the augmentation does not provide separate facet columns covering the concept's main aspects, so as a faceted decomposition it is largely unrealised."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

@@ -1,0 +1,109 @@
+{
+  "var_a": "skill_on",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.85,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 3,
+    "actionability": 3,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "53 of 61 declined (86.9%) are labeled as asset_category_type = travel_equipment",
+        "why": "numeric column-tied claim"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "processed_date field perfectly separates outcomes but is not predictive",
+        "why": "correctly flags definitional leakage"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Decline rate for automated descriptions: 56.8%",
+        "why": "some group comparison but mostly negative findings"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "low-risk composite profiles decline at 27.8%; high-risk profiles at 45.6%",
+        "why": "builds composite risk model with gradient"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Vehicle | 11 | 7 | 63.6%",
+        "why": "concrete per-segment magnitudes"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "49.1% decline rate for generic placeholders vs. 36.4% for specific models",
+        "why": "quantified differential"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Highest Risk (≥50% decline): Vehicle assets",
+        "why": "decision-ready risk hierarchy"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B provides richer segmentation, quantified per-category decline signals, and a composite risk model, whereas A largely concludes no strong signals exist.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

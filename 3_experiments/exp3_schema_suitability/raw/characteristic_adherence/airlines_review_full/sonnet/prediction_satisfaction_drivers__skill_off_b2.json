@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "Service_Score_Mean",
+    "Weakest_Service_Dim",
+    "Value_Gap",
+    "Airline_Avg_Rating",
+    "Rating_vs_Airline_Avg",
+    "Is_Premium_Class",
+    "Satisfaction_Tier",
+    "Service_Score_Std"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.2188,
+    "predictor_fraction": 0.625,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.35,
+    "leakage_rate": 0.25
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "Service_Score_Mean",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Mean of the service sub-dimension ratings (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment, Value For Money). Values top out at 5, consistent with a 1-5 average, and it is distinct from the Overall Rating scale. It plausibly carries strong signal about satisfaction and is not a function of overall_rating. Caveat: it is only an aggregate of columns already present, so its NEW leverage beyond the original sub-ratings is limited, but it is a legitimate predictor."
+      },
+      {
+        "name": "Weakest_Service_Dim",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorical label of which service dimension scored lowest. Derived from the sub-rating columns, external to overall_rating, and plausibly predictive (which aspect fails can shape overall satisfaction). Legitimate predictor, though again a transformation of existing sub-ratings."
+      },
+      {
+        "name": "Value_Gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A signed difference (0.25-step values from ~-2.75 to 2) between value-for-money and the service mean. It is a mismatch/interaction feature built from sub-ratings, not from overall_rating, and can carry predictive signal. Legitimate predictor."
+      },
+      {
+        "name": "Airline_Avg_Rating",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This is the group mean of the FOCUS variable (average Overall Rating per airline). It is computed directly from overall_rating values and includes the target aggregated over the airline. As full-sample target encoding of an existing column, it leaks the outcome (rows share their own target's group mean) and is only knowable from the labels. Not a clean predictor."
+      },
+      {
+        "name": "Rating_vs_Airline_Avg",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This is overall_rating minus the airline average, i.e. a deterministic residual of the focus variable. overall_rating can be exactly recovered as Rating_vs_Airline_Avg + Airline_Avg_Rating. It restates/leaks the target and must be excluded."
+      },
+      {
+        "name": "Is_Premium_Class",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Binary flag derived from the Class column indicating premium travel. External to overall_rating and plausibly predictive of satisfaction. Legitimate predictor (a re-encoding of an existing categorical)."
+      },
+      {
+        "name": "Satisfaction_Tier",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "A high/mid/low tier of 'satisfaction', which is the focus concept itself; this is almost certainly a discretization/binning of the Overall Rating (or an equivalent satisfaction measure). It restates the target and cannot serve as an independent predictor without leaking."
+      },
+      {
+        "name": "Service_Score_Std",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Standard deviation across the service sub-dimension ratings, capturing consistency/dispersion of the experience. Derived from sub-ratings, external to overall_rating, and can carry incremental (nonlinear/interaction) signal. Legitimate predictor."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.35,
+    "rationale": "Five of eight columns are legitimate predictors (Service_Score_Mean, Weakest_Service_Dim, Value_Gap, Is_Premium_Class, Service_Score_Std), but each is essentially an aggregation or re-encoding of columns already in the original table (the five service sub-ratings and Class). They add convenient summaries, dispersion, and interaction terms, but only modest NEW predictive leverage beyond the raw sub-ratings a model already sees. Three columns are disqualified: Airline_Avg_Rating (target-encoded group mean of overall_rating) and Rating_vs_Airline_Avg (deterministic residual of overall_rating) are outcome leakage, and Satisfaction_Tier is a restatement/binning of the focus. The set's genuine incremental predictive value is therefore limited, hence a low-moderate score."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

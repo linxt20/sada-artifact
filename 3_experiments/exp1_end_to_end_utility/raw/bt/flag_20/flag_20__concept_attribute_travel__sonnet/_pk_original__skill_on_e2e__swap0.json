@@ -1,0 +1,145 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.85,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 3,
+    "depth": 3,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "`EXP00000017`: \"Travel accessory asset entry\" / `TravelMate P6 Laptop`",
+        "why": "concrete row-level citations"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "146 of 500 rows (29.2%)",
+        "why": "some numeric grounding"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Review should prioritize auto-generated travel entries",
+        "why": "prioritization guidance"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "41.78% decline rate ... four times the rate of Assets (6.1%)",
+        "why": "cross-group numeric comparison"
+      },
+      {
+        "dimension": "depth",
+        "quote": "True | 14 | 7 | 50.0% ... False | 132 | 54 | 40.9%",
+        "why": "segmented decline-rate comparison"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "circumvent standard asset-procurement controls",
+        "why": "decision-ready risk framing with counts"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "9 travel-category records are tagged as `hardware_endpoint`",
+        "why": "precise counts and fields"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "transport_expense_misclassified",
+        "quote": "flagged 14 of 146 travel records",
+        "dependent": true
+      },
+      {
+        "column": "asset_category",
+        "quote": "9 travel-category records are tagged as `hardware_endpoint`",
+        "dependent": true
+      },
+      {
+        "column": "asset_description_quality",
+        "quote": "93.2% ... travel_descriptor_only",
+        "dependent": true
+      },
+      {
+        "column": "missing_source_id_flag",
+        "quote": "missing_source_id_flag = True for 100%",
+        "dependent": true
+      },
+      {
+        "column": "entry_method",
+        "quote": "manual: 44/105 = 41.9%",
+        "dependent": true
+      },
+      {
+        "column": "processing_lag_flag",
+        "quote": "23 travel records (15.8%) have a processing lag",
+        "dependent": true
+      },
+      {
+        "column": "repeat_user_flag",
+        "quote": "True for 25 travel records (17.1%)",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B adds segmented decline-rate comparisons and quantified risk patterns, giving stronger evidence, depth, and actionability.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

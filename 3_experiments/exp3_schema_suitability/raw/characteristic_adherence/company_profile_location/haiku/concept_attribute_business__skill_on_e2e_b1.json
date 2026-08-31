@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What business models and customers do these companies describe?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "business_model_type",
+    "customer_segment_primary",
+    "industry_vertical_served",
+    "value_prop_primary_mechanism"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.9,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.8375,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8688,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the 'business models' half of the query and provides a strong grouping axis with well-distributed categories. Samples are well-grounded (venture_capital for 5AM/Accel, services_consulting for 280 Group, saas for Addepar). Classifying 23andMe as 'saas' is defensible but slightly loose (it's more a consumer product/subscription), a minor stretch."
+      },
+      {
+        "name": "customer_segment_primary",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly addresses the 'customers' half of the query and offers a distinct segmentation axis. Consumer for 23andMe and enterprise for Addepar are sound. Labeling VC firms' segment as 'enterprise' is a reasonable inference but somewhat imposed (their customers are founders/LPs), only mildly warranted by the terse text."
+      },
+      {
+        "name": "industry_vertical_served",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A genuine, non-redundant vertical axis useful for the query. Several samples grounded (life_sciences for 5AM, financial_services for Addepar). However 280 Group -> 'education' overreads 'training/certification' (they serve product management broadly, not education vertical), and Accel -> 'financial_services' is an invented specific where the generic founder text names no vertical; a 'not_stated' would have been more correct."
+      },
+      {
+        "name": "value_prop_primary_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a distinct mechanism-of-value axis, useful for comparing how companies create value, and appropriately uses 'not_present' for silent rows. Sample mappings are reasonable (data_insights for 23andMe/Addepar, market_access for VC firms). Some subjectivity but generally warranted readings."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.83,
+    "rationale": "All four added columns give genuine, mutually distinct axes (model, customer, vertical, value mechanism) that squarely serve the query about business models and customers; none is near-constant, redundant, or a trivial length/sentiment flag. Groundedness is generally solid with sensible categorisation and correct 'not_present' handling, but industry_vertical_served shows occasional over-specific inferences from terse text (Accel->financial_services, 280 Group->education) that the source does not clearly support, lowering the table-level groundedness slightly."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_business",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

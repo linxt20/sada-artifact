@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_service_quality",
+    "seat_comfort_quality",
+    "food_beverage_quality",
+    "operational_reliability",
+    "customer_service_recovery",
+    "ground_service_professionalism",
+    "value_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6211,
+    "facet_fraction": 0.8571,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.75,
+    "exhaustiveness": 0.7,
+    "mece": 0.7246,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Cabin-crew interaction (attentiveness, warmth, professionalism vs rudeness) is a core constitutive aspect OF airline service quality — the assurance/empathy dimension delivered onboard. Genuine part-of relationship."
+      },
+      {
+        "name": "seat_comfort_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Physical comfort of the seat/cabin is a tangibles facet of the service experience — an aspect of what the airline delivers, not an external predictor. Constitutive part."
+      },
+      {
+        "name": "food_beverage_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Catering quality is a tangible product/service component of the airline experience — a bona fide aspect OF service quality."
+      },
+      {
+        "name": "operational_reliability",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Punctuality, delays, cancellations and missed connections constitute the reliability dimension of service quality — a core constitutive facet, not a cause or predictor."
+      },
+      {
+        "name": "customer_service_recovery",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Responsiveness and handling of problems (support, communication, recovery from failures) is the responsiveness/recovery facet of service quality. Constitutive, though it partly overlaps with crew/ground staff service when interactions are face-to-face."
+      },
+      {
+        "name": "ground_service_professionalism",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Airport/ground staff (check-in, boarding, gate handling) is a distinct touchpoint aspect OF service quality. Constitutive facet, distinguished from crew by location/stage of journey."
+      },
+      {
+        "name": "value_perception",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Value-for-money blends perceived quality WITH price; it is an overall evaluative/summary judgment (an outcome downstream of quality, akin to the Overall Rating) rather than an isolated aspect OF service quality itself. It reintroduces the whole-appraisal construct rather than carving out one constitutive part, so it fails the part-of test."
+      }
+    ],
+    "facet_columns": [
+      "crew_service_quality",
+      "seat_comfort_quality",
+      "food_beverage_quality",
+      "operational_reliability",
+      "customer_service_recovery",
+      "ground_service_professionalism"
+    ],
+    "non_facet_columns": [
+      "value_perception"
+    ],
+    "mutual_exclusivity": 0.75,
+    "exhaustiveness": 0.7,
+    "rationale": "Six of the seven columns are true meronymic facets of airline service quality, decomposing it into staff (crew), physical product (seat, food), operational reliability, and support/recovery — a genuine part-of decomposition. Mutual exclusivity is good but not clean: three people-service facets (crew_service_quality, ground_service_professionalism, customer_service_recovery) share overlapping 'rude/professional/helpful' semantics and can co-capture the same interaction, differentiated only by touchpoint. Exhaustiveness is solid for the core journey but omits recognized constitutive aspects — inflight entertainment/connectivity (present in the source data), baggage handling, and booking/reservation experience. value_perception is not a constitutive facet: it is an overall value/appraisal construct fusing quality with price, functioning as a summary restatement rather than an aspect of quality, and it slightly muddies the MECE carving."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

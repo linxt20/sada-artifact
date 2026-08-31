@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review facets differ by sentiment label?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "exclamation_count",
+    "question_count",
+    "caps_words_count",
+    "avg_sentence_length",
+    "criticism_words_count",
+    "praise_words_count",
+    "review_length_chars"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.5714,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.8571,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.7143,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Punctuation intensity is a plausible facet that could vary by sentiment; values match source (AMZ-0003 has one '!'). Modestly useful, mostly zero-valued so limited leverage."
+      },
+      {
+        "name": "question_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Rhetorical questions could differ by sentiment; counts match source (AMZ-0001 and AMZ-0003 each have questions). Heavily zero-skewed limiting differentiation."
+      },
+      {
+        "name": "caps_words_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "All-caps emphasis is a reasonable stylistic facet. AMZ-0003 'REAL' and AMZ-0005 'DVD' plausibly counted as 1; groundable, though intensity signal is weak."
+      },
+      {
+        "name": "avg_sentence_length",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Sentence-length as a structural facet gives a genuine numeric axis to compare across sentiment; computed values look plausible for the sampled texts."
+      },
+      {
+        "name": "criticism_words_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to sentiment facets; lexicon counting is warranted (e.g. AMZ-0001 'disturbing/disappointed' -> 1). Some borderline cases (AMZ-0004 has 'negative' yet 0) suggest imperfect lexicon but generally grounded."
+      },
+      {
+        "name": "praise_words_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Complements criticism count and is highly on-topic for facet-by-sentiment analysis; values mostly defensible though AMZ-0004's strong praise scoring 0 shows some undercount."
+      },
+      {
+        "name": "review_length_chars",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Raw char length is a generic surface metric with weak analytical leverage. The 600 cap (many rows truncated) makes values only approximate for long reviews, slightly reducing groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.86,
+    "rationale": "The added columns operationalize review 'facets' (punctuation intensity, caps emphasis, sentence structure, criticism/praise lexicon counts) that give real axes to compare across the sentiment label, directly serving the query; criticism/praise counts are the strongest, while raw char length is generic. Values are largely sound readings of the source text with no fabricated content; minor weaknesses are lexicon undercounts and a 600-char truncation cap that only approximates length for long reviews. No hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 7
+}

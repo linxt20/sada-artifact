@@ -1,0 +1,97 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do expense decline rates differ across departments?",
+  "focus_variable": "departmental_declined_rate_variation",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "department_stratification",
+    "asset_category",
+    "asset_specification_clarity",
+    "asset_portability_profile",
+    "requester_experience_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "departmental_declined_rate_variation",
+    "per_column": [
+      {
+        "name": "department_stratification",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "This is the grouping/focus dimension (department) itself, explicitly named in the query. It defines the strata across which the outcome varies rather than acting as treatment or confounder for a causal estimation."
+      },
+      {
+        "name": "asset_category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The type of asset/expense (hardware, service, travel) is a plausible candidate cause of whether an expense is declined; different categories carry different approval scrutiny. It functions as a candidate treatment whose effect on the decline outcome could be attributed."
+      },
+      {
+        "name": "asset_specification_clarity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How clearly the asset is specified plausibly affects both what category/asset is being requested (treatment) and the likelihood of decline (outcome) -- ambiguous requests get declined more. It is surfaced from text, not named in the query."
+      },
+      {
+        "name": "asset_portability_profile",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Portability (portable device, fixed infrastructure, cloud service) is correlated with asset category (treatment) and could independently affect decline decisions via policy, making it a plausible common cause. However it overlaps heavily with asset_category and could be partly a mediator; treated conservatively as a weak confounder."
+      },
+      {
+        "name": "requester_experience_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Requester experience (new/occasional/frequent) plausibly influences both what is requested (treatment) and the decline outcome, since inexperienced requesters make errors that get declined. Surfaced from data, not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "asset_category"
+    ],
+    "confounders": [
+      {
+        "name": "asset_specification_clarity",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "requester_experience_signal",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "asset_portability_profile",
+        "named_in_query": false,
+        "plausibility": 0.35
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The set includes a plausible treatment (asset_category) and several variables surfaced from the text/data rather than copied from the query, which is the capability under test. asset_specification_clarity and requester_experience_signal are the strongest genuine confounder candidates -- plausibly common causes of both what is requested and whether it is declined. However, the causal structure is loosely specified: the true focus is departmental variation, yet no variable disentangles WHY departments differ (e.g. department-level policy, budget, approver strictness) beyond re-stratifying by department. Several 'confounders' overlap with the asset dimension and risk being mediators of the category->decline path, and the outcome itself (decline decision) is not directly added as a column. Overall moderate evidence of real causal reasoning but weak precision on the common-cause requirement."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

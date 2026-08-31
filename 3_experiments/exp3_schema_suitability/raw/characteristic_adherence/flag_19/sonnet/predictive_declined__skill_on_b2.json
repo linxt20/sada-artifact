@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_type_category",
+    "entry_origin",
+    "source_id_present",
+    "processed_date_present",
+    "ci_specificity",
+    "vendor_brand"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4583,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.1667
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of asset/expense (hardware, travel, cloud, software) is known at submission time and plausibly correlates with decline rates across categories; a legitimate external predictor derived from item metadata."
+      },
+      {
+        "name": "entry_origin",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How the entry was created (asset registration, auto-generated, manual acquisition, etc.) is available before adjudication and may carry signal about scrutiny/decline likelihood; not a function of the outcome."
+      },
+      {
+        "name": "source_id_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a source_id was linked reflects data completeness/traceability at intake, plausibly associated with approval vs decline, and is knowable prior to the outcome."
+      },
+      {
+        "name": "processed_date_present",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Presence of a processed_date is populated as part of processing/adjudication. It is only knowable after the outcome and is likely deterministically tied to whether/how the expense was resolved, constituting outcome leakage."
+      },
+      {
+        "name": "ci_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Granularity of the configuration item reference (named model vs generic label) reflects documentation quality at submission and can plausibly predict decline; external to the outcome."
+      },
+      {
+        "name": "vendor_brand",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Vendor/brand of the purchase is known at intake and can plausibly correlate with decline rates (approved vendors vs others); a legitimate predictor, not a restatement of the focus."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.55,
+    "rationale": "Five of six columns are legitimate, pre-outcome features engineered from item, source, documentation, and vendor metadata that plausibly carry signal about decline likelihood, adding leverage beyond the raw columns. processed_date_present is a leakage feature: a processed date is typically populated during/after adjudication, so it is not knowable before the outcome and likely encodes the outcome itself. As a set the added columns provide moderate genuine predictive value, but the presence of a leaky column and the correlational (not strongly causal) nature of the rest caps the utility."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

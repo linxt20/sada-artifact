@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What customer issues create the most support burden?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 7,
+  "added_columns": [
+    "customer_urgency_signal",
+    "system_criticality",
+    "user_impact_scale",
+    "issue_category",
+    "blocking_or_workaround_status",
+    "escalation_requirement",
+    "remediation_type"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.2996,
+    "facet_fraction": 0.5714,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.55,
+    "mece": 0.5244,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "customer_urgency_signal",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Urgency/priority reflects how the customer perceives the issue and drives prioritization, but it is not itself a constitutive part of the operational burden (the effort/load on support). It predicts burden rather than being an aspect of it."
+      },
+      {
+        "name": "system_criticality",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes the nature/criticality of the affected system, an attribute of the issue that influences burden, not a part of the burden itself. Values also mix issue types (feature_request, payment) blurring the meaning."
+      },
+      {
+        "name": "user_impact_scale",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The breadth of user impact (single_user to entire_tenant) is a genuine dimension of the burden's magnitude -- the scope of what must be handled is an aspect of the operational load."
+      },
+      {
+        "name": "issue_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Classifies the type of issue causing burden; it is an attribute of the driver, not a constitutive aspect of the burden itself."
+      },
+      {
+        "name": "blocking_or_workaround_status",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the issue is fully blocking vs. has a workaround captures the severity/impact dimension of the burden -- an aspect of how heavy the load is."
+      },
+      {
+        "name": "escalation_requirement",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The level and type of escalation needed (platform engineering, p1 bridge, etc.) is a constitutive part of the operational effort/coordination burden."
+      },
+      {
+        "name": "remediation_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The kind of remediation work required (hotfix, data recovery, documentation) is a direct component of the operational work performed to resolve the issue."
+      }
+    ],
+    "facet_columns": [
+      "user_impact_scale",
+      "blocking_or_workaround_status",
+      "escalation_requirement",
+      "remediation_type"
+    ],
+    "non_facet_columns": [
+      "customer_urgency_signal",
+      "system_criticality",
+      "issue_category"
+    ],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.55,
+    "rationale": "Operational_burden (the workload/effort imposed on support) is only partially decomposed into true meronymic facets. Genuine parts of the burden are its impact scale, severity/blocking status, escalation/coordination requirement, and remediation work type. However, several columns are external predictors or descriptors of the issue rather than constitutive parts: customer_urgency_signal (customer perception/priority), system_criticality (system attribute), and issue_category (type of issue). Mutual exclusivity is weakened by overlap: system_criticality, issue_category, remediation_type, and blocking_or_workaround_status share the same underlying issue-type/severity signal (e.g., feature_request, configuration, production outage recur across columns), so multiple columns re-encode the same aspect. Exhaustiveness is moderate: the effort/time dimension itself (e.g., handling time, number of touches, recurrence/volume) -- arguably the core of 'burden' -- is not captured by any facet, and resolution_minutes already in the original table is the closest proxy. Overall this is a mixed set with meaningful facets diluted by predictors and redundancy."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

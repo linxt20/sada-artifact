@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "asset_category_type",
+    "travel_equipment_marker",
+    "expense_automation_method",
+    "receipt_or_approval_risk",
+    "personal_use_risk_indicator",
+    "department_compliance_context",
+    "ci_vendor_brand",
+    "high_value_risk_flag",
+    "miscellaneous_or_undefined_asset"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.4389,
+    "analytical_usefulness__table_level": 0.42,
+    "source_groundedness": 0.5389,
+    "source_groundedness__table_level": 0.52,
+    "b1_overall": 0.4889,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.45,
+        "rationale": "Categorizing the CI asset is a reasonable axis, but it is largely redundant with the ci field and only tangential to TRAVEL POLICY risk. Groundedness is undermined by clear miscategorisation: 'Dell OptiPlex 7070 Desktop' labeled 'laptop', contradicting the source text.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "travel_equipment_marker",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "rationale": "A travel-equipment flag is directly relevant to the travel-policy query and gives a groupable axis. However none of the sampled rows (all hardware/cloud) support inferring travel status, and it is partly redundant with asset_category_type's travel buckets; groundedness for silent rows is uncertain.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "expense_automation_method",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.7,
+        "rationale": "Automatic vs manual entry is weakly connected to travel policy risk. It is derivable from phrasing ('Automated creation' -> automatic_generation; 'Procurement' -> manual_entry) so grounding is fair, but the three-way split (automatic_generation vs automated_entry) looks arbitrary and the analytical leverage for THIS query is low.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "receipt_or_approval_risk",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.35,
+        "rationale": "Receipt/approval requirements are a plausible policy-risk axis, but these values appear invented: nothing in the source rows states receipt or approval requirements. Assigning 'receipt_required'/'approval_required' confidently to silent hardware descriptions is unwarranted assertion.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "personal_use_risk_indicator",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.4,
+        "rationale": "Personal-use risk is squarely relevant to travel policy. But the source texts (procurement of hardware) give no basis for a personal-use inference; 146 'true' assignments are not supported by anything in the sampled evidence, suggesting fabricated signal.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "department_compliance_context",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.5,
+        "rationale": "This is essentially a restatement of the existing 'department' column, adding little analytical leverage. Values may or may not match the original department field; the label 'compliance_context' overstates content that is just a department copy.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "ci_vendor_brand",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.8,
+        "rationale": "Vendor extracted from the ci string (Dell, AWS, HP) is well grounded and can support spend-by-vendor grouping, but it is largely redundant with ci and only loosely tied to travel-policy risk.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "high_value_risk_flag",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "rationale": "A high-value flag is a useful risk axis and the original 'amount' column could ground it. However the threshold basis is unstated and none of the sampled rows expose amount to verify the True assignments, leaving grounding partly unverifiable.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "miscellaneous_or_undefined_asset",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.5,
+        "rationale": "Largely redundant with asset_category_type (the 'miscellaneous' bucket) and near-inverse of other flags; adds little new leverage for travel-policy analysis. Grounding is inconsistent given asset_category_type miscategorisations.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.42,
+    "source_groundedness": 0.52,
+    "rationale": "Several columns offer genuine travel-policy-risk axes (travel_equipment_marker, personal_use_risk_indicator, high_value_risk_flag), but a large share are redundant restatements of existing fields (department_compliance_context ~ department; ci_vendor_brand, asset_category_type, miscellaneous_or_undefined_asset ~ ci) or only tangential to the query. Groundedness is the bigger concern: sampled rows show a clear misclassification (a Desktop labeled 'laptop') and, more seriously, policy-risk columns (receipt_or_approval_risk, personal_use_risk_indicator) assert confident specifics that the source text does not support, indicating fabricated signal rather than warranted inference."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 9
+}

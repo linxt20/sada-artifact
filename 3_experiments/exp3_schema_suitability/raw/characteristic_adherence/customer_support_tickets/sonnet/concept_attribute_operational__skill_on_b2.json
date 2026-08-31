@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What customer issues create the most support burden?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 8,
+  "added_columns": [
+    "issue_category",
+    "product_area",
+    "operational_impact",
+    "failure_mechanism",
+    "affected_user_scope",
+    "workaround_available",
+    "escalation_required",
+    "requires_engineering"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.2873,
+    "facet_fraction": 0.5,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "The type/nature of the issue (bug, feature request, how-to) is what generates burden, not a constitutive part of the burden itself. It classifies the source of the problem, not an aspect of how heavy the operational load is."
+      },
+      {
+        "name": "product_area",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The product area where the issue arises is a locational attribute of the ticket that may predict or correlate with burden, but it is not an aspect OF the burden concept."
+      },
+      {
+        "name": "operational_impact",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Severity of operational impact (outage, degraded performance, data loss) is a genuine constitutive dimension of how much operational burden an issue imposes."
+      },
+      {
+        "name": "failure_mechanism",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "The underlying technical failure mechanism (regression, race condition, config error) is the causal origin of the issue, not a part of the burden it creates."
+      },
+      {
+        "name": "affected_user_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The breadth of users affected (single user to entire/cross tenant) is a real constitutive aspect of burden magnitude -- more affected users means greater burden."
+      },
+      {
+        "name": "workaround_available",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Availability of a workaround directly shapes the ongoing support/operational load a ticket imposes; it is an aspect of the burden's severity/urgency dimension."
+      },
+      {
+        "name": "escalation_required",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether and what kind of escalation is needed is a direct constitutive aspect of operational burden -- escalation is part of the effort/resource cost the issue imposes."
+      },
+      {
+        "name": "requires_engineering",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is essentially a binary re-encoding of the escalation_required facet (engineering_escalation vs. no_escalation), overlapping heavily with it rather than adding a distinct aspect."
+      }
+    ],
+    "facet_columns": [
+      "operational_impact",
+      "affected_user_scope",
+      "workaround_available",
+      "escalation_required"
+    ],
+    "non_facet_columns": [
+      "issue_category",
+      "product_area",
+      "failure_mechanism",
+      "requires_engineering"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "rationale": "Operational burden as a concept decomposes into aspects like severity of impact, breadth of affected users, resolvability (workaround), and escalation/effort cost. Four columns (operational_impact, affected_user_scope, workaround_available, escalation_required) qualify as constitutive facets. However, several columns fail the meronymy test: issue_category and failure_mechanism are causes/sources of burden, and product_area is a locational predictor -- none are aspects OF burden. Mutual exclusivity is dragged down because requires_engineering largely restates escalation_required, and escalation/workaround both touch the resolution-effort dimension. Exhaustiveness is moderate: the facet set covers severity, scope, resolvability, and escalation, but omits a direct labor/time-cost dimension (e.g., handling effort, reopen/recurrence, backlog duration) that is core to burden, and it is diluted by the non-facet columns."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

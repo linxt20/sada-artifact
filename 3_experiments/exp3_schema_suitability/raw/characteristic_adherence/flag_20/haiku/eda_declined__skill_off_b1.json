@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "is_travel",
+    "has_automated_desc",
+    "is_high_amount",
+    "missing_processing"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7625,
+    "analytical_usefulness__table_level": 0.76,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7688,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_travel",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "The query is specifically about travel-expense descriptions, so a flag isolating travel rows is a genuinely useful filtering/grouping axis. Values are derivable from short_description; the non-travel hardware/cloud samples are correctly marked 0."
+      },
+      {
+        "name": "has_automated_desc",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether a description is boilerplate/automated is a plausible predictive signal for decline decisions and offers a real new axis. It reads from description text, but the sample labeling is inconsistent: 'Automated creation of new hardware asset' is marked 0 while 'Automatically generated asset entry' is marked 1, indicating some ungrounded/erratic assignment."
+      },
+      {
+        "name": "is_high_amount",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Amount magnitude is a reasonable predictor of expense declines and roughly balanced, giving analytical leverage. However, the amount column is not shown in the row_evidence samples yet high/low flags are asserted, and the threshold basis is opaque, so groundedness cannot be strongly confirmed for these rows."
+      },
+      {
+        "name": "missing_processing",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A missing processed_date flag is a clean, well-grounded feature that could plausibly correlate with decline/incomplete workflows. The one row with processed_date 'nan' is correctly flagged 1 and populated rows are 0, showing sound derivation from the source."
+      }
+    ],
+    "analytical_usefulness": 0.76,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns each provide a distinct, non-trivial axis (travel isolation, automation of text, amount magnitude, processing completeness) relevant to predicting declines, and none are mere restatements. Groundedness is generally sound, with missing_processing and is_travel well-supported by evidence. Concerns: has_automated_desc shows inconsistent labeling on near-identical 'automated' phrasings, and is_high_amount asserts thresholds without the amount field visible in samples, mildly lowering confidence in grounding."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

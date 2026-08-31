@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can clinics improve triage and scheduling?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "clinical_severity_level",
+    "workup_and_diagnostic_demand",
+    "treatment_intervention_complexity",
+    "time_criticality_for_intervention",
+    "visit_type_and_slot_profile"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.88,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.81,
+    "source_groundedness__table_level": 0.81,
+    "b1_overall": 0.845,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "clinical_severity_level",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A severity axis distinct from raw urgency is highly useful for triage improvement. Most rows are sound readings (viral URI as acute_significant is defensible, EF-preserved post-MI as chronic_stable is apt). However the annual physical with mild fatigue labeled chronic_stable overstates a documented chronic condition where none is clearly stated, showing occasional over-inference."
+      },
+      {
+        "name": "workup_and_diagnostic_demand",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Diagnostic resource demand is directly relevant to scheduling and slot allocation. Values are well grounded: labs ordered->labs_only, MRI/echo->imaging_required, exam-only URI->clinical_decision_only. Strong extraction fidelity."
+      },
+      {
+        "name": "treatment_intervention_complexity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Intervention complexity is a valuable axis for resourcing visits. Several values are grounded (topical+oral for acne->medication_initiation_complex, viral URI->counseling_support). But the annual physical labeled medication_adjustment has no medication change in the text, and knee-injury MRI-to-rule-out labeled procedural_or_surgical is premature since no procedure is documented yet."
+      },
+      {
+        "name": "time_criticality_for_intervention",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Time-to-intervention is central to triage prioritization and offers leverage beyond the coarse urgency field. Values track the text well (routine follow-ups->routine_weeks, acute injury/URI->urgent_hours_to_days). Some overlap with urgency but the finer granularity adds value."
+      },
+      {
+        "name": "visit_type_and_slot_profile",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A slot/visit-type profile is directly actionable for scheduling optimization, the core of the query. Mostly grounded, but labeling the post-MI follow-up and the annual physical as brief_follow_up is an assumption about visit length/type not clearly supported; the annual physical is arguably a preventive_wellness visit, indicating some misclassification."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.81,
+    "rationale": "The added columns collectively provide genuinely distinct, actionable axes (severity, diagnostic demand, intervention complexity, time-criticality, slot profile) that go well beyond the original coarse fields and directly support triage/scheduling analysis. Groundedness is generally solid with clean extraction of labs/imaging cues, but there is recurring mild over-inference on the routine annual-physical row (asserting chronic status, medication adjustment, and follow-up type not evidenced) and one premature procedural label, lowering groundedness modestly without undermining overall quality."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

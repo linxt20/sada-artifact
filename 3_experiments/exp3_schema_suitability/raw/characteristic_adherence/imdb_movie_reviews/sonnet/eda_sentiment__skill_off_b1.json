@@ -1,0 +1,130 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "n_added_columns": 14,
+  "added_columns": [
+    "aspect_acting",
+    "aspect_plot",
+    "aspect_direction",
+    "aspect_music",
+    "aspect_humor",
+    "aspect_emotion",
+    "aspect_special_effects",
+    "aspect_nostalgia",
+    "dominant_theme",
+    "positive_word_count",
+    "negative_word_count",
+    "sentiment_word_ratio",
+    "sarcasm_signal",
+    "review_length_words"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 14,
+    "n_judged_columns": 14,
+    "analytical_usefulness": 0.715,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8229,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.769,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "aspect_acting",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "Acting mention count is a direct theme axis for comparing sentiment groups. Sample rows show plausible counts tied to acting/performance mentions."
+      },
+      {
+        "name": "aspect_plot",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "Plot theme count is central to the query. Values align reasonably with source text references to premise/story."
+      },
+      {
+        "name": "aspect_direction",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "rationale": "Direction/filmmaking mention count adds a genuine grouping axis. Row 4's count of 2 (well-made, atmospheric) is defensible."
+      },
+      {
+        "name": "aspect_music",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "rationale": "Near-constant (219 zeros) but a legitimate theme; silent rows correctly zero. Slightly weaker leverage given rarity but still a valid axis."
+      },
+      {
+        "name": "aspect_humor",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Humor mention count is a real theme dimension; values look grounded for silent rows (all 0 here)."
+      },
+      {
+        "name": "aspect_emotion",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.82,
+        "rationale": "Emotion count is relevant; row 3's emotion=1 (poignant/drama) is a sound reading."
+      },
+      {
+        "name": "aspect_special_effects",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "rationale": "Highly sparse (233 zeros) so limited leverage, but a valid theme and correctly zero for silent rows."
+      },
+      {
+        "name": "aspect_nostalgia",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.8,
+        "rationale": "Nostalgia is a distinctive theme; row 1's nostalgia=2 ('when I was younger', '12 year-old me') is well grounded."
+      },
+      {
+        "name": "dominant_theme",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "rationale": "Single categorical dominant theme is highly useful for group comparison. Mostly derivable but somewhat redundant with aspect counts, and row 2 labelling 'acting' as dominant is arguable."
+      },
+      {
+        "name": "positive_word_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "rationale": "Somewhat generic sentiment lexicon count, but gives a magnitude axis. Values plausible against text."
+      },
+      {
+        "name": "negative_word_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "rationale": "Generic but usable; row 2's high negative count matches strongly negative text."
+      },
+      {
+        "name": "sentiment_word_ratio",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "rationale": "Derived restatement of the two word counts, adding modest leverage. Ratio=0 when zero words is a convention but slightly ambiguous."
+      },
+      {
+        "name": "sarcasm_signal",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "rationale": "Potentially interesting for theme/tone but near-constant (248 zeros) and sarcasm detection is unreliable; row 2 flag is defensible but low-confidence inference."
+      },
+      {
+        "name": "review_length_words",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.95,
+        "rationale": "Raw token count is generic and adds little thematic leverage for this query, though accurately derived from text."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.82,
+    "rationale": "The aspect_* mention counts and dominant_theme directly serve the query of comparing review themes across sentiment groups, offering genuine grouping and comparison axes; they are mostly sound readings of the source text with reasonable zeros for silent rows. Sentiment word counts and their ratio add modest magnitude signal, while review_length_words and sarcasm_signal are the weakest—generic or near-constant—though still well grounded. Groundedness is generally high across sampled rows with only minor over-confident category calls (e.g., dominant_theme on strongly negative reviews)."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 14
+}

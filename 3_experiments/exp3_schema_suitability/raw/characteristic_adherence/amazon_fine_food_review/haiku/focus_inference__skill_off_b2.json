@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "review_length",
+    "sentiment",
+    "helpfulness_ratio",
+    "has_criticism",
+    "engagement_level"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.341,
+    "focus_coherence": 0.62,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.6,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Review value/attention-worthiness — which reviews merit attention based on their sentiment signal and community-perceived helpfulness/engagement",
+    "per_column": [
+      {
+        "name": "review_length",
+        "supports_focus": true,
+        "rationale": "A generic textual metric, but plausibly a proxy for review substance/detail that feeds an attention-worthiness framing; weakly supportive rather than central."
+      },
+      {
+        "name": "sentiment",
+        "supports_focus": true,
+        "rationale": "Categorical sentiment identifies the valence of feedback, directly relevant to 'what's worth attention' (e.g., surfacing negatives)."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "supports_focus": true,
+        "rationale": "Normalizes the existing helpfulness numerator/denominator into a community-perceived usefulness signal — a strong facet of which reviews are worth attention."
+      },
+      {
+        "name": "has_criticism",
+        "supports_focus": true,
+        "rationale": "Flags actionable negative content, directly aligned with 'actionable' reviews to investigate."
+      },
+      {
+        "name": "engagement_level",
+        "supports_focus": true,
+        "rationale": "Buckets attention/engagement, a coherent facet of prioritizing reviews worth attention."
+      }
+    ],
+    "focus_coherence": 0.62,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.6,
+    "rationale": "The columns loosely orbit a single inferable focus — the attention-worthiness/value of a review — via helpfulness, sentiment, criticism, and engagement. However coherence is diluted: sentiment and has_criticism are largely redundant (both encode negative valence), and review_length is a bare mechanical text metric that does not cleanly join the focus. The set mixes an actionable value/prioritization theme (helpfulness_ratio, has_criticism, engagement_level) with generic NLP features (length, bare sentiment), so it is neither a tight facet decomposition nor pure noise. The implied focus is genuinely actionable — an analyst could triage low-helpfulness or critical reviews — but the framing is only partially realized because no column resolves what the reviews are actually ABOUT (topics/product aspects), leaving the 'what's in these reviews' half of the query unaddressed. Solid but not tightly centred."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

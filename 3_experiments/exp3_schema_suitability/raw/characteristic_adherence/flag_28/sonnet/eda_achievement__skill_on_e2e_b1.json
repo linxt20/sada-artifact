@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does goal achievement vary across department, metric, and the management practices described?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "primary_intervention_type",
+    "goal_scope",
+    "time_horizon",
+    "technology_enabler"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7625,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7562,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_intervention_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Categorises the management practice/intervention described in each goal, giving a genuine new axis directly aligned with the query's 'management practices' dimension. Values are well-grounded readings of the description (e.g., 'Optimize... duplicated resources' -> process_optimization; premium subscriptions revenue -> marketing_strategy). The training_program label for a customer-satisfaction/after-sales row is a slightly loose inference but defensible."
+      },
+      {
+        "name": "goal_scope",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Scope (company_wide vs department_specific) is a useful grouping axis for goal achievement. However, the source descriptions rarely state scope explicitly; labelling most rows 'company_wide' appears to be a default inference not clearly warranted by text (e.g., the cost-reduction and revenue rows do not specify organizational scope). Some assignments are reasonable (status-meetings -> department_specific), but the dominant company_wide default is partly asserted rather than grounded."
+      },
+      {
+        "name": "time_horizon",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Buckets the deadline language ('next fiscal year', 'end of Q4', 'last quarter', 'upcoming year') into a clean temporal axis useful for comparing achievement over horizons. Values track the text well, and NULL for silent rows is appropriate behaviour."
+      },
+      {
+        "name": "technology_enabler",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Provides a potentially useful modelling axis, but it is near-constant: 437 of ~550 rows are 'no_technology', giving limited analytical leverage. Groundedness is acceptable since most descriptions genuinely mention no technology, and the sampled rows correctly get 'no_technology'; however such absence-based labelling risks under-detecting implied tooling."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns supply several genuinely new axes (intervention type, time horizon, scope) that map well onto the query's department/metric/management-practice framing. intervention_type and time_horizon are the strongest on both dimensions. goal_scope adds useful grouping but relies on an under-supported company_wide default, and technology_enabler is heavily skewed toward one value, limiting its leverage. Values in the sampled rows are largely sound readings of the source text with no gross contradictions."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "eda_achievement",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

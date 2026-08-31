@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can support teams reduce ticket resolution time?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_category",
+    "estimated_complexity",
+    "routing_recommendation",
+    "self_service_candidate"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7875,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.575,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6812,
+    "hallucination_rate": 0.75
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Categorising free-text descriptions into issue types gives a strong grouping axis to compare resolution_minutes across category types, directly serving the query. However groundedness is undermined by clear misreads: CS-0004 (a feature enhancement request) labelled 'billing', and CS-0005 (a CSV/BOM export bug, likely data/integration) labelled 'outage'. Several samples are correct (billing, auth, outage), but the error rate on the visible sample is material."
+      },
+      {
+        "name": "estimated_complexity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A complexity tier is a reasonable inferential axis that can help explain and model resolution time. Values are mostly defensible warranted inferences (outage=high, simple enhancement=low). It is inherently subjective but the samples are plausible readings of the text, so groundedness is moderately high."
+      },
+      {
+        "name": "routing_recommendation",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Routing directly speaks to the query—correct routing reduces resolution time—so it is a useful actionable axis. But it is largely derived from issue_category and inherits its errors: CS-0004 routed to billing specialist (it is a product feature request), and CS-0005 escalated as if an outage. When category is right (auth->security, outage->escalate) routing is sound, but the propagated misreads lower groundedness."
+      },
+      {
+        "name": "self_service_candidate",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A binary self-service flag is a plausible lever for reducing ticket load and time, so it has some analytical value, though it is coarser and partly redundant with complexity. Groundedness is weak: CS-0001 (a duplicate-invoice correction needing a human-issued corrected invoice) marked 'yes', and CS-0004 (a product feature request that cannot be self-served) marked 'yes' are poorly supported by the text."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.55,
+    "rationale": "The added columns provide genuine new analytical axes (issue type, complexity, routing, self-service) that let an analyst group and model resolution_minutes and identify levers to reduce resolution time—well aligned with the query and not merely redundant with existing columns. However groundedness is only moderate: the visible samples show real misclassifications (feature request tagged billing, export bug tagged outage, an invoice correction and a feature request tagged self-service 'yes'), and these errors propagate into routing_recommendation. The columns are useful in principle but their values are not reliably faithful to the source text."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "hw_device_mentions",
+    "hw_symptom_signals",
+    "hw_signal_score",
+    "hw_signal_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7875,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8125,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hw_device_mentions",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "Extracts specific hardware device mentions from descriptions, giving a strong new axis directly aligned with the query about hardware signals. Mostly grounded extractions, but the 'server' tag on 'Unable to establish connection to MySQL server' misreads a database/software context as a hardware device, indicating some false-positive extraction."
+      },
+      {
+        "name": "hw_symptom_signals",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizes symptom language (not_working, malfunction, failure, physical_symptom) that plausibly signals hardware issues -- a genuine analytical axis for the query. Samples show NULLs for software-installation rows, which is a correct silent reading."
+      },
+      {
+        "name": "hw_signal_score",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "An aggregate intensity score derived from the other signal columns; useful for ranking/modeling likelihood of hardware problems. Somewhat redundant with its component columns, and inherits the MySQL-server false positive (score 1) from device mentions."
+      },
+      {
+        "name": "hw_signal_flag",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Binary hardware-vs-not indicator is useful for grouping, but it is largely a thresholded restatement of hw_signal_score, adding limited independent leverage. Grounded, though it carries over the same borderline device-detection issues."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns form a coherent set directly targeting the query: extracted hardware devices, symptom categories, a composite score, and a flag. Device mentions and symptom signals provide real new axes for grouping and comparison; the score and flag are somewhat redundant with these but still support ranking/filtering. Values are generally well grounded in the descriptions, with correct NULLs on silent software rows; the main weakness is over-eager device extraction (e.g., 'MySQL server' treated as a hardware server), a minor false-positive pattern that propagates into the score."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

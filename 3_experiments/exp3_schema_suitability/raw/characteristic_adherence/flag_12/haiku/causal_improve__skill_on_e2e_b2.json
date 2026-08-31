@@ -1,0 +1,111 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we improve incident resolution efficiency?",
+  "focus_variable": "incident_resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "issue_complexity",
+    "assigned_technician_id",
+    "required_action_type",
+    "technician_match_efficiency",
+    "repeat_issue_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.72,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.72,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "incident_resolution_efficiency",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident (printer, software, network) is a common cause of both how the issue is handled/assigned and how efficiently it resolves. It is not a settable lever (you cannot decide an incident's intrinsic category), so it functions as a confounder, not a treatment. Not named in the query."
+      },
+      {
+        "name": "issue_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity is an intrinsic property of the incident that drives both assignment decisions and resolution time; it is not intervenable. A classic unnamed confounder that must be adjusted for."
+      },
+      {
+        "name": "assigned_technician_id",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Which technician is assigned is a genuine decision an actor can set/change -- an intervenable lever. This is a valid what-if treatment."
+      },
+      {
+        "name": "required_action_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The action required (repair, replacement, troubleshooting) is determined by the nature of the incident rather than freely chosen; it is a common cause of both assignment and resolution effort. Treated as a confounder."
+      },
+      {
+        "name": "technician_match_efficiency",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the technician was a good match sits on the causal path between the assignment (treatment) and resolution efficiency (outcome); it is a mediator, not a confounder, and must not be adjusted for."
+      },
+      {
+        "name": "repeat_issue_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the issue is a recurring pattern is a pre-existing property that can influence both how it is assigned/handled and how quickly it resolves. Not intervenable; acts as a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "assigned_technician_id"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "issue_complexity",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "required_action_type",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "repeat_issue_pattern",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.72,
+    "rationale": "The added set does satisfy the interventional claim. It includes a genuinely settable treatment (assigned_technician_id -- who to assign is a decision), which distinguishes a what-if question from mere attribution. It also supplies multiple confounders (issue_complexity, incident_category, required_action_type, repeat_issue_pattern) that are common causes of both the assignment decision and resolution efficiency, and none of these were named or implied in the vague query 'How can we improve incident resolution efficiency?' -- demonstrating the capability under test. The main weakness is technician_match_efficiency, which is a mediator on the assignment->efficiency path and would bias the estimate if adjusted for, so it does not count toward confounder quality. Overall a solid, though not flawless, realisation of the what-if intent."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

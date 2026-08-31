@@ -1,0 +1,98 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "focus_variable": "declined_expense_reasons",
+  "concept": "declined_expense_reasons",
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_type_category",
+    "acquisition_intent",
+    "travel_relevance_flag",
+    "departmental_spend_pattern",
+    "source_id_available_flag",
+    "asset_complexity_level",
+    "vendor_or_product_specificity"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.0,
+    "mece": 0.0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "declined_expense_reasons",
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Describes what kind of asset the expense is for, not an aspect of WHY it was declined or the compliance risk it poses. It characterizes the expense item, not the decline reason."
+      },
+      {
+        "name": "acquisition_intent",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Captures the purpose of the purchase (who/what it is for). This is a property of the expense that may correlate with decline likelihood, but it is not a constitutive part of the decline reason or compliance-risk concept."
+      },
+      {
+        "name": "travel_relevance_flag",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A flag for whether the expense is travel-related. It categorizes the expense subject matter, not a facet of the reason it was declined."
+      },
+      {
+        "name": "departmental_spend_pattern",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Restates/derives from the existing department field. It is a contextual attribute of the expense, not an aspect of the decline reason itself."
+      },
+      {
+        "name": "source_id_available_flag",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A data-completeness/metadata flag about whether source_id exists. This is a mechanical availability indicator, not a constitutive aspect of the decline reason or compliance risk."
+      },
+      {
+        "name": "asset_complexity_level",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Describes complexity/tier of the asset purchased, again characterizing the item rather than decomposing the reason it was declined."
+      },
+      {
+        "name": "vendor_or_product_specificity",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Characterizes the vendor/product branding of the expense. It may relate to procurement policy compliance but is a property of the item, not a facet of the decline reason itself."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "asset_type_category",
+      "acquisition_intent",
+      "travel_relevance_flag",
+      "departmental_spend_pattern",
+      "source_id_available_flag",
+      "asset_complexity_level",
+      "vendor_or_product_specificity"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.0,
+    "rationale": "The concept to decompose is 'declined_expense_reasons' -- i.e., the constitutive aspects of WHY an expense was declined and its compliance-risk dimensions (e.g., policy-violation type, missing-documentation, spend-limit breach, unauthorized-category, duplicate/fraud indication, approval-workflow failure). None of the added columns are aspects OF the decline reason. Instead they all characterize the EXPENSE ITEM (asset type, complexity, vendor branding, travel relevance) or its context (department, acquisition purpose, source metadata). These are at best external predictors/correlates of decline, not part-of facets of the decline reason. Several columns also overlap heavily among themselves (asset_type_category vs asset_complexity_level vs vendor_or_product_specificity all slice the asset dimension; travel_relevance_flag overlaps travel_equipment; departmental_spend_pattern restates department), lowering mutual exclusivity. Because zero columns are constitutive facets, exhaustiveness of the actual concept is 0."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

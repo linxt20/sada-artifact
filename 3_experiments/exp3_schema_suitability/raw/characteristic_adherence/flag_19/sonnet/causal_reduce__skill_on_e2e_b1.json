@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined expense submissions?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "submission_origin",
+    "submission_action_type",
+    "source_id_present",
+    "ci_specificity",
+    "asset_brand_family",
+    "submitting_department",
+    "is_high_cost_asset_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.575,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.6875,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.6312,
+    "hallucination_rate": 0.375
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing submissions by asset type (hardware/travel/software) gives a real grouping axis to see if declines cluster by category. Values are soundly derived from short_description and ci in all samples."
+      },
+      {
+        "name": "submission_origin",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Distinguishing manual vs auto-generated submissions is a useful axis for decline analysis. However groundedness is weaker: 'Deployed service-related asset' labeled 'auto_generated' and 'Miscellaneous hardware component' labeled 'manual_acquisition' rest on inference the terse text only loosely supports."
+      },
+      {
+        "name": "submission_action_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A finer-grained action taxonomy could help, but it partly overlaps submission_origin. Some assignments seem inferred beyond the text (e.g. 'Miscellaneous hardware component' -> 'registration', a Dell laptop 'Asset assignment' -> 'allocation' is reasonable but others are shaky)."
+      },
+      {
+        "name": "source_id_present",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A bare presence flag on an existing original column (source_id). Mostly a trivial derivation with limited analytical leverage for reducing declines, though a null-source pattern could weakly correlate. Values are directly checkable and grounded."
+      },
+      {
+        "name": "ci_specificity",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Classifying how specific the CI reference is (specific_model vs generic_label) is a plausible driver of declines (vague submissions may be rejected). Values track the ci text well across samples."
+      },
+      {
+        "name": "asset_brand_family",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Vendor/brand extraction gives a genuine grouping axis. Brands are read soundly from ci/short_description; 'other_vendor' for silent rows is acceptable behaviour."
+      },
+      {
+        "name": "submitting_department",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "This largely duplicates the original 'department' column, and the produced values (e.g. 'Sales' for a plain hardware component, 'Product Management' for a Dell laptop) are not supported by any source text field shown — they appear invented rather than extracted."
+      },
+      {
+        "name": "is_high_cost_asset_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "A cost-tier flag could correlate with declines and adds a modeling axis. Assignments are a reasonable heuristic from asset type (laptop/desktop=True, RAM component/service=False), though it partly restates asset_category_type."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.68,
+    "rationale": "Most added columns provide genuine new grouping/modeling axes relevant to diagnosing declined submissions (asset category, brand, CI specificity, origin, cost tier). Weaknesses: submitting_department largely duplicates an existing column and its values appear fabricated rather than extracted; source_id_present is a trivial presence flag; and origin/action_type contain some inferences the terse source text only loosely supports. Overall the set is useful and mostly grounded, with a couple of columns dragging groundedness down."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 8
+}

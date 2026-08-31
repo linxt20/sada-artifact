@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "dominant_topic",
+    "review_sentiment",
+    "review_length_category"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.3,
+    "focus_coherence": 0.6,
+    "structure_quality": 0.5,
+    "focus_actionability": 0.72,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The dominant service aspect (topic) driving each airline review",
+    "per_column": [
+      {
+        "name": "dominant_topic",
+        "supports_focus": true,
+        "rationale": "Directly proposes the review's central aspect (staff, food, seat comfort, etc.), naming the focus concept the analyst should investigate."
+      },
+      {
+        "name": "review_sentiment",
+        "supports_focus": true,
+        "rationale": "Polarity is a coherent facet that pairs with dominant_topic, enabling analysis of which aspect drives positive vs negative reactions."
+      },
+      {
+        "name": "review_length_category",
+        "supports_focus": false,
+        "rationale": "A generic structural/metadata bucket of text length; it does not centre on any review-content aspect and reads as boilerplate noise rather than a facet of the implied focus."
+      }
+    ],
+    "focus_coherence": 0.6,
+    "structure_quality": 0.5,
+    "focus_actionability": 0.72,
+    "rationale": "Two of the three columns cohere around a plausible, data-inferable focus — the dominant service aspect of each review — with sentiment providing a useful cross-cutting facet that turns topic identification into something actionable (which aspects worth analyzing correlate with satisfaction). This is a defensible proposed focus given the vague query. However, review_length_category is a mechanical text-length bucket that dilutes coherence and adds no facet of the content focus, so the set is not tightly centred. The structure is thin: only topic + sentiment genuinely build around the focus, giving a serviceable but underdeveloped predictor/facet set rather than a rich one. The focus itself is non-trivial and investigable, hence moderate actionability, but the grab-bag element and limited depth keep scores middling."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

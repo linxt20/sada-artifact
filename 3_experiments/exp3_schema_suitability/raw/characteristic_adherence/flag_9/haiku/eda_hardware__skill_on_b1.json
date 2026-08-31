@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "device_type",
+    "failure_mode",
+    "affected_component",
+    "physical_state_keyword",
+    "problem_specificity",
+    "location_mentioned"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.705,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8317,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.7683,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "device_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Categorizing the affected device is directly central to distinguishing hardware from software incidents, giving a strong grouping axis for the query. Values are well-grounded: 'software installation' -> software, 'MySQL server' -> database are sound readings. NULLs for silent rows are appropriate."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Failure mode (connection_error, overheating, flickering, crashing) is a strong signal-bearing axis; overheating/flickering lean hardware, crashing leans software. 'connection to MySQL server' -> connection_error is well-supported; Unknown for silent installation rows is correct."
+      },
+      {
+        "name": "affected_component",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Abstracting components (network, display_output, physical_hardware, storage, power_thermal) is a genuine analytical axis correlating with hardware. Mapping MySQL server connection to 'network' is a defensible reading. Somewhat overlaps device_type but adds a distinct grouping. Heavy NULL share is acceptable silence."
+      },
+      {
+        "name": "physical_state_keyword",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "A boolean flag for presence of physical-state language is plausibly informative for hardware detection, though it is a coarse binary that partly restates signals in device_type/affected_component. Grounded as a keyword-presence check; False for software-install rows is correct."
+      },
+      {
+        "name": "problem_specificity",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "An ordinal specificity score gives a mild new modeling axis, but its relevance to the hardware-vs-software query is weak and generic. The scale's basis is opaque; values look plausible but the specific integer assignments are only loosely warranted by the short text."
+      },
+      {
+        "name": "location_mentioned",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A location-mention flag is only tangentially related to identifying hardware problems and adds little analytical leverage for THIS query. It is well-grounded as a detectable text feature (False on the samples is correct), but generically low-value here."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.85,
+    "rationale": "The core added columns (device_type, failure_mode, affected_component) provide strong, well-grounded axes directly aligned with distinguishing hardware from software incidents, and their values are sound readings of the source short_descriptions with appropriate Unknown/NULL for silent rows. physical_state_keyword adds a moderately useful, grounded binary. problem_specificity and especially location_mentioned are generic flags with weak relevance to this particular query, dragging holistic usefulness down modestly, but none exhibit hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

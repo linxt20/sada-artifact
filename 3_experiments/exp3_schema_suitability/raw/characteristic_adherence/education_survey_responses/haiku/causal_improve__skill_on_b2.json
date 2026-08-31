@@ -1,0 +1,136 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can educators improve learning satisfaction?",
+  "focus_variable": "learning_satisfaction",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "adaptive_content_delivery_strategy",
+    "synchronous_interaction_design",
+    "peer_community_structure",
+    "hands_on_or_kinesthetic_access",
+    "feedback_turnaround_and_personalization",
+    "technical_platform_stability",
+    "student_engagement_and_motivation_baseline",
+    "developmental_stage_fit",
+    "subject_discipline_and_remote_fit"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.8,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 0.5,
+    "confounder_quality": 0.8,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "learning_satisfaction",
+    "per_column": [
+      {
+        "name": "adaptive_content_delivery_strategy",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A configurable pedagogical choice educators can set (async tools, video, segmented lessons) — an intervenable lever."
+      },
+      {
+        "name": "synchronous_interaction_design",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How live sessions are structured is a settable design decision by educators."
+      },
+      {
+        "name": "peer_community_structure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Educators can decide to assign collaborative projects, peer review, etc. — intervenable."
+      },
+      {
+        "name": "hands_on_or_kinesthetic_access",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether kits/simulations/demos are provided is a deliberate instructional choice — settable."
+      },
+      {
+        "name": "feedback_turnaround_and_personalization",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Feedback speed and personalization is directly under educator control — an intervenable lever."
+      },
+      {
+        "name": "technical_platform_stability",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Platform reliability affects both which delivery/interaction strategies are feasible and satisfaction; a common cause. Arguably partly settable but here framed as background condition."
+      },
+      {
+        "name": "student_engagement_and_motivation_baseline",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Pre-existing engagement influences both the interventions educators apply/that students take up and their satisfaction — a classic unnamed confounder."
+      },
+      {
+        "name": "developmental_stage_fit",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Corresponds to grade_level already in the table; a common cause of appropriate strategy and satisfaction but effectively named."
+      },
+      {
+        "name": "subject_discipline_and_remote_fit",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Corresponds to subject already in the table; influences which strategies suit and satisfaction, but named/implied."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "adaptive_content_delivery_strategy",
+      "synchronous_interaction_design",
+      "peer_community_structure",
+      "hands_on_or_kinesthetic_access",
+      "feedback_turnaround_and_personalization"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "technical_platform_stability",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "student_engagement_and_motivation_baseline",
+        "named_in_query": false,
+        "plausibility": 0.9
+      },
+      {
+        "name": "developmental_stage_fit",
+        "named_in_query": true,
+        "plausibility": 0.8
+      },
+      {
+        "name": "subject_discipline_and_remote_fit",
+        "named_in_query": true,
+        "plausibility": 0.8
+      }
+    ],
+    "confounder_quality": 0.8,
+    "rationale": "The schema strongly realises the what-if claim. Multiple treatments are genuinely intervenable levers educators can set (delivery mode, synchronous design, peer structure, hands-on access, feedback). It also supplies confounders that are common causes of both treatment uptake and satisfaction: student_engagement_baseline and platform_stability are NOT named in the query and demonstrate the capability under test, while developmental_stage and subject fit map to existing table columns (named/implied). No columns are mistaken for mediators-as-confounders. This passes the interventional test."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

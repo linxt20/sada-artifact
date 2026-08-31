@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What company traits explain regional clustering?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "industry_sector",
+    "company_type",
+    "geo_cluster",
+    "tech_focus_level",
+    "description_length"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.33,
+    "predictor_fraction": 0.6,
+    "n_predictors": 3,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.55,
+    "interpretable_fraction": 0.6
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean, interpretable categorical variable (industry) that is external to geography and can be cross-tabulated against regional clusters to reveal sector-based clustering patterns. Some categories are thin (n=1) but the top segments are well-populated and meaningful."
+      },
+      {
+        "name": "company_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable segmentation (private/public/investor/startup) that could plausibly associate with regional distribution. Heavily skewed toward 'Private Company' (169), which limits contrast, but remaining categories still allow comparison."
+      },
+      {
+        "name": "geo_cluster",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This IS the regional/geographic grouping and essentially restates the focus variable (regional_cluster). Grouping the focus against itself yields no informative external relationship."
+      },
+      {
+        "name": "tech_focus_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal Low/Medium/High scale that is external to geography, interpretable, and reasonably distributed, enabling comparison of tech intensity across regions. Somewhat derived/opaque in how it is scored but categories are well-separated."
+      },
+      {
+        "name": "description_length",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A mechanical text-metadata artifact with no substantive associational meaning to regional clustering, and highly near-constant (160/199 'Medium'), so no meaningful comparison can be drawn."
+      }
+    ],
+    "n_predictors": 3,
+    "relationship_informativeness": 0.55,
+    "rationale": "The set contains three genuinely useful associational segmentation variables (industry_sector, company_type, tech_focus_level) that can be cross-tabulated against regional clusters to explore what traits explain clustering. However, geo_cluster restates the focus itself (adding no external relationship), and description_length is a mechanical, near-constant text artifact that realises none of the EDA claim. company_type and tech_focus_level are also somewhat skewed, modestly weakening contrast. Overall the set enables some interpretable relationship discovery but is diluted by one restatement and one irrelevant column."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_regional",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

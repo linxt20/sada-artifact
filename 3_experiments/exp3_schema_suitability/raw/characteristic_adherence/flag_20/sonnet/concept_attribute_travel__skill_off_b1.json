@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "travel_policy_risk_flags",
+    "travel_policy_risk_level",
+    "travel_policy_risk_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.5667,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.6083,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "travel_policy_risk_flags",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Directly targets the query by categorizing specific travel policy risks (air travel, business class, high-value, luxury, international), giving a rich axis to group and prioritize expenses. However, the evidence samples are all hardware/cloud IT asset records with no travel content, yet the taxonomy asserts confident policy-specific inferences ('requires VP approval', '>$5,000 requires manager approval') that are not derivable from the visible source fields (short_description, ci); amount is an original column so high-value flags could be grounded, but the specific travel categorizations are not evidenced in the samples and risk over-asserting. The dominant 'No travel policy risks' value is a reasonable silent-row reading."
+      },
+      {
+        "name": "travel_policy_risk_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A Low/Medium/High severity ordinal is a useful, distinct axis for prioritizing which expenses need review, more than a bare count. It is largely derived from the flags column, so partly redundant but adds an interpretable severity dimension. Groundedness is limited by the same underlying flag inferences, but NULL/Low for the non-travel sample rows is correct silent-row behavior."
+      },
+      {
+        "name": "travel_policy_risk_count",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A count of flags is largely a mechanical restatement of the flags column and correlates almost perfectly with risk_level, offering little independent analytical leverage for identifying policy risks. It is well-grounded as a direct derivation from the flags, and 0 for non-travel rows is correct."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.5,
+    "rationale": "The flags column is well-targeted to the query and provides a genuine categorical axis; the risk_level adds an ordinal severity view, while risk_count is mostly redundant. The main concern is groundedness: all provided evidence rows are IT hardware/cloud asset records with no travel content, and the taxonomy embeds confident, policy-specific approval assertions whose derivability from the visible source text is unclear, though the silent-row 'No risk'/NULL/0 defaults are handled correctly."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

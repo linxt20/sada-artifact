@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "agent_avg_resolution_hrs",
+    "agent_workload",
+    "priority_numeric",
+    "category_avg_resolution_hrs",
+    "opened_hour_of_day",
+    "opened_day_of_week"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.3,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.3333
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "agent_avg_resolution_hrs",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This is the historical mean of the focus variable itself, computed over the agent's tickets. It is a direct aggregate of resolution_time and, if computed over the same set of tickets (including the target row), leaks the outcome. It restates the focus rather than being an external signal."
+      },
+      {
+        "name": "agent_workload",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Number of tickets an agent is handling is an external, plausibly causal factor: higher concurrent load can slow resolution. It is knowable at/before assignment and is not a function of the target."
+      },
+      {
+        "name": "priority_numeric",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A numeric encoding of the existing priority field. Priority plausibly influences how fast tickets are resolved and is known at open time. Mild redundancy with the original priority column, but it is a legitimate external predictor."
+      },
+      {
+        "name": "category_avg_resolution_hrs",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Average of the focus variable grouped by category. Like the agent average, this is an aggregate of resolution_time; used naively (in-sample, including the target) it leaks the outcome and restates the focus rather than providing an independent signal."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from opened_at, known at open time, outside the focus. Time of opening can plausibly carry signal (e.g., off-hours tickets resolve slower), so it is a legitimate, non-leaking predictor."
+      },
+      {
+        "name": "opened_day_of_week",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from opened_at, known at open time. Day of week (e.g., weekend openings) plausibly affects resolution speed and does not restate or leak the target."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.45,
+    "rationale": "Four of six columns are legitimate external predictors (workload, priority encoding, opened hour, opened day), and these give real leverage—workload especially is a strong, non-leaking causal signal. However, two columns (agent_avg_resolution_hrs and category_avg_resolution_hrs) are target aggregates that restate/leak the focus variable; unless carefully computed out-of-fold they contaminate the model and may inflate apparent performance. As a set, the valid predictors provide moderate genuine lift beyond the original columns, discounted by the presence of two leakage features."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

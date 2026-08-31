@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What factors explain low review scores?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "summary_length",
+    "text_length",
+    "has_negative_words",
+    "has_positive_words",
+    "helpfulness_ratio",
+    "has_complaint_markers",
+    "uppercase_ratio",
+    "exclamation_count",
+    "question_count",
+    "is_low_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.495,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.66,
+    "hallucination_rate": 0.3
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "summary_length",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw character length of the summary; a generic surface metric with weak analytical leverage for explaining low scores, but values are directly and correctly derivable from the text."
+      },
+      {
+        "name": "text_length",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Review text length is a plausible but weak generic feature. Values match source text (e.g. taffy review = 140). Low leverage for THIS query as a bare length count."
+      },
+      {
+        "name": "has_negative_words",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A negative-lexicon flag is relevant to explaining low scores. However groundedness is questionable: the 'Not as Advertised' complaint row is flagged 0, showing the lexicon misses clear negativity, undermining reliability of the values."
+      },
+      {
+        "name": "has_positive_words",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Positive-word flag gives a sentiment axis useful for contrasting with low scores. Sampled values look sound (positive reviews flagged 1, the complaint flagged 0)."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly computed from existing numerator/denominator columns; a genuinely useful ratio to correlate with score. Slightly redundant with originals but adds a normalized axis."
+      },
+      {
+        "name": "has_complaint_markers",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Complaint markers directly target the query. But groundedness is weak: the clearly positive 'Delight'/'heaven' review is flagged 1, a false positive that contradicts the source, indicating a noisy marker rule."
+      },
+      {
+        "name": "uppercase_ratio",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Uppercase ratio can proxy shouting/emphasis, mildly relevant to negative reviews, but a weak generic surface feature. Values are computable from text."
+      },
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Punctuation count is a generic feature with modest leverage for score explanation; values are trivially derivable and match samples (all 0 here)."
+      },
+      {
+        "name": "question_count",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Question-mark count is near-constant (mostly 0) and offers little analytical leverage, though values are correctly derived."
+      },
+      {
+        "name": "is_low_score",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "As the target label this is useful for framing the analysis, but it is essentially a restatement of the existing Score column. Grounding is shaky: the 'Cough Medicine' row (medicinal but not clearly a rating) is flagged low_score=1 while source gives no explicit rating cue, suggesting derivation from Score which is fine—but the taffy/positive rows labeled 0 are consistent."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.78,
+    "rationale": "The set mixes genuinely relevant axes (helpfulness_ratio, sentiment/complaint flags, the low-score label) with several generic surface metrics (summary_length, text_length, uppercase_ratio, exclamation_count, question_count) that add limited leverage for explaining low scores. Most values are soundly derivable from the source text, but the lexicon/marker-based flags show observable misfires in the samples—'Not as Advertised' not flagged negative and the positive 'Delight' review flagged as a complaint—lowering confidence in groundedness for those columns."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 10
+}

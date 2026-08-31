@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "interaction_collaboration_loss",
+    "subject_modality_fit",
+    "instruction_quality",
+    "engagement_sentiment",
+    "emotional_distress",
+    "emotional_distress_signals"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.2,
+    "predictor_fraction": 0.5,
+    "n_predictors": 3,
+    "redundancy": 0.0,
+    "predictive_utility": 0.4,
+    "leakage_rate": 0.5
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "interaction_collaboration_loss",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Extracts a specific themed signal (loss of peer/collaborative interaction) from the open response that plausibly depresses satisfaction but is not a restatement of the score itself; a legitimate learnable predictor."
+      },
+      {
+        "name": "subject_modality_fit",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures whether the subject's hands-on/performance nature translated poorly to the modality; an external contextual signal that could drive dissatisfaction without being a function of the rating."
+      },
+      {
+        "name": "instruction_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Perceived teaching quality/responsiveness is a distinct upstream driver of satisfaction, not a deterministic restatement of the 1-5 score. Valid predictor."
+      },
+      {
+        "name": "engagement_sentiment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Affective engagement (enthusiastic vs. dreading/bored) is essentially a proxy restatement of satisfaction expressed in the same response. It is near-collinear with the focus and would leak the outcome rather than provide independent predictive signal."
+      },
+      {
+        "name": "emotional_distress",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Loss of motivation, frustration, and distress are affective manifestations largely inseparable from low satisfaction itself; treating them as predictors of satisfaction restates the outcome rather than predicting it."
+      },
+      {
+        "name": "emotional_distress_signals",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Duplicate of emotional_distress with near-identical value distribution; adds no new information and shares the same restatement/leakage problem."
+      }
+    ],
+    "n_predictors": 3,
+    "predictive_utility": 0.4,
+    "rationale": "Three columns (collaboration loss, subject-modality fit, instruction quality) capture upstream contextual/causal drivers that lie outside the satisfaction rating and carry genuine predictive signal. The remaining three (engagement_sentiment, emotional_distress, and its duplicate) encode the respondent's own affect, which is effectively the same latent construct as satisfaction expressed in the same open text—these leak/restate the focus rather than predict it, and the duplicated distress column adds redundancy. As a set, moderate but not strong independent leverage."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

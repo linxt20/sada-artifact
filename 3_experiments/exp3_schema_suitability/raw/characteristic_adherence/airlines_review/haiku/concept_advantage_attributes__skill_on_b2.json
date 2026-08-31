@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "focus_variable": "airline_competitive_advantage",
+  "concept": "airline_competitive_advantage",
+  "n_added_columns": 5,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "aircraft_cleanliness_maintenance",
+    "aircraft_modernity",
+    "ground_service_efficiency",
+    "fare_value_proposition"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.5745,
+    "facet_fraction": 1.0,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_competitive_advantage",
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Service quality delivered by cabin crew is a genuine constitutive aspect of an airline's competitive advantage in the passenger-experience dimension."
+      },
+      {
+        "name": "aircraft_cleanliness_maintenance",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Cabin cleanliness and maintenance is an aspect of the product/hardware experience an airline offers, a legitimate part-of the advantage concept."
+      },
+      {
+        "name": "aircraft_modernity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Fleet modernity is a facet of the airline's physical product offering; however it overlaps materially with cleanliness_maintenance since the dominant value 'well_maintained_modern' blends the two aspects."
+      },
+      {
+        "name": "ground_service_efficiency",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Ground/airport service efficiency (check-in, boarding) is a distinct constitutive aspect of the end-to-end service advantage."
+      },
+      {
+        "name": "fare_value_proposition",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Price/value proposition is a core facet of competitive advantage and does not overlap with the service or product facets."
+      }
+    ],
+    "facet_columns": [
+      "cabin_crew_service_quality",
+      "aircraft_cleanliness_maintenance",
+      "aircraft_modernity",
+      "ground_service_efficiency",
+      "fare_value_proposition"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "rationale": "All five columns are true meronymic facets of airline competitive advantage rather than external predictors, causes, or restatements, so the part-of requirement is met. Mutual exclusivity is lowered by the substantial conceptual and empirical overlap between aircraft_cleanliness_maintenance and aircraft_modernity: both target the physical aircraft/hardware aspect and their top values ('well_maintained_modern', 'clean_well_maintained') conflate cleanliness with modernity, so they do not cleanly carve non-overlapping aspects. Exhaustiveness is moderate: the set covers crew service, physical product (two overlapping facets), ground service, and price/value, but omits salient constitutive facets such as seat comfort/legroom, food & beverage quality, inflight entertainment/connectivity, and network/schedule/reliability (punctuality) — several of which are prominent advantage aspects and are even present as original columns. The set is coherent but skews toward hardware and under-covers the in-flight comfort and operational-reliability dimensions of the concept."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

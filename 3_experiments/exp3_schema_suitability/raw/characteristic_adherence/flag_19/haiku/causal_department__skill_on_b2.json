@@ -1,0 +1,97 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do expense decline rates differ across departments?",
+  "focus_variable": "departmental_declined_rate_variation",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "asset_category_type",
+    "procurement_timing_signal",
+    "creation_origin",
+    "asset_specification_completeness",
+    "expense_nature"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "departmental_declined_rate_variation (whether/why an expense is declined across departments)",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of asset (hardware/service/travel) plausibly affects both which departments incur the expense and whether it is declined (approval policies differ by asset type). It is a common cause of department-mix and decline outcome, not named in the query."
+      },
+      {
+        "name": "procurement_timing_signal",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Procurement pace (rapid vs standard) is a candidate cause whose effect on decline could be attributed -- rushed procurement may be more likely declined. It behaves as a manipulable treatment rather than a pre-existing common cause."
+      },
+      {
+        "name": "creation_origin",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How the record originated (auto_generated vs manual) can drive both the type/pace of expense (department workflows) and decline likelihood (auto records may pass differently), acting as a common cause. Surfaced from data, not the query."
+      },
+      {
+        "name": "asset_specification_completeness",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Completeness of the CI/specification plausibly influences both submission quality (which departments produce) and decline (incomplete records get declined). Arguable it is a mediator between procurement quality and decline, but as data-quality it more resembles a common cause; surfaced from the 'ci' field."
+      },
+      {
+        "name": "expense_nature",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Largely redundant with asset_category_type (hardware/service/travel/office); a near-duplicate categorical descriptor rather than an independent confounder. Adds little distinct causal information."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "procurement_timing_signal"
+    ],
+    "confounders": [
+      {
+        "name": "asset_category_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "creation_origin",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "asset_specification_completeness",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The query names only the outcome (department-level decline variation) and department itself; none of the added columns were copied from the query, so any confounders here are genuinely surfaced. There is a plausible treatment (procurement_timing_signal) and several candidate common causes (asset_category_type, creation_origin), which shows some real causal setup. However the confounders are only moderately convincing: several columns are near-duplicates (asset_category_type vs expense_nature), asset_specification_completeness is arguably a mediator of decline rather than a common cause, and none is tied clearly to BOTH the treatment (procurement pace) and the outcome. The set gestures at causal estimation but does not cleanly separate treatment from confounders, so confounder quality is moderate rather than strong."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

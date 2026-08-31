@@ -1,0 +1,123 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "focus_variable": "percent_complete",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "primary_lever",
+    "action_plan_detail",
+    "feedback_loop_present",
+    "goal_specificity",
+    "target_ambition_level",
+    "time_horizon",
+    "measurement_mechanism",
+    "goal_category_alignment"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.72,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.72,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "percent_complete",
+    "per_column": [
+      {
+        "name": "primary_lever",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The choice of primary lever (market expansion, automation, process optimization, etc.) is a decision an actor can set/change, and aligns with 'goal-management practices' the query proposes adopting. It is intervenable."
+      },
+      {
+        "name": "action_plan_detail",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Whether a goal has a single action vs. multi-step detailed plan is a settable practice — a direct instance of 'goal-management practices described by top performers.'"
+      },
+      {
+        "name": "feedback_loop_present",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Presence of a feedback loop is an intervenable practice teams could adopt; a lever the query explicitly frames as adoptable."
+      },
+      {
+        "name": "goal_specificity",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Whether goals include baseline+target vs. target only is a configurable goal-setting practice — intervenable and consistent with the treatment set."
+      },
+      {
+        "name": "target_ambition_level",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Ambition level of the target is a common cause: it influences both which practices/levers get adopted and the achievable percent_complete (more ambitious targets are harder to complete). Not named in query. Plausible confounder to adjust for."
+      },
+      {
+        "name": "time_horizon",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Time horizon plausibly affects both which management practices are chosen and the likelihood/degree of completion. A genuine common cause not named in the query."
+      },
+      {
+        "name": "measurement_mechanism",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "The way progress is measured (financial metric, survey, KPI, turnover) is more a measurement/operationalization artifact than a common cause of both treatment and outcome; closer to how percent_complete is defined than a confounder."
+      },
+      {
+        "name": "goal_category_alignment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Goal category (revenue growth, satisfaction, cost reduction) is a domain that shapes both which levers/practices are applicable and baseline completion rates. A plausible common cause not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_lever",
+      "action_plan_detail",
+      "feedback_loop_present",
+      "goal_specificity"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "target_ambition_level",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "time_horizon",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "goal_category_alignment",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.72,
+    "rationale": "The added columns strongly realise the what-if claim. Multiple treatments (primary_lever, action_plan_detail, feedback_loop_present, goal_specificity) are genuine intervenable practices an actor could set/change and directly instantiate the 'goal-management practices' the query proposes adopting — satisfying requirement (a). For (b), several columns function as bona fide confounders that are common causes of both practice adoption and completion and were NOT named in the query: target_ambition_level, time_horizon, and goal_category_alignment. These demonstrate the capability under test. measurement_mechanism is better treated as a measurement/operationalization artifact of the outcome rather than a confounder. Overall this is a strong pass on the interventional what-if criterion."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

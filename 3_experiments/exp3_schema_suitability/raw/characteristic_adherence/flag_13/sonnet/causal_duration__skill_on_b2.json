@@ -1,0 +1,146 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do resolution duration values vary across tickets?",
+  "focus_variable": "resolution_duration_variation",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "affected_system_type",
+    "affected_scope",
+    "resolver_match",
+    "assigned_agent",
+    "open_hour_of_day",
+    "caller_type",
+    "is_repeat_or_cluster_incident"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 7,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 7,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_duration_variation",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category of incident plausibly affects both which agent/process handles it (treatment routing) and the resolution duration; a common cause candidate."
+      },
+      {
+        "name": "failure_mode",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The nature of the failure affects both how it is resolved (treatment) and how long it takes; plausible common cause of difficulty and handling."
+      },
+      {
+        "name": "affected_system_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "System type influences routing/assignment and inherent resolution complexity; plausible common cause."
+      },
+      {
+        "name": "affected_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (individual vs system-wide) affects prioritization/staffing (treatment) and duration; plausible common cause."
+      },
+      {
+        "name": "resolver_match",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the resolver matched (e.g., correct/appropriate resolver) is a candidate cause whose effect on duration is being attributed."
+      },
+      {
+        "name": "assigned_agent",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The agent handling the ticket is a candidate cause of duration variation; a plausible treatment whose effect is attributed."
+      },
+      {
+        "name": "open_hour_of_day",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Time of opening affects staffing availability (treatment/assignment) and duration; plausible common cause."
+      },
+      {
+        "name": "caller_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Caller type may affect prioritization/assignment and duration; plausible common cause."
+      },
+      {
+        "name": "is_repeat_or_cluster_incident",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Repeat/cluster status affects both handling approach and duration; plausible common cause, though could partly be a mediator."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "resolver_match",
+      "assigned_agent"
+    ],
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "failure_mode",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "affected_system_type",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "affected_scope",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "open_hour_of_day",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "caller_type",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "is_repeat_or_cluster_incident",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The query ('Why do resolution durations vary?') names no confounders, so all surfaced variables are genuinely derived from the data/text, satisfying the decisive test. The set supplies plausible treatments (assigned_agent, resolver_match) whose effect on duration is being attributed, and multiple candidate confounders that plausibly cause both the treatment (routing/assignment) and the outcome (duration): incident_category, failure_mode, affected_system_type, affected_scope. These are genuine common-cause candidates capturing intrinsic ticket difficulty that drives both who/how it is handled and how long it takes. Weaker items (caller_type, open_hour_of_day, is_repeat_or_cluster_incident) are plausible but partly ambiguous — is_repeat_or_cluster_incident in particular risks being a mediator/collider. Overall the columns do set up a causal estimation with treatment plus non-copied confounders, hence moderate-to-good confounder quality."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

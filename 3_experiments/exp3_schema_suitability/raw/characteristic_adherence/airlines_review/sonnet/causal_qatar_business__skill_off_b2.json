@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "Low_Value_For_Money",
+    "Mentions_Seat_Issue",
+    "Mentions_Service_Complaint",
+    "Mentions_Price_Complaint",
+    "Mentions_Delay_Or_Disruption",
+    "Avg_Service_Rating",
+    "Overall_Vs_Service_Gap"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome",
+    "per_column": [
+      {
+        "name": "Low_Value_For_Money",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of non-recommendation derived from Value For Money; a plausible driver whose effect on the outcome is being attributed."
+      },
+      {
+        "name": "Mentions_Seat_Issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause (seat problems) whose association with non-recommendation is of interest; not obviously a common cause of another treatment."
+      },
+      {
+        "name": "Mentions_Service_Complaint",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause reflecting service complaints, a direct driver of the recommendation outcome, not a common cause."
+      },
+      {
+        "name": "Mentions_Price_Complaint",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause; overlaps with price/value driver. Direct driver, not a confounder of another treatment."
+      },
+      {
+        "name": "Mentions_Delay_Or_Disruption",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause; delays could plausibly drive both dissatisfaction and non-recommendation, but here it is framed as a direct driver rather than a common cause adjusted for."
+      },
+      {
+        "name": "Avg_Service_Rating",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "An aggregate of the service rating dimensions; lies on the causal path from service quality to recommendation rather than being a common cause of a treatment and the outcome."
+      },
+      {
+        "name": "Overall_Vs_Service_Gap",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "A derived contrast between overall and service ratings; a constructed difference driven by both, functioning as a collider/mediator artifact, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "Low_Value_For_Money",
+      "Mentions_Seat_Issue",
+      "Mentions_Service_Complaint",
+      "Mentions_Price_Complaint",
+      "Mentions_Delay_Or_Disruption"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply several candidate treatments (low value-for-money, seat/service/price complaints, delays), so requirement (a) is met. However, requirement (b) is not: no column functions as a genuine confounder -- a common cause of BOTH a treatment and the non-recommendation outcome that must be adjusted to avoid bias. Plausible confounders such as route, traveller type, or overall pre-existing expectations are not surfaced as adjustment variables. The two aggregate columns (Avg_Service_Rating, Overall_Vs_Service_Gap) are a mediator and a collider/derived contrast respectively, and adjusting for them would be an error. Because there are no true confounders surfaced from the data, the causal-attribution setup is incomplete and would yield biased attribution."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

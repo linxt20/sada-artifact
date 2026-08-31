@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "problem_manifestation",
+    "affected_scope",
+    "failure_mechanism"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.765,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Characterization/taxonomy of hardware failures in incidents (how hardware problems manifest, what they affect, and why they fail)",
+    "per_column": [
+      {
+        "name": "problem_manifestation",
+        "supports_focus": true,
+        "rationale": "Captures the observable symptom of the hardware problem (connectivity, not powering on, error message), a core facet of characterizing hardware issues."
+      },
+      {
+        "name": "affected_scope",
+        "supports_focus": true,
+        "rationale": "Captures what the hardware problem affects (infrastructure vs single-user device vs shared equipment), an impact facet consistent with the same hardware-problem focus."
+      },
+      {
+        "name": "failure_mechanism",
+        "supports_focus": true,
+        "rationale": "Captures the underlying cause/mode of failure (component, power, boot, connectivity), a causal facet distinct from manifestation, deepening the same focus."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.85,
+    "rationale": "All three columns centre coherently on a single inferable focus: the nature of hardware problems in these incidents. They form a sound multi-facet structure (symptom/manifestation, impact/scope, root cause/mechanism) rather than a restatement or noise, and each is at a useful categorical granularity. Manifestation and failure_mechanism overlap somewhat (connectivity_issue vs connectivity_failure), slightly blurring the symptom/cause distinction, but they remain distinguishable enough to add analytical value. The focus is actionable: an analyst could triage, prioritize, and target remediation by manifestation, scope, and mechanism. High NULL counts (especially failure_mechanism) are a data-coverage concern but do not undermine the conceptual coherence or actionability of the proposed focus."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

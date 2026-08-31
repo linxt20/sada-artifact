@@ -1,0 +1,98 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "Service_Quality_Score",
+    "Comfort_Quality_Score",
+    "Value_Perception_Gap",
+    "Route_Is_Long_Haul",
+    "Premium_Class_Flown",
+    "Service_Consistency",
+    "Overall_Experience_Quality",
+    "Meets_High_Rating_Threshold",
+    "Business_Traveler",
+    "Review_Is_Verified"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.2
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "Service_Quality_Score",
+        "role": "predictor",
+        "rationale": "Aggregate of service-related sub-ratings; a legitimate external feature that correlates with overall rating but is not a deterministic function of it."
+      },
+      {
+        "name": "Comfort_Quality_Score",
+        "role": "predictor",
+        "rationale": "Aggregate of seat comfort dimensions; distinct sub-rating aspect that plausibly predicts overall satisfaction without restating it."
+      },
+      {
+        "name": "Value_Perception_Gap",
+        "role": "predictor",
+        "rationale": "Derived difference between value-for-money and service/comfort perception; carries signal about expectation mismatch, external to the overall rating."
+      },
+      {
+        "name": "Route_Is_Long_Haul",
+        "role": "predictor",
+        "rationale": "Route characteristic known before outcome; plausible predictor of satisfaction and directly relevant to the route-optimisation query."
+      },
+      {
+        "name": "Premium_Class_Flown",
+        "role": "predictor",
+        "rationale": "Cabin class is a pre-outcome attribute that plausibly influences overall rating; legitimate feature."
+      },
+      {
+        "name": "Service_Consistency",
+        "role": "predictor",
+        "rationale": "Dispersion (e.g., std dev) across sub-ratings; captures variance signal that is not a simple restatement of the overall rating."
+      },
+      {
+        "name": "Overall_Experience_Quality",
+        "role": "leakage",
+        "rationale": "An overall composite quality score that is essentially a continuous restatement of the overall rating; using it to predict overall_rating_gt7 leaks the target."
+      },
+      {
+        "name": "Meets_High_Rating_Threshold",
+        "role": "leakage",
+        "rationale": "Binary flag whose value distribution mirrors the target and is defined as crossing a high-rating threshold; this is a near-identical restatement/leak of overall_rating_gt7."
+      },
+      {
+        "name": "Business_Traveler",
+        "role": "predictor",
+        "rationale": "Traveller-type indicator known independently of the outcome; plausible predictor of satisfaction."
+      },
+      {
+        "name": "Review_Is_Verified",
+        "role": "predictor",
+        "rationale": "Verification status is an external metadata attribute that may correlate with rating behaviour; legitimate weak predictor."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.55,
+    "rationale": "Most added columns are legitimate external predictors derived from sub-ratings and pre-flight attributes (service/comfort scores, consistency, route, class, traveller type, verification), giving genuine leverage for modelling overall_rating_gt7. However, two columns (Overall_Experience_Quality and Meets_High_Rating_Threshold) are restatements/leakage of the target — the latter is a near-duplicate binary of the focus variable — which inflates apparent performance and would corrupt an honest model. Because the aggregate sub-rating features largely re-package information already present in the original sub-rating columns, the net NEW predictive leverage beyond the originals is moderate, and the presence of clear leakage lowers the set's trustworthiness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

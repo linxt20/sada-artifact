@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "customer_service_responsiveness",
+    "value_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.635,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.505,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.57,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.63,
+        "hallucination_observed": true,
+        "rationale": "Provides a text-derived categorical axis on how responsive/helpful staff were, which is a genuine potential driver of Overall Rating. It partially overlaps the existing numeric 'Staff Service' column, but the qualitative categories (proactive_helpful vs dismissive_rude vs problem_unresolved) capture responsiveness nuance beyond a raw score, so it retains analytical leverage. Groundedness is mostly sound: samples 1, 3, 4, 5 clearly describe attentive/caring crew and are correctly tagged proactive_helpful_accommodating. However, sample 2 is entirely about seat/IFE quality with no mention of any crew interaction, yet it was labeled 'indifferent_slow' — an invented service judgment on a source that is silent about service, which should have been unknown/not-stated. That fabrication lowers groundedness."
+      },
+      {
+        "name": "value_perception",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.38,
+        "hallucination_observed": true,
+        "rationale": "A value/price framing is relevant to satisfaction drivers, but this column is fairly redundant with the existing 'Value For Money' rating and, as produced, behaves largely as a sentiment proxy rather than a distinct value axis. Groundedness is weak: none of the five sampled reviews mention price, cost, or value at all, yet every row received a confident value label (e.g., 'excellent_great_value' for a purely quality-praising 9/10 review, 'good_fair_value' for 'excellent performance on all fronts'). Most tellingly, sample 2 discusses only bad seats/audio and is labeled 'overpriced_poor_value' — 'overpriced' is invented since no cost is stated. These are unwarranted quality-to-value inferences on silent text, indicating systematic hallucination."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.5,
+    "rationale": "Both added columns supply text-derived categorical dimensions (service responsiveness, value perception) that are plausible drivers of Overall Rating and give new grouping/modeling axes, though each partly overlaps existing numeric ratings (Staff Service, Value For Money). Usefulness is moderate-to-good overall. Groundedness is the main weakness: customer_service_responsiveness is well-grounded on 4 of 5 samples but fabricates a service verdict on a service-silent row, while value_perception repeatedly asserts value/price judgments (including an 'overpriced' label) on reviews that never mention cost, effectively converting sentiment into value claims the text does not support. Silent rows should have been left unknown rather than confidently classified."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 2
+}

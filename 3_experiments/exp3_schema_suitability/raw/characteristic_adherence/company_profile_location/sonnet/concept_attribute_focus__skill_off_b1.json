@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What market-expansion focus should analysts study?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "Industry Sector",
+    "Geographic Cluster",
+    "Market Expansion Potential"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.85,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.4567,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.6533,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Industry Sector",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "A strong grouping axis for market-expansion analysis, letting analysts compare sectors. Most classifications are well grounded (23andMe->Healthcare, 5AM Ventures->VC, Addepar->Cloud/Enterprise Software is defensible). However '280 Group', a product management training/consulting firm, is labeled 'AI & Machine Learning' with no textual support, an invented specific. The catch-all 'Other Technology' (Accel, a VC, placed there rather than Venture Capital) also weakens grounding."
+      },
+      {
+        "name": "Geographic Cluster",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Geographic clustering is directly relevant to market-expansion focus and provides a genuine grouping axis. But the produced values contradict the source addresses: 23andMe at 899 W Evelyn Ave (Mountain View area) is plausibly Core, yet 280 Group at 'S Santa Cruz Ave' (Los Gatos) labeled 'South Bay (San Jose)' is a stretch, and both Sand Hill Road entries (Menlo Park) are labeled 'Redwood City / San Mateo' rather than the Menlo Park corridor, contradicting the actual location. This misassignment lowers groundedness."
+      },
+      {
+        "name": "Market Expansion Potential",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Directly targets the query and offers a rankable High/Medium/Low axis, so it is analytically useful. However the values are largely unsupported by the source text: nothing in the brief company descriptions or addresses warrants a confident High/Medium/Low expansion judgment (e.g., 23andMe->Low, Addepar->High, 280 Group->Medium appear asserted rather than derived). These look like invented confident specifics on silent inputs."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.45,
+    "rationale": "All three columns give genuine, non-redundant axes (sector, geography, expansion score) that directly serve the market-expansion query, so analytical usefulness is high. Groundedness is the weak point: Industry Sector is mostly sound but has clear fabrications (280 Group as AI/ML), Geographic Cluster contradicts the actual addresses in several samples (Sand Hill Road/Menlo Park mislabeled), and Market Expansion Potential is an unsupported inferred rating with little textual basis. Notable hallucination risk across the added columns."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

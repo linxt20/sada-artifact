@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some incidents take longer to resolve?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "open_to_close_days_bucket",
+    "incident_category",
+    "failure_mode",
+    "affected_component",
+    "scope_indicator",
+    "assigned_at_open",
+    "resolver_match",
+    "assignee_id",
+    "caller_id_group"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7644,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8111,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7877,
+    "hallucination_rate": 0.2222
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "open_to_close_days_bucket",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "This bucketed resolution duration is the direct dependent variable for 'why do some incidents take longer to resolve' -- highly useful for grouping. Values are derivable from opened_at/closed_at. However the row samples show a grounding flaw: rows 2-5 have identical sys_updated_on and closed_at timestamps yet are bucketed 'one_to_three_days', while row 1 with the same pattern is 'same_day'. Without opened_at shown the derivation appears inconsistent, lowering groundedness somewhat."
+      },
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A cleaned category (email, vpn, database, network) gives a genuine axis to compare resolution times across incident types. It overlaps partially with the original 'category' column but is derived from short_description and is more granular/text-grounded. Sample values (VPN->vpn, WiFi->network_connectivity, database->database) are sound readings of the source text."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Failure mode (connection_failure, service_unresponsive, outage) is a strong new axis for explaining resolution duration and not redundant with existing columns. Mostly well grounded: 'Cannot connect'->connection_failure, 'not working properly'->service_unresponsive are reasonable, though some mappings require mild inference and null for silent rows is acceptable."
+      },
+      {
+        "name": "affected_component",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes server_side / network_infrastructure / client_application, a useful grouping axis for resolution time. Grounding is generally reasonable but some inferences are aggressive, e.g. 'Email system not working' -> client_application is a debatable read (could be server_side), indicating warranted-but-uncertain inference rather than direct extraction."
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Scope (system_wide, department_wide, individual_user) is a plausible driver of longer resolution and a good analytical axis. But some values are not well supported: 'Cannot connect to database' -> individual_user and 'Email system not working properly' -> system_wide assert scope the terse text does not state, indicating some invented specifics."
+      },
+      {
+        "name": "assigned_at_open",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A boolean for whether the incident was assigned at open time is a reasonable explanatory factor for delays. It is near-binary skewed (435 true) reducing leverage somewhat, and its derivation from the shown fields is not clearly demonstrated in the samples, giving moderate groundedness."
+      },
+      {
+        "name": "resolver_match",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Whether assigned_to matches closed_by is a plausible workflow signal that could relate to resolution time. Derivable from original columns, so it is somewhat mechanical but adds a comparison axis. Moderate usefulness; derivation is sound where those fields exist, null where not."
+      },
+      {
+        "name": "assignee_id",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is essentially a normalized restatement of the existing 'assigned_to' column, so it is largely redundant, though a clean assignee axis with an explicit 'unassigned' value can help compare resolution times by resolver. Values are grounded in the original assignment fields."
+      },
+      {
+        "name": "caller_id_group",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Appears to be a near-restatement of the original caller_id (individual caller names, not a meaningful grouping despite the name). It adds little analytical leverage beyond the existing column for explaining resolution duration. Values are grounded in caller_id."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.82,
+    "rationale": "The added set provides the key dependent variable (resolution-time bucket) plus several genuinely useful explanatory axes (incident_category, failure_mode, affected_component, scope_indicator) that let the analyst group and compare why some incidents resolve slower. A few columns are redundant restatements of originals (assignee_id, caller_id_group) or skewed near-constants (assigned_at_open), lowering holistic usefulness. Groundedness is generally solid for extraction-style columns, but text-inference columns (scope_indicator, affected_component, and inconsistent duration bucketing in the samples) occasionally assert specifics the terse short_descriptions do not clearly support, warranting a moderate deduction."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 9
+}

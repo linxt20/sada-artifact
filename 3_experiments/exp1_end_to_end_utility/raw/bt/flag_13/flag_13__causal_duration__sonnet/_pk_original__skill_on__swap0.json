@@ -1,0 +1,104 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.7,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Database connection issue` averages **40.9 min** (n=8)",
+        "why": "concrete subtype with count"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "overall standard deviation is **16.8 min**",
+        "why": "quantifies spread vs group gaps"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "closed_at` and it exactly matches `sys_updated_on`",
+        "why": "flags data provenance honestly"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "location_specific` printing (avg. ~44.6 min)",
+        "why": "concrete subgroup magnitude"
+      },
+      {
+        "dimension": "depth",
+        "quote": "connectivity_failure averages ~31.3 min",
+        "why": "failure-mode segmentation"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Duration values appear to be capped/truncated at 60 minutes",
+        "why": "notes data caveat"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "A cites verifiable in-table columns while B relies on unexplained derived fields, weakening its coherence.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 4,
+  "added_columns": [
+    "aircraft_product_deprecation",
+    "catering_quality_decline",
+    "product_degradation_perception",
+    "traveler_type_context"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.55,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.4375,
+    "source_groundedness__table_level": 0.42,
+    "b1_overall": 0.4938,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "aircraft_product_deprecation",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Fleet age/product-deprecation is a plausible axis for explaining non-recommendations, but the source texts rarely state fleet identity. Sample 1 ('seat reclined on its own') is coded 'older_fleet' as a speculative inference, and sample 3 'newer_fleet' is asserted with no aircraft mention. These are confident specifics the text does not support, though 'Unknown' rows are handled correctly."
+      },
+      {
+        "name": "catering_quality_decline",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Catering quality is a relevant driver for recommendation. Where reviews describe food ('Great tasting food' -> excellent_consistent; sample 4 -> excellent_consistent) the coding is well grounded, and silent rows are correctly 'Unknown'. However, sample 2 'average_declining' overreads a text that only mentions slow service and layout, not any catering decline over time — an unwarranted 'declining' inference."
+      },
+      {
+        "name": "product_degradation_perception",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Directly targets the query's 'why non-recommended' theme, giving a decline-perception axis. But values are frequently unsupported: sample 1 'noticeable_decline' and sample 5 'recent_cutbacks' assert a temporal degradation narrative the reviews never mention (they describe a broken seat and a lost bag, respectively). The 'decline/cutback' framing invents a trend not present in the source."
+      },
+      {
+        "name": "traveler_type_context",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Traveller type is a legitimate grouping axis and partly redundant with the existing 'Type of Traveller' column, reducing leverage. Grounding is shaky: sample 3 coded 'family_leisure' with no family mention, sample 1 'couple_leisure' is supportable ('our seats'), and sample 4 'business_traveller' is inferred from tone rather than stated status."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.42,
+    "rationale": "The four columns propose reasonable analytical axes (fleet quality, catering, perceived degradation, traveller type) for explaining non-recommendations, and silent rows are appropriately marked Unknown. However, groundedness is the key weakness: several columns (aircraft fleet age, product-degradation/cutback perception) fabricate confident specifics and a temporal-decline narrative that the source reviews do not support, and traveler_type_context partly duplicates an existing original column. Analytical usefulness is moderate; source groundedness is undermined by recurrent unwarranted inference."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 4
+}

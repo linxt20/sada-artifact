@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "n_added_columns": 3,
+  "added_columns": [
+    "is_processed",
+    "days_to_process",
+    "amount_decile"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7333,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7667,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_processed",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binary flag derived from presence/absence of processed_date (nan -> 0). It is well-grounded and offers a usable grouping axis (processed vs not), but it is largely a restatement of whether processed_date exists, so its analytical leverage is modest."
+      },
+      {
+        "name": "days_to_process",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Elapsed days between opening and processing is a genuinely useful new axis for spotting delays/outliers. However for unprocessed rows (nan processed_date) it invents large specific values (e.g. 970, 965, 1051) rather than leaving them unknown, asserting a concrete duration the source does not support. This partially contradicts the is_processed=0 rows."
+      },
+      {
+        "name": "amount_decile",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Deciles of the existing amount column give a clean, uniform banding (50 per bin) that supports grouping and comparison of spend levels. It is a sound transformation of a present numeric column; the decile values are derivable, though the sample lacks amount to fully verify."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns provide reasonable new axes (spend banding, processing latency, processed flag) for exploring travel-expense records. amount_decile and is_processed are well-grounded transformations of existing fields; days_to_process is the most analytically valuable but injects fabricated large durations for rows with missing processed_date instead of marking them unknown, which lowers overall groundedness. No completeness penalty applied."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

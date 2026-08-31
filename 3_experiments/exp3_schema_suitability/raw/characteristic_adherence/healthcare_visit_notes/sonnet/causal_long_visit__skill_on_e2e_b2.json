@@ -1,0 +1,117 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which clinical factors best explain longer visit durations?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "visit_type_category",
+    "condition_acuity",
+    "procedure_performed",
+    "admission_or_urgent_referral",
+    "counseling_complexity",
+    "multimorbidity_signal",
+    "multimorbidity_or_polypharmacy"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "visit_type_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of visit (chronic followup, acute illness, wellness, emergency) plausibly drives both what clinical interventions occur (treatment-like factors) and the visit duration. It is a common upstream cause and was not named in the query."
+      },
+      {
+        "name": "condition_acuity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Acuity plausibly causes both whether procedures/admissions occur and how long the visit lasts. It sits upstream of the candidate causes and the outcome. Related to 'urgency' already in the table but surfaced here as a clinical severity variable; not restated in the query."
+      },
+      {
+        "name": "procedure_performed",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A concrete candidate cause whose effect on duration is being attributed: performing a procedure directly lengthens a visit."
+      },
+      {
+        "name": "admission_or_urgent_referral",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Admission/urgent referral is typically downstream of acuity and is itself part of the process that lengthens the visit; it lies on the causal path from severity to duration rather than being a common cause of an independent treatment. Adjusting for it as a confounder would be an error."
+      },
+      {
+        "name": "counseling_complexity",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Amount of counseling is a candidate clinical factor whose effect on duration is being attributed; more counseling directly consumes visit time."
+      },
+      {
+        "name": "multimorbidity_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Multimorbidity plausibly causes both the intensity of clinical activity (counseling, procedures) and longer duration, making it a genuine common cause not named in the query."
+      },
+      {
+        "name": "multimorbidity_or_polypharmacy",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Near-duplicate of multimorbidity_signal; same confounding role, redundant. Common cause of clinical intensity and duration."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "procedure_performed",
+      "counseling_complexity"
+    ],
+    "confounders": [
+      {
+        "name": "visit_type_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "condition_acuity",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "multimorbidity_signal",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "multimorbidity_or_polypharmacy",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The set does set up a causal estimation: it supplies candidate treatments (procedure_performed, counseling_complexity) and several plausible common causes of both treatment and duration (visit_type_category, condition_acuity, multimorbidity). Crucially these confounders were surfaced from the clinical content rather than copied from the query, which only said 'clinical factors' and 'visit duration' — demonstrating the capability under test. Weaknesses: admission_or_urgent_referral is more a mediator/outcome-adjacent variable than a confounder (adjusting for it would bias attribution), and multimorbidity is duplicated, inflating apparent coverage. Overall a moderately strong but imperfect realisation of causal attribution."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_long_visit",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

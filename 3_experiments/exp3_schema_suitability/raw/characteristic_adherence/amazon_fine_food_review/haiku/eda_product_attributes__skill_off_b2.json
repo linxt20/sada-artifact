@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "focus_variable": "satisfaction_score",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "review_text_length",
+    "summary_length",
+    "exclamation_count",
+    "positive_words_count",
+    "negative_words_count",
+    "helpfulness_ratio",
+    "sentiment_score",
+    "review_quality",
+    "high_satisfaction"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.2667,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.4,
+    "interpretable_fraction": 0.3333
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_score",
+    "per_column": [
+      {
+        "name": "review_text_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "An external associational variable (review verbosity) that could relate to satisfaction, but as a raw character count it is extremely fine-grained with hundreds of near-singleton values; it must be binned before any meaningful segmentation/comparison can be drawn."
+      },
+      {
+        "name": "summary_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Same issue: a continuous length count spread across many values. Associational in principle, but not directly interpretable as well-separated categories without bucketing."
+      },
+      {
+        "name": "exclamation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Discrete, low-cardinality, and interpretable (proxy for emotional intensity). Values concentrate on 0/1/2/3+, allowing clean grouping and comparison against satisfaction."
+      },
+      {
+        "name": "positive_words_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable count with a small range (0-9), easily segmented. Plausibly associated with satisfaction, though it verges on tautology since positive language and high scores co-occur."
+      },
+      {
+        "name": "negative_words_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Interpretable in concept, but the distribution is near-constant (89% zeros), so it offers very little variation to compare across satisfaction levels."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A genuinely external community-signal variable (helpful votes fraction) distinct from the review content; interpretable and groupable (0, 1, and fractions), enabling a meaningful relationship with satisfaction."
+      },
+      {
+        "name": "sentiment_score",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is effectively pos-minus-neg word count; a bare sentiment aggregate that is essentially a proxy/restatement of the satisfaction signal rather than an independent attribute to compare against."
+      },
+      {
+        "name": "review_quality",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "An opaque composite score with undefined derivation and arbitrary values (0.34/0.67); not interpretable as a segmentation and provides no transparent axis for exploration."
+      },
+      {
+        "name": "high_satisfaction",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is a binarized version of the focus variable itself, not an external attribute; it restates satisfaction and cannot serve as an independent predictor to compare against it."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.4,
+    "rationale": "The set is dominated by mechanical text statistics. A few columns (exclamation_count, positive_words_count, helpfulness_ratio) are interpretable, low-cardinality external variables that support real segmentation against satisfaction, with helpfulness_ratio being the strongest genuinely independent attribute. However, high_satisfaction restates the focus, sentiment_score and positive_words_count edge toward tautology with the satisfaction signal, review_quality is opaque, negative_words_count is near-constant, and the two length columns are too fine-grained to segment without binning. As a whole it provides only moderate support for discovering interpretable relationships with the focus."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

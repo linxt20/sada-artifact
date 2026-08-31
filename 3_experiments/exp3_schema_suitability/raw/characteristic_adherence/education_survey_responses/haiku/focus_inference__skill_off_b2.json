@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different themes do students raise in these open responses?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "theme_engagement",
+    "theme_technical_issues",
+    "theme_social_interaction",
+    "theme_hands_on_learning",
+    "theme_teacher_effectiveness",
+    "theme_asynchronous_benefits",
+    "theme_equity_concerns",
+    "theme_attention_focus",
+    "detected_themes"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.855,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Thematic content of student open responses -- the set of distinct themes (engagement, technical issues, social interaction, hands-on learning, teacher effectiveness, asynchronous benefits, equity, attention) students raise about their learning experience",
+    "per_column": [
+      {
+        "name": "theme_engagement",
+        "supports_focus": true,
+        "rationale": "Binary flag for a specific substantive theme; a coherent facet of response content."
+      },
+      {
+        "name": "theme_technical_issues",
+        "supports_focus": true,
+        "rationale": "Distinct theme flag, non-overlapping content facet."
+      },
+      {
+        "name": "theme_social_interaction",
+        "supports_focus": true,
+        "rationale": "Distinct theme flag centred on response content."
+      },
+      {
+        "name": "theme_hands_on_learning",
+        "supports_focus": true,
+        "rationale": "Distinct pedagogical theme flag."
+      },
+      {
+        "name": "theme_teacher_effectiveness",
+        "supports_focus": true,
+        "rationale": "Distinct theme flag; most prevalent, a meaningful facet."
+      },
+      {
+        "name": "theme_asynchronous_benefits",
+        "supports_focus": true,
+        "rationale": "Distinct theme flag capturing a specific content dimension."
+      },
+      {
+        "name": "theme_equity_concerns",
+        "supports_focus": true,
+        "rationale": "Distinct theme flag, substantive and actionable."
+      },
+      {
+        "name": "theme_attention_focus",
+        "supports_focus": true,
+        "rationale": "Distinct theme flag, though rare in the data."
+      },
+      {
+        "name": "detected_themes",
+        "supports_focus": true,
+        "rationale": "Aggregated co-occurring theme set; usefully summarises multi-theme responses and confirms the decomposition."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "rationale": "All added columns centre tightly on ONE coherent, data-inferable focus: the thematic content of student open responses. The system proposed a set of eight distinct, mutually differentiated substantive themes (not bare sentiment or token counts) plus an aggregate multi-label summary, forming a sound multi-facet decomposition at a useful granularity. This directly and non-trivially serves the query 'what different themes do students raise', giving analysts actionable, investigable dimensions (e.g., teacher effectiveness dominates; equity and attention are rare). The only minor deductions are that the themes are individual binary facets whose collective coverage is asserted rather than shown, and the redundant detected_themes column overlaps the flags; neither undermines the focus. Strong pass on all three criteria."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

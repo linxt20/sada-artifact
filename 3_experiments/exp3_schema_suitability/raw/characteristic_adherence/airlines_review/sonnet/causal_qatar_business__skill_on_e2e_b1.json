@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "seat_product_downgrade",
+    "seat_change_notification_given",
+    "seat_product_generation",
+    "cabin_crew_service_quality",
+    "service_consistency_across_legs",
+    "food_beverage_quality",
+    "ffp_elite_status_failure"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6357,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.6429,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.6393,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "seat_product_downgrade",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Directly relevant to explaining non-recommendation (seat product mismatch/downgrade is a plausible driver). But values are often unsupported: row 1 describes a malfunctioning reclining seat, not a 'standard_delivered' vs downgrade fact, and row 2 has no evidence of any downgrade. The category asserts downgrade states the text is silent on."
+      },
+      {
+        "name": "seat_change_notification_given",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (590 false / 2 true), so provides almost no grouping leverage for the query. Values are defensible mainly as 'not stated' defaults, which is acceptable, but the column adds little analytical value."
+      },
+      {
+        "name": "seat_product_generation",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A genuine axis for comparing seat hardware against outcomes. However values are frequently invented: row 2 and row 1 receive specific generations ('new_flat_bed_1x2x1', 'older_angled_or_partial_flat') with no textual basis. Confident specifics where the source is silent lower groundedness."
+      },
+      {
+        "name": "cabin_crew_service_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Service quality is a core explanatory axis for recommendation. Categorisations largely track the text ('poor_or_disengaged' for reclining-seat complaint is a slight stretch, but 'exceptional', 'good_standard' align well with samples). Mostly a sound reading."
+      },
+      {
+        "name": "service_consistency_across_legs",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Consistency across legs is an insightful axis (row 2 'pretty good on my aisle and extremely slow' → variable_high_low is well grounded). Some rows with a single leg get 'variable_high_low' without clear support, mild over-assertion, but generally warranted."
+      },
+      {
+        "name": "food_beverage_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Food quality is a relevant grouping dimension. Values mostly grounded ('excellent' for outstanding-food row, 'Unknown' appropriately for the baggage-complaint row). Row 1 'adequate' is unsupported since food isn't mentioned, a minor invented value."
+      },
+      {
+        "name": "ffp_elite_status_failure",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (574 false / 18 true) giving little analytical leverage for this query. Values are acceptable defaults for silent rows, so groundedness is moderate, but usefulness is low."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.63,
+    "rationale": "Several columns (cabin_crew_service_quality, service_consistency, food_beverage_quality, seat_product_downgrade) offer genuine explanatory axes for why Business-Class flights are not recommended. Two columns (seat_change_notification_given, ffp_elite_status_failure) are near-constant and add little leverage. Groundedness is the weaker dimension: the seat-related columns repeatedly assert specific product generations and downgrade states that the source texts do not support, while service/food columns are read more soundly from the text. 'Unknown' defaults for silent rows are used correctly and are not penalised."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

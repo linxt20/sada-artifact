@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "problem_category",
+    "system_component",
+    "symptom_severity",
+    "scope_dimension",
+    "time_to_resolution",
+    "assigned_to_completion_match",
+    "recurrence_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.656,
+    "focus_coherence": 0.82,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/typology of recurring IT incident problems -- characterizing each ticket by what kind of problem it represents (category, affected component, symptom, scope, and recurrence).",
+    "per_column": [
+      {
+        "name": "problem_category",
+        "supports_focus": true,
+        "rationale": "Directly types the problem (connectivity, email, database...), the core facet of problem taxonomy the query asks about."
+      },
+      {
+        "name": "system_component",
+        "supports_focus": true,
+        "rationale": "Identifies the affected component (vpn, database, email_server), a sound facet for grouping recurring problem types."
+      },
+      {
+        "name": "symptom_severity",
+        "supports_focus": true,
+        "rationale": "Captures the manifestation/symptom (connection_error, complete_outage), differentiating problem kinds beyond raw category."
+      },
+      {
+        "name": "scope_dimension",
+        "supports_focus": true,
+        "rationale": "Describes breadth of impact (individual_user, company_wide), a coherent facet distinguishing systemic vs isolated problems."
+      },
+      {
+        "name": "recurrence_pattern",
+        "supports_focus": true,
+        "rationale": "Explicitly flags repeated_component/repeated_user, directly operationalizing the 'recurring' aspect of the query."
+      },
+      {
+        "name": "time_to_resolution",
+        "supports_focus": false,
+        "rationale": "An operational metric on the incident, not a facet of the problem type; peripheral to a problem taxonomy focus."
+      },
+      {
+        "name": "assigned_to_completion_match",
+        "supports_focus": false,
+        "rationale": "A process/assignment-consistency check unrelated to what type of problem recurs; scatters the focus."
+      }
+    ],
+    "focus_coherence": 0.82,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The majority of columns (problem_category, system_component, symptom_severity, scope_dimension, recurrence_pattern) converge tightly on one coherent, data-inferable focus: a multi-facet typology of recurring incident problems. These form a genuinely differentiated analytical structure at a useful granularity -- category, component, symptom, scope, and recurrence are complementary rather than restatements -- and directly enable the 'recurring problem types' investigation, which is actionable (e.g., prioritizing VPN/email/database recurrences). Two columns (time_to_resolution and assigned_to_completion_match) drift toward operational/process metrics that do not characterize problem type, mildly diluting coherence and structure. Overall the set clearly realises focus inference rather than being a generic grab-bag."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

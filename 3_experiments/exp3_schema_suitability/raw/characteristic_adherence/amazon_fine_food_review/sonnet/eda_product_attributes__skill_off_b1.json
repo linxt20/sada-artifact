@@ -1,0 +1,160 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "n_added_columns": 16,
+  "added_columns": [
+    "mentioned_attributes",
+    "attribute_count",
+    "attr_taste_flavor",
+    "attr_texture",
+    "attr_smell_aroma",
+    "attr_quality",
+    "attr_packaging",
+    "attr_value_price",
+    "attr_ingredients",
+    "attr_health_nutrition",
+    "attr_size_quantity",
+    "attr_shipping_delivery",
+    "positive_word_count",
+    "negative_word_count",
+    "sentiment_ratio",
+    "review_length_bucket"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 16,
+    "n_judged_columns": 16,
+    "analytical_usefulness": 0.7125,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.8688,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.7907,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "mentioned_attributes",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly captures product attributes from review text, giving a strong axis to correlate with Score for the query. Row samples show sound extractions (taste, texture, value, shipping all warranted)."
+      },
+      {
+        "name": "attribute_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Derived count of attributes; offers a modest modeling axis (breadth of mentions vs score) but is largely a summary of mentioned_attributes. Values consistent with the parsed attributes."
+      },
+      {
+        "name": "attr_taste_flavor",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "One-hot flag enabling clean per-attribute Score comparison, exactly what the query needs. Grounded in text (flavor mentions correctly flagged)."
+      },
+      {
+        "name": "attr_texture",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Per-attribute flag useful for grouping by satisfaction; 'light, pillowy...not too chewy' correctly flagged as texture."
+      },
+      {
+        "name": "attr_smell_aroma",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct attribute axis for satisfaction analysis; low prevalence but valid. First sample's 'smells better' arguably missed but overall grounded."
+      },
+      {
+        "name": "attr_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful flag; 'good quality' correctly captured. Directly supports the query."
+      },
+      {
+        "name": "attr_packaging",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Groundable per-attribute flag; strong axis to relate to Score."
+      },
+      {
+        "name": "attr_value_price",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "'great price' correctly flagged; good comparison axis for satisfaction."
+      },
+      {
+        "name": "attr_ingredients",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Grounded (Filberts/nuts, root beer extract) and provides a useful grouping dimension."
+      },
+      {
+        "name": "attr_health_nutrition",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Valid distinct attribute axis; grounded where mentioned, correctly absent otherwise."
+      },
+      {
+        "name": "attr_size_quantity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "'small sized' and 'tiny squares' correctly flagged. Useful satisfaction axis, though size interpretation is occasionally loose."
+      },
+      {
+        "name": "attr_shipping_delivery",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "'Delivery was very quick' correctly flagged. Note: sample 2 flags shipping for a mislabeling issue, a slightly loose reading, but generally grounded."
+      },
+      {
+        "name": "positive_word_count",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Generic lexicon-based count; weak analytical leverage for identifying which product ATTRIBUTES drive satisfaction. Values are plausible but coarse and lexicon-dependent."
+      },
+      {
+        "name": "negative_word_count",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Generic sentiment count; largely a proxy for Score rather than an attribute axis. Plausibly derived but low leverage for the attribute-focused query."
+      },
+      {
+        "name": "sentiment_ratio",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Restatement of pos/neg counts and largely redundant with Score; adds little new axis for the attribute question. Derivable but noisy."
+      },
+      {
+        "name": "review_length_bucket",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Bucketed text length is a generic feature with weak relevance to which attributes drive satisfaction. Trivially derivable from text."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.88,
+    "rationale": "The core of the augmentation—mentioned_attributes plus the per-attribute one-hot flags—is well-targeted to the query, giving clean grouping axes to relate specific product attributes to satisfaction Scores, and the values are sound readings of the source text. attribute_count is a reasonable derived helper. The sentiment/length columns (positive_word_count, negative_word_count, sentiment_ratio, review_length_bucket) are generic, mutually redundant, and offer little leverage for the attribute-focused question, dragging table-level usefulness down. Groundedness is strong overall with only minor loose readings (e.g., shipping flag on a mislabeling complaint); no clear hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 16
+}

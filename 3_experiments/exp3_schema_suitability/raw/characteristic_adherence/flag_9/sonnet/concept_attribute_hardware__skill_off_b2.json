@@ -1,0 +1,58 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "focus_variable": "hardware_hiccups",
+  "concept": "hardware_hiccups",
+  "n_added_columns": 2,
+  "added_columns": [
+    "hardware_issue_type",
+    "is_hardware_incident"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.05,
+    "mece": 0.1414,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "hardware_hiccups",
+    "per_column": [
+      {
+        "name": "hardware_issue_type",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This column enumerates categories/kinds of hardware issues (Printer, Monitor, Keyboard, etc.). These are TYPES/instances of the concept, not constitutive aspects OF a hardware hiccup. A faceted decomposition would carve a single hardware issue into aspects like severity, affected component, failure mode, user impact, and remediation. Instead this is a single categorical typology of the whole concept, i.e., a restatement of 'what kind of hardware issue it is' rather than a part-of aspect."
+      },
+      {
+        "name": "is_hardware_incident",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A Yes/No flag for whether the incident is a hardware incident restates the identity/membership of the whole concept rather than decomposing it into constitutive aspects. It is a filter/scope indicator, not an aspect OF the hardware hiccup."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "hardware_issue_type",
+      "is_hardware_incident"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.05,
+    "rationale": "Neither added column is a constitutive facet (meronym) of 'hardware_hiccups'. 'is_hardware_incident' merely flags membership in the concept, and 'hardware_issue_type' provides a single categorical typology of the whole thing. Neither carves the concept into non-overlapping aspects OF a hardware issue (e.g., affected component, failure mode, severity, user impact, resolution). They also functionally overlap: the NULLs in hardware_issue_type (418) exactly mirror the 'No' count in is_hardware_incident (418), showing the type column is essentially a refinement of the same membership signal rather than an orthogonal facet. Because the columns are restatements/scoping flags rather than parts, the facet set is empty, exhaustiveness is near zero, and mutual exclusivity is undermined by the redundancy between the two columns."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

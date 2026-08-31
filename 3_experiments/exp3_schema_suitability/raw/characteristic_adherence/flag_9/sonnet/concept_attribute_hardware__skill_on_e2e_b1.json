@@ -1,0 +1,40 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "n_added_columns": 1,
+  "added_columns": [
+    "hardware_scope"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 1,
+    "n_judged_columns": 1,
+    "analytical_usefulness": 0.85,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.725,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Categorizing incidents by hardware scope (server, network, individual device, shared office device) gives a genuine new axis for grouping the kinds of hardware issues the query asks about, so usefulness is high. Groundedness is mixed: software-installation rows correctly map to 'Unknown', which is appropriate silent behavior. However, the mapping of 'Unable to establish connection to MySQL server' to 'server_infrastructure' is an inferential leap -- the text describes a connectivity/database issue and does not clearly warrant a hardware-server categorization; it could be a network or client-side problem. The large volume of confident non-null scope assignments raises concern that some values assert hardware specifics the short descriptions may not support."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.6,
+    "rationale": "The single added column provides a meaningful categorical axis directly aligned with the query about kinds of hardware issues, enabling grouping and comparison. It handles silent (software-only) rows sensibly with 'Unknown'. The main weakness is groundedness: at least one sample shows a specific hardware-infrastructure inference drawn from text that describes a software/connectivity issue rather than clearly identified hardware, indicating a tendency to assert hardware specifics the source may not support."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 1
+}

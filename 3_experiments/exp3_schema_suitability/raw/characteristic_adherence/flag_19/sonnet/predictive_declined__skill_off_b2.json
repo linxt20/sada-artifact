@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "missing_source_id",
+    "missing_processed_date",
+    "high_risk_dept_category",
+    "high_risk_user",
+    "decline_risk_score"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.4
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "role": "predictor",
+        "rationale": "Derived from source_id, not from the outcome. A missing source reference is a plausible antecedent signal (incomplete submission) that could correlate with declines without restating them. Legitimate predictor, though it may partly overlap with processing metadata."
+      },
+      {
+        "name": "missing_processed_date",
+        "role": "leakage",
+        "rationale": "processed_date is populated as part of the processing/resolution of the expense. Whether it is missing is largely determined by whether the item was actually processed, which is entangled with the final state outcome. This is only knowable in relation to the processing that also yields decline/approval, so it leaks the outcome rather than predicting it ex ante."
+      },
+      {
+        "name": "high_risk_dept_category",
+        "role": "predictor",
+        "rationale": "A flag combining department and category, both available at submission time. It encodes prior base rates of these attributes and lies outside the focus variable, carrying plausible predictive signal."
+      },
+      {
+        "name": "high_risk_user",
+        "role": "predictor",
+        "rationale": "A user-level attribute known before the outcome. Users with a history of problematic expenses plausibly predict declines; it does not restate the focus and is a legitimate feature."
+      },
+      {
+        "name": "decline_risk_score",
+        "role": "leakage",
+        "rationale": "An aggregate 'decline risk' score whose construction is defined in terms of the decline outcome. Absent evidence it is built purely from ex-ante predictors on a held-out basis, a score named and scaled to the target typically encodes the label (target leakage) and effectively restates/anticipates the focus."
+      }
+    ],
+    "n_predictors": 3,
+    "predictive_utility": 0.45,
+    "rationale": "Three columns (missing_source_id, high_risk_dept_category, high_risk_user) are legitimate ex-ante predictors derived from submission-time attributes and offer modest genuine leverage beyond the raw columns by encoding base rates and completeness signals. However, two columns are problematic: missing_processed_date is entangled with whether the item was processed and thus leaks the outcome, and decline_risk_score is a target-derived score that restates/leaks the label. As a set, real added predictive value is moderate but diluted by two leakage columns that a strict evaluation cannot credit."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

@@ -1,0 +1,63 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined travel expenses?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "is_travel_declined",
+    "amount_risk_level",
+    "item_type",
+    "days_to_process"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.6875,
+    "source_groundedness__table_level": 0.69,
+    "b1_overall": 0.7188,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_travel_declined",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Directly isolates the target population (declined travel expenses) that the query centers on, giving a clean grouping axis. However, groundedness is uncertain: the sampled rows are all hardware/asset entries with no travel context yet are labeled 0, which is plausible, but there is no visible evidence in the samples of how a '1' is warranted from source text like category/type. The flag is derivable in principle from state+category fields, so moderately grounded."
+      },
+      {
+        "name": "amount_risk_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "rationale": "Bucketing amount into Low/Medium/High offers a genuine modeling axis for whether high-value travel claims are declined more often, relevant to the reduction query. Values are derivable from the original 'amount' column via thresholds, so reasonably grounded, though the samples don't show amount to fully verify the mapping.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "item_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "rationale": "Categorizes the 'ci' text into item classes, a legitimate new axis to see which item categories drive declines. Sampled values (Dell Latitude→Laptop, OptiPlex→Desktop/Server, AWS EC2→Other) are sound readings of the source text. Usefulness is somewhat tempered because most items are laptops/desktops rather than travel items, but it remains a valid categorical grouping.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "days_to_process",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "rationale": "Processing latency is a plausible driver/correlate of declines and gives a numeric axis to model. It should derive from opened_at and processed_date; the 'nan' processed_date row correctly yields null. However, samples show values (5, 14, 9) that cannot be verified against opened_at since opened_at is not shown, and one row has processed_date but the derivation basis is opaque, lowering confidence."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.69,
+    "rationale": "The added columns collectively provide several genuine analytical axes (target flag, amount risk buckets, item categorization, processing latency) that support investigating what drives declined travel expenses. Groundedness is generally acceptable and silent rows are handled reasonably (null for nan dates), but is_travel_declined and days_to_process lack visible source evidence in the samples to fully confirm their derivations, and item categorization skews toward non-travel hardware. No clear contradictions or invented facts observed in the provided samples."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

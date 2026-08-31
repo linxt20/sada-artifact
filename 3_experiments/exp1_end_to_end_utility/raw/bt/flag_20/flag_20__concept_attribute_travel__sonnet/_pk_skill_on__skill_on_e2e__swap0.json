@@ -1,0 +1,114 @@
+{
+  "var_a": "skill_on",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.7,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "132 of 146 travel-category rows ... flagged travel_unexpected",
+        "why": "concrete counts and segments"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "34 of 146 travel rows (23%) are flagged True",
+        "why": "numbers tied to columns"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "28 rows flagged for both hardware mismatch and personal/business ambiguity",
+        "why": "decision-ready priority"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "amount alone is not a reliable risk discriminator",
+        "why": "acknowledges weak evidence"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "True 14 ... 50.0% ... False 132 ... 40.9%",
+        "why": "decline-rate comparison across risk groups"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "41.78% decline rate — more than four times ... Assets (6.1%)",
+        "why": "cross-category outcome numbers"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Flight Booking for Official Travel — state: Declined, amount: $5,656",
+        "why": "row-level detail with amounts"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "lagged records had a 0% decline rate ... signals workflow failure",
+        "why": "handles counterintuitive finding"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B ties risks to outcome decline-rate comparisons across groups, adding causal depth beyond A's strong descriptive flagging.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

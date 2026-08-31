@@ -1,0 +1,176 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "n_added_columns": 18,
+  "added_columns": [
+    "desc_word_count",
+    "desc_avg_word_length",
+    "desc_sentence_count",
+    "tech_density",
+    "primary_industry",
+    "industry_tag_count",
+    "is_fintech",
+    "is_healthcare",
+    "is_enterprise_sw",
+    "is_consumer",
+    "is_security",
+    "is_ai_ml",
+    "is_hardware_iot",
+    "is_education",
+    "mentions_b2b",
+    "mentions_b2c",
+    "has_funding_language",
+    "action_verb_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 18,
+    "n_judged_columns": 18,
+    "analytical_usefulness": 0.5306,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.7694,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.65,
+    "hallucination_rate": 0.3889
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "desc_word_count",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw text-length surface feature; generic and unlikely to carry real signal for regional clustering. Values are a sound reading of the source text."
+      },
+      {
+        "name": "desc_avg_word_length",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Near-trivial stylometric metric with little analytical leverage for predicting region. Correctly computed from text."
+      },
+      {
+        "name": "desc_sentence_count",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Highly skewed (mostly 1), near-constant surface feature; low leverage. Derivable from text."
+      },
+      {
+        "name": "tech_density",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A keyword-ratio feature that could plausibly differentiate tech-heavy descriptions; more analytically meaningful than raw length, though the keyword list is opaque. Values are broadly warranted by text."
+      },
+      {
+        "name": "primary_industry",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Strong categorical axis for grouping/modeling. But groundedness is shaky: 5AM Ventures (a VC firm) tagged fintech, and Accel (a VC) tagged 'other' while 5AM is fintech—inconsistent; VC labeled fintech is a stretch."
+      },
+      {
+        "name": "industry_tag_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Could serve as a diversity/breadth feature. But inherits over-tagging errors: 23andme tagged with 3 industries including ai_ml not supported by text; 280 Group tagged education/ai_ml unsupported."
+      },
+      {
+        "name": "is_fintech",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful binary industry axis. 5AM Ventures (life science VC) flagged fintech is questionable; otherwise reasonable."
+      },
+      {
+        "name": "is_healthcare",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "Useful axis. 23andme correctly healthcare; but 5AM 'life science' → healthcare AND fintech simultaneously is muddled."
+      },
+      {
+        "name": "is_enterprise_sw",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Reasonable axis but near 50/50 and over-applied: Addepar reasonable, but 5AM Ventures (a VC) flagged enterprise_sw is unsupported."
+      },
+      {
+        "name": "is_consumer",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Reasonable B2C axis; 23andme consumer is well warranted."
+      },
+      {
+        "name": "is_security",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Plausible binary industry flag; sampled rows consistent with text."
+      },
+      {
+        "name": "is_ai_ml",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Potentially useful, but clearly over-fired: 23andme and 280 Group both flagged ai_ml with no supporting text mention; 52/199 seems inflated."
+      },
+      {
+        "name": "is_hardware_iot",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Reasonable industry flag; sampled rows consistent (all 0)."
+      },
+      {
+        "name": "is_education",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Plausible flag but 280 Group's 'training, certification' → education is defensible, yet borderline; some over-tagging risk."
+      },
+      {
+        "name": "mentions_b2b",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful business-model axis; sampled values consistent with text."
+      },
+      {
+        "name": "mentions_b2c",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful business-model axis; consistent with sampled text."
+      },
+      {
+        "name": "has_funding_language",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Reasonable flag; 5AM Ventures 'returns to investors' correctly flagged; others correctly 0."
+      },
+      {
+        "name": "action_verb_score",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Generic stylistic/marketing-tone feature with weak connection to regional cluster; values derivable from text."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.72,
+    "rationale": "The set mixes genuinely useful categorical/industry features (primary_industry, is_* flags, mentions_b2b/b2c, has_funding_language) that offer real axes for grouping and modeling, with several low-leverage surface/stylometric features (word count, avg word length, sentence count, action_verb_score) that add little for this query. Groundedness is generally decent for extractive flags, but the industry tagging over-fires—especially is_ai_ml (fired for 23andme and 280 Group without textual support) and industry_tag_count inheriting these spurious tags—and treatment of VC firms (5AM Ventures, Accel) is inconsistent (life-science VC labeled both fintech and healthcare and enterprise_sw). These represent confident specifics not warranted by the text, lowering the source-groundedness verdict."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 18
+}

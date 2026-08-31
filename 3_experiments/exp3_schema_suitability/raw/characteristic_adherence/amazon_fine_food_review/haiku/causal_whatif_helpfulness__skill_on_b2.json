@@ -1,0 +1,125 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How would HelpfulnessNumerator change if reviews provided more detailed product information?",
+  "focus_variable": "helpfulness_numerator_outcome",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "ProductInformationDensity",
+    "SensoryDetailRichness",
+    "ConcreteUsageContext",
+    "ProductComparisonIncluded",
+    "ProblemOrDefectMention",
+    "PriceValueAnalysis",
+    "ReaderExpertiseIndicator",
+    "NegativeOrTradeOffDisclosure",
+    "ReviewTextLengthOrInformationDensity"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.3,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.3,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "HelpfulnessNumerator",
+    "per_column": [
+      {
+        "name": "ProductInformationDensity",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Directly operationalizes 'more detailed product information' -- the intervenable treatment the query proposes. A reviewer can choose to include more detail."
+      },
+      {
+        "name": "SensoryDetailRichness",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "A facet of detailed product information (sensory detail); another dimension of the same intervenable treatment, not a distinct confounder."
+      },
+      {
+        "name": "ConcreteUsageContext",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Whether concrete usage context is provided is another aspect of 'detailed product information'; a settable content choice, part of the treatment."
+      },
+      {
+        "name": "ProductComparisonIncluded",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Including comparisons is a form of providing more detailed product information; a content choice, so treatment-facet rather than confounder."
+      },
+      {
+        "name": "ProblemOrDefectMention",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Mentioning problems/defects plausibly affects both how detailed a review is and how helpful readers find it. Not named in the query; a candidate common cause, though arguably also a content choice."
+      },
+      {
+        "name": "PriceValueAnalysis",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Price/value discussion is itself review content added by the writer, sitting on the detail-to-helpfulness path rather than being a pre-existing common cause; treated as mediator, not confounder."
+      },
+      {
+        "name": "ReaderExpertiseIndicator",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Reader/reviewer expertise is a plausible common cause: more expert authors write more detailed reviews and their reviews are voted more helpful. Not named in the query."
+      },
+      {
+        "name": "NegativeOrTradeOffDisclosure",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Disclosing trade-offs is content added by the reviewer, downstream of the decision to be detailed; a mediator rather than a pre-existing confounder."
+      },
+      {
+        "name": "ReviewTextLengthOrInformationDensity",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Length/information density is essentially a proxy for the detail treatment itself, not an independent confounder; overlaps with ProductInformationDensity."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "ProductInformationDensity",
+      "SensoryDetailRichness",
+      "ConcreteUsageContext",
+      "ProductComparisonIncluded"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "ProblemOrDefectMention",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "ReaderExpertiseIndicator",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.3,
+    "rationale": "The treatment is well represented and clearly intervenable: multiple columns operationalize 'more detailed product information' as settable content choices, satisfying claim (a). However the set is weak on claim (b). Most added columns are either restatements/facets of the treatment (density, sensory richness, usage context, comparisons, text length) or mediators sitting on the detail->helpfulness path (price/value analysis, trade-off disclosure), which must NOT be adjusted for. Only ReaderExpertiseIndicator functions as a genuine, not-named-in-query common cause of both writing detail and being voted helpful; ProblemOrDefectMention is a weaker, ambiguous candidate. Classic confounders (product category, author reputation/history, review timing/exposure, star rating) are absent. The augmentation demonstrates strong treatment construction but only marginal confounder-identification capability."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_whatif_helpfulness",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "pain_points",
+    "learner_needs",
+    "response_sentiment",
+    "pain_point_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7175,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7925,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.755,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "pain_points",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Directly answers the query with a categorical, multi-label taxonomy that supports grouping and frequency analysis. Mostly well-grounded (ED-0001 correctly captures technical/isolation/pacing/feedback; ED-0003 grounded), but shows over-extraction: ED-0002 tags 'instructor_feedback' though the text is a positive teacher account with no feedback complaint, and ED-0005 tags 'technical_issues' and 'access_equity' not supported by the text (issue is participation, not tech/equity)."
+      },
+      {
+        "name": "learner_needs",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "Second core axis of the query; useful categorical multi-label for grouping. Generally sound (ED-0003 peer_connection/teacher_support; ED-0004 flexible_pacing/teacher_support). Some questionable inferences: ED-0002 'interactive_content' and ED-0005 'interactive_content' are loose readings not clearly stated as needs, and 'none' vs NULL inconsistency for ED-0001."
+      },
+      {
+        "name": "response_sentiment",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A bare 3-way sentiment flag adds limited analytical leverage for a needs/pain-point query, though it offers a modest secondary axis for cross-tabulation with satisfaction_1to5 (with which it is partly redundant). Values align well with the source text."
+      },
+      {
+        "name": "pain_point_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A derived aggregate of pain_points; offers a quick severity/intensity axis but is largely redundant with the pain_points column itself. Groundedness inherits pain_points' over-extraction (e.g., counts of 3-4 reflect tags not fully supported by the text)."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.78,
+    "rationale": "The two flagship columns (pain_points, learner_needs) directly and richly answer the query, giving genuine categorical axes to group and compare on. Sentiment and pain_point_count are weaker—one is a generic sentiment flag, the other a restatement/aggregate of pain_points—but still provide minor secondary leverage. Groundedness is mostly solid extraction/categorisation, lowered by consistent over-tagging of pain_points (asserting technical/access/feedback issues where source text does not support them), which propagates into pain_point_count."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

@@ -1,0 +1,98 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "low_satisfaction_flag",
+    "tech_issue_mentions",
+    "engagement_mentions",
+    "clarity_mentions",
+    "workload_mentions",
+    "primary_driver",
+    "satisfaction_band"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "low_satisfaction_flag",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Binary recoding of the outcome (satisfaction below threshold); it is a restatement of the focus variable, not a treatment or confounder."
+      },
+      {
+        "name": "tech_issue_mentions",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of dissatisfaction extracted from open responses; a plausible driver whose effect on satisfaction is being attributed."
+      },
+      {
+        "name": "engagement_mentions",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate driver surfaced from text; treated as a competing cause of satisfaction."
+      },
+      {
+        "name": "clarity_mentions",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause (clarity of instruction) mined from responses; a driver of satisfaction."
+      },
+      {
+        "name": "workload_mentions",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate driver mined from text; a competing cause of satisfaction."
+      },
+      {
+        "name": "primary_driver",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A pre-computed attribution/label of which factor dominates; it is a derived conclusion, not a treatment or confounder input, and would leak the outcome if used as a predictor."
+      },
+      {
+        "name": "satisfaction_band",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Discretisation of the outcome variable; not a cause or confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "tech_issue_mentions",
+      "engagement_mentions",
+      "clarity_mentions",
+      "workload_mentions"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply plausible candidate TREATMENTS (tech, engagement, clarity, workload mentions extracted from the open responses), so requirement (a) is met. However, requirement (b) is entirely unmet: no CONFOUNDERS are present. A confounder would be a variable that plausibly causes both a mentioned-factor treatment and satisfaction and must be adjusted to avoid biased attribution -- e.g., respondent_role, grade_level, or subject exist in the original table but were NOT surfaced or engineered as adjustment variables, and no new confounders (e.g., prior tech familiarity, class size, remote vs in-person context) were mined. The remaining added columns are all recodings of the outcome (low_satisfaction_flag, satisfaction_band) or a derived attribution label (primary_driver, which is a conclusion/leaky variable). Because the system did not surface any common cause of both treatment and outcome, the causal-attribution claim fails the decisive test."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

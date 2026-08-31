@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "resolution_complexity",
+    "issue_severity_signal",
+    "recurrent_issue",
+    "authentication_or_access_requirement",
+    "hardware_or_software_installation_need",
+    "scope_of_impact",
+    "assigned_technician",
+    "assigned_resolver_consistency",
+    "closure_status_completeness",
+    "issue_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.565,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.585,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.575,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_complexity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Directly targets the query's 'underlying causes' of longer resolution times and gives a strong grouping axis. However values assert specific resolution mechanisms (e.g. 'infrastructure_reconfiguration' for a bare 'VPN connection issue') that the short_description does not support; these are invented specifics."
+      },
+      {
+        "name": "issue_severity_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A useful axis distinct from priority for explaining duration. Some labels are defensible from text ('service_outage' for email not working), but 'intermittent' vs 'individual_access' for similar connectivity descriptions is weakly grounded and inconsistent."
+      },
+      {
+        "name": "recurrent_issue",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Recurrence could plausibly explain resolution time, but the source text gives no basis to label a ticket recurrent; nearly all rows are 'true' with no supporting evidence in short_description, indicating fabricated inference."
+      },
+      {
+        "name": "authentication_or_access_requirement",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Reasonable causal axis. Mostly derivable from descriptions (VPN/database access -> true; email/wifi -> false), consistent with samples."
+      },
+      {
+        "name": "hardware_or_software_installation_need",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Plausible driver of longer times but heavily skewed (482 false) making it near-constant and low leverage. Values shown are defensible from text."
+      },
+      {
+        "name": "scope_of_impact",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Scope is a strong candidate cause for duration. Department cases are well grounded, but 'company_wide' being the dominant value and 'single_user' assigned to a plain 'VPN connection issue' involve inference beyond what many terse descriptions state."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Largely redundant with existing 'assigned_to' original column, adding little new leverage. Values are plausible but not verifiable from the provided short_description text."
+      },
+      {
+        "name": "assigned_resolver_consistency",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Whether opener/resolver match could relate to handoff delays, giving some leverage, but it is derived from other columns rather than text and is somewhat generic."
+      },
+      {
+        "name": "closure_status_completeness",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A near-boolean completeness flag largely restating closure fields; little analytical leverage for explaining duration causes."
+      },
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Well grounded categorisation of the short_description (email/vpn/database/network). Useful, but the query says to control for category, so it partly overlaps the original 'category' column, reducing marginal leverage."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.58,
+    "rationale": "Several columns (resolution_complexity, scope_of_impact, authentication_requirement, issue_severity_signal) give genuine new axes to explain longer resolution times beyond priority and category, which is exactly what the query needs. Weaknesses: some columns are redundant with originals (assigned_technician vs assigned_to, issue_category vs category) or near-constant/restated (closure_status_completeness). Groundedness is mixed: categorisation-style columns read the description soundly, but 'resolution_complexity' and especially 'recurrent_issue' assert confident specifics (mechanisms, recurrence) that the terse source text does not support, indicating hallucinated inference."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 10
+}

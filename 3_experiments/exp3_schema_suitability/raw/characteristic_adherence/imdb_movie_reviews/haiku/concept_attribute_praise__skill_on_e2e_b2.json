@@ -1,0 +1,58 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "focus_variable": "audience_praise_and_complaints",
+  "concept": "audience_praise_and_complaints",
+  "n_added_columns": 2,
+  "added_columns": [
+    "praised_aspect",
+    "complaint_aspect"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.8746,
+    "facet_fraction": 1.0,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.9,
+    "exhaustiveness": 0.85,
+    "mece": 0.8746,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "audience_praise_and_complaints",
+    "per_column": [
+      {
+        "name": "praised_aspect",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The praise dimension is one of the two constitutive halves of 'praise and complaints', and this column decomposes it by the film aspect being praised (acting, cinematography, screenplay, etc.), which is an aspect OF the praise concept rather than an external predictor or cause."
+      },
+      {
+        "name": "complaint_aspect",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The complaint dimension is the other constitutive half of the concept, decomposed by the film aspect being criticized. This is genuinely a part-of the focus concept."
+      }
+    ],
+    "facet_columns": [
+      "praised_aspect",
+      "complaint_aspect"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.9,
+    "exhaustiveness": 0.85,
+    "rationale": "Both columns are constitutive facets: the concept 'praise and complaints' is explicitly a two-part valenced construct, and the columns cleanly partition it into the praise facet and the complaint facet, each further specifying WHICH aspect of the film is being evaluated. Mutual exclusivity is high because praise vs. complaint are non-overlapping by valence and are stored as separate columns; the only minor overlap is that both share the same underlying aspect vocabulary (e.g., 'acting', 'screenplay', 'cinematography'), but since they are conditioned on opposite valence they do not double-count. Exhaustiveness is strong for the top-level valence decomposition (praise + complaint covers the whole concept), though the aspect-level enumeration is not exhaustive of all evaluative dimensions and relies on a 'not_present' catch-all, slightly reducing coverage of the concept's full constitutive space."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 2
+}

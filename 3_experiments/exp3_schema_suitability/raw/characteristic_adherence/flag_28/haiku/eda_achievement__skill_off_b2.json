@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does goal achievement vary across department, metric, and the management practices described?",
+  "focus_variable": "goal_achievement",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "achievement_gap",
+    "on_track",
+    "priority_impact_level",
+    "goal_status_category"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.075,
+    "predictor_fraction": 0.25,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.3,
+    "interpretable_fraction": 0.75
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "goal_achievement",
+    "per_column": [
+      {
+        "name": "achievement_gap",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is a direct arithmetic transform of goal achievement versus target (percent_complete minus target_percentage). It restates the focus rather than opening an external relationship, and its fine-grained integer scale offers no well-separated categories for meaningful segmentation."
+      },
+      {
+        "name": "on_track",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "A binary Yes/No derived from whether achievement meets target. Clean categories, but it is a re-expression of goal_achievement itself, not an external associational variable to compare the focus against."
+      },
+      {
+        "name": "priority_impact_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "An external management-practice attribute (derived from priority) with clean, well-separated ordinal categories. Goal achievement can be segmented and compared across these impact levels, directly serving the query's 'management practices' angle."
+      },
+      {
+        "name": "goal_status_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Achieved/Active/Inactive is essentially a coarsening of state and achievement status; 'Achieved' overlaps the focus directly, so it largely restates goal_achievement rather than providing an independent segmentation axis."
+      }
+    ],
+    "n_predictors": 1,
+    "relationship_informativeness": 0.3,
+    "rationale": "Only priority_impact_level functions as a genuine external, interpretable segmentation variable for exploring relationships with goal achievement. The other three (achievement_gap, on_track, goal_status_category) are restatements or transforms of the focus itself, and achievement_gap is additionally too fine-grained for meaningful grouping. The set weakly supports interpretable relationship discovery and does not add segmentation dimensions for the query's other axes beyond what the original table (department, metric) already provided."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "eda_achievement",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

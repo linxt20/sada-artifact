@@ -1,0 +1,120 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "n_added_columns": 11,
+  "added_columns": [
+    "goal_outcome_domain",
+    "improvement_mechanism",
+    "target_population_scope",
+    "quantified_target_direction_sign",
+    "temporal_scope",
+    "outcome_metric_indicator",
+    "goal_confidence_completeness",
+    "baseline_specificity",
+    "metric_goal_alignment_flag",
+    "enabling_capability_gap",
+    "outcome_materiality"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 11,
+    "n_judged_columns": 11,
+    "analytical_usefulness": 0.6291,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7727,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7009,
+    "hallucination_rate": 0.1818
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_outcome_domain",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Well-grounded categorisation of the goal's domain, matching category text closely. Somewhat redundant with existing 'category' column, but offers a normalized axis useful for grouping."
+      },
+      {
+        "name": "improvement_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures the HOW/lever of each goal, a genuinely new analytical axis not in the original table. Mostly sound readings, though some (e.g. 'product_quality' for a premium-subscription revenue goal) are loose."
+      },
+      {
+        "name": "target_population_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Who/what is targeted is a useful grouping dimension and generally well-inferred from descriptions."
+      },
+      {
+        "name": "quantified_target_direction_sign",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Direction of change is analytically useful. Grounded for most rows, but the cost-reduction row (description says 'cost reduction of 20%') is labeled 'increase', a contradiction that reveals inconsistent handling of framing vs. metric direction."
+      },
+      {
+        "name": "temporal_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Time horizon (fiscal_year/quarter) extracted directly from phrases like 'by end of Q4' or 'next fiscal year'. New, useful axis with appropriate 'unspecified' handling."
+      },
+      {
+        "name": "outcome_metric_indicator",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Normalized metric type inferred from the description; reasonable and offers a comparison axis. Overlaps partly with 'metric' but the original metric column appears noisy/misaligned, so this adds value."
+      },
+      {
+        "name": "goal_confidence_completeness",
+        "analytical_usefulness": 0.02,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Constant 'true' across all 550 rows -- zero analytical leverage, near-constant flag adds nothing."
+      },
+      {
+        "name": "baseline_specificity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing precise vs implied baseline is a genuinely useful data-quality axis for 'what's worth attention'. Grounded (e.g. '78% to 90%' = precise). Some borderline calls but sound."
+      },
+      {
+        "name": "metric_goal_alignment_flag",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Constant 'false' across all rows. Near-constant so no leverage; and the samples show clear metric/goal mismatches (e.g. revenue goal with 'Survey Score' metric) that a genuine alignment flag would flag as misaligned -- yet the value is uniformly false, suggesting it doesn't actually reflect the intended signal."
+      },
+      {
+        "name": "enabling_capability_gap",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Categorising execution difficulty/capability need is a strong 'worth attention' axis. Distribution is varied. Groundedness is moderate -- these are interpretive inferences (e.g. 'change_management_heavy') not always explicit in text, but generally defensible."
+      },
+      {
+        "name": "outcome_materiality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Business impact/materiality (revenue_direct, reputation_risk, etc.) directly serves the 'what's worth attention' query. Reasonable inference from domain, though partly correlated with goal_outcome_domain."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.82,
+    "rationale": "Most added columns supply genuinely new axes (mechanism, scope, temporal horizon, capability gap, materiality, baseline specificity) that directly help an analyst decide what's worth attention, and their values are generally sound readings of the descriptions. Two columns are dead weight: goal_confidence_completeness (constant true) and metric_goal_alignment_flag (constant false, which also fails to capture the visible metric/goal mismatches). A notable grounding lapse is quantified_target_direction_sign labeling an explicit cost-reduction goal as 'increase'. Overall the set is analytically strong and mostly well-grounded, dragged down by the two constant/uninformative flags and a direction-sign inconsistency."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 11
+}

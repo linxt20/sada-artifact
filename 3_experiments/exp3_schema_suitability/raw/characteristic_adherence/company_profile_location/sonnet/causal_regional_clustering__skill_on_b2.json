@@ -1,0 +1,116 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "industry_sector",
+    "company_stage",
+    "core_technology_focus",
+    "market_orientation",
+    "talent_ecosystem_dependency",
+    "physical_infrastructure_dependency",
+    "regulatory_compliance_domain"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Industry sector plausibly drives both where a company locates (clustering economies) and is not on the causal path from a single treatment; it is a common cause candidate surfaced from company descriptions."
+      },
+      {
+        "name": "company_stage",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Firm stage affects location choice (startups seek hubs/VC proximity) and correlates with sector/talent needs; a common cause surfaced from data."
+      },
+      {
+        "name": "core_technology_focus",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Could be read as the candidate cause whose effect on regional location is being attributed; but it is largely correlated with sector and may equally be a confounder — ambiguous, treated here as candidate treatment."
+      },
+      {
+        "name": "market_orientation",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "B2B vs B2C orientation can influence proximity to customers/hubs and covaries with sector; a plausible common cause."
+      },
+      {
+        "name": "talent_ecosystem_dependency",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Talent dependency is a mechanism THROUGH which location is chosen (firms locate where the needed talent is); it lies on the causal path to regional cluster rather than being an exogenous common cause."
+      },
+      {
+        "name": "physical_infrastructure_dependency",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Infrastructure needs (fabs, labs, logistics) are a mechanism driving location choice; on the causal path, not a common cause of an independent treatment."
+      },
+      {
+        "name": "regulatory_compliance_domain",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Regulatory domain can jointly influence sector/tech and where a firm bases itself (proximity to regulators/gov clients); plausible common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "core_technology_focus"
+    ],
+    "confounders": [
+      {
+        "name": "industry_sector",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "company_stage",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "market_orientation",
+        "named_in_query": false,
+        "plausibility": 0.45
+      },
+      {
+        "name": "regulatory_compliance_domain",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The columns richly characterize firm attributes and are all surfaced from the description text rather than the query, which is good. However, the set does not cleanly set up a causal estimation: there is no clearly designated single treatment whose effect on location is being attributed — 'core_technology_focus' is only weakly separable from sector and could itself be a confounder. Several of the strongest 'location-driving' variables (talent_ecosystem_dependency, physical_infrastructure_dependency) are MEDIATORS that lie on the mechanism from firm type to location and should not be adjusted as confounders. The remaining variables are plausible common causes but are all mutually entangled firm-type descriptors rather than variables distinguished as jointly causing a specific treatment AND the outcome. Thus the causal-attribution structure is only partially realized."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

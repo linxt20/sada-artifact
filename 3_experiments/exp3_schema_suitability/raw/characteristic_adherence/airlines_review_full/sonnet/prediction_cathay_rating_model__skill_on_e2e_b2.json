@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "cabin_crew_attitude",
+    "proactive_crew_service_presence",
+    "meal_quality_rating",
+    "meal_timing_appropriateness",
+    "seat_comfort_issue_type",
+    "disruption_type",
+    "disruption_handling_quality",
+    "cabin_class_experience_vs_expectation",
+    "premium_economy_value_gap",
+    "service_decline_vs_pre_covid"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.522,
+    "predictor_fraction": 0.9,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "predictive_utility": 0.58,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "cabin_crew_attitude",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A distinct service-quality dimension (warm/proactive vs. rude/cold) extracted from the review narrative. It is antecedent to the reviewer's holistic rating, is not a component or restatement of it, and crew demeanour is a well-known driver of airline satisfaction, so it plausibly carries predictive signal about whether Overall Rating > 7."
+      },
+      {
+        "name": "proactive_crew_service_presence",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Boolean flag for whether crew were actively attentive. It overlaps somewhat with cabin_crew_attitude but is a separate operational service attribute, lies outside the focus, and correlates plausibly with satisfaction. Legitimate predictor (with some redundancy)."
+      },
+      {
+        "name": "meal_quality_rating",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Food quality (poor/acceptable/excellent/inedible) is a genuine experiential dimension that precedes and feeds into the overall judgment. It is not a deterministic function of the overall rating, and catering quality is a plausible driver of it. Predictor, though partially covered by the original Food & Beverages column."
+      },
+      {
+        "name": "meal_timing_appropriateness",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether meal service timing was appropriate is a specific, actionable service attribute distinct from the focus and plausibly linked to satisfaction. Weaker signal, but a legitimate predictor rather than a restatement or leakage."
+      },
+      {
+        "name": "seat_comfort_issue_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorises concrete seat problems (narrow, poor recline, broken, insufficient legroom). This is an operational cause variable outside the overall rating, adds granularity beyond the numeric Seat Comfort field, and comfort issues plausibly depress overall satisfaction. Predictor."
+      },
+      {
+        "name": "disruption_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Delays, cancellations, missed connections and baggage loss are exogenous operational events that occur before the reviewer's evaluation. They are not present in the original numeric ratings, are highly actionable for route/service optimisation, and carry strong predictive signal about satisfaction. Strong predictor."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How well any disruption was handled (poorly/well/NA) is a service-recovery attribute distinct from the overall rating and a recognised driver of satisfaction. It lies outside the focus and adds new signal. Predictor."
+      },
+      {
+        "name": "cabin_class_experience_vs_expectation",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is a global evaluative judgment (severely below / below / met / exceeded expectations) that is essentially a synonym for overall satisfaction. It restates the focus rather than providing an independent, actionable driver, and would be near-collinear with Overall Rating (borderline leakage). Not a legitimate distinct predictor."
+      },
+      {
+        "name": "premium_economy_value_gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Flags a perceived value shortfall in premium economy — a value-perception attribute tied to a specific cabin. It lies outside the overall rating and plausibly relates to satisfaction, though it overlaps with the original Value For Money field and has low variance. Predictor with limited leverage."
+      },
+      {
+        "name": "service_decline_vs_pre_covid",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A comparative perception that service has declined versus pre-COVID. It is a distinct attitudinal driver outside the focus and could correlate with lower ratings. Low variance limits its usefulness, but conceptually it is a predictor, not a restatement or leak."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.58,
+    "rationale": "Nine of the ten columns are legitimate, antecedent service/operational attributes (crew attitude and proactivity, meal quality/timing, seat issue type, disruption type and its handling, value gap, perceived decline) that lie outside the focus and plausibly drive whether Overall Rating > 7. The disruption fields in particular add genuinely new operational signal not captured by the original per-category numeric ratings, which is valuable for the MD's route/service optimisation goal. Deductions: (1) cabin_class_experience_vs_expectation is a holistic 'met/exceeded expectations' judgment that essentially restates overall satisfaction and is near-collinear with the target (restatement/near-leakage); (2) several features (crew attitude/proactivity, meal quality, seat comfort, value gap) substantially duplicate existing original numeric ratings (Staff Service, Food & Beverages, Seat Comfort, Value For Money), so incremental leverage over the original columns is only moderate; (3) some added booleans have very low variance. Net: a solid predictor set with meaningful incremental signal but noticeable redundancy and one restatement, yielding moderate predictive utility."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

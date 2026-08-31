@@ -1,0 +1,120 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "n_added_columns": 11,
+  "added_columns": [
+    "primary_lever",
+    "initiative_type",
+    "goal_specificity",
+    "comparison_reference",
+    "timeframe_horizon",
+    "multi_initiative_complexity",
+    "scope_of_change",
+    "measurement_mechanism",
+    "automation_as_mechanism",
+    "technology_enabler",
+    "feedback_loop_present"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 11,
+    "n_judged_columns": 11,
+    "analytical_usefulness": 0.6864,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7909,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.7387,
+    "hallucination_rate": 0.0909
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_lever",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures the core practice type described, giving a strong grouping axis to compare achievement across goal-management approaches. Readings are sound (process_optimization, engagement_program), though the premium-subscription row labeled product_expansion is a mild stretch."
+      },
+      {
+        "name": "initiative_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Provides a complementary categorization of how the goal is pursued. Somewhat overlapping with primary_lever but a distinct axis. The revenue-growth row mapped to process_redesign is weakly supported by its text."
+      },
+      {
+        "name": "goal_specificity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to the query about goal-management practices; distinguishing quantified target vs baseline+target is a strong analytical lever. Values match the text (baseline stated 78%-90% -> baseline_and_target)."
+      },
+      {
+        "name": "comparison_reference",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A meaningful practice dimension (benchmarking against prior periods). Mostly well grounded; the Q4 customer-satisfaction row labeled specific_period rather than no_reference is a defensible but slightly loose reading."
+      },
+      {
+        "name": "timeframe_horizon",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Time-horizon of goals is a relevant management practice axis. Values align with the text (Q4 -> within_quarter, fiscal year -> within_fiscal_year)."
+      },
+      {
+        "name": "multi_initiative_complexity",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Captures whether a goal bundles multiple initiatives, a plausible driver of achievement. The customer-satisfaction row (after-sales support AND personalized interactions -> True) is reasonable, though the boolean is somewhat coarse."
+      },
+      {
+        "name": "scope_of_change",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Useful axis to compare achievement by breadth of change. However 'company_wide' is applied where the text is often silent on scope (cost-reduction across functions), suggesting some over-confident defaulting."
+      },
+      {
+        "name": "measurement_mechanism",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with the existing 'metric' column, reducing added leverage. Values appear to mirror 'metric' even when it contradicts the description (satisfaction goal with metric Expense Ratio labeled expense_ratio; revenue goal labeled survey_score), propagating mismatches rather than reading the text."
+      },
+      {
+        "name": "automation_as_mechanism",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A relevant practice flag given automation is a top lever, but as a near-constant boolean (452/98) it adds limited leverage. Values (all False in samples) are consistent with texts that mention no automation."
+      },
+      {
+        "name": "technology_enabler",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Plausible practice dimension but overlaps conceptually with automation_as_mechanism and is skewed/bare boolean, giving modest analytical value. Sample values are well grounded."
+      },
+      {
+        "name": "feedback_loop_present",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Feedback loops are a credible top-performer practice, so the flag has some value despite being a skewed boolean. Grounding is mostly sound, though the engagement-program-with-survey row marked False is arguably inconsistent."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.8,
+    "rationale": "Most added columns supply genuine, distinct axes (goal_specificity, comparison_reference, timeframe_horizon, primary_lever, scope_of_change) that directly support comparing achievement across goal-management practices, which is exactly what the query needs. A cluster of skewed booleans (automation_as_mechanism, technology_enabler, feedback_loop_present) overlap and add limited leverage, and measurement_mechanism is largely redundant with the existing 'metric' column while propagating its contradictions with the descriptions. Grounding is generally solid and silent rows are handled sensibly (no_reference, not_specified), with only occasional over-confident defaults (scope company_wide) and a couple of loose mappings."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 11
+}

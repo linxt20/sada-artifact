@@ -1,0 +1,119 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do expense decline rates differ across departments?",
+  "focus_variable": "departmental_declined_rate_variation",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_type",
+    "entry_origin",
+    "has_source_id",
+    "processing_lag",
+    "vendor_brand",
+    "department_function_type",
+    "is_travel_related",
+    "is_new_asset_acquisition"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 0.6667,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "departmental_declined_rate_variation (expense decline / rejection)",
+    "per_column": [
+      {
+        "name": "asset_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Type of asset (hardware/software/cloud/travel) plausibly drives whether an expense is declined; a candidate cause of the decline outcome. Also varies by department, but its primary role here is a spend-category treatment whose effect on decline can be attributed."
+      },
+      {
+        "name": "entry_origin",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Manual vs auto-generated entry plausibly affects decline likelihood (manual entries more error-prone), a candidate cause of the outcome."
+      },
+      {
+        "name": "has_source_id",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Presence of a source_id (linkage/provenance) plausibly affects both how an expense is entered/originated and whether it is declined; a common cause of process treatment and outcome."
+      },
+      {
+        "name": "processing_lag",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Processing lag is downstream of both the entry process and the decline decision (declined items may not be processed; 'not_processed' overlaps with decline). Conditioning on it induces bias; it is an outcome-related effect, not a common cause."
+      },
+      {
+        "name": "vendor_brand",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Vendor/brand plausibly influences both asset_type (treatment) and decline likelihood (approved-vendor policies), a common cause surfaced from the CI/description data."
+      },
+      {
+        "name": "department_function_type",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "A grouping/attribute of department, which is the explicit axis of variation named in the query. Plausibly causes both the type of spend (treatment) and the decline rate, but it is essentially a re-encoding of the department already named in the query."
+      },
+      {
+        "name": "is_travel_related",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Largely a derivative of asset_type/spend category (travel_equipment). It sits on the path between asset_type treatment and decline rather than being a common cause; redundant/mediating."
+      },
+      {
+        "name": "is_new_asset_acquisition",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Constant (true for all 500 rows). No variance means it can identify nothing; contributes no causal information."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "asset_type",
+      "entry_origin"
+    ],
+    "confounders": [
+      {
+        "name": "has_source_id",
+        "named_in_query": false,
+        "plausibility": 0.45
+      },
+      {
+        "name": "vendor_brand",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "department_function_type",
+        "named_in_query": true,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "A treatment is present (asset_type/entry_origin as candidate causes of decline). Some genuinely surfaced confounders exist (vendor_brand, has_source_id) that plausibly cause both the spend/process treatment and the decline outcome and are NOT named in the query. However, the one confounder most directly tied to the query axis (department_function_type) is a re-encoding of 'department', already named. Several added columns are problematic: processing_lag is a collider tangled with the outcome, is_travel_related is a mediator/redundant with asset_type, and is_new_asset_acquisition is constant and uninformative. So the set only partially realises a proper causal-adjustment design, with moderate-to-weak confounder quality."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "is_high_rating",
+    "primary_advantage",
+    "advantage_strength",
+    "is_exceptional_service",
+    "attribute_count_high"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.59,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.67,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.63,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_high_rating",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This binary is the exact grouping axis the query calls for ('airlines whose overall rating is high'), so it gives direct analytical leverage even though it is a threshold on the existing Overall Rating column. Values are cleanly derivable from Overall Rating and match the samples (9/10 amazing flight -> 1, 'dreadful' -> 0, 'excellent' -> 1). Slight usefulness discount for being a restatement/binarization of an existing column."
+      },
+      {
+        "name": "primary_advantage",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by naming the standout attribute per high-rated review, providing a strong categorical axis to aggregate on; NULL is correctly reserved for non-high rows. Values map to real attribute dimensions (likely the top sub-rating). Grounding is generally sound but imperfect: samples 4 and 5 emphasize food and cabin-crew service in the text yet are labeled 'Seat Comfort', so the primary attribute reading is sometimes debatable, though not clearly invented."
+      },
+      {
+        "name": "advantage_strength",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.4,
+        "hallucination_observed": false,
+        "rationale": "Constant: every one of the 8100 rows is 0. A column with no variance offers zero ability to group, compare, or model, so it is analytically inert for this (or any) query. It does not assert a false fact, but a uniform default value is not a meaningful reading of any source text either, hence low groundedness."
+      },
+      {
+        "name": "is_exceptional_service",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A stronger-than-baseline service flag adds a usable axis for identifying service-driven high ratings, though it partly overlaps with primary_advantage='Staff Service' and reads as a fairly bare positive-service indicator. Grounding is mostly reasonable (samples 3-5 with well-trained/attentive/caring crew -> 1; the 'dreadful' review -> 0), but sample 1 describes clearly exceptional crew (birthday cake, very kind) yet was flagged 0, a notable miss."
+      },
+      {
+        "name": "attribute_count_high",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A 0-5 count of strong attributes gives a genuine breadth axis useful for characterizing what high-rated reviews praise. Values plausibly derive from the five sub-rating columns. Grounding is only moderate: the all-negative 'dreadful' review (sample 2) is assigned 3 high attributes and the 'excellent on all fronts' review (sample 3) only 2, both of which sit in tension with the free text, suggesting the count is not always a faithful reflection of the source."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.72,
+    "rationale": "The set contains genuinely query-relevant columns: is_high_rating supplies the required high/not-high partition and primary_advantage plus attribute_count_high give real categorical and breadth axes for identifying common advantage attributes. is_exceptional_service adds modest, somewhat overlapping leverage, while advantage_strength is a dead constant contributing nothing. Groundedness is generally acceptable and no column invents facts outright, but several samples show attribute assignments and counts that do not fully track the emphasis of the source text (e.g., food/service-heavy reviews labeled Seat Comfort, a wholly negative review credited with 3 high attributes), and the constant column carries no source signal."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

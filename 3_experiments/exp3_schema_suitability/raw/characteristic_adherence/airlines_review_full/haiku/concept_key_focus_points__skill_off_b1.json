@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "Rating_Category",
+    "Key_Issues",
+    "Sentiment_Gap",
+    "Route_Type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.72,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.71,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Rating_Category",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Collapses reviews into a 4-way sentiment tier (Very Positive / Positive / Mixed / Negative), which gives a clean grouping axis for a 'what should I concentrate on' summary and preserves a 'Mixed' bucket rather than a bare pos/neg flag. It partly overlaps with the existing Overall Rating / Recommended columns, which caps its novelty. Groundedness is strong: all five samples (9/10 amazing, dreadful seats, excellent, food-praise, consistently good) map to defensible tiers."
+      },
+      {
+        "name": "Key_Issues",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Highly aligned with the query: extracting the recurring themes (Seating, Food, Service, Entertainment, Delay, Pricing, Baggage) directly tells the analyst what to concentrate on and gives a real multi-label axis to aggregate. However groundedness is shaky in the samples: row 1 adds 'Delay' though the text (a 1h45 flight praised as 9/10) never mentions any delay, and row 4 adds 'Entertainment' where the text only describes cabin lighting/food/crew. Included topics are otherwise well-read, but the injected labels are unsupported inferences."
+      },
+      {
+        "name": "Sentiment_Gap",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "The signed numeric could be valuable if it is a genuine discrepancy metric (e.g., text sentiment vs. Overall Rating), which would flag mismatched reviews. But with no description its meaning is opaque and it largely tracks the same sentiment signal as Rating_Category / Overall Rating, risking redundancy. Directionally the values are consistent with the text (positive reviews get high positives, the negative-seat review gets -0.4), but the precise decimals (5.0, 7.2) are hard to verify from the source and look like confident specifics."
+      },
+      {
+        "name": "Route_Type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Bucketing Route into Short/Medium/Long-haul is a genuinely new grouping dimension derived from the existing Route field, useful for comparing satisfaction by flight length. Values are well grounded in route geography: Singapore–London = Long-haul, Jakarta/Phuket–Singapore = Short-haul. Minor inconsistency (Siem Reap–Singapore tagged Medium while the similar Phnom Penh–Singapore is Short) slightly lowers reliability but the classifications are defensible."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.68,
+    "rationale": "As a set the added columns give the analyst several real axes to explore the 'key points': a sentiment tier (Rating_Category), a thematic issue tagging (Key_Issues), a continuous sentiment measure (Sentiment_Gap), and a flight-length segmentation (Route_Type). Key_Issues and Route_Type add the most analytical leverage; Rating_Category and Sentiment_Gap partly restate the existing rating signal. Groundedness is solid for Rating_Category and Route_Type but is dragged down by Key_Issues, which injects unsupported labels (invented 'Delay' and 'Entertainment' in the samples), and by Sentiment_Gap's opaque, unverifiable decimals. Completeness is explicitly not judged."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

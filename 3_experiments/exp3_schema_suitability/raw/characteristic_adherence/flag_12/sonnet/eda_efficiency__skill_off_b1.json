@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_time_hours",
+    "sla_met",
+    "resolution_speed_category",
+    "category_avg_resolution_hours",
+    "assignment_group_avg_resolution_hours",
+    "resolution_vs_category_avg"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.55,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6625,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Central metric for resolution efficiency; enables grouping by category/priority/group. However, groundedness is questionable: opened_at is available but the samples show closed_at equal to sys_updated_on, and produced hour values (161.13, 384.32, 58.02) cannot be verified against a shown opened_at, and a large spike at exactly 24 (57 rows) suggests fallback/imputed values rather than true computation."
+      },
+      {
+        "name": "sla_met",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A binary SLA flag is a reasonable efficiency axis, but no SLA target field exists in the source table, so any threshold is an assumed/invented policy. The value is only as grounded as resolution_time plus an unstated threshold, making it partly unsupported."
+      },
+      {
+        "name": "resolution_speed_category",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A discrete speed bucket is useful for grouping/comparison. It is a derived restatement of resolution_time_hours, so it adds modest new leverage, and its correctness inherits the uncertainty of the underlying (possibly imputed) resolution time."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Category-level average directly supports the query's cross-category comparison and is a legitimate aggregate over category (present) and resolution_time. Groundedness limited only by the reliability of the underlying resolution_time values."
+      },
+      {
+        "name": "assignment_group_avg_resolution_hours",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Assignment-group average is squarely on-target for the query's assignment_group dimension and is a valid aggregate. Note its top values are near-identical to category_avg, hinting at low variance, but it remains a distinct grouping axis."
+      },
+      {
+        "name": "resolution_vs_category_avg",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Deviation from category mean is a useful normalized comparison for spotting under/over-performers. It is a deterministic function of two other added columns (mild redundancy), and its groundedness depends on the underlying resolution_time accuracy."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.55,
+    "rationale": "The added columns collectively give strong analytical leverage for the query: a core resolution-time metric, categorical speed buckets, and category/assignment-group aggregates plus a deviation measure that directly enable comparison across category, priority, and assignment group. Several columns are derivations of one another (speed_category, sla_met, resolution_vs_category_avg all stem from resolution_time_hours), which trims but does not eliminate their usefulness. The main concern is groundedness: the samples show closed_at equal to sys_updated_on with no visible opened_at to verify the computed hours, a suspicious spike of exactly 24 hours across 57 rows suggests imputation, and sla_met relies on an SLA threshold not present in the source. These signal partly unsupported/assumed values, lowering overall groundedness while usefulness stays high."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

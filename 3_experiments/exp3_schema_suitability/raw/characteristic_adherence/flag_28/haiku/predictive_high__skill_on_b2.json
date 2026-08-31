@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "focus_variable": "high_goal_achievement",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "baseline_reference_clarity",
+    "timeline_explicitness",
+    "goal_category",
+    "intervention_specificity",
+    "implementation_scope",
+    "supporting_mechanism_depth",
+    "execution_explicitness",
+    "metric_goal_fit",
+    "resource_or_investment_mention"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.55,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "high_goal_achievement",
+    "per_column": [
+      {
+        "name": "baseline_reference_clarity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a goal has an explicit baseline/comparison period is a property of goal framing knowable in advance and plausibly correlates with measurability and thus achievement; it does not restate or leak the outcome."
+      },
+      {
+        "name": "timeline_explicitness",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Clarity/specificity of the timeframe is a framing feature available before the outcome and plausibly predicts follow-through; independent of achievement level."
+      },
+      {
+        "name": "goal_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The type of goal (revenue, satisfaction, cost, etc.) is an exogenous attribute that can carry differential base rates of achievability; legitimate predictor and not a restatement of the focus."
+      },
+      {
+        "name": "intervention_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How concrete the planned action is (tool vs vague strategic direction) is knowable from the plan and plausibly signals execution quality without leaking the outcome."
+      },
+      {
+        "name": "implementation_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope of implementation (single lever, org-wide, pilot) is a planning attribute independent of the achievement value and can predict feasibility."
+      },
+      {
+        "name": "supporting_mechanism_depth",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Number of specified levers is a plan-side feature; somewhat overlaps conceptually with implementation_scope but still a distinct, non-leaking predictor of achievement."
+      },
+      {
+        "name": "execution_explicitness",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Explicitness of the execution method (named program, tested method) is derivable from the description and plausibly correlates with success without restating it."
+      },
+      {
+        "name": "metric_goal_fit",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Alignment between the chosen metric and the stated goal is a design-quality feature that can influence measured achievement; it is not the outcome itself and is knowable ex ante."
+      },
+      {
+        "name": "resource_or_investment_mention",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether resources/investment are mentioned is a plan attribute plausibly linked to achievement likelihood and does not leak the outcome."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.55,
+    "rationale": "All added columns are ex-ante framing/planning attributes derived from the goal description, none of which restate or leak high_goal_achievement (they are not components or deterministic functions of the outcome and are not post-outcome knowable). Each plausibly carries some predictive signal about achievement. However, several columns overlap heavily (implementation_scope vs supporting_mechanism_depth; intervention_specificity vs execution_explicitness) reducing incremental leverage, and their real correlation with achievement is speculative rather than strong. Some derive from the existing description column, so marginal lift beyond originals is moderate. Collectively they form a coherent, non-leaking predictor set of moderate utility."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

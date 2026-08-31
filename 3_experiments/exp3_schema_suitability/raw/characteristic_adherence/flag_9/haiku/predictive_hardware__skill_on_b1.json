@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals indicate a hardware incident is in the anomaly window?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "hardware_component_type",
+    "failure_symptom_pattern",
+    "incident_scope",
+    "recurrence_flag",
+    "concurrent_incident_clustering",
+    "escalation_or_rework_indicator"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8083,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.4417,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.625,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_component_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A well-distributed categorical axis genuinely useful for grouping hardware incidents. However, groundedness is weak on evidence: software-installation rows are labeled 'other' as a hardware component when the text describes no hardware, forcing a hardware reading onto non-hardware tickets. The MySQL row correctly maps to 'server'. Mixed reliability."
+      },
+      {
+        "name": "failure_symptom_pattern",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Symptom pattern is a useful axis to correlate with anomaly windows. But 'software installation assistance' rows are labeled 'not_working', a symptom the source text does not assert (a request, not a failure). The MySQL connection row correctly yields 'connectivity_issue'. Values are partly invented for silent/non-failure rows."
+      },
+      {
+        "name": "incident_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Individual vs infrastructure vs shared is a meaningful scope axis for detecting broad anomaly clusters. Grounding is reasonable for the MySQL 'infrastructure' case, but 'individual_device' is asserted for software-install rows that give no device-scope evidence, a confident specific where the text is silent."
+      },
+      {
+        "name": "recurrence_flag",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Recurrence is directly relevant to anomaly-window detection. However, a single short_description gives no basis to determine recurrence; the flag would require cross-row history not evident here, and the samples show only 'False' with no visible derivation. Values appear largely unsupported by per-row source text."
+      },
+      {
+        "name": "concurrent_incident_clustering",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Temporal clustering of concurrent incidents is arguably the strongest signal for an anomaly window, so highly useful in principle. But derivability from a single row's text is weak; it would require aggregating timestamps across rows. The samples all show 'False' with no clear grounding, so groundedness is limited."
+      },
+      {
+        "name": "escalation_or_rework_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Escalation/rework is a plausible incident-severity signal. It could partly derive from state/priority original columns, but the source samples (short_description + timestamps) show no escalation evidence, and all sampled values are 'False' without warranted derivation. Usefulness is real but grounding is thin on shown evidence."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.45,
+    "rationale": "The added columns collectively provide several genuine analytical axes (component type, symptom, scope, recurrence, concurrency, escalation) that are well-suited to characterizing hardware incidents within an anomaly window, and they are non-redundant with the original operational metadata. However, groundedness is the recurring weakness: non-hardware/software-request rows are confidently forced into hardware component and failure-symptom categories the text does not support, and several boolean flags (recurrence, clustering, escalation) require cross-row or state evidence not visible in the per-row source, yet are asserted as specific values. Categorizations for the clearly hardware/server rows (e.g., MySQL) are sound, so the operator is partially grounded but exhibits notable overreach on silent rows."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "predictive_hardware",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

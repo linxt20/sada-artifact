@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_service_quality",
+    "food_quality",
+    "seat_cabin_hardware_condition",
+    "service_decline_signal",
+    "value_for_money_perception",
+    "disruption_handling_quality",
+    "family_child_accommodation"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.78,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.78,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Extracts a review theme with well-separated, interpretable categories (attentive_warm, inattentive_rude, professional_neutral, robotic_mechanical) that can be segmented and compared against Overall Rating. This is a genuine associational variable derived from text, not a restatement of the numeric ratings."
+      },
+      {
+        "name": "food_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal, interpretable categories (excellent/acceptable/poor) drawn from review text. A meaningful theme to cross-tabulate against Overall Rating. Slightly overlaps with the existing 'Food & Beverages' rating but adds a text-derived thematic view, so still informative."
+      },
+      {
+        "name": "seat_cabin_hardware_condition",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean, well-separated categories describing hardware condition (new_excellent, adequate_functional, dated_worn, broken_defective). A distinct review theme that can be grouped and compared against Overall Rating."
+      },
+      {
+        "name": "service_decline_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary flag with a reasonable split (571/329) capturing perceived decline. Interpretable and segmentable, though somewhat vaguely defined; still supports a meaningful comparison against Overall Rating."
+      },
+      {
+        "name": "value_for_money_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable ordinal categories. Note this closely parallels the existing 'Value For Money' column, so it partly restates an existing feature, but as a text-derived theme it remains a usable segmentation dimension."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories about how disruptions were handled. Heavily dominated by 'not_applicable' (696/900), so the informative categories are sparse, but where present they enable a meaningful comparison against Overall Rating."
+      },
+      {
+        "name": "family_child_accommodation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag. Highly imbalanced (852/48 true), limiting comparison power, but still a distinct interpretable segment that could relate to rating for family travellers."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.78,
+    "rationale": "The set consists of text-derived review themes with clean, interpretable, well-separated categorical levels that can each be grouped/segmented and cross-tabulated against Overall Rating across Type of Traveller and Class -- exactly the exploratory goal. Most columns (crew_service_quality, food_quality, seat_cabin_hardware_condition) have balanced, discriminating categories ideal for discovering relationships. Deductions: value_for_money_perception largely restates the existing Value For Money field; disruption_handling_quality and family_child_accommodation are so imbalanced (dominated by not_applicable/false) that comparisons rest on small subgroups, limiting their informativeness. Overall a strong, human-interpretable EDA set."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

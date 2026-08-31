@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What company traits explain regional clustering?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "industry_sector",
+    "company_type",
+    "geo_cluster",
+    "tech_focus_level",
+    "description_length"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.68,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.71,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.695,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A strong axis for explaining regional clustering by company traits; industry is a primary clustering driver. Mostly well-grounded from descriptions (5AM Ventures->VC, Addepar->Enterprise Software). But some errors: 280 Group (product management consulting/training) labeled EdTech is a stretch, and Accel (a VC firm) labeled 'Other Technology' contradicts the clearly investor-focused text."
+      },
+      {
+        "name": "company_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Distinguishing investors, startups, public vs private companies is a useful trait for clustering (e.g., VC concentration on Sand Hill Road). Mostly reasonable, but 'Public Company' vs 'Private Company' distinctions and the Accel row (labeled Private Company though it is an investor firm) suggest some ungrounded assertions where text is silent on ownership status."
+      },
+      {
+        "name": "geo_cluster",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Directly operationalizes the 'regional clustering' the query centers on, providing the grouping axis. However several samples appear mislabeled: Sand Hill Road (Menlo Park, Peninsula) rows are tagged 'South Bay', and 899 W Evelyn Ave (Sunnyvale/Mountain View) is fine, but the misassignment of clearly Peninsula addresses to South Bay indicates the mapping from Address/City is not consistently sound."
+      },
+      {
+        "name": "tech_focus_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A subjective ordinal that could add a modeling axis, but it is a coarse, somewhat generic derivation from description text with unclear criteria; many rows default to 'Medium', reducing its discriminative leverage. Values are plausible readings but not strongly warranted by the source."
+      },
+      {
+        "name": "description_length",
+        "analytical_usefulness": 0.1,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw text length bucket adds essentially no analytical leverage for explaining regional clustering by company traits; it is the generic length feature explicitly flagged as low-value. Values are trivially and correctly derivable from the text."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.68,
+    "rationale": "The core trait columns (industry_sector, company_type, geo_cluster) directly serve the query by giving real axes to correlate company traits with region, making the set analytically useful overall. Groundedness is moderate: extractions from descriptions are mostly sound, but there are notable errors—Accel mislabeled as 'Other Technology'/Private when clearly a VC, 280 Group as EdTech, and Peninsula/Sand Hill addresses assigned to 'South Bay'—indicating some values not supported by the source. tech_focus_level is weakly warranted and description_length adds little, dragging the holistic scores down modestly."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_regional",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

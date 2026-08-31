@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "focus_variable": "satisfaction_and_complaint_facets",
+  "concept": "satisfaction_and_complaint_facets",
+  "n_added_columns": 3,
+  "added_columns": [
+    "sentiment_type",
+    "primary_theme",
+    "theme_count"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1247,
+    "facet_fraction": 0.3333,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.35,
+    "mece": 0.3742,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "satisfaction_and_complaint_facets",
+    "per_column": [
+      {
+        "name": "sentiment_type",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Positive/negative sentiment is the overarching valence of satisfaction vs complaint itself, i.e. a restatement of the whole concept's polarity rather than a specific constitutive aspect (facet) of what the satisfaction or complaint is about."
+      },
+      {
+        "name": "primary_theme",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Values like food_quality, service, pricing, atmosphere, cleanliness, value, and portion_size are genuine aspects OF satisfaction/complaint -- the constitutive dimensions along which reviewers express praise or grievance. This is a real meronymic decomposition of the concept."
+      },
+      {
+        "name": "theme_count",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A count of how many themes appear is a meta/structural summary statistic, not an aspect OF satisfaction or complaint. It measures the enumeration, not a part of the concept."
+      }
+    ],
+    "facet_columns": [
+      "primary_theme"
+    ],
+    "non_facet_columns": [
+      "sentiment_type",
+      "theme_count"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.35,
+    "rationale": "Only one column (primary_theme) is a genuine faceted decomposition of the concept, and even it collapses multiple facets into a single 'primary' categorical rather than exposing each facet as its own aspect. sentiment_type merely restates the overall valence of the concept and thus overlaps conceptually with what the themes already encode (general_positive/general_negative buckets), hurting mutual exclusivity; theme_count is a structural meta-statistic, not a facet. Because the facet content is confined to a single column with a forced-primary constraint (and catch-all general_positive/general_negative buckets), the set does not exhaustively expose the concept's constitutive aspects as separate MECE facets."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

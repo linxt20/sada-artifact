@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Which clinical factors best explain longer visit durations?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "procedure_performed",
+    "chronic_condition_count",
+    "systems_involved_count",
+    "referral_or_consult",
+    "medication_mentions",
+    "note_word_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6667,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7833,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "procedure_performed",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A binary procedure/order flag is a plausible driver of visit duration and gives a real grouping axis. Grounding is mixed: labs ordered (row1) and MRI ordered (row5) reasonably count as procedures/orders, but the MI follow-up (row3) marked 1 has only an echo referenced as a past result, and the URI visit is 0, which is defensible. Some values stretch 'procedure performed' vs 'ordered'."
+      },
+      {
+        "name": "chronic_condition_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Chronic condition burden is a genuine clinical factor likely correlated with duration. Values look sound: post-MI on statin/beta-blocker = 1, acute URI/knee injury/acne/physical = 0. Reasonable readings of the text."
+      },
+      {
+        "name": "systems_involved_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Case complexity via organ-system count is a useful modeling axis. However some counts are questionable: the annual physical (row1) marked 4 seems inflated for a routine exam, and acne (row4) marked 2 is generous. Extraction is inconsistent and partly unsupported by the text."
+      },
+      {
+        "name": "referral_or_consult",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Referral/consult is a distinct workflow factor that plausibly lengthens visits. All five samples are 0, which is consistent with the source texts (none mention a referral/consult), so grounding is sound though variance is low in the sample."
+      },
+      {
+        "name": "medication_mentions",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Medication-related complexity is a reasonable axis. Values are well grounded: acne row correctly 1 (adapalene/doxycycline as new meds), URI 0. The MI follow-up scored 0 despite beta-blocker/statin is arguably a definitional choice (new vs continued meds), still defensible."
+      },
+      {
+        "name": "note_word_count",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw word count is a generic surface feature with little clinical explanatory leverage for the query and is near-constant (18-30, tightly clustered). Values are trivially derivable and accurate, but analytical value is low."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.78,
+    "rationale": "Most added columns supply genuine clinical axes (procedures/orders, chronic burden, case complexity, referrals, medications) that plausibly explain visit duration and enable grouping/modeling. Groundedness is generally acceptable but weakened by inflated systems_involved_count values (e.g. 4 systems for an annual physical) and some liberal readings of 'procedure performed'. note_word_count is well grounded but adds little analytical leverage for this query, dragging the holistic usefulness down."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_long_visit",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

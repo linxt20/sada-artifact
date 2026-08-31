@@ -1,0 +1,46 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "issue_category",
+    "issue_keywords"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.835,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.94,
+    "source_groundedness__table_level": 0.94,
+    "b1_overall": 0.8875,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.95,
+        "rationale": "Directly answers the query 'main kinds of issues' by providing a clean categorical axis to group and count tickets. The category set is coherent and non-trivial. All five sampled rows are correctly categorized (Billing, Authentication, Performance/Outage, Feature Request, Data/Reporting), reflecting sound readings of the source text."
+      },
+      {
+        "name": "issue_keywords",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.93,
+        "rationale": "Extracted salient keywords give a finer-grained lens beneath the category, useful for spotting recurring themes within kinds of issues. Somewhat redundant with issue_category and noisy/inconsistent, lowering leverage a bit, but still a distinct axis. Sampled keyword sets are well grounded in the source text (invoice/ach, sso/session, 502/outage, pin/competitor, csv/export)."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.94,
+    "rationale": "issue_category squarely serves the analytical query, offering the primary grouping needed to identify main issue kinds; issue_keywords adds a secondary, somewhat redundant but still useful thematic dimension. Both columns' values are soundly derivable from the source issue descriptions with no observed hallucinations across the samples."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 2
+}

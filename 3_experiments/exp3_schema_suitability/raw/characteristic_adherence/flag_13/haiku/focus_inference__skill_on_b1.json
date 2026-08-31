@@ -1,0 +1,67 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "n_added_columns": 5,
+  "added_columns": [
+    "problem_domain",
+    "severity_signal",
+    "scope_context",
+    "caller_recurrence",
+    "technician_workload"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.67,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.735,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_domain",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Categorizing incidents by domain (database, email, vpn, connectivity, etc.) gives a strong grouping axis for triaging what's worth attention. Values are cleanly derivable from short_description; samples map soundly (VPN->vpn, WiFi->connectivity, database->database, printing->hardware)."
+      },
+      {
+        "name": "severity_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "rationale": "Severity/impact categorization is highly useful for prioritizing attention. However short_descriptions are terse and often do not state scope of impact; labels like 'access_degraded' vs 'multi_user_service_outage' or 'infrastructure_failure' frequently rely on inference not clearly warranted by the text (e.g. 'Unable to connect to office VPN' -> access_degraded is plausible, but many such distinctions are not textually grounded)."
+      },
+      {
+        "name": "scope_context",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "rationale": "Scope (enterprise vs single-user vs building-wide) is a useful axis for attention. But groundedness is weak: 'Unable to connect to the office VPN' labeled 'enterprise_system' while near-identical 'Cannot connect to office VPN' also enterprise, and 'Cannot connect to office WiFi' labeled 'office_location' -- inconsistent and largely inferred beyond what terse text supports."
+      },
+      {
+        "name": "caller_recurrence",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "rationale": "Repeat vs single vs placeholder caller is a genuine new axis for spotting recurring problems. Derivable by aggregating caller_id across rows, and 'generic_placeholder' is a reasonable read. Some risk in single-row evidence, but the categorization is defensible from caller_id frequency."
+      },
+      {
+        "name": "technician_workload",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "rationale": "Bucketing assignees by volume gives a useful axis for understanding load and potential bottlenecks. Derivable from assigned_to/closed_by counts. Mild concern: sample uses closed_by (Fred Luddy) -> high_volume while others differ; the mapping is a warranted frequency-based inference."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.65,
+    "rationale": "The added columns provide several genuinely distinct analytical axes (domain, severity, scope, caller recurrence, technician load) that would meaningfully help an analyst decide what is worth attention, with little redundancy. Groundedness is the weaker dimension: problem_domain and the frequency-based columns are well-supported, but severity_signal and scope_context assert impact/scope specifics that terse short_descriptions often do not clearly support, producing some unwarranted confident inferences."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

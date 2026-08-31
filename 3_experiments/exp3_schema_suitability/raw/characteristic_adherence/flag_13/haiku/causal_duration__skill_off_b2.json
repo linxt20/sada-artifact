@@ -1,0 +1,154 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do resolution duration values vary across tickets?",
+  "focus_variable": "resolution_duration_variation",
+  "concept": null,
+  "n_added_columns": 14,
+  "added_columns": [
+    "resolution_hours",
+    "priority_numeric",
+    "is_network",
+    "is_database",
+    "is_software",
+    "is_hardware",
+    "duration_category",
+    "priority_avg_duration",
+    "category_avg_duration",
+    "duration_vs_priority_avg",
+    "duration_vs_category_avg",
+    "assignee_avg_duration",
+    "duration_vs_assignee_avg",
+    "has_round_duration"
+  ],
+  "metrics": {
+    "n_added_columns": 14,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.15,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.15,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_hours (resolution_duration)",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "The numeric resolution duration itself -- the outcome whose variation is being explained."
+      },
+      {
+        "name": "priority_numeric",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Priority is a candidate cause of resolution duration; a plausible treatment whose effect is being attributed."
+      },
+      {
+        "name": "is_network",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Category indicator; candidate cause of duration. One-hot slice of the category variable, a candidate driver rather than a common cause."
+      },
+      {
+        "name": "is_database",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Category indicator serving as another candidate driver of duration."
+      },
+      {
+        "name": "is_software",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Category indicator; candidate driver of duration."
+      },
+      {
+        "name": "is_hardware",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Category indicator; candidate driver of duration."
+      },
+      {
+        "name": "duration_category",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A binned version of the outcome itself, not an explanatory variable."
+      },
+      {
+        "name": "priority_avg_duration",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Group-mean of the outcome by priority -- a target-derived aggregate, essentially leakage from the outcome, not a confounder."
+      },
+      {
+        "name": "category_avg_duration",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Group-mean of the outcome by category -- outcome-derived aggregate, not a common cause."
+      },
+      {
+        "name": "duration_vs_priority_avg",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Deviation of the outcome from its own group mean -- a transformation of the outcome, not a predictor/confounder."
+      },
+      {
+        "name": "duration_vs_category_avg",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Outcome deviation from category mean -- derived from the outcome, not a confounder."
+      },
+      {
+        "name": "assignee_avg_duration",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Assignee historical average duration could proxy an assignee/skill effect that plausibly influences both assignment (which tickets/priorities go to whom) and duration; however it is largely outcome-derived, weakening its status."
+      },
+      {
+        "name": "duration_vs_assignee_avg",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Outcome deviation from assignee mean -- derived from the outcome, not a confounder."
+      },
+      {
+        "name": "has_round_duration",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Degenerate flag (all zeros); noise, no causal role."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "priority_numeric",
+      "is_network",
+      "is_database",
+      "is_software",
+      "is_hardware"
+    ],
+    "confounders": [
+      {
+        "name": "assignee_avg_duration",
+        "named_in_query": false,
+        "plausibility": 0.3
+      }
+    ],
+    "confounder_quality": 0.15,
+    "rationale": "The set supplies candidate treatments (priority, category one-hots) but essentially NO genuine confounders. A confounder must be a common cause of both a treatment and the outcome that is not derived from the outcome. Almost all remaining columns are outcome-derived aggregates or deviations (priority_avg_duration, category_avg_duration, assignee_avg_duration, and the *_vs_*_avg deviations) -- these are transformations of the outcome itself, constituting target leakage rather than confounding adjustment. There are no independent covariates such as ticket complexity, workload/queue length at open time, reassignment count, business hours, caller/requester attributes, or assignment-group capacity that would plausibly cause both which priority/category a ticket gets and how long it takes. Because the system surfaced no true common-cause covariates and instead recycled the outcome into group means, the causal-attribution capability under test is not realised."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 14
+}

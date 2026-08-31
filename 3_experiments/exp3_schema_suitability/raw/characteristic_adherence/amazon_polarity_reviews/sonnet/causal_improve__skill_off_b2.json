@@ -1,0 +1,77 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "focus_variable": "product_satisfaction",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "sentiment",
+    "mentioned_topics",
+    "seller_improvement_signal",
+    "review_length_bucket"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "product_satisfaction",
+    "per_column": [
+      {
+        "name": "sentiment",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Sentiment (positive/negative) is essentially a proxy for product satisfaction itself, the focus/outcome, not an intervenable treatment or confounder."
+      },
+      {
+        "name": "mentioned_topics",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Topics such as product_quality, sizing_fit, shipping_packaging, customer_service, pricing map to actionable levers a seller could change. As drivers of satisfaction they function as candidate intervenable treatments, though here they are extracted from the review text and thus partly mediating the expressed sentiment."
+      },
+      {
+        "name": "seller_improvement_signal",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Directly encodes an intervenable action a seller could take (improve quality, clarify sizing, improve shipping, review pricing). This is genuinely settable/decidable and aligns with the what-if framing."
+      },
+      {
+        "name": "review_length_bucket",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A mechanical property of the review text; not a common cause of both an intervenable treatment and satisfaction. Does not serve as a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "seller_improvement_signal",
+      "mentioned_topics"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns do identify intervenable treatments (seller_improvement_signal is an explicit settable action; mentioned_topics maps to configurable product/service levers), satisfying part (a) of the what-if claim. However, the set completely fails part (b): there is NO confounder among the added columns. A valid what-if design needs common causes of both the treatment (e.g., which improvement is pursued) and the outcome (satisfaction) to be adjusted for — for example product category, price tier, brand reputation, buyer expectations, or reviewer demographics, none of which appear. sentiment restates the outcome, and review_length_bucket is a mechanical text feature (mediator/noise at best, not a confounder). Because no confounders are present, none can be scored as named-or-unnamed, so the interventional counterfactual effect cannot be read off. The columns are reasonable as descriptive/attribution aids but do not realise a proper interventional design."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

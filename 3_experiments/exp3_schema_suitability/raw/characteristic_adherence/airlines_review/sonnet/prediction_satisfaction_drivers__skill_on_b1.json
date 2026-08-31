@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_attitude",
+    "crew_proactivity",
+    "service_consistency",
+    "operational_disruption_type",
+    "disruption_handling_quality",
+    "post_flight_resolution_quality",
+    "special_needs_accommodation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7414,
+    "analytical_usefulness__table_level": 0.76,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.79,
+    "b1_overall": 0.7707,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_attitude",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Crew attitude is a plausible major driver of satisfaction and gives a genuine grouping axis. Values are well-grounded in the samples (positive greeting -> positive; no service seen -> negative). The 'positive' label on the deficient-reservation row is defensible since the review calls employees friendly, though it slightly mixes crew vs. non-flight service. Balanced distribution supports discriminative value."
+      },
+      {
+        "name": "crew_proactivity",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct from attitude, capturing whether crew anticipated needs; a useful additional axis for modeling service drivers. Samples are well-supported (2.5 hours no service -> absent_neglectful; hard-working crew -> proactive). Reasonable Unknown for silent row."
+      },
+      {
+        "name": "service_consistency",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Consistency of service is a reasonable analytical lens with a well-spread distribution. However groundedness is weaker: the itinerary-change row (SQ101 not operating) has no in-flight service description yet was labeled 'consistently_poor', which the text does not support. Some labels appear to conflate overall sentiment with service consistency."
+      },
+      {
+        "name": "operational_disruption_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A clear, non-trivial categorical axis (delay/cancellation/etc.) directly relevant to satisfaction drivers. Samples are well-read: rescheduling -> flight_delay, non-operating flight -> cancellation. Mostly no_disruption is realistic. Minor ambiguity between delay/cancellation labeling but generally sound."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Handling quality conditioned on a disruption is a strong driver dimension distinct from disruption type. Values track the text (passive_poor for the rescheduling+bad seat reallocation). Reasonable no_disruption pass-through for calm rows."
+      },
+      {
+        "name": "post_flight_resolution_quality",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Captures resolution of complaints, a genuine axis though it overlaps partly with disruption_handling. Grounded reasonably: reservation issue never resolved -> refused_or_ignored; smooth flights -> no_issue_raised. Values are sound readings of the samples."
+      },
+      {
+        "name": "special_needs_accommodation",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Heavily skewed (863 false / 37 true), so near-constant and offers limited analytical leverage for the general satisfaction question. Where present the false values are correctly grounded (no mention -> false), so groundedness is fine, but usefulness is weak due to sparsity."
+      }
+    ],
+    "analytical_usefulness": 0.76,
+    "source_groundedness": 0.79,
+    "rationale": "The added columns provide several genuine, distinct axes (crew attitude, proactivity, disruption type and handling, post-flight resolution) that are highly relevant to modeling satisfaction drivers and are largely well-grounded in the review text. Weaknesses: special_needs_accommodation is near-constant and adds little leverage, and service_consistency shows some grounding drift (labeling rows 'consistently_poor' where the source text lacks in-flight service evidence). Overall the set is analytically useful and mostly faithful to the source."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

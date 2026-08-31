@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "focus_variable": "airline_competitive_advantage",
+  "concept": "airline_competitive_advantage",
+  "n_added_columns": 5,
+  "added_columns": [
+    "is_high_rating",
+    "primary_advantage",
+    "advantage_strength",
+    "is_exceptional_service",
+    "attribute_count_high"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0346,
+    "facet_fraction": 0.2,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.15,
+    "mece": 0.1732,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_competitive_advantage",
+    "per_column": [
+      {
+        "name": "is_high_rating",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "This is a binary flag on Overall Rating, i.e. the segmentation/outcome condition of the query. Overall rating is what competitive advantage is meant to explain; it is not an aspect OF competitive advantage. It is a whole-outcome indicator, not a part-of the concept."
+      },
+      {
+        "name": "primary_advantage",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Although its category values (Seat Comfort, Staff Service, Value For Money, Food & Beverages, Inflight Entertainment) name genuine facets, this column collapses the whole concept into a single winner-take-all label. It restates 'the competitive advantage' as one categorical rather than being one aspect OF it, and it does not provide separate non-overlapping facet dimensions."
+      },
+      {
+        "name": "advantage_strength",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Conceptually a magnitude/overall-intensity measure of the whole advantage, not a constitutive aspect. It also is degenerate (constant 0 across all 8100 rows), carrying no decompositional information about any facet."
+      },
+      {
+        "name": "is_exceptional_service",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "This targets the staff-service dimension, which is a genuine part-of / aspect of an airline's competitive advantage. It is a weak realization (binary threshold rather than a clean facet dimension) and overlaps with the 'Staff Service' value in primary_advantage, but it does map to a real constitutive facet."
+      },
+      {
+        "name": "attribute_count_high",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A count of how many attributes are rated high is an aggregate summary of the whole advantage profile (its breadth/magnitude), not a specific aspect OF the concept. It sums across facets rather than carving one out."
+      }
+    ],
+    "facet_columns": [
+      "is_exceptional_service"
+    ],
+    "non_facet_columns": [
+      "is_high_rating",
+      "primary_advantage",
+      "advantage_strength",
+      "attribute_count_high"
+    ],
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.15,
+    "rationale": "This set does not realize a faceted MECE decomposition of 'airline_competitive_advantage'. The constitutive facets of the concept are the competitive dimensions already present as ratings (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment, Value For Money); a proper decomposition would express each as its own non-overlapping facet column. Instead: is_high_rating is the outcome/segmentation flag (overall rating), advantage_strength and attribute_count_high are whole-concept magnitude/breadth summaries (one degenerate constant), and primary_advantage collapses the concept into a single winner-take-all label. Only is_exceptional_service weakly isolates one true facet (service). Mutual exclusivity is low because the advantage-related columns (primary_advantage, is_exceptional_service, attribute_count_high) all re-derive from the same underlying attribute ratings and overlap on 'service'. Exhaustiveness is very low because the concept's main constitutive aspects are not each represented as facets."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

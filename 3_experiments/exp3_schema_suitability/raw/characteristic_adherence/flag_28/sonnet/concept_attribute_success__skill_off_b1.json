@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What goal-management practices support high achievement?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "goal_specificity_score",
+    "has_quantified_target",
+    "goal_duration_days",
+    "priority_numeric",
+    "achievement_vs_target",
+    "goal_outcome"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7083,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.725,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7167,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_specificity_score",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A specificity ordinal is a genuine new axis directly relevant to goal-management practices and achievement. Descriptions vary in specificity, so scores are broadly derivable, though the scoring rubric is opaque and some assignments (e.g. the detailed engagement-program goal scored 1) are questionable, lowering groundedness somewhat."
+      },
+      {
+        "name": "has_quantified_target",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Whether a goal states a numeric target is a meaningful practice dimension for achievement. However it is near-constant (548 Yes vs 2 No), giving little discriminating power for THIS query, capping usefulness. Values are well grounded: sampled descriptions all contain explicit percentages/counts."
+      },
+      {
+        "name": "goal_duration_days",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Duration is a solid new axis to model against achievement. But values appear derived from start/end dates that are not clearly reflected in descriptions, and some are inconsistent with stated timeframes (e.g. a 'next quarter' goal at 316 days, a 'Q4' goal at 148, an 'upcoming year' at 477 vs a 20% cut labeled 11 days). Warranted where dates exist, but several look poorly grounded."
+      },
+      {
+        "name": "priority_numeric",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A numeric recast of the existing 'priority' original column; trivially redundant, so it adds little analytical leverage beyond enabling sorting. Values are directly grounded in the priority field."
+      },
+      {
+        "name": "achievement_vs_target",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "A binned achievement measure is central to the query and a strong grouping axis. Derivable from percent_complete/target_percentage. However sample labels are inconsistent: the 78%->90% goal is 'Achieved' while a similar 75%->85% goal is 'Low Progress', and a 20% reduction is 'Achieved' with no visible completion evidence, indicating some ungrounded assignments."
+      },
+      {
+        "name": "goal_outcome",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A consolidated outcome category is useful for outcome analysis, though it largely restates state + achievement_vs_target. Mostly derivable from state/percent_complete, but 'Cancelled' for the engagement-program row and other labels are not clearly supported by the sampled source text."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.68,
+    "rationale": "Most columns provide genuine axes (specificity, quantified target, duration, achievement, outcome) directly relevant to what supports high achievement; priority_numeric and has_quantified_target are weaker due to redundancy and near-constancy respectively. Groundedness is moderate: quantified-target and priority values are well supported, but duration, achievement_vs_target, and goal_outcome show several assignments that conflict with or exceed the stated source text, indicating some fabricated specifics."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

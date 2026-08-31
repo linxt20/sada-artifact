@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "focus_variable": "regional_fit",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "business_model_category",
+    "remote_delivery_capability",
+    "localization_dependency",
+    "current_geographic_presence",
+    "customer_engagement_model",
+    "physical_infrastructure_intensity"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "regional_fit",
+    "per_column": [
+      {
+        "name": "business_model_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query explicitly proposes shifting the business model toward service-oriented or localized; this categorizes the current business model, which is the intervenable lever the actor could set/change."
+      },
+      {
+        "name": "remote_delivery_capability",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Remote vs on-site delivery is a channel through which a business-model shift would affect regional fit; it lies on the causal path from treatment to outcome, so it is a mediator rather than a confounder."
+      },
+      {
+        "name": "localization_dependency",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "Localization is part of the proposed treatment ('localized model'); as a consequence/component of the shift affecting fit, it is a mediator, not a common cause."
+      },
+      {
+        "name": "current_geographic_presence",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Current geographic footprint plausibly influences both the existing business model (treatment) and regional fit (outcome), and is not named in the query."
+      },
+      {
+        "name": "customer_engagement_model",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Engagement model (enterprise vs consumer, B2B/B2C) is largely a facet/downstream of the business model shift affecting fit, so it functions as a mediator rather than an independent common cause."
+      },
+      {
+        "name": "physical_infrastructure_intensity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Capital/physical infrastructure intensity is a structural characteristic that shapes both what business model is feasible (treatment) and how well the firm fits a new region (outcome); not named in query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "business_model_category"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "current_geographic_presence",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "physical_infrastructure_intensity",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The treatment (business_model_category) is genuinely intervenable and matches the query's proposed shift, satisfying part (a). However, most added columns (remote_delivery_capability, localization_dependency, customer_engagement_model) are mediators/components of the treatment shift rather than confounders, since they lie on the causal path from a business-model change to regional fit. Only physical_infrastructure_intensity and current_geographic_presence plausibly act as common causes of both the current business model and regional fit, and while both are unnamed in the query, they are structural traits that arguably determine the model as much as cause it, making their confounder status moderate. The set under-delivers on the decisive test: it provides few clean, non-named confounders to adjust for before reading off the counterfactual effect."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

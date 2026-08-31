@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some agents have longer resolution times?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "incident_symptom_type",
+    "affected_system_scope",
+    "ticket_handoff",
+    "recurrence_indicator"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.83,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.618,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.724,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents from short_description gives a strong axis to group resolution times by problem type, directly relevant to the query. Sample values (database, vpn, network_connectivity, software_application) are sound readings of the descriptions."
+      },
+      {
+        "name": "incident_symptom_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Symptom type is a useful orthogonal axis (outage vs. slow vs. error) plausibly correlated with resolution effort. Mostly grounded, though 'error_message' for 'Software update issue' and 'slow_degraded_performance' for 'connection unstable' are somewhat loose inferences from terse text."
+      },
+      {
+        "name": "affected_system_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual vs. server vs. systemic) is a genuinely useful driver of resolution time. However values are frequently inferred beyond what terse descriptions state, e.g. 'Unable to access the database' -> 'server_infrastructure' and 'VPN issue' -> 'individual_device' are guesses the text does not clearly warrant."
+      },
+      {
+        "name": "ticket_handoff",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Whether a ticket was handed off could plausibly explain longer resolution times and is analytically useful. But the source text shown (short_description plus timestamps) provides no basis for a True/False handoff flag; assignment_group/assigned_to differences aren't evidenced in the samples, so values appear largely invented."
+      },
+      {
+        "name": "recurrence_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Recurrence is relevant to resolution-time analysis. Yet grounding is weak: 'VPN issue, frequent disconnection' clearly signals recurrence but is marked False, and other rows are flagged without textual support, indicating values are not reliably derived from the source."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.6,
+    "rationale": "All five columns supply genuine, non-redundant axes (category, symptom, scope, handoff, recurrence) for explaining resolution-time variation, so analytical usefulness is high across the board. Groundedness is mixed: the category and symptom columns are sound readings of short_description, but affected_system_scope, ticket_handoff, and recurrence_indicator assert specifics the sampled source text does not support (including a contradiction where 'frequent disconnection' is marked non-recurring), lowering the table-level groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

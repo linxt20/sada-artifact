@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "issue_domain",
+    "severity_signal",
+    "resolution_path_complexity",
+    "assignee_specialization",
+    "caller_profile",
+    "infrastructure_outage_indicator",
+    "diagnostic_clarity"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4714,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.1429
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "issue_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from short_description, this categorizes the incident type (email, database, vpn, etc.). It lies outside resolution_time, is knowable at open time, and different domains plausibly have different resolution durations. Legitimate predictor."
+      },
+      {
+        "name": "severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures the nature/severity of the issue (system_down, outage, degraded_performance) extracted from description. Knowable at intake and severity plausibly drives resolution time. Legitimate predictor, though somewhat correlated with priority."
+      },
+      {
+        "name": "resolution_path_complexity",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether a different person closed the incident vs the resolver is only known once the ticket has been worked and closed. This is a post-outcome property tied to the resolution process itself, so it leaks information not available before resolution."
+      },
+      {
+        "name": "assignee_specialization",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Identifies the assignee, which is known at assignment (before resolution). Different assignees/specializations plausibly resolve at different speeds. It essentially restates assigned_to (already in the original table), so it adds little marginal signal, but it is a valid predictor, not leakage."
+      },
+      {
+        "name": "caller_profile",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorizes the caller's reporting history (single_report, repeat_caller, system_reporter). Knowable at open time and plausibly correlated with issue complexity/resolution time. Legitimate predictor."
+      },
+      {
+        "name": "infrastructure_outage_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A boolean flag inferable from the incident description/category at intake, marking infrastructure outages which plausibly take longer. Valid predictor, though overlapping with issue_domain/severity_signal."
+      },
+      {
+        "name": "diagnostic_clarity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Indicates whether the incident is well-characterized/diagnosable, derivable from the description at intake. Poor diagnostic clarity plausibly extends resolution time. Legitimate predictor if judged from intake-available text."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.55,
+    "rationale": "Most columns are legitimate, intake-time predictors of resolution_time with plausible signal (issue_domain, severity_signal, caller_profile, infrastructure_outage_indicator, diagnostic_clarity). resolution_path_complexity is leakage: whether a different person closed the ticket is only known after the incident is worked/closed. assignee_specialization is a valid predictor but largely restates the existing assigned_to column, so its marginal contribution is limited. Several remaining predictors overlap heavily with each other and with existing priority/category columns, dampening incremental leverage. Overall the set offers moderate genuine predictive lift beyond the original table."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

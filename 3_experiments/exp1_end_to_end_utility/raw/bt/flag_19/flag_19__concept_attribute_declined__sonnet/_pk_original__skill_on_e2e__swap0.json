@@ -1,0 +1,145 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.62,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "27 of 46 declined rows are Assets (58.7%)",
+        "why": "numeric claims tied to base columns"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Within IT + Assets, 13 of 23 rows are declined (56.5%)",
+        "why": "cross-group segmentation"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "no explicit decline reason, receipt status, approver note",
+        "why": "acknowledges limits, no fabrication"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "asset-expense misclassification, missing traceability, and category misuse",
+        "why": "decision-ready risks"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "30.4% of declined lack source_id; 100% of Travel/Misc declined",
+        "why": "quantified with comparison group"
+      },
+      {
+        "dimension": "depth",
+        "quote": "auto_generated_action (13 declined)... high-value Assets ($8,301; $7,990)",
+        "why": "detailed causal segmentation"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "EXP00000238, $8,084",
+        "why": "row-level identifiers"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "TAPP-generated columns used: asset_category, entry_origin...",
+        "why": "relies on columns not in augmented list, weakening auditability"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "source_id_present",
+        "quote": "Missing Source ID (source_id_present)",
+        "dependent": true
+      },
+      {
+        "column": "ci_id_quality",
+        "quote": "ci_id_quality = opaque_code",
+        "dependent": true
+      },
+      {
+        "column": "asset_lifecycle_action",
+        "quote": "asset_lifecycle_action = auto_generated_action",
+        "dependent": true
+      },
+      {
+        "column": "entry_origin",
+        "quote": "entry_origin = auto_generated",
+        "dependent": true
+      },
+      {
+        "column": "asset_category",
+        "quote": "hardware_laptop (23/46, 50%)",
+        "dependent": true
+      },
+      {
+        "column": "travel_related",
+        "quote": "travel_related = True for 10/46",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "Both are strong, but A grounds every claim in stated visible columns while B leans on augmented columns not in its provided list, slightly weakening auditability.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

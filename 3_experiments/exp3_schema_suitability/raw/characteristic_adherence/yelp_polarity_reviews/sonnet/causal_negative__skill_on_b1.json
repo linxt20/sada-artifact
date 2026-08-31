@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "service_staff_behavior",
+    "service_attentiveness",
+    "food_quality_issue",
+    "food_flavor_issue",
+    "complaint_severity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.854,
+    "analytical_usefulness__table_level": 0.86,
+    "source_groundedness": 0.876,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.865,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_staff_behavior",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizes staff conduct into a rich set of failure/success modes directly relevant to explaining negative experiences. Samples map soundly: friendly for Oliveo, indifferent for the forgetful diner, discriminatory for the 'not of color' review."
+      },
+      {
+        "name": "service_attentiveness",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A distinct axis (responsiveness) separate from staff demeanor, giving genuine grouping leverage. 'ignored_or_forgotten' for YLP-0002 and 'attentive_and_prompt' for positive reviews are well-grounded."
+      },
+      {
+        "name": "food_quality_issue",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Fine-grained physical food problems provide a useful driver axis. 'portion_too_small' for the 12-inch pizza complaint is a sound reading; positive/not_present values are warranted for the samples shown."
+      },
+      {
+        "name": "food_flavor_issue",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Flavor is a separate dimension from physical quality and adds analytical value. Groundings look reasonable, though flavor is often only weakly implied; the silent/positive readings are defensible."
+      },
+      {
+        "name": "complaint_severity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "An ordinal severity scale is useful for modeling intensity of negative experiences. However, values are subjective and partly ungrounded: YLP-0003 is a mild positive review with a minor gripe yet scores 2, and the discriminatory YLP-0005 scores only 4 while a forgotten-table review scores 5, suggesting inconsistent/invented calibration not clearly warranted by text."
+      }
+    ],
+    "analytical_usefulness": 0.86,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns decompose service and food experience into several distinct, non-redundant axes plus an intensity scale, all directly serving the query about drivers of negative Yelp experiences. Categorical columns are well-grounded in the source text with sensible 'not_present' handling for silent rows. The main weakness is complaint_severity, whose numeric scores are subjective and show inconsistent calibration across samples, reducing its groundedness though not its usefulness."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

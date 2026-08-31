@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "avg_service_rating",
+    "lowest_service_dimension",
+    "rating_service_gap",
+    "customer_segment",
+    "critical_issue_type",
+    "is_problem_review"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.725,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.3917,
+    "source_groundedness__table_level": 0.37,
+    "b1_overall": 0.5584,
+    "hallucination_rate": 0.8333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "avg_service_rating",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A composite average of the numeric service sub-ratings is a reasonable analytical axis for diagnosing overall rating drivers. However, the values contradict the review text in several samples: the glowing 'Excellent performance on all fronts' review gets 2.8 and the 'dreadful seats' review gets 3.4, while the amazing 9/10 review gets only 4.0. These are inconsistent with the source narratives, indicating the average is either mis-computed or drawn from fields not matching sentiment."
+      },
+      {
+        "name": "lowest_service_dimension",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Identifying the weakest dimension per review is directly useful for the 'where to improve' query. But grounding is weak: the 'Excellent performance' review and the food-praising economy review are both tagged 'Seat Comfort' as lowest despite text praising comfort/food, and the emergency-exit review explicitly complaining about seats/headphones is tagged 'Value For Money'. Several values do not match the source text."
+      },
+      {
+        "name": "rating_service_gap",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "The gap between overall rating and averaged service scores is a legitimate analytical measure to spot over/under-performance. However, its correctness depends on avg_service_rating, which is unreliable; e.g., the excellent review shows a gap of 7.2 and the dreadful-seats review -0.4, which are hard to reconcile with the text and inherit the upstream inaccuracy."
+      },
+      {
+        "name": "customer_segment",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A high-value vs economy segmentation could add a grouping axis, and Class exists to derive it. But it is largely redundant with the original Class column, and the values are questionable: an explicitly stated economy-class London flight is fine, yet the Jakarta review with no class stated is asserted 'high_value_segment' without support."
+      },
+      {
+        "name": "critical_issue_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Categorising the primary complaint type is highly relevant for targeting improvements on non-recommended flights. However values often contradict text: the 'Excellent performance' review is labelled 'seat_comfort_issue', and the seat/entertainment complaint is labelled 'value_issue' rather than seat comfort. The category is useful in principle but frequently mis-assigned."
+      },
+      {
+        "name": "is_problem_review",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A binary problem flag is a fairly generic sentiment-style indicator and partly redundant with Recommended/Overall Rating. The sampled flags are mostly plausible (the dreadful-seats review = 1, praise reviews = 0), so grounding is moderate, but analytical leverage beyond existing signals is limited."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.37,
+    "rationale": "As a set, the added columns target genuinely useful axes for the improvement query: weakest-dimension identification, critical issue categorisation, and rating-vs-service gaps directly support diagnosing why passengers do not recommend. However, source groundedness is the dominant weakness: across the provided evidence samples the derived values repeatedly contradict the review text (glowing reviews scored low, complaint-free reviews flagged with seat issues, mismatched lowest-dimension and issue labels, and an unsupported high-value segment assignment). The composite numeric columns (avg_service_rating, rating_service_gap) appear mis-computed, propagating error. Usefulness is decent but reliability of the values is low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

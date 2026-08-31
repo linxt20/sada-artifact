@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "product_quality_failure",
+    "performance_misalignment",
+    "design_flaw_type",
+    "customer_experience_failure",
+    "value_mismatch_type",
+    "reviewer_emotional_intensity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7083,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7233,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7158,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_quality_failure",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Categorizes a concrete failure axis (performance, build, durability) directly relevant to identifying drivers of negative reviews. Values in samples are correctly 'not_present' for reviews about dolls, books, music, and cosmetics where no quality failure is described; groundedness supported."
+      },
+      {
+        "name": "performance_misalignment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Captures whether the product underperforms claims - a distinct, useful factor. Some conceptual overlap with product_quality_failure's 'performance_issue', but it targets claims-vs-reality specifically. Samples correctly marked 'not_present'."
+      },
+      {
+        "name": "design_flaw_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis (ergonomics, safety, operation difficulty) that gives real grouping leverage for physical products. Sample values plausibly 'not_present' for non-physical items. Well grounded."
+      },
+      {
+        "name": "customer_experience_failure",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Useful high-level bucket, but its values look questionable: reviews about the absence of a black doll, a disappointing book, and a diss track are all labeled 'value_mismatch', which is a strained reading. These are content/preference complaints, not value/price mismatches, suggesting over-eager categorization not well grounded in the text."
+      },
+      {
+        "name": "value_mismatch_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a specific price/value sub-dimension (durability-for-cost, false advertising) useful for the query. Correctly 'not_present' across all samples where price is not discussed; conservative and grounded."
+      },
+      {
+        "name": "reviewer_emotional_intensity",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A generic intensity score close to a bare sentiment-strength flag, giving limited analytical leverage for identifying WHICH factors drive negativity. Values also look inconsistent/inflated: a glowing positive skincare review ('can't get enough of it') and a positive film review both scored 4, contradicting the text's tone, undermining groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.72,
+    "rationale": "Most added columns provide genuine, distinct axes (quality failure, performance vs claims, design flaws, value mismatch) that directly support diagnosing drivers of negative reviews, with conservative and mostly well-grounded 'not_present' handling. Weaknesses: customer_experience_failure applies 'value_mismatch' too loosely to preference/content complaints, and reviewer_emotional_intensity is both generically low-leverage and mis-scores clearly positive reviews as high intensity, indicating some ungrounded values."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

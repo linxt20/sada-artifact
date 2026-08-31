@@ -1,0 +1,134 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 12,
+  "added_columns": [
+    "cabin_crew_sentiment",
+    "service_consistency",
+    "service_frequency_complaint",
+    "seat_comfort_issue",
+    "food_quality_sentiment",
+    "special_meal_handling",
+    "disruption_handling_quality",
+    "ground_service_quality",
+    "customer_service_responsiveness",
+    "value_for_class_perception",
+    "class_product_expectation_gap",
+    "service_decline_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.87,
+    "predictor_fraction": 1.0,
+    "n_predictors": 12,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.87,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "cabin_crew_sentiment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categorical theme extracted from review text with well-separated, human-readable levels (poor_rude, warm_proactive, professional_adequate, inconsistent) that are near-balanced. Ideal for segmenting Overall Rating and cross-tabbing with Type of Traveller/Class."
+      },
+      {
+        "name": "service_consistency",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable four-level theme (consistent_low, consistent_high, inconsistent_by_leg, inconsistent_by_crew) with healthy support in every bucket; supports meaningful comparison of ratings across consistency patterns."
+      },
+      {
+        "name": "service_frequency_complaint",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean boolean flag with a clear semantic meaning. It is skewed (~5.7% true), so the comparison rests on a smaller subgroup, but 460 rows is still enough to contrast mean rating between the two groups."
+      },
+      {
+        "name": "seat_comfort_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Thematic decomposition of comfort remarks (adequate, comfortable_spacious, cramped_narrow, broken_defective) with interpretable categories. High NULL share (~38%, theme not mentioned) shrinks the compared population but is itself an informative 'mentioned vs not' contrast. Distinct from the existing numeric Seat Comfort rating, not a restatement of the focus."
+      },
+      {
+        "name": "food_quality_sentiment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable ordinal-like sentiment (positive/adequate/negative) over food. High NULL (~45%) reduces coverage but the non-null levels remain well separated and comparable against Overall Rating."
+      },
+      {
+        "name": "special_meal_handling",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable niche boolean. Heavily skewed (~4.3% true), so it is close to near-constant and offers only weak comparative power, but the true group (345) is still a legitimate segment for a targeted comparison."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated categories (poorly_handled_dismissive, proactive_excellent, adequate) with an explicit not_applicable gate. The applicable subset (~2600) yields a strong, interpretable relationship to rating; not_applicable is a coherent segment rather than opaque noise."
+      },
+      {
+        "name": "ground_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable multi-level theme (poor_rude, smooth_positive, disorganized_slow, adequate) covering a review dimension not in the original numeric columns; supports clear segmentation despite a ~42% NULL share."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Balanced, human-readable levels (responsive_helpful, unresponsive_rude, not_contacted, slow_inadequate) with strong support in each; an excellent associational variable for comparing Overall Rating."
+      },
+      {
+        "name": "value_for_class_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal, well-populated expectation scale (poor_value → exceeds_expectations) that ties value to the booked Class, directly enabling the requested Class-conditioned analysis of rating. Distinct theme, not a restatement of Overall Rating."
+      },
+      {
+        "name": "class_product_expectation_gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable ordinal gap (below_expectation/met/exceeded) with strong support in all levels; a natural segmentation for how the class product relates to Overall Rating across traveller types."
+      },
+      {
+        "name": "service_decline_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable boolean capturing a 'things got worse' narrative. Skewed (~7.6% true) so comparative power is modest, but 619 rows form a usable segment for contrasting rating."
+      }
+    ],
+    "n_predictors": 12,
+    "relationship_informativeness": 0.87,
+    "rationale": "The set is a strong fit for exploratory analysis: nearly every column is an external, associational theme mined from the free-text Reviews field and expressed as named, well-separated categories or clean booleans rather than opaque scores, so a human can group/segment on them and compare Overall Rating across Type of Traveller and Class. None restate the focus (Overall Rating), and even columns overlapping existing numeric ratings (seat_comfort_issue, food_quality_sentiment, value_for_class_perception) add interpretable categorical framing. Deductions: (1) three boolean flags (service_frequency_complaint ~5.7%, special_meal_handling ~4.3%, service_decline_perception ~7.6%) are heavily skewed toward near-constant, limiting comparative leverage; (2) several themes carry large NULL/not_applicable shares (~38–67%), which shrink the compared subpopulations even though the 'mentioned vs not' split is itself informative. Overall, the columns realise the EDA claim well, hence a high but not perfect informativeness score."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 12
+}

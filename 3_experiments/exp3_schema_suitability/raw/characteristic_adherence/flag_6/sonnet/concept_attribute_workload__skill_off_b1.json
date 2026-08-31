@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_hours",
+    "priority_score",
+    "updated_after_close",
+    "workload_index"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.5875,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.6438,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Resolution time is a direct proxy for agent effort and highly relevant to workload. However, the samples show closed_at == sys_updated_on, and opened_at is not shown; the produced values (e.g. 286.79, 348.57) cannot be verified from the timestamps provided and would be 0 if derived from the two identical timestamps. The values likely come from opened_at (present in original columns) so grounding is plausible but the shown evidence does not support the specific numbers, lowering confidence."
+      },
+      {
+        "name": "priority_score",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A numeric recoding of the existing 'priority' column. Priority is relevant to workload but this is largely redundant with an original column, providing little new analytical axis. Values are directly grounded in the existing priority field."
+      },
+      {
+        "name": "updated_after_close",
+        "analytical_usefulness": 0.1,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "The flag is 0 for all 500 rows, making it near-constant and offering no discriminating power for the analysis. It is well grounded (sys_updated_on == closed_at yields 0), but a constant column adds no leverage."
+      },
+      {
+        "name": "workload_index",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A composite index directly targeting the query's notion of agent workload gives a genuine modelling/ranking axis. However it is derived largely from resolution_hours (values track it closely) so partly redundant, and its grounding inherits the same unverifiable derivation as resolution_hours; the exact formula and inputs are not demonstrably supported by the shown source text."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.65,
+    "rationale": "resolution_hours and workload_index provide strong, query-relevant axes for measuring agent effort, while priority_score is a redundant recoding and updated_after_close is a constant with no analytical value. Grounding is solid for the recoded/flag columns but only partially supported for the two time-derived columns: the evidence samples show identical closed_at/sys_updated_on timestamps that cannot reproduce the large resolution_hours values, and workload_index inherits that uncertainty. Overall moderately useful and moderately grounded."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

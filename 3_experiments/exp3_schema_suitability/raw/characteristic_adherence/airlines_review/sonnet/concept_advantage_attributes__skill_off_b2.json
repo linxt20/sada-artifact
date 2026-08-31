@@ -1,0 +1,123 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "focus_variable": "airline_competitive_advantage",
+  "concept": "airline_competitive_advantage",
+  "n_added_columns": 10,
+  "added_columns": [
+    "adv_food",
+    "adv_staff",
+    "adv_seat_comfort",
+    "adv_entertainment",
+    "adv_value",
+    "adv_lounge",
+    "adv_punctuality",
+    "adv_cleanliness",
+    "advantage_attribute_count",
+    "top_advantage_attribute"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6597,
+    "facet_fraction": 0.8,
+    "n_facets": 8,
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.8,
+    "mece": 0.8246,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_competitive_advantage",
+    "per_column": [
+      {
+        "name": "adv_food",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Food & beverage quality is a genuine constitutive aspect of an airline's competitive advantage."
+      },
+      {
+        "name": "adv_staff",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Staff/service quality is a real facet of the airline's advantage profile."
+      },
+      {
+        "name": "adv_seat_comfort",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Seat comfort is a distinct aspect of the product offering that constitutes advantage."
+      },
+      {
+        "name": "adv_entertainment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Inflight entertainment is a separable constitutive aspect of the offering."
+      },
+      {
+        "name": "adv_value",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Value-for-money is a legitimate facet of competitive advantage (price/quality dimension)."
+      },
+      {
+        "name": "adv_lounge",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Lounge/ground experience is a distinct constitutive aspect of the airline offering."
+      },
+      {
+        "name": "adv_punctuality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Punctuality/reliability is a genuine operational facet of competitive advantage."
+      },
+      {
+        "name": "adv_cleanliness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Cleanliness/hygiene is a distinct constitutive aspect of the cabin experience."
+      },
+      {
+        "name": "advantage_attribute_count",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "An aggregate count of how many advantage flags are set is a summary of the whole, not a distinct aspect OF the concept; it restates the facet set in scalar form."
+      },
+      {
+        "name": "top_advantage_attribute",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A pointer to which facet dominates is a meta-summary over the facets, not itself a constitutive part of the concept."
+      }
+    ],
+    "facet_columns": [
+      "adv_food",
+      "adv_staff",
+      "adv_seat_comfort",
+      "adv_entertainment",
+      "adv_value",
+      "adv_lounge",
+      "adv_punctuality",
+      "adv_cleanliness"
+    ],
+    "non_facet_columns": [
+      "advantage_attribute_count",
+      "top_advantage_attribute"
+    ],
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.8,
+    "rationale": "Eight of the ten added columns are genuine part-of facets that carve airline competitive advantage into largely non-overlapping aspects (food, staff, seat comfort, entertainment, value, lounge, punctuality, cleanliness), covering most of the concept's main constitutive dimensions, though items like baggage handling, booking/website, or safety are absent. Mutual exclusivity is high but not perfect: value-for-money partially overlaps with the price/quality tradeoff implicit across the other quality facets. The two remaining columns (advantage_attribute_count, top_advantage_attribute) are scalar/meta restatements of the facet set rather than constitutive facets themselves, so they do not realise the faceted-decomposition claim."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

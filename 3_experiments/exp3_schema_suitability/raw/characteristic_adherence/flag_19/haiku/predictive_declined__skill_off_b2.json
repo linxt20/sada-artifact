@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "missing_source_id",
+    "missing_processed_date",
+    "is_pending",
+    "is_submitted",
+    "is_it_department",
+    "is_travel_category",
+    "amount_is_low",
+    "amount_is_high",
+    "processing_delay_days",
+    "risk_score"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.27,
+    "predictor_fraction": 0.6,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.2
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Absence of a source id is a plausible data-quality signal available at or before decision time and lies outside the outcome."
+      },
+      {
+        "name": "missing_processed_date",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether a processed date exists is tightly coupled to whether/how the expense reached a terminal state; it is largely determined by the outcome-processing step rather than being an independent pre-decision predictor."
+      },
+      {
+        "name": "is_pending",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Derived from the same 'state' field as the focus; pending vs declined are mutually exclusive states, so this restates/partitions the outcome variable rather than predicting it."
+      },
+      {
+        "name": "is_submitted",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Also a decode of the 'state' field. Being in another state category is a component of the same outcome variable, not an external predictor."
+      },
+      {
+        "name": "is_it_department",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Department is a legitimate ex-ante attribute plausibly correlated with decline rates and independent of the outcome."
+      },
+      {
+        "name": "is_travel_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Expense category is known before adjudication and can carry signal about decline likelihood."
+      },
+      {
+        "name": "amount_is_low",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Thresholded amount is a pre-decision feature plausibly related to decline (small amounts auto-approved)."
+      },
+      {
+        "name": "amount_is_high",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "High-amount flag is an ex-ante predictor plausibly linked to scrutiny and decline."
+      },
+      {
+        "name": "processing_delay_days",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Computed from processed_date, which is post-adjudication; the 999 sentinel coincides with missing processed date and thus encodes the outcome. Not knowable before the decision."
+      },
+      {
+        "name": "risk_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "An engineered composite risk indicator; if built from pre-decision attributes it is a legitimate predictor, though its provenance is opaque and could hide leakage. Judged conservatively as a predictor."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.45,
+    "rationale": "The set is a mix. Genuine ex-ante predictors (department, category, amount thresholds, missing_source_id, and a composite risk_score) provide real, if modest, predictive leverage on decline. However several columns undermine the claim: is_pending and is_submitted merely decode the same 'state' field the target comes from (restatement/partition of the outcome), and missing_processed_date / processing_delay_days derive from processed_date, a post-decision timestamp whose sentinel value coincides with unprocessed items — classic leakage. Because a meaningful fraction of the added columns restate or leak the focus, overall independent predictive utility beyond the original columns is moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

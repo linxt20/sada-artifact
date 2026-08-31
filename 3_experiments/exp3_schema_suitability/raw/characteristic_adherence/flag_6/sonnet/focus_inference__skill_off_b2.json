@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_hours",
+    "priority_tier",
+    "topic_cluster",
+    "sla_status"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.697,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.88,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Incident resolution performance / SLA adherence (how long incidents take to resolve and whether they meet SLA targets)",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "supports_focus": true,
+        "rationale": "Directly quantifies time-to-resolution, the core metric of resolution performance and the natural driver of SLA outcomes."
+      },
+      {
+        "name": "sla_status",
+        "supports_focus": true,
+        "rationale": "Binary/categorical outcome of the resolution-performance focus; the target facet an analyst would investigate (407 breached is a strong signal)."
+      },
+      {
+        "name": "priority_tier",
+        "supports_focus": true,
+        "rationale": "A key predictor/segmentation attribute for resolution time and SLA breach, letting an analyst slice performance by urgency."
+      },
+      {
+        "name": "topic_cluster",
+        "supports_focus": true,
+        "rationale": "Groups incidents by problem domain, a coherent explanatory dimension for why certain categories breach SLA or take longer."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.88,
+    "rationale": "The four columns cohere tightly around a single inferable focus: resolution performance and SLA adherence. resolution_hours (metric) and sla_status (outcome) form the core, while priority_tier and topic_cluster provide coherent predictor/segmentation facets to explain variation in that outcome. This is a genuine analytical structure (outcome + drivers) at a useful granularity, not a restatement or mechanical grab-bag. Minor deductions: resolution_hours and sla_status are partly redundant derivations of the same underlying timing, and no facet touches ownership/team (assignment_group) which would strengthen the causal structure; but the set is clearly focused and actionable (heavy breach rate is an obvious investigable signal)."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

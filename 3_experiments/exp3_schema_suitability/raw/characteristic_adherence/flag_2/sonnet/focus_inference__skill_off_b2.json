@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "problem_type",
+    "is_connectivity_issue",
+    "resolution_days"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.396,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The type/category of problem underlying each incident ticket (recurring problem taxonomy)",
+    "per_column": [
+      {
+        "name": "problem_type",
+        "supports_focus": true,
+        "rationale": "Directly infers and labels the recurring problem category from ticket text, realising the focus of 'types of problems' with a rich, data-inferable taxonomy."
+      },
+      {
+        "name": "is_connectivity_issue",
+        "supports_focus": true,
+        "rationale": "A meaningful roll-up/grouping facet of problem_type, grouping the dominant connectivity-related categories into a higher-level cut analysts can pivot on."
+      },
+      {
+        "name": "resolution_days",
+        "supports_focus": false,
+        "rationale": "Entirely NULL across all 500 rows, so it contributes no signal; conceptually it also pertains to resolution effort/duration, not to inferring the type of problem."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.85,
+    "rationale": "Two of three columns centre coherently on one inferable focus -- the recurring problem-type taxonomy -- with problem_type providing a granular inferred category and is_connectivity_issue providing a sensible higher-level grouping facet. This is clearly not a scattered grab-bag, and the focus is highly actionable (an analyst can rank, cluster, and prioritise recurring problem classes). Structure quality is dragged down because the set is thin: is_connectivity_issue is largely a derivative restatement of problem_type rather than an orthogonal facet, and resolution_days is completely NULL and off-focus (it addresses resolution time, not problem type), adding no analytical value. A stronger structure would have added orthogonal facets of the problem taxonomy (e.g., affected system/service, root-cause class, severity pattern) rather than a duplicate boolean and an empty column."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "avg_sub_score",
+    "rating_gap",
+    "weakest_dimension",
+    "sub_score_variance",
+    "passenger_segment",
+    "improvement_priority"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "overall_rating_recommendation",
+    "per_column": [
+      {
+        "name": "avg_sub_score",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Aggregate of the sub-dimension scores (comfort, service, food, IFE, value). These sub-scores are components/drivers that constitute the experience directly determining rating and recommendation; they lie on the causal path to the outcome rather than being common causes of an independent treatment. It is a derived summary of outcome-adjacent ratings, effectively a mediator/proxy of the outcome itself."
+      },
+      {
+        "name": "rating_gap",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A difference measure (e.g., between overall rating and average sub-score). This is a diagnostic/derived quantity, not a distinct cause or confounder; it mixes outcome components and does not set up an independent treatment-confounder structure."
+      },
+      {
+        "name": "weakest_dimension",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Identifies which service dimension scored lowest. This can be read as the candidate cause being attributed as the driver of low recommendation. However it is derived from the sub-scores themselves, so it is essentially a mediator-derived treatment rather than an exogenous cause."
+      },
+      {
+        "name": "sub_score_variance",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Dispersion across sub-scores. A derived descriptive statistic of the outcome-component ratings; not a common cause of a treatment and the outcome."
+      },
+      {
+        "name": "passenger_segment",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Promoter/passive/detractor is an NPS classification derived directly from the recommendation/rating outcome. It is a restatement of the outcome, not a confounder; adjusting for it would be conditioning on the outcome."
+      },
+      {
+        "name": "improvement_priority",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A recommendation/action label derived from the weakest dimension and value perception. It is a prescriptive output, not a cause or confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "weakest_dimension"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns are almost entirely derivations of the existing sub-dimension ratings and the recommendation outcome (averages, gaps, variance, weakest dimension, NPS segment, action label). While 'weakest_dimension' can loosely serve as a candidate cause, no column supplies a genuine CONFOUNDER -- a variable that is a common cause of BOTH a treatment and the outcome and that would bias attribution if unadjusted. Obvious confounders available in this domain (e.g., cabin Class, Type of Traveller, Route, Verified status) were NOT surfaced as new columns; several added columns (passenger_segment) are colliders/restatements of the outcome and avg_sub_score is a mediator. The system therefore does not realise the causal-attribution claim: it performs descriptive decomposition, not confounder-adjusted causal estimation."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

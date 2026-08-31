@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "is_travel",
+    "has_source_id",
+    "is_unfinalized",
+    "amount_range",
+    "has_processed_date",
+    "days_to_process",
+    "is_cust_support_travel"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "is_travel",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Flags travel expenses, the candidate cause whose effect on declination the query directly asks about ('some travel expenses get declined')."
+      },
+      {
+        "name": "has_source_id",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Presence of a source_id is a data-completeness/provenance indicator; not a plausible common cause of both travel status and declination, more a bookkeeping artifact."
+      },
+      {
+        "name": "is_unfinalized",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Being unfinalized is likely part of the processing pathway toward a decline decision (on the causal path), so it functions as a mediator/near-collider rather than a confounder."
+      },
+      {
+        "name": "amount_range",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Expense amount plausibly influences whether an expense is travel-related (travel tends to be costlier) and independently drives scrutiny/declination, making it a genuine common cause surfaced from data."
+      },
+      {
+        "name": "has_processed_date",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether a processed date exists is downstream of the decision outcome/processing, not a prior common cause; conditioning on it risks collider bias."
+      },
+      {
+        "name": "days_to_process",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Processing duration is realized during handling of the expense and lies on the path to the outcome; it is a mediator/consequence, not a pre-treatment confounder."
+      },
+      {
+        "name": "is_cust_support_travel",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A narrow subcategory of travel; overlaps with the treatment definition rather than serving as an independent common cause of both treatment and outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "is_travel"
+    ],
+    "confounders": [
+      {
+        "name": "amount_range",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "A treatment is clearly present (is_travel), matching the query's focus on travel expenses. However, the causal-estimation scaffolding is weak: only amount_range qualifies as a plausible common cause of both being a travel expense and being declined, and even that is modest. The remaining added columns are dominated by mediators/consequences of processing (is_unfinalized, days_to_process), colliders/outcome-adjacent completeness flags (has_processed_date, has_source_id), or restatements of the treatment (is_cust_support_travel). Adjusting for these would introduce mediator/collider bias rather than removing confounding. Thus the system did surface one genuine, non-query-named confounder, but failed to assemble a credible confounder set, so it only partially realizes the causal-attribution claim."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

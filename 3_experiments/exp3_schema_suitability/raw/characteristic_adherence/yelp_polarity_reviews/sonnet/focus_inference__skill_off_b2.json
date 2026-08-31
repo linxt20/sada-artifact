@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "food_quality",
+    "service",
+    "ambiance",
+    "value",
+    "location",
+    "cleanliness",
+    "wait_time",
+    "menu_variety",
+    "primary_aspect"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.855,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The dimensions/aspects of the dining experience discussed in Yelp reviews (aspect-based decomposition of restaurant experience)",
+    "per_column": [
+      {
+        "name": "food_quality",
+        "supports_focus": true,
+        "rationale": "A core experiential aspect of dining; a coherent facet of the implied focus."
+      },
+      {
+        "name": "service",
+        "supports_focus": true,
+        "rationale": "Standard experiential facet reviewers discuss."
+      },
+      {
+        "name": "ambiance",
+        "supports_focus": true,
+        "rationale": "Atmosphere is a distinct, data-inferable experiential facet."
+      },
+      {
+        "name": "value",
+        "supports_focus": true,
+        "rationale": "Price/value is a recognized review aspect."
+      },
+      {
+        "name": "location",
+        "supports_focus": true,
+        "rationale": "A legitimate experiential facet, though less frequently flagged."
+      },
+      {
+        "name": "cleanliness",
+        "supports_focus": true,
+        "rationale": "Hygiene is a distinct experiential facet."
+      },
+      {
+        "name": "wait_time",
+        "supports_focus": true,
+        "rationale": "Timing/waiting is a concrete facet of the experience."
+      },
+      {
+        "name": "menu_variety",
+        "supports_focus": true,
+        "rationale": "Menu breadth is a differentiated aspect distinct from food quality."
+      },
+      {
+        "name": "primary_aspect",
+        "supports_focus": true,
+        "rationale": "Summarizes the dominant aspect(s) per review, tying the facets together into a top-level classification."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "rationale": "The columns collectively and unambiguously centre on ONE coherent, data-inferable focus: the aspects of the dining experience mentioned in reviews. This directly realises the analytical query. The structure is a well-differentiated set of binary aspect indicators (food quality, service, ambiance, value, location, cleanliness, wait time, menu variety) covering distinct, non-redundant facets at a useful granularity, plus a summarizing primary_aspect column that names the dominant theme(s) per review. This is neither a single restatement nor undifferentiated noise, and the aspects are non-trivially distinct from bare sentiment (label_pos already exists). The implied focus is highly actionable: an analyst can quantify which aspects dominate reviews, cross them with polarity, and prioritize operational improvements. Minor deductions: primary_aspect is noisy/free-text with overlapping and off-topic values ('This is not a restaurant review', 'DMV service and location experience'), and some aspects (cleanliness, location) are rarely flagged, slightly weakening granularity balance."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

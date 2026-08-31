@@ -1,0 +1,136 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "n_added_columns": 13,
+  "added_columns": [
+    "theme_crew_service",
+    "theme_seat_comfort",
+    "theme_food_quality",
+    "theme_entertainment",
+    "theme_punctuality",
+    "theme_value_money",
+    "theme_cleanliness",
+    "theme_boarding",
+    "review_sentiment_score",
+    "review_word_count",
+    "traveller_class_segment",
+    "segment_mean_rating",
+    "rating_vs_segment_mean"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 13,
+    "n_judged_columns": 13,
+    "analytical_usefulness": 0.7354,
+    "analytical_usefulness__table_level": 0.76,
+    "source_groundedness": 0.8615,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.7985,
+    "hallucination_rate": 0.1538
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "theme_crew_service",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Binary presence flag for a crew/service theme; directly supports theme-vs-rating analysis. Samples confirm sound reading (crew praise=1, seat-only complaint=0). Partial topical overlap with the existing 'Staff Service' rating but the text-mention signal is a distinct axis."
+      },
+      {
+        "name": "theme_seat_comfort",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Flags seat/comfort discussion. Well grounded across samples (legroom, narrow padding, comfortable seat all -> 1; unrelated review -> 0). Some redundancy with the original 'Seat Comfort' numeric rating, but captures whether the topic was raised in free text."
+      },
+      {
+        "name": "theme_food_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Food-theme flag; clean extraction in all samples (delicious/plentiful/available -> 1, silent rows -> 0). Useful grouping axis for the query despite overlap with 'Food & Beverages' rating."
+      },
+      {
+        "name": "theme_entertainment",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "IFE-theme flag; mostly grounded (IFE variety, dreadful sound, movies -> 1). Sample 4 (truncated text with no clear entertainment mention) was set to 1, a mild over-assertion, but overall sound."
+      },
+      {
+        "name": "theme_punctuality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Adds a genuine new axis (no equivalent original column). However sample 1 fires punctuality=1 with no timeliness/delay language in the text, an unsupported assertion, lowering groundedness."
+      },
+      {
+        "name": "theme_value_money",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Value-for-money theme flag; samples all 0 and consistent with texts that do not discuss price/value. Overlaps with existing 'Value For Money' rating but reflects a text-mention signal."
+      },
+      {
+        "name": "theme_cleanliness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "New axis with no original counterpart. Well grounded (sanitized seat/clean bathroom -> 1; well-maintained cabin -> reasonable; silent rows -> 0)."
+      },
+      {
+        "name": "theme_boarding",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Boarding is a useful new theme, but the flag fires spuriously: samples 1 and 3 are set to 1 despite no boarding/gate/embarkation language in the source text. This confident over-assertion materially undermines groundedness."
+      },
+      {
+        "name": "review_sentiment_score",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Continuous sentiment is somewhat more useful than a bare positive/negative flag and can help relate tone to rating, though it partly restates Overall Rating/Recommended. Sample values (positive reviews ~0.75-1.0, all-negative review -1.0) are sound readings of the text."
+      },
+      {
+        "name": "review_word_count",
+        "analytical_usefulness": 0.12,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw word count is explicitly a generic length feature that gives no analytical leverage for associating themes with rating across segments. It is mechanically derivable from the text (well grounded) but adds little value here."
+      },
+      {
+        "name": "traveller_class_segment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.98,
+        "hallucination_observed": false,
+        "rationale": "Concatenation of Type of Traveller and Class -- exactly the grouping key the query calls for ('Across Type of Traveller and Class'). Values match the two source columns; deterministic and correct."
+      },
+      {
+        "name": "segment_mean_rating",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Per-segment mean of Overall Rating; provides a baseline for comparing segments and is derivable from the table. Somewhat restates the segment key, but supports higher-vs-lower rating comparison."
+      },
+      {
+        "name": "rating_vs_segment_mean",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Row-level deviation of Overall Rating from its segment mean -- a normalized signal directly useful for seeing which themes accompany above/below-average ratings within a segment. Reconstructed Overall Ratings from the samples are internally consistent (e.g. mean 7.29 + 1.71 = 9, matching the '9/10' review)."
+      }
+    ],
+    "analytical_usefulness": 0.76,
+    "source_groundedness": 0.85,
+    "rationale": "The added set is well aligned with the query: theme flags supply the 'review themes' axis, traveller_class_segment supplies the exact grouping key, and segment_mean_rating / rating_vs_segment_mean give normalized rating comparisons -- a strong analytical toolkit. Usefulness is dragged down modestly by review_word_count (generic length feature) and partial redundancy of several theme flags with existing numeric sub-ratings and of the sentiment score with Overall Rating. Groundedness is generally strong: theme extractions, sentiment, the segment key, and the rating-deviation arithmetic all check out against the sample texts. It is reduced by two themes that fire without textual support -- theme_boarding (spurious 1s in samples 1 and 3) and theme_punctuality (spurious 1 in sample 1) -- indicating some over-assertion in the noisier theme detectors."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 13
+}

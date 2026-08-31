@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category_type",
+    "travel_purpose_indicator",
+    "business_legitimacy_clarity",
+    "high_value_asset_flag",
+    "processing_delay_flag",
+    "ci_asset_specificity",
+    "creation_method"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.4643,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.7143,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.5893,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorises the asset/CI into meaningful types, with a 'travel_equipment' bucket directly relevant to the travel-policy query. Values (hardware_device from Dell laptops, service from AWS) are well grounded in the CI text. Only moderately useful since it is asset-centric rather than policy-risk-centric, but it gives a genuine grouping axis."
+      },
+      {
+        "name": "travel_purpose_indicator",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Directly on-target for the query: separates travel_related vs office_based vs service. Samples are reasonable readings (hardware->office_based, cloud service->service_based). Groundedness slightly reduced because the travel/office split leans on inference from terse descriptions, but the readings shown are defensible."
+      },
+      {
+        "name": "business_legitimacy_clarity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Highly relevant axis for policy-risk analysis (personal_travel_signal, ambiguous_business_purpose). However 124 'personal_travel_signal' labels are hard to justify from source texts that are largely generic asset/hardware procurement descriptions; the shown samples are all 'clear_business_purpose' from neutral text, so the personal-signal assignments risk asserting intent the text does not support."
+      },
+      {
+        "name": "high_value_asset_flag",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A near 50/50 boolean split is weakly informative and only loosely tied to the travel-policy query. Groundedness is questionable: an AWS EC2 instance is flagged high_value=True while Dell laptops are False, and the source rows shown contain no price/amount cues to justify a specific value threshold, suggesting the flag is inferred beyond available evidence."
+      },
+      {
+        "name": "processing_delay_flag",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Delay could be computed from opened_at vs processed_date, so values are potentially grounded, but the column is largely orthogonal to travel-policy risk. Adds little analytical leverage for THIS query."
+      },
+      {
+        "name": "ci_asset_specificity",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well grounded (branded_model for 'Dell Latitude 3410', service_name for AWS). But it describes naming specificity of the CI, largely redundant with asset_category_type and only tangentially useful for detecting travel-policy risk."
+      },
+      {
+        "name": "creation_method",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Grounded in the description wording ('Automated creation' -> automated_generation, 'Procurement' -> manual_procurement). However it captures record provenance, not travel-policy risk, so it offers little leverage for the query."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.72,
+    "rationale": "Two or three columns (travel_purpose_indicator, business_legitimacy_clarity, and to a lesser extent asset_category_type) directly serve the travel-policy-risk query and provide genuine grouping axes. The remainder (high_value_asset_flag, processing_delay_flag, ci_asset_specificity, creation_method) are either boolean/near-generic, redundant, or oriented toward asset/record metadata rather than travel policy, dragging holistic usefulness to mid-range. Groundedness is generally acceptable and most values are sound readings of the CI/description text, but the intent-laden labels (personal_travel_signal, high_value flag) assert specifics not clearly supported by the terse source rows shown, warranting the moderate groundedness score."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 7
+}

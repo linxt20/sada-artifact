@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "focus_variable": "product_score_outcome",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "taste_flavor_satisfaction",
+    "flavor_strength_mismatch",
+    "health_dietary_fit",
+    "product_efficacy_outcome",
+    "product_category",
+    "use_context"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "product_score_outcome",
+    "per_column": [
+      {
+        "name": "taste_flavor_satisfaction",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate observed cause of the product score; higher taste satisfaction plausibly drives higher scores. This is an actionable lever the query asks about, functioning as a treatment."
+      },
+      {
+        "name": "flavor_strength_mismatch",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause: a mismatch between expected and actual flavor strength plausibly lowers scores. Actionable and treatment-like, not a confounder."
+      },
+      {
+        "name": "health_dietary_fit",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the product fits dietary needs is a candidate driver of the score, another actionable lever rather than a common cause of another treatment."
+      },
+      {
+        "name": "product_efficacy_outcome",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether product claims were confirmed plausibly causes the score. Actionable candidate cause; treatment-like. Not a common cause of another treatment, so not a confounder."
+      },
+      {
+        "name": "product_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Product category plausibly affects both the treatments (e.g., taste satisfaction, efficacy expectations differ by category) and the baseline score distribution, making it a common cause that must be adjusted for."
+      },
+      {
+        "name": "use_context",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How the product is used (personal consumption, gift, pet, medical) plausibly shapes both the experienced treatment (taste/efficacy perception) and the tendency to score high/low, so it is a common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "taste_flavor_satisfaction",
+      "flavor_strength_mismatch",
+      "health_dietary_fit",
+      "product_efficacy_outcome"
+    ],
+    "confounders": [
+      {
+        "name": "product_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "use_context",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The added columns supply clear actionable treatments (taste satisfaction, flavor strength mismatch, dietary fit, efficacy) whose effect on the product score is being attributed. Two structural context variables (product_category, use_context) function as genuine common causes of both the experienced treatments and the score, and neither was named or implied in the generic query, demonstrating real confounder surfacing. Confounder quality is moderate: they are plausible common causes rather than mediators/colliders, but their status is somewhat borderline since category/context could also modify rather than confound, and only two were surfaced."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

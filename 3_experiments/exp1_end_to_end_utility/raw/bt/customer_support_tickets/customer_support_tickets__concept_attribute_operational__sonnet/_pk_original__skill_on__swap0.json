@@ -1,0 +1,114 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on",
+  "swap": false,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.78,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "CS-0009 | Okta SSO rejects all logins (480 users locked out) | Critical | 110",
+        "why": "concrete ticket IDs and magnitudes"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "average ≈148 minutes for High-priority performance cases",
+        "why": "numeric but many ranges are approximate (~15-18%)"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Post-deployment regressions are specifically costly",
+        "why": "causal sub-pattern reasoning"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "bug_regression | 82 | 62.8 | 5,152",
+        "why": "exact category counts and totals"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Total Agent-Min ... 5,152",
+        "why": "quantified burden metric aggregating volume x time"
+      },
+      {
+        "dimension": "depth",
+        "quote": "82 tickets (33%) ... Performance ... 143 min per-ticket",
+        "why": "separates total vs per-ticket burden across categories"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "should be the primary focus ... via better QA/regression testing",
+        "why": "decision-ready recommendation tied to data"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "very small sample sizes (6–7 tickets each) ... interpreted cautiously",
+        "why": "explicit caveats maintain consistency"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B quantifies total agent-minutes across categories and reasons about total vs per-ticket burden with explicit caveats, edging out A's richer but more estimate-based narrative.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

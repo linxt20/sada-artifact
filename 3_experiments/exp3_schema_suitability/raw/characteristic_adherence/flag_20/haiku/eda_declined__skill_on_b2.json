@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "asset_category_type",
+    "asset_purpose_signal",
+    "expense_source_indicator",
+    "departmental_context",
+    "source_system_origin"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.48,
+    "predictor_fraction": 0.8,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.6,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable categories (hardware_device, travel_equipment, cloud_service, etc.) that a human can group on and compare decline rates across. External to the focus and associational."
+      },
+      {
+        "name": "asset_purpose_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable purpose categories with reasonable spread; supports segmentation of declines by purpose. Overlaps somewhat with asset_category_type but adds a distinct purpose framing."
+      },
+      {
+        "name": "expense_source_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear, distinguishable origin categories (procurement, automated_creation, travel_related, etc.) that plausibly relate to decline likelihood and can be compared as segments."
+      },
+      {
+        "name": "departmental_context",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories, but the original table already contains a 'department' column; this largely restates existing data rather than opening a new associational axis."
+      },
+      {
+        "name": "source_system_origin",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Only three clean, well-separated categories (internal_ticket_system, asset_management_system, expense_system) that segment well and can reveal system-level differences in decline rates."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.6,
+    "rationale": "The set provides mostly interpretable, well-separated categorical variables external to the focus, each groupable for comparing decline rates -- satisfying the EDA claim. However there is notable redundancy: asset_category_type / asset_purpose_signal / expense_source_indicator overlap conceptually (all encode a 'travel_related' vs equipment/service distinction), and departmental_context duplicates the existing 'department' column, restating rather than extending the data. No opaque scores are present, which is good, but the redundancy limits the breadth of distinct relationships a human explorer can discover around state_declined."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

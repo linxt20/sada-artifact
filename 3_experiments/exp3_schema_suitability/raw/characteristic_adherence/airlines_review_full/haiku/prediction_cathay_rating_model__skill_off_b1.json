@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "Service_Quality_Score",
+    "Service_to_Value_Gap",
+    "Route_Complexity",
+    "Business_Traveller",
+    "Premium_Class",
+    "High_Satisfaction"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.5917,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.8583,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Service_Quality_Score",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Appears to be a composite (average) of the existing service sub-ratings (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment). This is a sound computation on original numeric columns, so it is grounded, and the pattern (row 1 terrible narrative and row 3 glowing narrative both ~3.75, while row 4 hits 5.0) confirms it reflects numeric ratings rather than text sentiment. As an aggregate it gives a single service axis for modelling but is substantially redundant with the individual rating columns and highly collinear with the Overall Rating target, capping its added leverage. Values cannot be text-verified from the samples (underlying numeric columns not shown), a mild groundedness caveat."
+      },
+      {
+        "name": "Service_to_Value_Gap",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Consistent with Service_Quality_Score minus Value_For_Money (e.g., row 4: 5.0 service, gap 1.0 -> value 4; row 3: 3.75 service, gap -1.25 -> value 5). This is a genuinely new axis: it isolates the mismatch between perceived service and perceived value, which is directly actionable for a route/service optimisation model rather than a mere restatement of either input. Derived from existing numeric columns, so well grounded, though not independently text-verifiable in the samples."
+      },
+      {
+        "name": "Route_Complexity",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Counts route segments/connections from the Route field (row 1 'Manchester to Sydney via Hong Kong' = 2, row 5 'Beijing to Bangkok via Hong Kong' = 2, row 2 'Hong Kong to Tokyo' = 1). Cleanly extracted and verifiable from source text. Highly relevant to a route-optimisation query: direct vs connecting is a distinct grouping/modelling axis not captured by any existing column."
+      },
+      {
+        "name": "Business_Traveller",
+        "analytical_usefulness": 0.48,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Binary flag that essentially one-hot-encodes the existing 'Type of Traveller' categorical column, so it is largely a trivial restatement of original data with limited new leverage. Values cannot be confirmed from the shown text (Type of Traveller not in samples) but are derivable from an existing column; no hallucination observed. Provides a mild segmentation axis but low novelty."
+      },
+      {
+        "name": "Premium_Class",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Binarisation of the existing 'Class' column (premium cabins vs not). Verifiable rows match the text: row 4 mentions 'Economy' -> 0, row 5 mentions 'business class A330' -> 1, row 3 (economy) -> 0. Well grounded. As a feature it is a somewhat redundant recoding of Class, but cabin tier is a relevant grouping axis for service optimisation, so moderate usefulness."
+      },
+      {
+        "name": "High_Satisfaction",
+        "analytical_usefulness": 0.42,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Binary satisfaction flag that tracks the sentiment/Overall Rating (positive reviews rows 3,4 = 1; negative rows 1,2,5 = 0), i.e. essentially a thresholded restatement of the existing Overall Rating target. Grounded, but as a model feature it is target leakage and as a label it merely duplicates the existing target column, so its independent analytical value is limited."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.85,
+    "rationale": "The set mixes genuinely useful new axes with redundant recodings. Route_Complexity and Service_to_Value_Gap add real analytical leverage for a route/service optimisation model, and Service_Quality_Score offers a service summary (though collinear with the target). Business_Traveller, Premium_Class, and especially High_Satisfaction are largely binarisations/restatements of existing columns, with High_Satisfaction effectively duplicating the Overall Rating target. Groundedness is strong overall: verifiable columns (Route_Complexity, Premium_Class, High_Satisfaction) match the source text, and the remaining scores are sound computations over existing numeric/categorical columns; no clear hallucinations were observed in the samples, only an inability to independently text-verify the rating-derived aggregates."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_symptom_type",
+    "server_vs_client_locus",
+    "scope_indicator",
+    "reassigned_resolver",
+    "off_hours_open",
+    "recurring_caller_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6929,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.6965,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "rationale": "Categorizing incidents from short_description gives a strong grouping axis to identify the most common operational burdens and relate them to resolution duration. Samples map cleanly to source text.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "failure_symptom_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Symptom taxonomy is a useful independent axis for burden analysis. Most samples are well-grounded, though 'printing issues' -> 'crash_malfunction' is a mild stretch where the text is vague; still defensible.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "server_vs_client_locus",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "rationale": "Locus adds a plausible grouping dimension relevant to where burdens originate. Grounding is weaker: assigning WiFi/VPN to 'infrastructure' vs a database 'access denied' to 'server_side' involves inference not always explicit, but generally warranted.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "rationale": "Scope (individual vs system-wide) is analytically relevant to burden magnitude. However short descriptions rarely state scope; 'system_wide' for 201 rows and 'location_specific' assignments are often inferred beyond what a single-user description supports.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "reassigned_resolver",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "rationale": "Reassignment is a genuine operational-burden signal plausibly derivable from assigned_to vs closed_by fields. But the provided source samples only expose closed_by, so the true/false values cannot be verified from evidence and may not be soundly derived.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "off_hours_open",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "rationale": "Off-hours flag is directly derivable from opened_at timestamps and is a legitimate operational-burden axis affecting resolution duration. Sample values are consistent with the times shown.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "recurring_caller_pattern",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.3,
+        "rationale": "Near-constant (497 true / 3 false), giving almost no analytical leverage. Values also cannot be grounded from the shown fields and the overwhelming 'true' assignment appears asserted rather than derived from caller history in the text.",
+        "hallucination_observed": true
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.72,
+    "rationale": "Most added columns provide genuine, distinct axes (category, symptom, locus, scope, off-hours) for isolating common operational burdens and modeling their effect on resolution duration, which is exactly what the query needs. incident_category, failure_symptom_type, and off_hours_open are both useful and well-grounded. scope_indicator and reassigned_resolver are useful but rest partly on inference not clearly supported by the visible text. recurring_caller_pattern is near-constant and poorly grounded, dragging the table down. Overall the set is analytically leveraged and largely grounded, with a few inference-heavy or degenerate columns."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 7
+}

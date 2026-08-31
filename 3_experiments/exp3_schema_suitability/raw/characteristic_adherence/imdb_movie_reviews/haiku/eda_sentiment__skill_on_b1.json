@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "plot_coherence_logic",
+    "acting_performance_level",
+    "visual_direction_artistry",
+    "pacing_editing_flow",
+    "emotional_depth_authenticity",
+    "entertainment_fun_factor",
+    "originality_freshness"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.8214,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.7857,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.8035,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "plot_coherence_logic",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A genuine thematic axis distinguishing coherent vs. convoluted/predictable plots, useful for comparing sentiment groups. Mostly grounded (IMDB-0002 'convoluted' and IMDB-0003 'predictable' fit), but IMDB-0005 'coherent_logical' is a weakly-supported specific from a brief plot summary that says nothing about coherence."
+      },
+      {
+        "name": "acting_performance_level",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis on performance quality with a well-graded set of categories. Values align well: IMDB-0003 'wooden' matches text explicitly, IMDB-0004 'adequate/competent' matches 'acting is pretty good', silent rows correctly marked not_present."
+      },
+      {
+        "name": "visual_direction_artistry",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful separate axis on visual/direction quality. IMDB-0004 'competent_standard' is defensible given 'atmospheric and well-made' though it arguably warrants a stronger positive; silent rows appropriately not_present."
+      },
+      {
+        "name": "pacing_editing_flow",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Legitimate axis for grouping. However some values are inferred where text is thin: IMDB-0001 and IMDB-0002 'slow_dragging' is not clearly stated in the shown excerpts, making these somewhat unsupported specifics; silent rows correctly not_present."
+      },
+      {
+        "name": "emotional_depth_authenticity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Strong analytical axis for sentiment contrast. IMDB-0003 'superficial/manipulative' fits the mocked 'poignant' attempts and IMDB-0005 'moving_poignant' fits heartache theme. But IMDB-0004 'superficial_manipulative' is a questionable read of a sexploitation review that never addresses emotional depth."
+      },
+      {
+        "name": "entertainment_fun_factor",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Clear enjoyment axis, well-suited to sentiment comparison. Values track text: IMDB-0004 'entertaining' matches enthusiastic tone, negative rows 'boring/dull' fit criticism."
+      },
+      {
+        "name": "originality_freshness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful axis; dominated by not_present which is honest. IMDB-0003 'familiar_derivative' fits 'predictable and well-trodden premise'. But IMDB-0005 'familiar_derivative_clichéd' is imposed on a brief plot summary with no such cue, a weakly grounded specific."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns form a well-chosen set of distinct thematic axes (plot, acting, visuals, pacing, emotion, entertainment, originality) that directly serve the query of contrasting themes across positive/negative sentiment; each gives a genuine grouping dimension rather than a trivial restatement, and the recurring not_present option is used honestly for silent rows. Groundedness is generally sound for explicit cues, but the operator repeatedly asserts specific negative categorizations (slow_dragging, superficial_manipulative, familiar_derivative) on rows whose excerpts do not support them, particularly on short plot-summary reviews like IMDB-0005 and the sexploitation review IMDB-0004, indicating a tendency to over-commit where the text is silent."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 7
+}

@@ -1,0 +1,97 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some agents have longer resolution times?",
+  "focus_variable": "agent_resolution_discrepancy",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "assigned_agent",
+    "incident_category",
+    "issue_complexity",
+    "incident_severity_proxy",
+    "resolution_mechanism"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.8,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.8,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "agent_resolution_discrepancy (resolution time)",
+    "per_column": [
+      {
+        "name": "assigned_agent",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query asks why some AGENTS have longer resolution times; the agent identity is the candidate cause whose effect on resolution time is being attributed. It is explicitly named in the query."
+      },
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category (e.g., email_server vs vpn) plausibly drives which agents get assigned (routing/specialization) and independently affects resolution time. A genuine common cause of both treatment and outcome, surfaced from data, not named in query."
+      },
+      {
+        "name": "issue_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity can influence assignment (harder tickets routed to certain agents) and directly lengthens resolution time. A common cause of both; not named in query."
+      },
+      {
+        "name": "incident_severity_proxy",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Severity/impact affects who is assigned (escalation to senior agents) and the effort/time to resolve. Plausible common cause of treatment and outcome; not named in query."
+      },
+      {
+        "name": "resolution_mechanism",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The required fix (server_restart, credentials_reset, etc.) lies on the causal path between the agent's handling/incident and the resolution time; it is a consequence of how the ticket is worked, so it is a mediator, not a confounder. Adjusting for it would be a mistake."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "assigned_agent"
+    ],
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "issue_complexity",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "incident_severity_proxy",
+        "named_in_query": false,
+        "plausibility": 0.8
+      }
+    ],
+    "confounder_quality": 0.8,
+    "rationale": "The columns set up a genuine causal estimation: assigned_agent is the treatment (named in query), and the outcome is resolution time. Three confounders (category, complexity, severity_proxy) are plausible common causes of both agent assignment and resolution time, and none were named in the query, demonstrating real surfacing of confounders. resolution_mechanism is a mediator, not a confounder, so it should not be adjusted for. Overall this is a strong instance of causal attribution with novel confounders, slightly discounted for including a mediator alongside the confounders."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

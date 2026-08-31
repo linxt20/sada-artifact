@@ -1,0 +1,109 @@
+{
+  "var_a": "skill_on",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.8,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 3,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "registration | 41 | 90 | 45.6%",
+        "why": "numeric decline-rate table"
+      },
+      {
+        "dimension": "depth",
+        "quote": "automated + new_procurement has a very low decline rate (7.7%)",
+        "why": "interaction segmentation"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "absence of a processed date is partly a consequence of decline rather than a cause",
+        "why": "leaky predictor undercuts main recommendation"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "For Travel rows with amount < 1000, 9 of 11 were declined (81.8%)",
+        "why": "concrete threshold and counts"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "booking/flight-like rows: 3 declines in 17 rows (17.6%)",
+        "why": "content-based segment comparison with numbers"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "detect terms such as laptop, luggage, suitcase, GPS",
+        "why": "decision-ready routing rule"
+      },
+      {
+        "dimension": "depth",
+        "quote": "asset/equipment purchases are entering category = Travel",
+        "why": "causal misclassification hypothesis"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B avoids A's leaky processed_date logic and gives concrete, causally-grounded misclassification insights with decision-ready rules.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

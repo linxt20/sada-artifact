@@ -1,0 +1,88 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals are linked to longer resolution duration values?",
+  "focus_variable": "duration_like_resolution_value",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "severity_signal",
+    "infrastructure_scope",
+    "assigned_technician",
+    "technician_assignment_alignment",
+    "time_of_day_opened",
+    "resolution_pathway_complexity"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.1429
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "duration_like_resolution_value",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of incident (connectivity, database, email) is known at open time and plausibly correlates with how long resolution takes; it lies outside the duration and carries genuine signal."
+      },
+      {
+        "name": "severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Severity/nature of issue (service_outage vs access_issue) is an ex-ante attribute that plausibly drives resolution time without restating or leaking the duration."
+      },
+      {
+        "name": "infrastructure_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope of affected infrastructure (server, network, multi_location) is knowable at intake and broader scope plausibly lengthens resolution; a legitimate predictor."
+      },
+      {
+        "name": "assigned_technician",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The individual technician is a valid predictor: technician speed/skill correlates with resolution time and is not a component or restatement of duration."
+      },
+      {
+        "name": "technician_assignment_alignment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the assignment matched the appropriate group/skill is an ex-ante process attribute; mis-alignment plausibly increases resolution time, a legitimate signal."
+      },
+      {
+        "name": "time_of_day_opened",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived solely from opened_at, known at intake; off-hours openings plausibly delay resolution. Legitimate predictor and not a function of the outcome."
+      },
+      {
+        "name": "resolution_pathway_complexity",
+        "role": "leakage",
+        "role_note": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the incident was escalated / multi-stage is only known during or after the resolution process itself; it is effectively part of the resolution outcome and correlates near-deterministically with duration, constituting leakage."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.7,
+    "rationale": "Six of seven added columns are legitimate ex-ante predictors spanning incident type, severity, scope, technician, assignment quality, and opening time -- a diverse, non-redundant feature set that adds real leverage beyond the original columns. Only 'resolution_pathway_complexity' leaks, as escalation/multi-stage status is realized during resolution and moves with the outcome. Strong overall predictive utility, docked for the one leaking feature."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

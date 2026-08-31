@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "procurement_urgency",
+    "expense_categorization_clarity",
+    "travel_intent_explicit",
+    "processing_lag",
+    "department_expense_pattern",
+    "asset_value_tier",
+    "user_submission_frequency"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.4313,
+    "analytical_usefulness__table_level": 0.42,
+    "source_groundedness": 0.4688,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.4501,
+    "hallucination_rate": 0.625
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Derivable from the ci field for hardware/cloud rows. But the query is about travel expense declines, and the source text describes hardware/asset procurement, not travel; the category adds only weak leverage. Groundedness is undermined by mislabeling: 'Dell OptiPlex 7070 Desktop' is labeled hardware_laptop, contradicting the source ci."
+      },
+      {
+        "name": "procurement_urgency",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A travel_related vs standard split could help the query, but 'urgency' is not stated anywhere in the source text; the values appear to be an invented/relabeled travel flag rather than a grounded reading. Contradicts its own name (urgency) with travel_related values."
+      },
+      {
+        "name": "expense_categorization_clarity",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Clarity of purpose is a plausibly useful axis for why an expense is declined, but the sampled short_descriptions all yield clear_purpose, so the value is a defensible reading yet near-constant in evidence and partly subjective."
+      },
+      {
+        "name": "travel_intent_explicit",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to a travel-expense query and gives a clean grouping axis. Sampled rows (hardware/cloud) are correctly marked false, consistent with the source text. Reasonable inference from description keywords."
+      },
+      {
+        "name": "processing_lag",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Timing could relate to declines, but only processed_date is present; without an opened_at/reference in the sampled text, 'fast_track'/'delayed' buckets are unwarranted specifics. Sample with only processed_date=2023-07-21 is labeled 'delayed' with no basis shown; nan row correctly Unknown."
+      },
+      {
+        "name": "department_expense_pattern",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Values mirror the existing 'department' original column (a mere restatement/relabel), so it adds little new analytical leverage. Values themselves are grounded in the department field."
+      },
+      {
+        "name": "asset_value_tier",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Value tier could plausibly drive declines and is derivable from amount. But tiers appear inconsistent with any stated thresholds; 'AWS EC2 Instance' as high_value is an assertion not supported by the sampled source text (no amount shown), suggesting invented tiering."
+      },
+      {
+        "name": "user_submission_frequency",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "Submitter frequency could be a useful factor, but it requires cross-row aggregation of the user column and the per-row labels ('frequent_submitter', 'rare') are not verifiable from the single-row source text shown and appear asserted without evidence."
+      }
+    ],
+    "analytical_usefulness": 0.42,
+    "source_groundedness": 0.45,
+    "rationale": "The table is nominally about hardware/asset procurement records, while the query targets travel-expense declines; several columns (travel_intent_explicit, procurement_urgency, expense_categorization_clarity) do address the travel angle and offer real grouping axes, giving moderate usefulness. However, department_expense_pattern largely restates the original department column, and asset-related columns are only tangential to declines. Groundedness is weak: multiple columns assert unwarranted specifics not supported by the source text (misclassified desktop as laptop, unexplained processing_lag buckets, high_value/frequency labels with no visible basis), indicating notable hallucination, though silent rows are handled correctly with Unknown/NULL."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "current_delivery_model",
+    "geographic_dependency_level",
+    "customer_interaction_mode",
+    "physical_asset_footprint",
+    "business_model_scaling_trait"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.88,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.73,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.805,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "current_delivery_model",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly captures product-vs-service orientation, the core axis of the query's counterfactual. Values are well-grounded readings of descriptions (23andMe product_only, 280 Group training/consulting managed_service, Addepar platform_service). Some inference for VC firms but reasonable."
+      },
+      {
+        "name": "geographic_dependency_level",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Localization dependency is central to the 'fit for a new region' half of the query, giving a strong grouping axis. Values are plausible inferences, though the source text rarely states geographic dependence explicitly, so some values are moderately speculative."
+      },
+      {
+        "name": "customer_interaction_mode",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "How customers are served (remote vs on-site vs embedded) is a meaningful lever for the service-oriented/localized shift. Samples are reasonable (self_service_digital for 23andMe, embedded_partner for VCs), though interaction mode is often inferred rather than stated."
+      },
+      {
+        "name": "physical_asset_footprint",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Asset footprint informs localization feasibility, a genuine analytical axis. However groundedness is weaker: descriptions rarely mention physical assets, and calls like 'moderate_assets' for VC firms are largely unwarranted from the given text."
+      },
+      {
+        "name": "business_model_scaling_trait",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Scaling traits (linearly_scalable, local_partnerships_required, network_effects_based) speak directly to how a model shift affects regional fit. Values are plausible but often deep inferences the terse descriptions do not clearly support (e.g. 'local_partnerships_required' for 280 Group)."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.73,
+    "rationale": "The five added columns form distinct, non-redundant axes (delivery model, geographic dependency, interaction mode, asset footprint, scaling trait) that are all directly relevant to a counterfactual about shifting toward service-oriented/localized models and assessing regional fit. None are trivial constants or bare sentiment flags. Groundedness is generally sound for delivery model and interaction mode, but weaker for asset footprint and scaling trait, where the short descriptions provide little explicit support and several values are confident inferences beyond what the text states. No outright contradictions or invented facts observed, so no hallucination flagged, but the more speculative columns pull the table-level groundedness down."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

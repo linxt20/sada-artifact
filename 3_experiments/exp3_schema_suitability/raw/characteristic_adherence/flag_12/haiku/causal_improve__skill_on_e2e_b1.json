@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we improve incident resolution efficiency?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "issue_complexity",
+    "assigned_technician_id",
+    "required_action_type",
+    "technician_match_efficiency",
+    "repeat_issue_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.725,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.5667,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6459,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents from short_description gives a genuine grouping axis for resolution efficiency analysis. Values (printer_related, network_connectivity, software_system) are sound readings of the source descriptions."
+      },
+      {
+        "name": "issue_complexity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Complexity is a useful axis for prioritization and efficiency modeling. However, groundedness is shaky: 'Unable to connect to the database' -> medium is defensible, but rating most printer issues 'low' is an inference the terse text only weakly supports. It is a plausible but partly asserted judgment."
+      },
+      {
+        "name": "assigned_technician_id",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "This is essentially redundant with the existing assigned_to original column, offering little new analytical leverage. Values are also not derivable from the sampled source text (short_description/timestamps); they appear copied from an original field, so grounding in the shown evidence is weak."
+      },
+      {
+        "name": "required_action_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Action type (repair, replacement, troubleshooting) is a useful new axis for resolution workflow analysis. Values are reasonable inferences from the described issue, though for terse descriptions like 'printer not working' the specific action is somewhat assumed."
+      },
+      {
+        "name": "technician_match_efficiency",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "A technician-suitability flag is directly relevant to the efficiency query. But the true/false values are not supportable from the source text, which contains no skill/matching information; the flag appears invented, and NULLs aside, the assertions are ungrounded."
+      },
+      {
+        "name": "repeat_issue_pattern",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Identifying repeat/recurring issues is genuinely useful for efficiency. Recurrence could in principle be derived from duplicate descriptions, but the per-row true/false assignments are not clearly warranted by the isolated source text shown and read as asserted flags."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.55,
+    "rationale": "Most added columns provide genuine new axes (category, action type, complexity, repeat/match flags) relevant to improving resolution efficiency. assigned_technician_id is largely redundant with the existing assigned_to column. Groundedness is mixed: category and action_type are sound readings of the description text, but issue_complexity, technician_match_efficiency, and repeat_issue_pattern assert judgments the terse source text does not clearly support, indicating hallucination risk."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

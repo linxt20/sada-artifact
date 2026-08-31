@@ -1,0 +1,114 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.62,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "90 hardware incidents, which is about 49% of all hardware tickets (90/182)",
+        "why": "concrete counts and ratios"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "2023-08-11: 6 ... 2023-07-28 ... 5 each",
+        "why": "row-level daily numbers"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "category = Hardware, and opened_at is in late July to mid-August 2023",
+        "why": "decision-ready rule"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "window is inferred from the opened_at spike",
+        "why": "consistent caveat about no explicit flag"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "over_fourteen_days | 5 | 5 | 100%",
+        "why": "quantified predictor rates"
+      },
+      {
+        "dimension": "depth",
+        "quote": "shared_resource or server_room scope show elevated anomaly rates",
+        "why": "segmented causal reasoning"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "resolution time ≥ 241.5 hours (75th percentile), yielding 46 anomaly incidents",
+        "why": "explicit threshold definition"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "likely in the anomaly window when two or more of the following hold",
+        "why": "composite predictive rule"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B offers richer multi-dimensional segmentation and quantified predictors, though it differs from A on the window definition.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_clinical_object",
+    "severity_or_impact",
+    "visit_episode_type",
+    "acuity_class",
+    "clinical_domain"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.636,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.914,
+    "source_groundedness__table_level": 0.92,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_clinical_object",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.97,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorizing the clinical concern type. Values are sound readings of the source text (URI->infectious, MI follow-up->cardiovascular, acne->dermatologic, knee injury->musculoskeletal, physical exam->preventive_health). This is the core grouping axis for the analysis."
+      },
+      {
+        "name": "severity_or_impact",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A useful secondary axis to characterize concerns by severity. Mostly well-grounded (acne 'moderate severity' stated; URI 'mild'). The MI follow-up as 'moderate' is a defensible inference though the text says no angina/stable. Some rows require judgment beyond explicit text, but generally warranted."
+      },
+      {
+        "name": "visit_episode_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes acute vs chronic vs preventive vs follow-up, a genuine new grouping axis. Values are well-grounded: 'annual physical'->preventive, 'follow-up after MI'->post_intervention_followup, new acne/injury->acute_new_presentation."
+      },
+      {
+        "name": "acuity_class",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Largely redundant with the existing 'urgency' original column (Routine/Urgent/Emergency mirror it). One sample even reclassifies an 'Urgent' pediatric URI as 'Routine', showing minor independent judgment, but overall it adds little analytical leverage over the existing urgency field for this query."
+      },
+      {
+        "name": "clinical_domain",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Nearly a restatement of the existing 'department' original column (GeneralPractice->General Practice, Pediatrics, Cardiology, etc.). Well-grounded but trivially redundant, providing little new axis for grouping concern types."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.92,
+    "rationale": "The columns are well-grounded overall, with values that are sound readings of the source text and no observed hallucinations. For the query about types of patient concerns, primary_clinical_object is highly valuable and directly on-target, with visit_episode_type and severity_or_impact adding meaningful secondary axes. However, acuity_class and clinical_domain are largely redundant with the existing 'urgency' and 'department' columns respectively, dragging down holistic usefulness."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

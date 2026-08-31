@@ -1,0 +1,104 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What factors explain low review scores?",
+  "focus_variable": "low_review_score",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "product_category",
+    "brew_strength_complaint",
+    "palatability_rejection",
+    "product_freshness_staleness",
+    "product_performance_failure",
+    "fulfillment_service_failure",
+    "ingredient_transparency_concern"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "low_review_score",
+    "per_column": [
+      {
+        "name": "product_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Product category plausibly affects both the type/likelihood of complaints (treatments like brew strength, palatability) and the baseline review score, since some categories systematically attract lower ratings. It is a genuine common cause surfaced from the data, not named in the query."
+      },
+      {
+        "name": "brew_strength_complaint",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A brew-strength complaint is an expressed dissatisfaction extracted from the review text; it lies on the causal path to giving a low score (it is essentially a reason the reviewer scored low), so it mediates rather than confounds the outcome."
+      },
+      {
+        "name": "palatability_rejection",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Refusal/rejection of the product on taste grounds is an intermediate reaction that leads to a low score; it is on the causal path, so it is a mediator, not a common cause."
+      },
+      {
+        "name": "product_freshness_staleness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the product was stale is a candidate observed cause whose effect on the low score is being attributed; it is a plausible treatment/cause of the outcome."
+      },
+      {
+        "name": "product_performance_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A product failing to perform (no effect/adverse effect) is a candidate cause of the low score being attributed; treatable as a treatment/cause variable."
+      },
+      {
+        "name": "fulfillment_service_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A shipping/fulfillment failure is a candidate observed cause of a low score, distinct from product quality; it is a plausible treatment."
+      },
+      {
+        "name": "ingredient_transparency_concern",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Concern about ingredient transparency is a candidate cause of dissatisfaction and low scores; a plausible treatment/cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "product_freshness_staleness",
+      "product_performance_failure",
+      "fulfillment_service_failure",
+      "ingredient_transparency_concern"
+    ],
+    "confounders": [
+      {
+        "name": "product_category",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The added columns supply multiple candidate causes (treatments) extracted from the review text, so requirement (a) is met. However, the causal-estimation setup is weak on requirement (b): almost all columns are themselves candidate causes/reasons for the low score rather than common causes of both a treatment and the outcome. Several (brew_strength_complaint, palatability_rejection) are mediators — expressed dissatisfaction on the path to the score — and labelling them confounders would be an error. The only plausible genuine confounder is product_category, which can drive both which complaints arise and baseline scores, and it was surfaced from the data (not named in the query). But it is a single, coarse confounder and no reviewer/context common causes (e.g., reviewer strictness, price paid, expectation) were adjusted for. So there is limited real confounder reasoning, yielding modest confounder quality."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

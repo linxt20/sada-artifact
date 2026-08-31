@@ -1,0 +1,122 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 12,
+  "added_columns": [
+    "ticket_category",
+    "product_area",
+    "is_active_outage",
+    "business_impact_type",
+    "urgency_driver",
+    "root_cause_mechanism",
+    "is_regression",
+    "affected_user_scope",
+    "involves_third_party_integration",
+    "involves_data_integrity_risk",
+    "has_security_or_compliance_dimension",
+    "workaround_available"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5833,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 10,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.1667
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "ticket_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of issue (bug, outage, feature_request) is knowable at intake and plausibly correlates with resolution time. Legitimate predictor."
+      },
+      {
+        "name": "product_area",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Which product component the ticket concerns is available at intake and different areas plausibly have different resolution complexity."
+      },
+      {
+        "name": "is_active_outage",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether an active outage is in progress is knowable at ticket creation and plausibly drives resolution duration."
+      },
+      {
+        "name": "business_impact_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Nature of business impact is derivable from the ticket at intake and correlates with prioritization/effort. Legitimate signal."
+      },
+      {
+        "name": "urgency_driver",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Stated urgency driver is available upfront and plausibly relates to how quickly/complexly a ticket is handled."
+      },
+      {
+        "name": "root_cause_mechanism",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "The root cause mechanism is typically only determined DURING or AFTER investigation/resolution. Knowing the true root cause is downstream of the diagnostic effort that consumes resolution time, so it leaks the outcome."
+      },
+      {
+        "name": "is_regression",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the issue was a regression is a diagnostic conclusion usually reached during resolution, not reliably knowable at intake. Post-hoc determination leaks resolution effort."
+      },
+      {
+        "name": "affected_user_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope of affected users can be characterized from the ticket at intake and plausibly predicts effort/priority. Legitimate predictor."
+      },
+      {
+        "name": "involves_third_party_integration",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a third-party integration is involved is inferable at intake and third-party dependencies plausibly lengthen resolution. Legitimate."
+      },
+      {
+        "name": "involves_data_integrity_risk",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Data integrity risk is characterizable from the reported symptoms at intake and plausibly carries predictive signal on duration."
+      },
+      {
+        "name": "has_security_or_compliance_dimension",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Security/compliance dimension is identifiable from the ticket at intake and plausibly affects handling time. Legitimate predictor."
+      },
+      {
+        "name": "workaround_available",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a workaround was mentioned by the customer is present in the intake description and plausibly relates to urgency/effort. Legitimate."
+      }
+    ],
+    "n_predictors": 10,
+    "predictive_utility": 0.7,
+    "rationale": "Most added columns are intake-time attributes derived from the issue description that lie outside resolution_minutes and plausibly carry predictive signal (category, product area, outage status, impact, urgency, scope, integration/security/data-integrity flags, workaround). Two columns—root_cause_mechanism and is_regression—represent diagnostic conclusions typically established only during or after the resolution process and thus risk leaking the outcome. As a set the features provide substantial, genuine predictive leverage beyond the original columns, discounted for the leakage-prone diagnostic fields."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 12
+}

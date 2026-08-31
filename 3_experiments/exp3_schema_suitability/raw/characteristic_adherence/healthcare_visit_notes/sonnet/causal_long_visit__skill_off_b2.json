@@ -1,0 +1,100 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which clinical factors best explain longer visit durations?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "procedure_performed",
+    "chronic_condition_count",
+    "systems_involved_count",
+    "referral_or_consult",
+    "medication_mentions",
+    "note_word_count"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "procedure_performed",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate clinical cause whose effect on visit duration is plausibly being attributed; performing a procedure directly lengthens a visit."
+      },
+      {
+        "name": "chronic_condition_count",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Patient comorbidity burden plausibly increases the likelihood of procedures/referrals (treatment) AND independently lengthens visits, so it is a common cause. Not named in the query."
+      },
+      {
+        "name": "systems_involved_count",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Clinical complexity (number of body systems) plausibly drives both whether a procedure/consult is done and the outcome duration; a genuine common cause surfaced from the data, not in the query."
+      },
+      {
+        "name": "referral_or_consult",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate clinical cause of longer duration; obtaining a consult adds time. Functions as an alternative treatment rather than a common cause."
+      },
+      {
+        "name": "medication_mentions",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Medication reconciliation/mentions plausibly lie on the path from complexity to longer duration and are downstream of clinical activity rather than a common cause of a specific treatment; treating it as a confounder would be an error."
+      },
+      {
+        "name": "note_word_count",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Note length is an artifact of both the visit content and its duration (longer visits produce longer notes); it is downstream/effect, a mechanical text-length proxy, not a common cause. Adjusting for it would induce bias."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "procedure_performed",
+      "referral_or_consult"
+    ],
+    "confounders": [
+      {
+        "name": "chronic_condition_count",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "systems_involved_count",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The set supplies clear candidate treatments (procedure_performed, referral_or_consult) and two plausible common causes of both treatment and outcome (chronic_condition_count, systems_involved_count) that were surfaced from the data rather than copied from the query, demonstrating some genuine causal reasoning. However the set is diluted: medication_mentions reads as a mediator and note_word_count is a mechanical text-length/collider proxy, neither of which are valid confounders. Existing table variables (department, urgency, age_group) are the more obvious confounders and were not among the added columns. Confounder quality is moderate because the two genuine confounders are reasonable but the augmentation mixes in mediators/colliders."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_long_visit",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

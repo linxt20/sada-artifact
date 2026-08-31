@@ -1,0 +1,127 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "skill_on",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.68,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "depth",
+        "quote": "Aligned closures (n=52): 558 hrs / Misaligned closures (n=24): 1,166 hrs (2.1x worse)",
+        "why": "multi-way stratified interaction analysis"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Infrastructure-wide: 769 hrs (n=62, 81.6% of workload)",
+        "why": "concrete magnitudes with counts"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "complexity signal = True ... Fred Luddy: 1,259 hrs",
+        "why": "contradicts common pattern; heavy reliance on unverifiable TAPP columns"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "47 cases (97.9%) were assigned to Fred Luddy",
+        "why": "concrete tied-to-count claim"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "50 records with negative resolution times ... excluded",
+        "why": "acknowledges data quality consistently"
+      },
+      {
+        "dimension": "depth",
+        "quote": "High complexity: 188.4 hours ... Low complexity: 253.9 hours",
+        "why": "counterintuitive comparison examined"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [
+      {
+        "column": "incident_complexity_signal",
+        "quote": "TAPP-generated `incident_complexity_signal`",
+        "dependent": true
+      },
+      {
+        "column": "problem_scope",
+        "quote": "TAPP-generated `problem_scope`",
+        "dependent": true
+      },
+      {
+        "column": "incident_category",
+        "quote": "TAPP-generated `incident_category`",
+        "dependent": true
+      },
+      {
+        "column": "agent_closure_alignment",
+        "quote": "TAPP-generated `agent_closure_alignment`",
+        "dependent": true
+      }
+    ],
+    "B": []
+  },
+  "reason": "B is more internally consistent and data-quality aware while A relies heavily on unverifiable augmented columns.",
+  "validation_warnings": [
+    "winner_conflicts_with_dimension_sum"
+  ],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

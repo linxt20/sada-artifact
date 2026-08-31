@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "focus_variable": "incident_inefficiency_reasons",
+  "concept": "incident_inefficiency_reasons",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "issue_nature",
+    "requires_physical_intervention",
+    "recurrence_signal",
+    "scope_context",
+    "self_resolved_by_assignee",
+    "urgency_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.4108,
+    "facet_fraction": 0.75,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.6,
+    "mece": 0.5477,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_inefficiency_reasons",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The type of affected asset/system is a constitutive aspect of what an incident's inefficiency reason is about (what kind of thing failed)."
+      },
+      {
+        "name": "failure_mode",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How the thing failed is a core aspect of the reason an incident is inefficient to resolve; a genuine part of the concept."
+      },
+      {
+        "name": "issue_nature",
+        "is_constitutive_facet": true,
+        "role": "restatement",
+        "rationale": "Hardware/software/connectivity classification substantially overlaps with both incident_category (asset) and failure_mode (connectivity_failure, performance_degradation appear verbatim), largely restating those facets rather than adding a distinct aspect."
+      },
+      {
+        "name": "requires_physical_intervention",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether physical action is needed is an aspect of what makes resolution inefficient (drives handling effort), a legitimate constitutive facet."
+      },
+      {
+        "name": "recurrence_signal",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Recurrence is directly named in the query ('recurring issues') and is a constitutive aspect of the inefficiency reason."
+      },
+      {
+        "name": "scope_context",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The breadth/impact scope (individual vs shared/infrastructure) is an aspect of the incident that shapes resolution effort; a valid facet, though it partly correlates with incident_category."
+      },
+      {
+        "name": "self_resolved_by_assignee",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "This describes a resolution OUTCOME/handling behavior, not a constitutive aspect of the inefficiency reason itself; it is an effect/observable predictor rather than a part-of facet."
+      },
+      {
+        "name": "urgency_signal",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Urgency/priority is an attribute governing prioritization (already present as priority) rather than a constitutive part of why resolution is inefficient; it is an external driver, not a facet of the reason."
+      }
+    ],
+    "facet_columns": [
+      "incident_category",
+      "failure_mode",
+      "requires_physical_intervention",
+      "recurrence_signal",
+      "scope_context"
+    ],
+    "non_facet_columns": [
+      "issue_nature",
+      "self_resolved_by_assignee",
+      "urgency_signal"
+    ],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.6,
+    "rationale": "Several columns are genuine part-of facets of the inefficiency-reason concept (what failed, how it failed, physical intervention, recurrence, scope). However mutual exclusivity is weakened: issue_nature largely restates incident_category and failure_mode (sharing connectivity_failure and performance_degradation values), and scope_context correlates with incident_category. Two columns are not facets at all: self_resolved_by_assignee is a resolution outcome and urgency_signal is an external prioritization driver, both effects/predictors rather than constitutive aspects. Exhaustiveness is moderate: the retained facets cover asset, failure mode, physicality, recurrence, and scope, but overlaps mean effective distinct coverage is thinner than the column count suggests."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

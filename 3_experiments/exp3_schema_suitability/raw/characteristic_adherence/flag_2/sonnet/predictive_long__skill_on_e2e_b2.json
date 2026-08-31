@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "problem_symptom_type",
+    "is_unassigned_at_open",
+    "assignee_resolver_match",
+    "opened_hour_of_day",
+    "is_recurring_issue_type"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4583,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.1667
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Category of the issue is known at open time and plausibly correlates with how long resolution takes (e.g., database vs email). Legitimate predictor outside the focus."
+      },
+      {
+        "name": "problem_symptom_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Symptom type (outage vs cannot_connect) is knowable at intake and carries signal about complexity and time to resolve. Valid predictor."
+      },
+      {
+        "name": "is_unassigned_at_open",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether an incident lacks an assignee at open time is knowable early and plausibly delays resolution. Legitimate predictor, no leakage."
+      },
+      {
+        "name": "assignee_resolver_match",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the assignee matches the resolver requires knowing who ultimately resolved/closed the incident, which is only determined after the outcome. This is post-hoc information correlated with the resolution process itself, constituting leakage."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Business vs off hours at open time is known before resolution and can affect response latency. Valid predictor derived from opened_at."
+      },
+      {
+        "name": "is_recurring_issue_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the issue type is recurring is knowable at intake (from category/symptom patterns) and plausibly relates to quicker resolution via known fixes. Legitimate predictor, though heavily skewed (462/38) so limited discriminative power."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.55,
+    "rationale": "Five of six columns are legitimate, intake-time predictors that plausibly carry signal about resolution_time (category, symptom, unassigned-at-open, opened-hour, recurring-type), giving a model meaningful leverage beyond the raw fields. assignee_resolver_match is leakage because it depends on the eventual resolver/closer, information only available after the outcome. Some predictors are highly skewed, capping the incremental predictive leverage of the set."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category",
+    "transport_expense_misclassified",
+    "asset_description_quality",
+    "entry_method",
+    "missing_source_id_flag",
+    "processing_lag_flag",
+    "repeat_user_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.5071,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.7571,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.6321,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorises the asset/item type from ci and short_description; well-grounded in the samples. Only partly aligned with the travel-policy-risk query, but the travel_item bucket does isolate the relevant subset, giving some analytical leverage."
+      },
+      {
+        "name": "transport_expense_misclassified",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Directly targets a travel policy risk (transport expenses miscoded), so highly useful. However determining misclassification generally requires comparing description against category; the samples shown are all trivially False and the basis for the 14 True flags is not demonstrated, so groundedness is moderate with inference risk."
+      },
+      {
+        "name": "asset_description_quality",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A quality/specificity axis of the description is a reasonable reading of the text (specific model vs travel descriptor vs vague). Relevant to policy risk since vague descriptions are a compliance flag. Grounded in the samples."
+      },
+      {
+        "name": "entry_method",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Manual vs automated is inferable from short_description phrasing ('Automated'/'Automatically'), so reasonably grounded. But entry method has weak bearing on travel policy risk, limiting analytical value for this query."
+      },
+      {
+        "name": "missing_source_id_flag",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A near-mechanical restatement of whether source_id is empty in an existing column; well-grounded but low leverage and largely redundant with the original source_id field, and only tangentially about travel policy."
+      },
+      {
+        "name": "processing_lag_flag",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Derived from date fields but the threshold/basis for 'lag' is opaque and one sample without a processed_date is False rather than unknown. Weakly connected to travel policy risk specifically."
+      },
+      {
+        "name": "repeat_user_flag",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Repeat submitters can be a genuine axis for expense/travel abuse analysis, giving some leverage. Derivable from the user column across rows, though not verifiable in the single-row samples."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.75,
+    "rationale": "Several columns (transport_expense_misclassified, asset_description_quality, asset_category, repeat_user_flag) give genuine axes for spotting travel policy risks in expense descriptions, while others (missing_source_id_flag, processing_lag_flag, entry_method) are more generic infrastructure/quality flags with weak ties to the query. Most values are sound readings of the source text; the main groundedness concern is transport_expense_misclassified, whose True cases and inference basis are not evidenced in the samples."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 7
+}

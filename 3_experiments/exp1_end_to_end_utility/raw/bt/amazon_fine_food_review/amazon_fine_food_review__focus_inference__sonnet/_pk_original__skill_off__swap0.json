@@ -1,0 +1,150 @@
+{
+  "var_a": "original",
+  "var_b": "skill_off",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.7,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Beware, these are tuber indicum, not melanosporum | 1 | 96 | 96",
+        "why": "concrete high-vote review with counts"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "1 | 469 ... 5 | 377",
+        "why": "text-length table tied to scores"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Safety/regulatory flags first: BPA in lids",
+        "why": "decision-ready prioritization from data"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Negative reviewers write more",
+        "why": "cross-group comparison"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "Positive 0.856 ... Negative 0.551",
+        "why": "helpfulness by sentiment"
+      },
+      {
+        "dimension": "depth",
+        "quote": "repeat-buy signals are slightly higher in low-rating reviews (23.6 %)",
+        "why": "counter-intuitive segmentation"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Repeat buyers leaving 1–2 star reviews (~220 reviews)",
+        "why": "retention target"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "taste ... 467 out of 1,522 negative reviews",
+        "why": "issue-flag counts"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "issue_flags",
+        "quote": "taste appears in the flags of ~7,600+ reviews",
+        "dependent": true
+      },
+      {
+        "column": "helpfulness_ratio",
+        "quote": "non-null helpfulness ratio",
+        "dependent": true
+      },
+      {
+        "column": "repeat_buy_signal",
+        "quote": "repeat-buy signals are slightly higher",
+        "dependent": true
+      },
+      {
+        "column": "sentiment_label",
+        "quote": "sentiment_label maps perfectly onto score bands",
+        "dependent": true
+      },
+      {
+        "column": "review_length_bucket",
+        "quote": "Most reviews are medium-length",
+        "dependent": true
+      },
+      {
+        "column": "exclamation_count",
+        "quote": "Exclamation count: Mean 0.73",
+        "dependent": true
+      },
+      {
+        "column": "caps_ratio",
+        "quote": "Caps ratio > 0.15: Only 129 reviews",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "A offers more concrete, verifiable review-level evidence and sharper actionable prioritization while B leans on augmented aggregates.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest a longer visit?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "note_length_chars",
+    "sentence_count",
+    "medical_term_count",
+    "comorbidity_count",
+    "action_count",
+    "multi_complaint_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.5917,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.725,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.6583,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "note_length_chars",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw character count is a generic surface metric explicitly flagged as low-leverage by the rubric. It is trivially derivable and correct, but adds little analytical axis beyond crude length. Values match the source text lengths."
+      },
+      {
+        "name": "sentence_count",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Sentence count is a slightly richer structural signal than raw chars and could plausibly correlate with visit complexity/duration, but it is still a generic text-structure metric with limited independent leverage. Values are accurately readable from the notes."
+      },
+      {
+        "name": "medical_term_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Density of medical terminology is a plausible proxy for clinical complexity relevant to visit length. However the counts are suspiciously high (20-28 per short note) and near-constant across rows, suggesting an opaque/over-broad term definition that weakens both leverage and clear groundedness, though values are broadly defensible."
+      },
+      {
+        "name": "comorbidity_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Comorbidity burden is a genuinely useful clinical axis for predicting visit duration. But groundedness is shaky: the annual-physical row (no stated comorbidity, just mild fatigue) and the pediatric viral URI row are both marked comorbidity_count=1, which the text does not clearly support, indicating over-attribution."
+      },
+      {
+        "name": "action_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Count of clinical actions (orders, prescriptions, referrals) is a strong signal for visit length. However the MI follow-up row lists 'continue regimen, repeat lipid panel' yet is scored 0, while other rows with a single order are scored 1, showing inconsistent/under-counting extraction that undermines groundedness."
+      },
+      {
+        "name": "multi_complaint_flag",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Multiple presenting complaints is a relevant duration driver. But the flagging is unreliable: single-complaint notes (annual physical, single URI, single knee injury) are flagged 1, while arguably these are single complaints, indicating the flag does not correspond to genuine multi-complaint status."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.68,
+    "rationale": "The set mixes generic surface metrics (note_length_chars, sentence_count) offering weak leverage with more query-relevant clinical signals (comorbidity_count, action_count, multi_complaint_flag) that give real axes for modeling visit duration. Usefulness is moderate overall. Groundedness is the weaker dimension: the count/flag columns show over-attribution and inconsistent extraction across the evidence rows (e.g., comorbidity=1 for a clean annual physical, action_count=0 for a note containing orders, multi_complaint_flag=1 for single-complaint visits), pointing to values not always warranted by the source text."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

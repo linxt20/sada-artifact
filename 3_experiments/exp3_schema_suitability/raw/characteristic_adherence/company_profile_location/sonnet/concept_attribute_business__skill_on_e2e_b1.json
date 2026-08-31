@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What business models and customers do these companies describe?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "business_model_type",
+    "primary_customer_segment",
+    "industry_vertical",
+    "core_product_service_category",
+    "delivery_mode"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.84,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.836,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.838,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the 'business model' half of the query and gives a well-distributed categorical axis for grouping. Sample values (venture_capital for 5AM/Accel, professional_services for 280 Group, consumer_app for 23andMe, SaaS for Addepar) are sound readings of the descriptions."
+      },
+      {
+        "name": "primary_customer_segment",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the 'customers' half of the query and provides a strong grouping axis. Segments are well-warranted inferences (investor_founder for VCs, B2B_enterprise for Addepar/280 Group, B2C_consumer for 23andMe), though some are reasonable inference rather than explicit."
+      },
+      {
+        "name": "industry_vertical",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Adds a genuine, distinct grouping dimension complementary to business model and customer. Mostly grounded (fintech for Addepar, healthtech for 23andMe), and silent rows sensibly marked Unknown/NULL. Labeling 5AM Ventures as healthtech_biotech is a defensible read of 'life science companies'."
+      },
+      {
+        "name": "core_product_service_category",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "Provides a finer product-level axis, but overlaps substantially with business_model_type (investment_fund<->venture_capital, staffing_consulting<->professional_services, software_platform<->SaaS), reducing incremental leverage. Also the AI_ML_product tag for 23andMe is not supported by the description of personalized ancestry/health reports."
+      },
+      {
+        "name": "delivery_mode",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Delivery/channel is a legitimate new axis relevant to business model. Values are largely reasonable, but some are inferred beyond the text (e.g., in_person_services for VCs whose text is silent on delivery), which is a warranted-but-thin inference rather than direct evidence."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns collectively give strong, distinct axes (model, customer, vertical, product, delivery) that directly serve the query about business models and customers. Grounding is generally sound with sensible Unknown/NULL handling for silent rows. Minor deductions: core_product_service_category is partly redundant with business_model_type, and a few values (e.g., AI_ML_product for 23andMe) assert specifics not supported by the source text."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_business",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

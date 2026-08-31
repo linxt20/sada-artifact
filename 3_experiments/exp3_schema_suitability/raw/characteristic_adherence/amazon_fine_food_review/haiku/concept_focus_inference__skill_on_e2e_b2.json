@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "focus_variable": "product_score_outcome",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "pod_defect_quality_issue",
+    "user_expectation_mismatch",
+    "repeat_purchase_intent",
+    "flavor_category"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "product_score_outcome",
+    "per_column": [
+      {
+        "name": "pod_defect_quality_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate actionable cause: presence of a product defect/quality issue plausibly drives down the product score. This is an intervenable treatment whose effect on the outcome is being attributed."
+      },
+      {
+        "name": "user_expectation_mismatch",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether expectations were exceeded/met/mismatched sits on the causal path between an underlying product/description quality and the resulting score. It largely reflects the reviewer's evaluative judgement that produces the score rather than a common cause of a separate treatment; adjusting for it would block part of the effect. Treated as a mediator, not a confounder."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Repurchase intent is a downstream consequence jointly determined by satisfaction/score and by product quality; conditioning on it would open spurious associations. It is an outcome-like collider, not a confounder."
+      },
+      {
+        "name": "flavor_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Product flavor plausibly affects both the likelihood of a perceived quality/defect issue (the treatment) and the score independently (taste preferences drive ratings). As a product attribute preceding both, it is a genuine common cause that must be adjusted for. Surfaced from data, not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "pod_defect_quality_issue"
+    ],
+    "confounders": [
+      {
+        "name": "flavor_category",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "A plausible intervenable treatment (defect/quality issue) is present, so the treatment leg of the causal claim is met. However the confounding leg is weak: two of the added columns (expectation_mismatch, repeat_purchase_intent) are a mediator and a collider respectively -- adjusting for them would bias attribution, not correct it. Only flavor_category functions as a genuine common cause of both a quality-defect perception and the score, and even that link is only moderately plausible. No named-in-query confounders were copied, but the surfaced confounder set is thin and partly contaminated with post-treatment variables, so the causal-estimation setup is only partially realised."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

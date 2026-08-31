@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "focus_variable": "incident_inefficiency_reasons",
+  "concept": "incident_inefficiency_reasons",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_type",
+    "resolution_action_type",
+    "reassignment_indicator",
+    "self_resolution_indicator",
+    "resolver_agent",
+    "scope_breadth",
+    "affected_asset_class"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.2122,
+    "facet_fraction": 0.5,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.4,
+    "mece": 0.4243,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_inefficiency_reasons",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes what kind of incident it is (subject matter), not an aspect of WHY resolution was inefficient. Category is context/predictor of inefficiency, not a constitutive part of the inefficiency reason itself."
+      },
+      {
+        "name": "failure_type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Characterises the nature of the underlying failure, i.e. the problem being solved, not a facet of the inefficiency of its resolution. It is an antecedent condition, not a part-of the inefficiency concept."
+      },
+      {
+        "name": "resolution_action_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The type of resolution action (repair, investigation_only, etc.) is genuinely an aspect OF the resolution process whose (in)efficiency is under study, capturing a process facet of inefficiency."
+      },
+      {
+        "name": "reassignment_indicator",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Reassignment/ping-pong is a canonical constitutive driver and aspect of resolution inefficiency (workflow churn facet)."
+      },
+      {
+        "name": "self_resolution_indicator",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the incident self-resolved vs required active intervention is an aspect of the resolution process and its efficiency, a legitimate handling facet."
+      },
+      {
+        "name": "resolver_agent",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Identity of the agent is a dimension/predictor associated with inefficiency, not a constitutive aspect OF the inefficiency reason. It is a grouping attribute, not a part-of the concept."
+      },
+      {
+        "name": "scope_breadth",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The breadth/scope of impact is an aspect of the incident's handling complexity that constitutes an inefficiency-relevant facet (scale of what must be resolved)."
+      },
+      {
+        "name": "affected_asset_class",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The asset involved describes the subject of the incident, a predictor/context, not a constitutive aspect of why resolution was inefficient. It also largely overlaps with incident_category."
+      }
+    ],
+    "facet_columns": [
+      "resolution_action_type",
+      "reassignment_indicator",
+      "self_resolution_indicator",
+      "scope_breadth"
+    ],
+    "non_facet_columns": [
+      "incident_category",
+      "failure_type",
+      "resolver_agent",
+      "affected_asset_class"
+    ],
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.4,
+    "rationale": "Only about half the columns are true meronymic facets of 'inefficiency reasons'. incident_category, failure_type, resolver_agent, and affected_asset_class describe the incident's subject/context or grouping predictors rather than aspects OF the inefficiency itself. Mutual exclusivity is weakened by heavy overlap among incident_category, failure_type, and affected_asset_class (all essentially encode what/which asset), and even among the real facets, reassignment and self_resolution both touch handling flow. Exhaustiveness is low: the genuine facets omit key constitutive drivers of inefficiency such as delays/wait time, escalation/priority handling, information/diagnosis gaps, and rework, so the set does not cover the concept's main aspects."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

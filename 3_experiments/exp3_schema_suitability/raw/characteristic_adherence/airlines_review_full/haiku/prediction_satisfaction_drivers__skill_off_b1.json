@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "avg_dimension_rating",
+    "rating_variance",
+    "service_focus_score",
+    "comfort_focus_score",
+    "value_alignment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.464,
+    "analytical_usefulness__table_level": 0.47,
+    "source_groundedness": 0.554,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.509,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "avg_dimension_rating",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "The 0.2-step value grid confirms this is the mean of the five existing 1-5 dimension ratings (Seat Comfort, Staff Service, Food & Beverages, IFE, Value For Money). As a driver analysis of Overall Rating, this is a near-linear combination of features already in the table and is almost collinear with the target, so it adds little new leverage. Groundedness is high in principle since it is a deterministic function of present numeric columns; however sample 3 ('Excellent performance on all fronts') yielding only 2.8 is an odd mismatch, keeping this below full marks."
+      },
+      {
+        "name": "rating_variance",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Spread across the dimension ratings is a genuinely new axis (consistent vs. mixed experience) that can help explain what moves overall satisfaction, so it is the most useful of the added columns. It is derivable from the same numeric dimensions. The value of 4.2 in sample 3 is near/above the theoretical population-variance ceiling for a 1-5 scale and co-occurs with a uniformly positive text, which introduces some doubt about the computation."
+      },
+      {
+        "name": "service_focus_score",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "The 0.5 increments indicate an average of a service-related subset of the existing rating columns. Bucketing into a 'service' theme gives a mild grouping axis for cross-airline comparison, but it is largely a re-slicing of columns already present. Grounded in numeric data in principle, but the samples show weak coupling to the review text (e.g., a strongly positive review scoring only 3.5), which lowers confidence that the underlying dimensions were mapped correctly."
+      },
+      {
+        "name": "comfort_focus_score",
+        "analytical_usefulness": 0.42,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Also a 0.5-step average of a comfort-oriented subset of existing ratings, so similar limited, redundant analytical value. Groundedness is the weakest here: sample 2 explicitly says 'the seats on this aircraft are dreadful' yet comfort_focus_score is 4.5, and sample 3 praises a 'well-maintained' aircraft yet scores 1.0. These direct contradictions with the source text suggest a likely mis-mapping of dimensions and constitute observed hallucination."
+      },
+      {
+        "name": "value_alignment",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.42,
+        "hallucination_observed": true,
+        "rationale": "An alignment/divergence measure (whether value-for-money tracks overall satisfaction) could be a useful driver signal, but the semantics are opaque and the distribution is questionable: a -4 to 9 range with 0 as the modal value (1939 rows) looks like a default/undefined fill rather than a computed alignment. The wide, partly out-of-range values and unclear derivation from any present column make groundedness weak."
+      }
+    ],
+    "analytical_usefulness": 0.47,
+    "source_groundedness": 0.55,
+    "rationale": "The added set is dominated by deterministic re-combinations of the five numeric rating columns already in the table (a grand mean, two thematic sub-averages, a variance). rating_variance is the one clearly value-adding axis for a satisfaction-driver analysis; avg_dimension_rating and the two focus scores are mostly redundant with existing columns and with each other, giving modest overall analytical leverage for the query. On groundedness, the metrics are in principle derivable from present numeric ratings, but the row evidence shows several direct contradictions with the review text (comfort scored 4.5 for 'seats dreadful', 1.0 for a 'well-maintained' aircraft; an 'excellent on all fronts' review averaging 2.8), and value_alignment's out-of-range values with a dominant 0 default suggest unreliable derivation. These issues pull the table-level groundedness to moderate."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

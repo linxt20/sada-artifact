@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_theme",
+    "theme_avg_resolution_minutes",
+    "channel_avg_resolution_minutes",
+    "priority_avg_resolution_minutes",
+    "resolution_vs_theme_avg",
+    "priority_numeric"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6417,
+    "analytical_usefulness__table_level": 0.66,
+    "source_groundedness": 0.6417,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.6417,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Themes are the core grouping axis the query asks for, giving strong new leverage. However several sample categorisations are wrong: CS-0004 (report pinning enhancement) labelled 'billing' and CS-0005 (CSV export BOM after release) labelled 'performance' contradict the text, indicating unreliable extraction."
+      },
+      {
+        "name": "theme_avg_resolution_minutes",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "A per-theme average is useful for comparison but is a derived aggregate largely redundant with grouping by issue_theme on resolution_minutes. Its correctness inherits the mislabelling of issue_theme, so grounding is only moderate."
+      },
+      {
+        "name": "channel_avg_resolution_minutes",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Channel-level average supports the channel dimension of the query, but it is a straightforward group aggregate redundant with grouping on the existing channel column. Values are computable from the table."
+      },
+      {
+        "name": "priority_avg_resolution_minutes",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Supports the priority dimension but is a redundant group aggregate over the existing priority column and resolution_minutes."
+      },
+      {
+        "name": "resolution_vs_theme_avg",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "A per-row deviation from the theme average is a genuinely useful modelling/comparison feature (outlier detection). Values are arithmetically derivable but depend on the flawed issue_theme assignment, lowering grounding."
+      },
+      {
+        "name": "priority_numeric",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "An ordinal encoding of priority enables modelling/sorting, a modest but real gain. However the mapping is inconsistent/ambiguous: CS-0002 and CS-0005 both map to 2 while priority ordering vs original label is unclear, and encodings appear not to align cleanly with a defensible severity order."
+      }
+    ],
+    "analytical_usefulness": 0.66,
+    "source_groundedness": 0.6,
+    "rationale": "The columns collectively target all three axes the query names (theme, channel, priority) and add a useful per-row deviation feature, so usefulness is solid, though the three group-average columns are partly redundant with simple group-bys on existing/added columns. Groundedness is the weaker dimension: issue_theme shows clear mislabelling in the samples (enhancement->billing, CSV/BOM->performance), and every derived column (theme averages, deviation) inherits that error, while priority_numeric's encoding looks inconsistent. Aggregates over channel and priority are well grounded."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

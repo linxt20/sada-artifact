@@ -1,0 +1,93 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do handling times differ by channel and priority?",
+  "focus_variable": "handling_time_gap",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_type",
+    "is_async_channel",
+    "priority_numeric",
+    "expected_resolution_minutes",
+    "resolution_deviation_pct"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "handling_time_gap",
+    "per_column": [
+      {
+        "name": "issue_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Issue type plausibly affects which channel/priority a ticket takes (e.g., outages routed to fast synchronous channels, high priority) AND independently affects handling time (complexity). It is not named in the query and is a genuine common cause, making it the strongest evidence of surfaced causal reasoning."
+      },
+      {
+        "name": "is_async_channel",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "This is a re-encoding of channel, one of the two candidate causes explicitly named in the query whose effect on handling time is being attributed."
+      },
+      {
+        "name": "priority_numeric",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "A numeric re-encoding of priority, the other candidate cause explicitly named in the query."
+      },
+      {
+        "name": "expected_resolution_minutes",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A workload/SLA-based expectation baseline that plausibly reflects underlying case difficulty/SLA tier, which can influence both channel/priority assignment and actual handling time. Not named in the query. Somewhat ambiguous because it may be derived from priority itself, weakening its independence."
+      },
+      {
+        "name": "resolution_deviation_pct",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "Deviation of actual from expected resolution time is essentially an operationalization of the handling_time_gap outcome, not a confounder; adjusting for it would be adjusting for the outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "is_async_channel",
+      "priority_numeric"
+    ],
+    "confounders": [
+      {
+        "name": "issue_type",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "expected_resolution_minutes",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "Treatments (channel via is_async_channel, priority via priority_numeric) are present but both are merely re-encodings of variables explicitly named in the query, so they add no new causal insight. The decisive capability is confounder surfacing. issue_type is a genuine, not-named common cause of both treatment (routing/prioritization) and outcome (handling time), demonstrating real causal reasoning. expected_resolution_minutes is a weaker, partly derived candidate that may be a mediator/re-expression of priority rather than an independent confounder. resolution_deviation_pct is effectively the outcome itself and must not be treated as a confounder. Overall there is one solid surfaced confounder plus one ambiguous one, so confounder quality is moderate."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

@@ -1,0 +1,58 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What business models and customers do these companies describe?",
+  "focus_variable": "company_business_profile",
+  "concept": "company_business_profile",
+  "n_added_columns": 2,
+  "added_columns": [
+    "Business Model",
+    "Primary Customer"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6519,
+    "facet_fraction": 1.0,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.5,
+    "mece": 0.6519,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "company_business_profile",
+    "per_column": [
+      {
+        "name": "Business Model",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How a company creates and captures value (SaaS, Hardware, Marketplace, etc.) is a genuine constitutive aspect of its business profile -- an 'aspect OF' the concept, not an external driver."
+      },
+      {
+        "name": "Primary Customer",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Who the company sells to (Enterprise, Consumer, Developer, SMB) is a distinct constitutive aspect of the business profile and directly answers the query's 'customers' component."
+      }
+    ],
+    "facet_columns": [
+      "Business Model",
+      "Primary Customer"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.5,
+    "rationale": "Both columns are true meronymic facets of a company's business profile: monetization/model and target customer are separable aspects of 'an aspect OF' the concept, not external predictors or causes. Mutual exclusivity is high but imperfect because value overlaps leak across the two (e.g., 'Consumer' appears as both a Business Model and a Primary Customer value, blurring the boundary between how-they-monetize and who-they-serve). Exhaustiveness is moderate: model and customer are covered, but other core constitutive aspects of a business profile -- value proposition/products offered, industry/sector, revenue/pricing structure, and market/geographic scope -- are left uncaptured, so the two facets do not fully cover the concept."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_business",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

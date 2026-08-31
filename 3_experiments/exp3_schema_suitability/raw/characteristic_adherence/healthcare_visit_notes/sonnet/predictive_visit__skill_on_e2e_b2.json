@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit reasons point to different departments?",
+  "focus_variable": "department",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "primary_clinical_domain",
+    "presenting_problem_category",
+    "body_system",
+    "visit_acuity_level",
+    "symptom_onset_pattern",
+    "encounter_type",
+    "care_phase",
+    "chronic_vs_acute",
+    "procedure_performed",
+    "specialist_referral_needed"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.27,
+    "predictor_fraction": 0.6,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.4
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "department",
+    "per_column": [
+      {
+        "name": "primary_clinical_domain",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Clinical domains (cardiovascular, dermatology, orthopedic, neurological) are essentially aliases of hospital departments. Predicting department from clinical domain is near-tautological restatement of the target."
+      },
+      {
+        "name": "presenting_problem_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Chronic management vs acute illness vs trauma vs mental health is a functional characterization of the visit that correlates with department but does not directly name it; a legitimate, non-deterministic signal."
+      },
+      {
+        "name": "body_system",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Body system (cardiac, skin, musculoskeletal, neurological) maps almost one-to-one onto specialty departments, making it a restatement of the focus rather than an independent predictor."
+      },
+      {
+        "name": "visit_acuity_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Acuity (routine/urgent/life-threatening) is orthogonal to which organ-system department; it carries some signal (e.g., emergency vs preventive) without encoding the department itself."
+      },
+      {
+        "name": "symptom_onset_pattern",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Onset pattern (sudden vs chronic vs asymptomatic) is a genuine descriptive feature of the complaint, correlated with but not determinative of department."
+      },
+      {
+        "name": "encounter_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Encounter type (acute unscheduled, scheduled followup, well visit, emergency triage) describes visit logistics; predictive of department distribution without restating it."
+      },
+      {
+        "name": "care_phase",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Care phase (new diagnosis, active treatment, surveillance, prevention) is a process feature that plausibly correlates with department mix and is not a component of the target."
+      },
+      {
+        "name": "chronic_vs_acute",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Chronicity classification is a legitimate independent feature; largely redundant with presenting_problem_category but not a restatement of department."
+      },
+      {
+        "name": "procedure_performed",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "The procedure performed is known only during/after the encounter (post-outcome), and procedure type (surgical, biopsy, device implant) strongly encodes department, constituting leakage."
+      },
+      {
+        "name": "specialist_referral_needed",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Referral to a subspecialty/surgical service is determined at/after the visit and directly implies destination department; post-outcome and target-revealing."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.45,
+    "rationale": "Several columns (primary_clinical_domain, body_system) are near-aliases of the department target and are restatements/leakage, while procedure_performed and specialist_referral_needed are post-encounter variables that leak the outcome. The remaining features (presenting_problem_category, visit_acuity_level, symptom_onset_pattern, encounter_type, care_phase, chronic_vs_acute) are legitimate pre-outcome descriptors, but they cluster on the acute/chronic and acuity axes and are heavily mutually redundant, so their combined incremental predictive leverage over the existing urgency and reason_for_visit columns is moderate rather than strong."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

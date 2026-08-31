@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "Has_Common_Complaint",
+    "Improved_Rating_If_Fixed"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.675,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.175,
+    "source_groundedness__table_level": 0.18,
+    "b1_overall": 0.425,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Has_Common_Complaint",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.15,
+        "hallucination_observed": true,
+        "rationale": "A binary flag for whether a review contains a common cabin-service complaint is directly relevant to the query, which asks about eliminating the most common complaints; it gives a genuine grouping axis. However, the values are badly grounded and contradict the source. Sample 2 is a clear complaint ('seats dreadful', 'entertainment dreadful') yet is flagged 0; Sample 3 and 4/5 are glowing praise with no complaint yet Sample 3 is flagged 1. The flag appears close to inverted/random relative to the text, so groundedness is very low."
+      },
+      {
+        "name": "Improved_Rating_If_Fixed",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "A counterfactual 'rating if the complaint were fixed' is conceptually the core quantity the query needs, so it offers real analytical leverage. But the values are not soundly derivable from the text and behave like invented specifics. The praise-only reviews (Samples 3-5) are assigned 10.0, plausibly, yet Sample 1 (self-stated 9/10, all positive) gets 9.0 while Sample 2 (heavy complaints) gets only 3.0 despite being the case where fixing the complaint should RAISE the rating most. The lift logic is not warranted by the source and often contradicts it, so groundedness is low."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.18,
+    "rationale": "Both added columns target the query well: a common-complaint flag and a counterfactual improved rating are exactly the axes needed to estimate the rating uplift from eliminating cabin-service complaints, so table-level usefulness is solid. Groundedness, however, is the failing condition. The complaint flag is inconsistent with and sometimes inverted relative to the review text (a clearly complaining review flagged 0; praise flagged 1), and the improved-rating values assert specific counterfactual numbers the text does not support and that at times contradict it (the most-complaint-heavy review receives a low improved rating). These are confident invented specifics rather than sound readings of the source, so hallucination is observed on both columns."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 2
+}

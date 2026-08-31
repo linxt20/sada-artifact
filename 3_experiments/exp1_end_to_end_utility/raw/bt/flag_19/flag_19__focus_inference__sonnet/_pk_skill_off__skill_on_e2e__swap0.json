@@ -1,0 +1,104 @@
+{
+  "var_a": "skill_off",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.65,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 3,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "111 records (22%) have missing_source_id = Yes ... Travel (94 records) and Miscellaneous (17 records)",
+        "why": "concrete counts mapped to categories"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "IT accounting for 19 of them ... ~44% decline rate vs. ~9% overall",
+        "why": "numeric claim tied to rows"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "processing_lag_days is only populated for 106 records and is uniformly 1 day",
+        "why": "honest treatment of weak columns"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "declines span spend types, suggesting a policy or approvals workflow issue rather than a single category problem",
+        "why": "causal reasoning across segments"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "121 records (24%) totaling $533,565 are unresolved",
+        "why": "quantified backlog with totals"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "353 of 326 physical hardware records",
+        "why": "internal contradiction (353>326)"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "Both are strong and evidence-rich, but B contains a clear numeric contradiction (353 of 326) that undercuts its coherence, tipping the edge to A.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

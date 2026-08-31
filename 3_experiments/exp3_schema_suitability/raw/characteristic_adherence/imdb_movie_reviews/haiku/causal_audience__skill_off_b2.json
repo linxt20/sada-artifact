@@ -1,0 +1,85 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "focus_variable": "audience_dissatisfaction",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "has_acting_complaints",
+    "has_pacing_issues",
+    "writing_quality_signal",
+    "has_character_depth_signal",
+    "production_quality_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "audience_dissatisfaction",
+    "per_column": [
+      {
+        "name": "has_acting_complaints",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of dissatisfaction: complaints about acting. It is a plausible driver of the outcome, functioning as a treatment/attributed cause, though it is essentially a restatement of dissatisfaction about a specific facet rather than an upstream common cause."
+      },
+      {
+        "name": "has_pacing_issues",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate facet-cause of dissatisfaction; treated as an attributed reason. Not a confounder of other treatments."
+      },
+      {
+        "name": "writing_quality_signal",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Perceived writing quality as a candidate cause of the outcome; a treatment-like facet, not a common cause of the other facets."
+      },
+      {
+        "name": "has_character_depth_signal",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Character depth as a candidate driver of satisfaction/dissatisfaction; another treatment facet."
+      },
+      {
+        "name": "production_quality_flag",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Production quality as a candidate cause; a treatment facet, not a confounder that jointly causes another treatment and the outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "has_acting_complaints",
+      "has_pacing_issues",
+      "writing_quality_signal",
+      "has_character_depth_signal",
+      "production_quality_flag"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply a menu of candidate causes (acting, pacing, writing, character depth, production quality) — plausible treatments for attributing dissatisfaction. However, the operator provides NO confounders: there is no variable that plausibly causes both one of these facet-treatments AND the outcome and would need adjustment (e.g., genre, budget/production tier, film era, reviewer strictness, star-rating baseline). Each added column is itself a parallel candidate cause; adjusting one for another would be inappropriate, and none is an upstream common cause. Since the decisive test requires surfaced confounders to demonstrate causal reasoning, and none are present, the causal-estimation setup is incomplete: treatment(s) present but confounding structure absent, so any attribution would be uncontrolled and potentially biased."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

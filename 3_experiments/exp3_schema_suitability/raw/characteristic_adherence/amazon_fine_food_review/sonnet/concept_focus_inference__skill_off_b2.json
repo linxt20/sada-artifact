@@ -1,0 +1,131 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "focus_variable": "product_score_outcome",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "sentiment",
+    "product_avg_score",
+    "score_vs_product_avg",
+    "helpfulness_ratio",
+    "review_length",
+    "flag_quality",
+    "flag_taste",
+    "flag_misleading",
+    "flag_shipping",
+    "flag_value"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "product_score_outcome",
+    "per_column": [
+      {
+        "name": "sentiment",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Review sentiment is largely an expression/consequence of the reviewer's score experience, sitting on the path between the review content and the numeric score rather than being a common cause; treating it as a driver of score risks reverse-causation/mediation."
+      },
+      {
+        "name": "product_avg_score",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Product-level baseline quality plausibly causes both which review attributes are present (treatment) and the individual score (outcome), acting as a common cause; not named in the query."
+      },
+      {
+        "name": "score_vs_product_avg",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "This is a re-centered version of the score itself (Score minus product_avg_score); it is essentially the outcome, not a treatment or confounder."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Helpfulness votes are caused by both review content and score/perception; it is a downstream effect (collider), and conditioning on it would induce bias rather than remove it."
+      },
+      {
+        "name": "review_length",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Engagement/effort proxy that could jointly influence both the review's expressed attributes (treatment) and the score given (outcome); weakly plausible common cause, not named in query."
+      },
+      {
+        "name": "flag_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate actionable cause: whether the review raises product-quality issues, whose effect on score is the attribution target ('actions that could improve product scores')."
+      },
+      {
+        "name": "flag_taste",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause capturing taste-related mentions; an actionable attribute whose effect on score can be estimated."
+      },
+      {
+        "name": "flag_misleading",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause: mentions of misleading description, an actionable driver of score."
+      },
+      {
+        "name": "flag_shipping",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause: shipping-related complaints, an actionable driver of score."
+      },
+      {
+        "name": "flag_value",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause: value/price mentions, an actionable driver of score."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "flag_quality",
+      "flag_taste",
+      "flag_misleading",
+      "flag_shipping",
+      "flag_value"
+    ],
+    "confounders": [
+      {
+        "name": "product_avg_score",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "review_length",
+        "named_in_query": false,
+        "plausibility": 0.35
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The system supplies a clear TREATMENT set: multiple thematic flags (quality, taste, misleading, shipping, value) that operationalise actionable candidate causes of the product score, satisfying requirement (a). Requirement (b) is only weakly met. product_avg_score is a genuine, query-surfaced common cause of both which review themes appear and the individual score, giving some real confounder evidence. review_length is a weaker candidate common cause. However, several added columns are NOT valid confounders: sentiment is a mediator/reverse-caused expression of the score, score_vs_product_avg is essentially the outcome itself, and helpfulness_ratio is a downstream collider whose adjustment would bias the estimate. So the causal setup has treatments plus one solid non-query confounder, but is diluted by mediators/colliders mislabelable as adjustments, yielding modest confounder quality."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

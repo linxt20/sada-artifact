@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "disruption_handling_quality",
+    "staff_behavior_tone",
+    "crew_responsiveness",
+    "customer_service_resolution",
+    "aircraft_type_mismatch"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.73,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.79,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures a genuine axis (how disruptions were managed) distinct from the raw ratings, useful for identifying recurring pain points. Values track the evidence well: full smooth flights are not_applicable, the rescheduling and reservation-failure cases are poor_communication. The 'not_applicable' for silent/no-disruption rows is correct behaviour."
+      },
+      {
+        "name": "staff_behavior_tone",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A meaningful qualitative dimension on staff demeanor, groupable for analysis. Mostly grounded (friendly greeting -> friendly_attentive; ignoring passenger -> indifferent). However the Perth row labels staff 'rude_or_dismissive' though the text describes a scheduling/seat-reallocation grievance without any reported staff tone, an unsupported specific. Silent row correctly marked Unknown."
+      },
+      {
+        "name": "crew_responsiveness",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Overlaps substantially with staff_behavior_tone (both derived from crew attentiveness), reducing its marginal leverage, but still offers a service-responsiveness angle. Grounded on inflight rows (no crew for 2.5h -> absent_or_dismissive). The Perth row is a ground/scheduling complaint with no inflight crew evidence, so 'absent_or_dismissive' is weakly supported."
+      },
+      {
+        "name": "customer_service_resolution",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct and analytically valuable: whether raised issues got resolved. Values align with evidence (unresolved reservation/reschedule -> unresolved_or_ignored; smooth flight -> no_issue_raised). Silent-appropriate default handled correctly."
+      },
+      {
+        "name": "aircraft_type_mismatch",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Well grounded — true only where an aircraft swap is explicitly mentioned (737-8 to 737-800NG ex-MI), false elsewhere. However it is highly skewed (877 false / 23 true), near-constant, limiting its analytical leverage for a broad 'key points' query, though it does flag a niche recurring issue."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns collectively provide several genuine qualitative axes (disruption handling, staff tone, responsiveness, service resolution) that meaningfully help an analyst find the key pain points beyond the numeric ratings. staff_behavior_tone and crew_responsiveness partially overlap, and aircraft_type_mismatch is near-constant, tempering usefulness. Groundedness is generally strong with sensible categorisation and correct 'not_applicable'/Unknown defaults for silent rows, but a couple of tone/responsiveness labels on the ground-service complaint row assert staff behaviour the text does not describe, indicating mild hallucination."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

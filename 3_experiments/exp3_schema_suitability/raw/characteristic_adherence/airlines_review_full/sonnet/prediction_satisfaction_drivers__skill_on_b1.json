@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_quality",
+    "ground_service_quality",
+    "food_quality_signal",
+    "disruption_handling_quality",
+    "post_flight_service_outcome",
+    "value_for_money_perception",
+    "service_consistency_trend"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6643,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.57,
+    "b1_overall": 0.6321,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_quality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Cabin crew is a plausible driver of Overall Rating and the categorical distillation (poor/good/exceptional/mixed) gives a groupable axis, though it partly overlaps the original 'Staff Service' numeric column. Samples 1,3,4,5 are well-read from the text. Sample 2, however, labels crew 'poor' when the review discusses only seats and the entertainment system and never mentions crew at all — an invented negative where the text is silent."
+      },
+      {
+        "name": "ground_service_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Ground service is a genuinely new axis absent from the original columns and useful for explaining satisfaction. It correctly returns Unknown for silent rows (samples 2–5). But sample 1 asserts 'smooth_efficient' for a review entirely about the onboard experience with no ground-service content — a confident specific not supported by the text."
+      },
+      {
+        "name": "food_quality_signal",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Overlaps the original 'Food & Beverages' rating but adds finer categories (special_meal_failure, out_of_stock) that give some extra leverage. Samples 1,3,4 are correctly praised. Sample 2 labels food 'poor' though food is never mentioned, and sample 5 assigns 'adequate' to a review with no food content — both assert signal where the source is silent."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Disruption handling is a distinct, high-value driver dimension not captured by any original column. All five samples correctly resolve to 'not_applicable' since none mention disruptions, showing sound handling of silent rows."
+      },
+      {
+        "name": "post_flight_service_outcome",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Complaint-resolution outcome is a separate, meaningful axis for satisfaction. All sampled rows are appropriately 'not_applicable' with no post-flight content, correctly avoiding invented values."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Trivially redundant with the existing 'Value For Money' original column — a categorical restatement of the same construct, adding little new analytical leverage. Values are plausible and can be grounded in the existing numeric rating / overall sentiment, so groundedness is moderate."
+      },
+      {
+        "name": "service_consistency_trend",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A temporal 'trend' (declining/improving/stable) is hard to derive from a single review; only sample 5 has explicit 'consistently good' support. Samples 1 and 2 receive 'stable_positive'/'stable_average' with no evidence of any across-time comparison, so the label is largely interpretive/invented rather than read from the text."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.57,
+    "rationale": "The set provides several genuinely new axes for explaining Overall Rating — ground_service, disruption_handling, post_flight_service, and cabin_crew — which are the strongest contributions. value_for_money_perception is trivially redundant with the original 'Value For Money' column, and service_consistency_trend is a weakly grounded interpretive construct. Groundedness is mixed: disruption and post-flight columns correctly mark silent rows as not_applicable, but several columns (cabin_crew in sample 2, ground_service in sample 1, food in samples 2 and 5) confidently assert specific quality signals for aspects the review never discusses, and the trend column infers time-based movement from single reviews. This systematic tendency to manufacture values for silent aspects is the main groundedness concern."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

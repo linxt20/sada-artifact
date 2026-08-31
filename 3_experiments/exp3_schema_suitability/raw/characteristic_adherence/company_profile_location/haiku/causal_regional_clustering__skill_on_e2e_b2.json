@@ -1,0 +1,105 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "industry_domain",
+    "talent_skill_requirement",
+    "capital_proximity_indicator",
+    "company_maturity_signal",
+    "technology_innovation_posture",
+    "target_market_vertical"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "industry_domain",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Industry sector plausibly drives location choice (e.g., semiconductors near fabs, fintech near financial centers). This is a strong candidate cause of regional clustering and functions as a treatment/attributable driver."
+      },
+      {
+        "name": "talent_skill_requirement",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Skill needs (specialized STEM vs general) both influence where a firm locates (near talent pools) and correlate with the industry/type of company. It is a plausible common cause of locational pull and the firm's characteristics, so it acts as a confounder for the location decision."
+      },
+      {
+        "name": "capital_proximity_indicator",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Access to venture capital vs self-funded is a classic driver of regional location (firms locate near capital hubs). This is itself an attributable cause of the outcome rather than a common cause of another treatment."
+      },
+      {
+        "name": "company_maturity_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Company maturity/stage plausibly affects both funding structure/industry mix (treatment) and where a firm ends up located, making it a common cause worth adjusting for."
+      },
+      {
+        "name": "technology_innovation_posture",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Innovation posture (cutting-edge research vs incremental) largely follows from industry and talent choices and in turn shapes location; it sits on the causal path rather than being a pre-treatment common cause, so it is more mediator than confounder."
+      },
+      {
+        "name": "target_market_vertical",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Target market (enterprise B2B vs consumer) plausibly co-determines industry/funding and location preferences, acting as an upstream common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "industry_domain",
+      "capital_proximity_indicator"
+    ],
+    "confounders": [
+      {
+        "name": "talent_skill_requirement",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "company_maturity_signal",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "target_market_vertical",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "The query names no candidate causes or confounders, so all added columns are surfaced from the data rather than copied from the query. The system supplies plausible treatments (industry_domain, capital_proximity_indicator) that are attributable drivers of where a company is based, satisfying part (a). It also supplies several pre-treatment variables (talent_skill_requirement, company_maturity_signal, target_market_vertical) that plausibly act as common causes of both firm characteristics and location, satisfying part (b) with genuine, non-query-named confounders. Quality is moderate rather than high because the causal structure among these firm-attribute columns is loose (they are more correlates of firm type than clean common causes of a well-separated treatment/outcome pair), and technology_innovation_posture is better read as a mediator, which would bias attribution if adjusted for. Overall this is real causal reasoning surfacing non-obvious confounders, but with imperfect treatment/confounder separation."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

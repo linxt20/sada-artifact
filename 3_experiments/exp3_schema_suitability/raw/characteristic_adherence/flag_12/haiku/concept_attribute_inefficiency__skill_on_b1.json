@@ -1,0 +1,67 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_category_primary",
+    "specific_issue_mechanism",
+    "issue_recurrence_pattern",
+    "diagnostic_clarity",
+    "assigned_technician_proxy"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.69,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.645,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category_primary",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Categorizing tickets into printer/hardware/software/connectivity gives a strong grouping axis for identifying recurring issue drivers. Values in samples (connectivity for 'internet connectivity lost', printer for printer tickets) are well grounded in short_description."
+      },
+      {
+        "name": "specific_issue_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "rationale": "A finer mechanism breakdown is genuinely useful for pinpointing recurring failure modes. However groundedness is compromised: 'Printer not working properly' and 'The office printer is not functioning' are mapped to 'display_malfunction', which the text does not support (no display mentioned); this is an invented specific where the source is vague."
+      },
+      {
+        "name": "issue_recurrence_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "rationale": "Directly targets the query's 'recurring issues' theme, offering a useful axis. But 'repeated_device_type' is a cross-row aggregate inference not verifiable from a single row's text, and its meaning overlaps heavily with issue_category_primary; assignment appears heuristic rather than clearly warranted per row."
+      },
+      {
+        "name": "diagnostic_clarity",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.55,
+        "rationale": "A bare true/false clarity flag is heavily skewed (430/70) and close to a generic binary; limited analytical leverage for diagnosing resolution inefficiency. Marking vague texts like 'Printer not working properly' as diagnostically clear (True) is questionable, weakening groundedness."
+      },
+      {
+        "name": "assigned_technician_proxy",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "rationale": "Largely redundant with existing 'assigned_to'/'closed_by' original columns, adding little new axis. Values are person names not derivable from the sampled source text (short_description/timestamps), suggesting they are copied from an original field or inferred without visible support."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.6,
+    "rationale": "The set provides useful grouping axes (category, mechanism, recurrence) directly relevant to identifying recurring inefficiency drivers, but suffers from over-specific hallucinated mechanism labels (vague 'printer not working' → 'display_malfunction'), a redundant technician proxy duplicating original columns, and a low-leverage binary clarity flag. Category assignment is the strongest column; mechanism and recurrence are useful but partly ungrounded."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

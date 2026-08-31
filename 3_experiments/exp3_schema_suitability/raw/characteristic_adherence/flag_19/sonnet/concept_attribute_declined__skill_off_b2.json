@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "focus_variable": "declined_expense_reasons",
+  "concept": "declined_expense_reasons",
+  "n_added_columns": 3,
+  "added_columns": [
+    "decline_reason_flags",
+    "compliance_risk_level",
+    "compliance_category"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6633,
+    "facet_fraction": 1.0,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.8,
+    "mece": 0.6633,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "declined_expense_reasons",
+    "per_column": [
+      {
+        "name": "decline_reason_flags",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "This column enumerates the actual decline reasons (missing source reference, exceeds threshold, missing documentation, outside-policy department, etc.), which are literally the constitutive parts of the concept 'declined_expense_reasons'. It is an aspect OF the concept, not an external predictor."
+      },
+      {
+        "name": "compliance_risk_level",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Severity/risk level (Low/Medium/High) is an aspect of a decline reason -- it characterizes the compliance-risk dimension the query explicitly asks about ('compliance risks'). It decomposes the concept along its risk-severity facet rather than restating the whole."
+      },
+      {
+        "name": "compliance_category",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Grouping reasons into Documentation Gap / Authorization Control / Policy Violation is a taxonomic facet OF the decline reasons -- a higher-level aspect of the same concept, meronymically part of the reason space."
+      }
+    ],
+    "facet_columns": [
+      "decline_reason_flags",
+      "compliance_risk_level",
+      "compliance_category"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.8,
+    "rationale": "All three columns are genuine facets of 'declined_expense_reasons': the specific reason flags, the risk severity, and the compliance category are each an aspect OF the concept rather than external predictors or causes. However mutual exclusivity is only moderate: decline_reason_flags already encodes the semantic content that compliance_category summarizes (e.g., 'missing_source_reference' -> Documentation Gap; 'high_value_requires_additional_approval' -> Authorization Control), so the category facet substantially overlaps with the reason facet, and risk_level is derivable from the same reason content, creating partial redundancy across facets. Exhaustiveness is fairly good: the set covers the reason itself, its risk severity, and its compliance type, which are the main constitutive aspects the query targets; a distinct 'remediation/resolution' or 'responsible-party' facet is missing but the core reason-space is well covered."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

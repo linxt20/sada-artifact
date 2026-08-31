@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "cabin_crew_service_sentiment",
+    "aircraft_condition_status",
+    "operational_reliability",
+    "ground_staff_professionalism",
+    "price_value_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.796,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.46,
+    "source_groundedness__table_level": 0.46,
+    "b1_overall": 0.628,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_service_sentiment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Cabin crew service is a core, high-frequency review theme and a genuinely useful axis for the query, with a well-spread three-level distribution (indifferent/professional/exceptional) plus a small NULL bucket. Groundedness is mostly sound: sample 1 ('very kind & helpful', birthday cake) → exceptional_attentive, samples 3-5 ('well-trained on hospitality', 'crew came round regularly', 'really cared') → professional_friendly are all faithful readings. But sample 2, whose text is entirely about seats/entertainment and says nothing about crew, was labelled 'indifferent_rude' — an invented negative where the source is silent (should be NULL), indicating a sentiment-bleed error."
+      },
+      {
+        "name": "aircraft_condition_status",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Aircraft condition is a legitimate, distinct theme with useful variation (modern/adequate/showing_age/outdated) and appropriate use of NULL. However groundedness is weakened by a clear contradiction: sample 2 explicitly says 'The seats on this aircraft are dreadful... poor padding... entertainment dreadful' yet was coded 'adequately_maintained' rather than showing_age/outdated. Sample 1 ('modern_well_maintained') over-specifies 'modern' from a generic positive review, and sample 5 has essentially no condition cue yet gets a non-NULL value. Faithful cases (sample 3 'well-maintained', sample 4 'older aircraft in good condition') are correct."
+      },
+      {
+        "name": "operational_reliability",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.32,
+        "hallucination_observed": true,
+        "rationale": "On-time performance / disruption is a valid analytical axis, and the label set (reliable/minor/significant/cascading) would give real leverage if trustworthy. But groundedness is poor: none of the five sampled reviews mention timing, punctuality or delays, yet all five were confidently coded 'reliable_on_time'. This is a systematic positive default asserting a specific fact the text does not support (should be NULL), consistent with the very large 4931 'reliable_on_time' bucket. Such default-to-positive labelling would bias any rating correlation."
+      },
+      {
+        "name": "ground_staff_professionalism",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Ground-staff experience (check-in/boarding) is a meaningful theme distinct from onboard crew, so it adds a useful grouping axis. Groundedness is mixed: sample 2 correctly returns NULL when ground staff are unmentioned (good behaviour), but samples 1, 4 and 5 describe only onboard/seat/food experiences with no ground-staff cue yet are coded 'professional', again showing a positive-default tendency. Sample 3's 'staff well-trained' plausibly refers to cabin, not ground, staff, making that assignment shaky."
+      },
+      {
+        "name": "price_value_perception",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.38,
+        "hallucination_observed": true,
+        "rationale": "A textual value-perception theme is relevant to the query, though it partially overlaps the existing numeric 'Value For Money' column, slightly reducing its novelty. Groundedness is the main weakness: none of the five sampled reviews discuss price, fare or value for money, yet each received a specific verdict (premium_value_justified / poor_overpriced / fair_value). These appear inferred from overall sentiment rather than from any price-related evidence, so the values assert a specific where the text is silent."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.46,
+    "rationale": "All five added columns are well-targeted to the query: they decompose free-text reviews into distinct thematic axes (crew, aircraft, reliability, ground staff, value) that an analyst could cross with Type of Traveller, Class and Overall Rating — exactly the 'which themes track higher/lower ratings' framing. Each carries genuine categorical variation rather than being near-constant or a bare sentiment flag, so analytical usefulness is high (price_value slightly discounted for overlap with the existing Value For Money field). Source groundedness is the clear weakness. The evidence samples reveal a pervasive 'default-to-positive when silent' pattern: operational_reliability labels all five silent reviews 'reliable_on_time', price_value_perception invents value verdicts with no price cues, and ground_staff_professionalism asserts 'professional' for reviews with no ground-staff mention. There is also an outright contradiction (aircraft_condition_status = 'adequately_maintained' for a review calling the seats 'dreadful') and a sentiment-bleed hallucination (cabin_crew = 'indifferent_rude' where crew is never mentioned). Because these fabricated positives correlate mechanically with overall sentiment, they risk producing circular rating associations. Per the scope rule, no scores were lowered for missing themes or set size; only faithfulness and per-query leverage were judged."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

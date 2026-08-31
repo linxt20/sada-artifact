@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "priority_rank",
+    "description_word_count",
+    "urgency_keyword_count",
+    "multi_system_keyword_count",
+    "investigation_keyword_count",
+    "scope_keyword_count",
+    "has_error_code",
+    "channel_complexity",
+    "composite_complexity_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.5556,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.5778,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.5667,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "priority_rank",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A numeric encoding of the existing 'priority' column, so it is largely redundant with an original column and adds little new analytical leverage. Groundedness is questionable: CS-0003 (a blocking Enterprise outage) is ranked 4 while the enhancement request CS-0004 is 1, which is plausible, but CS-0001 gets 3 with no clear textual priority signal, suggesting the mapping may reflect an unseen original field rather than the text. Mild concern."
+      },
+      {
+        "name": "description_word_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Description length is a weak but legitimate proxy for ticket complexity/resolution time, so it has some analytical value. However groundedness is shaky: the per-row produced values (49, 48, 47, 41, 44) do not match the aggregate distribution (mostly 30-42) and several look like character or dollar-figure artifacts rather than actual word counts (e.g. CS-0001's '49' coincides with the '$49' figure, and the text clearly has more than 49 words). Counting is only partially reliable."
+      },
+      {
+        "name": "urgency_keyword_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Urgency language is a reasonable new axis for predicting resolution time. But the counts are inconsistently derived: CS-0003 scores 6 while its text has at most a couple of urgency terms ('immediate', 'blocking', 'outage'), and CS-0005 scores 1 with no obvious urgency term. The metric captures a real signal but the specific values are only loosely warranted by the source."
+      },
+      {
+        "name": "multi_system_keyword_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Number of distinct systems mentioned is a genuinely useful complexity axis for resolution time. Values are mostly defensible readings (CS-0001 '2' for invoice+ACH; CS-0002 '1' for SSO; CS-0005 '1' for Snowflake pipeline), though CS-0003 scoring 0 despite tenant/dashboard/gateway references is a minor miss. Broadly grounded."
+      },
+      {
+        "name": "investigation_keyword_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Signals whether a ticket requires investigation (RCA, diagnosis), which plausibly correlates with longer resolution. Heavily zero (234/250) so near-constant, weakening leverage, but the non-zero cases appear defensible. In the samples all are 0, including CS-0003 which requests an RCA — a slight under-count but no fabrication."
+      },
+      {
+        "name": "scope_keyword_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Breadth-of-impact ('all members', 'all tenant') is a sensible predictor of longer resolution. CS-0003 scoring 3 aligns with 'all members of the Acme tenant'. However the value 3 seems inflated for the single scope phrase present, and most other rows are 0, so the specific counts are only partly warranted."
+      },
+      {
+        "name": "has_error_code",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binary flag for presence of an error code is a legitimate, if simple, complexity signal. Well grounded: CS-0003 flagged 1 for the '502 gateway error'; others correctly 0. Somewhat coarse and sparse (13/250) which limits leverage, but sound."
+      },
+      {
+        "name": "channel_complexity",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A numeric recoding of the existing 'channel' column, so largely redundant with an original field. Values are not derivable from issue_description at all and their assignment (CS-0001=2, CS-0002=1, CS-0003=3) is an arbitrary complexity ordinal not evidenced in the shown source text. Low usefulness and weak groundedness."
+      },
+      {
+        "name": "composite_complexity_score",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "An aggregate complexity score is directly aligned with the query and gives a single modelling axis. But it inherits and compounds the groundedness problems of its constituent columns (word-count artifacts, inflated urgency/scope counts, channel ordinal), so its specific values are only weakly warranted by source text. Also partly a restatement of the other added columns."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.55,
+    "rationale": "The set offers several genuinely relevant complexity/urgency axes for predicting resolution time (multi_system, investigation, scope, has_error_code, composite), which is where the analytical value lies. However usefulness is dragged down by columns that merely re-encode existing original fields (priority_rank, channel_complexity) and by generic/near-constant features (raw word count, mostly-zero keyword counts). Groundedness is only moderate: the per-row samples reveal counting artifacts (description_word_count appears to pick up dollar/char figures) and inflated keyword counts (urgency=6, scope=3 for CS-0003) that outrun the actual text, and channel_complexity is not derivable from the shown source at all. Reasonable zero values for silent rows are appropriate, but the confident specific magnitudes in several columns are not consistently supported."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

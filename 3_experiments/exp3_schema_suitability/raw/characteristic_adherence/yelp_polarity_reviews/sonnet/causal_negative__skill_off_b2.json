@@ -1,0 +1,121 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "complaint_category",
+    "negative_signal_count",
+    "service_mention_count",
+    "food_mention_count",
+    "price_mention_count",
+    "wait_mention_count",
+    "cleanliness_mention_count",
+    "atmosphere_mention_count",
+    "review_length_bucket"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.2,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.2,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "complaint_category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Categorizes the type of complaint (food, service, price, etc.); a candidate cause whose effect on negative experience is being attributed. Includes a 'positive' bucket, so it partly encodes the outcome, but its intent is to name the driving factor."
+      },
+      {
+        "name": "negative_signal_count",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Count of negative signals in text is essentially a proxy/reflection of the negative sentiment itself, lying on the path between any cause and the label; effectively a restatement of the outcome, not a distinct common cause."
+      },
+      {
+        "name": "service_mention_count",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Degree of service-related content; a candidate factor whose effect on negativity is being estimated."
+      },
+      {
+        "name": "food_mention_count",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate factor: food-related content as a driver of the experience label."
+      },
+      {
+        "name": "price_mention_count",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate factor: price-related content."
+      },
+      {
+        "name": "wait_mention_count",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate factor: wait-time content."
+      },
+      {
+        "name": "cleanliness_mention_count",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate factor: cleanliness content."
+      },
+      {
+        "name": "atmosphere_mention_count",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate factor: atmosphere content."
+      },
+      {
+        "name": "review_length_bucket",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Review length can plausibly drive how many topic mentions/signals are detected (more text = more mentions) and also correlate with sentiment expression intensity, making it a common cause of the mention-count treatments and the outcome. Weak but the only genuine confounder-like variable."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "complaint_category",
+      "service_mention_count",
+      "food_mention_count",
+      "price_mention_count",
+      "wait_mention_count",
+      "cleanliness_mention_count",
+      "atmosphere_mention_count"
+    ],
+    "confounders": [
+      {
+        "name": "review_length_bucket",
+        "named_in_query": false,
+        "plausibility": 0.35
+      }
+    ],
+    "confounder_quality": 0.2,
+    "rationale": "The added columns richly enumerate candidate causes (topic mention counts and a complaint category), so a treatment is clearly present. However, causal attribution requires confounders that are common causes of BOTH treatment and outcome and must be adjusted for. The only column that even weakly plays this role is review_length_bucket (longer text yields more mentions and may relate to sentiment intensity); it is a mechanical proxy rather than a substantive confounder. No genuine common cause external to the text (e.g., reviewer disposition, restaurant type, visit occasion, rating baseline) was surfaced. negative_signal_count is essentially a restatement of the outcome/mediator, not a confounder. Thus the design is a factor-enumeration/correlational setup, not a properly confounder-adjusted causal estimation, and confounder quality is low."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

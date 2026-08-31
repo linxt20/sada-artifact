@@ -1,0 +1,58 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "focus_variable": "food_quality",
+  "concept": "food_quality",
+  "n_added_columns": 2,
+  "added_columns": [
+    "taste_quality",
+    "flavor_authenticity"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3674,
+    "facet_fraction": 1.0,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.3,
+    "mece": 0.3674,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "food_quality",
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Taste is a core sensory aspect OF food quality -- a genuine part-of the concept, capturing how the food tastes as evaluated by reviewers."
+      },
+      {
+        "name": "flavor_authenticity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the flavor is authentic vs. artificial/off is a legitimate aspect OF food quality, but it heavily overlaps with taste_quality since both concern the flavor/taste dimension rather than carving out a distinct facet."
+      }
+    ],
+    "facet_columns": [
+      "taste_quality",
+      "flavor_authenticity"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.3,
+    "rationale": "Both added columns are constitutive facets of food_quality (meronymic, not external predictors or causes). However, they are drawn from the same underlying dimension -- taste/flavor -- so they substantially overlap, lowering mutual exclusivity: flavor_authenticity is largely a sub-aspect of the broader taste_quality rather than an orthogonal facet. Exhaustiveness is low because food quality has several other major constitutive aspects that are entirely uncovered: texture/mouthfeel, freshness, aroma/smell, appearance, ingredient quality, and portion/consistency. The set thus captures only the taste/flavor cluster and fails to MECE-partition the concept."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 2
+}

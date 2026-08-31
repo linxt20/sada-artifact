@@ -1,0 +1,162 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What factors explain low review scores?",
+  "focus_variable": "low_review_score",
+  "concept": null,
+  "n_added_columns": 15,
+  "added_columns": [
+    "is_low_score",
+    "helpfulness_ratio",
+    "review_length",
+    "word_count",
+    "has_exclamation",
+    "has_question",
+    "negative_word_count",
+    "positive_word_count",
+    "sentiment_ratio",
+    "summary_length",
+    "caps_ratio",
+    "product_avg_score",
+    "user_avg_score",
+    "score_vs_product_avg",
+    "reviewer_is_harsh"
+  ],
+  "metrics": {
+    "n_added_columns": 15,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 5,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "low_review_score (is_low_score)",
+    "per_column": [
+      {
+        "name": "is_low_score",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Binary encoding of the focus variable; the outcome itself, restated from the query."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Helpfulness votes are plausibly caused by review content/score reception rather than causing the score; adjusting for it risks collider bias, not a common cause of the review-writing behavior and the score."
+      },
+      {
+        "name": "review_length",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A generic text-length feature. It is a property of the review text, correlated with score but not a plausible upstream common cause; closer to a descriptor/proxy than a confounder."
+      },
+      {
+        "name": "word_count",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Mechanical token count; generic, does not represent a common cause of a treatment and the outcome."
+      },
+      {
+        "name": "has_exclamation",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Stylistic text feature; a downstream expression of the reviewer's sentiment rather than a common cause; not a confounder."
+      },
+      {
+        "name": "has_question",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Stylistic text feature, generic; not a common cause of a treatment and the outcome."
+      },
+      {
+        "name": "negative_word_count",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Negative language expresses the reviewer's (dis)satisfaction; it lies on the path between an experience and the assigned score rather than being an upstream common cause. Treating it as a confounder would be an error."
+      },
+      {
+        "name": "positive_word_count",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Same as negative_word_count: sentiment expressed in text is on the causal path to the score, a mediator/proxy of the outcome, not a confounder."
+      },
+      {
+        "name": "sentiment_ratio",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Derived sentiment measure that essentially encodes the same satisfaction that drives the score; mediator/near-outcome, not a common cause."
+      },
+      {
+        "name": "summary_length",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Generic length feature of the summary text; not a plausible common cause of treatment and outcome."
+      },
+      {
+        "name": "caps_ratio",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Stylistic emphasis feature; downstream expression of reviewer emotion, not an upstream common cause."
+      },
+      {
+        "name": "product_avg_score",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Underlying product quality plausibly causes both how a given reviewer tends to rate (treatment behavior) and the individual low score outcome; a genuine common cause surfaced from data."
+      },
+      {
+        "name": "user_avg_score",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Reviewer's baseline harshness/leniency causes both their propensity to be a harsh reviewer (treatment) and the low score outcome; a genuine common cause surfaced from data."
+      },
+      {
+        "name": "score_vs_product_avg",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Computed as a function of the score itself relative to product average; it is derived from the outcome and thus a collider/near-outcome, not a valid confounder."
+      },
+      {
+        "name": "reviewer_is_harsh",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A binary indicator of reviewer harshness serves as the candidate cause (treatment) whose effect on the low score is being attributed."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "reviewer_is_harsh"
+    ],
+    "confounders": [
+      {
+        "name": "product_avg_score",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "user_avg_score",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "A plausible treatment (reviewer_is_harsh) is present, and the query names no confounders, so any valid common cause counts toward the capability. product_avg_score is a genuine common cause (product quality drives both rating tendency and the low score) surfaced from data. user_avg_score partly overlaps with the harshness treatment (near-definitional to reviewer_is_harsh, which is derived from user_avg_score), weakening it as an independent confounder. The bulk of added columns are generic text/style features, sentiment mediators expressing the same satisfaction that produces the score, or outcome-derived colliders (helpfulness_ratio, score_vs_product_avg). Because the strongest 'confounders' are mixed with a mediated/collider-heavy set and one confounder is effectively the treatment's own definition, the confounder_quality is only moderate."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 15
+}

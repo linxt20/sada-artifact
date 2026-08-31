@@ -1,0 +1,69 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "focus_variable": "user_satisfaction",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "sentiment_driver",
+    "problem_mentioned",
+    "improvement_keyword_count"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "user_satisfaction",
+    "per_column": [
+      {
+        "name": "sentiment_driver",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Identifies the dimension driving sentiment (service, food, price, ambiance, wait time, cleanliness). These are intervenable business levers a business could actually change/improve, directly matching 'how can businesses improve'. It functions as a settable treatment category."
+      },
+      {
+        "name": "problem_mentioned",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether a problem is mentioned in the review is a downstream expression of dissatisfaction, sitting between the underlying quality lever and the satisfaction outcome. It is a symptom/mediator rather than a common cause of both treatment and outcome."
+      },
+      {
+        "name": "improvement_keyword_count",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A mechanical keyword count that captures suggestion language in the text. It is neither a common cause of the intervenable lever and satisfaction nor a settable treatment; it is a text-derived proxy, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "sentiment_driver"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query is interventional: 'how can businesses improve satisfaction?' seeks a settable lever. sentiment_driver plausibly encodes intervenable business dimensions (service, food, price, etc.), satisfying the treatment requirement. However, the technical claim also requires CONFOUNDERS -- common causes of both the treatment and the outcome that must be adjusted for. None of the added columns are confounders: problem_mentioned is a mediator/symptom, and improvement_keyword_count is a mechanical text feature. No adjustment variables (e.g., business type, price tier, location demographics, reviewer expectations) are provided, so the counterfactual effect of the treatment cannot be isolated. The set fails the decisive test: zero confounders, none named or unnamed, so confounder_quality is 0."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can educators improve learning satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "tech_issues_flag",
+    "interaction_quality",
+    "teacher_innovation_score",
+    "peer_interaction_gap",
+    "improvement_lever"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.82,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.78,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.8,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "tech_issues_flag",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A binary tech-problem flag gives a clean axis to segment satisfaction and identify infrastructure as an improvement lever. Values match the text well (ED-0001 camera freeze, ED-0003 platform logout = 1; ED-0002/0004/0005 = 0)."
+      },
+      {
+        "name": "interaction_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A three-level interaction axis is genuinely useful for the query. However 'medium' appears to be an overused default: ED-0002 shows strong engagement (arguably high) and ED-0003 explicitly says 'zero peer interaction' yet is labeled medium, contradicting the text. Some values are weakly grounded."
+      },
+      {
+        "name": "teacher_innovation_score",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Innovation/creativity scoring is a useful new axis tied directly to educator action. Mostly defensible (ED-0004 documentary clips = 2, ED-0002 creative labs = 2), though scoring ED-0001/0003 as 1 based on scant mention of teacher method is a somewhat imposed inference."
+      },
+      {
+        "name": "peer_interaction_gap",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A specific peer-collaboration deficit flag is a distinct, actionable axis. Well grounded: ED-0003 'zero peer interaction'=1, ED-0005 silent discussion=1, ED-0001 missing hand-raising=1, others 0. Somewhat overlaps interaction_quality but adds finer signal."
+      },
+      {
+        "name": "improvement_lever",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorizing the recommended action; strong analytical leverage for grouping. Values are reasonable readings, but the large 'general_support' bucket (136) is a vague catch-all, and ED-0002 (positive, no clear problem) mapping to a lever is a stretch."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns collectively give several genuine, non-redundant axes (tech, interaction, innovation, peer gap, recommended lever) that map tightly onto the query about improving learning satisfaction. Groundedness is generally sound with clear extraction from the open responses, but interaction_quality shows a default-to-'medium' tendency that occasionally contradicts explicit text ('zero peer interaction' labeled medium), and improvement_lever leans heavily on a vague 'general_support' bucket. No pervasive fabrication of specific facts."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

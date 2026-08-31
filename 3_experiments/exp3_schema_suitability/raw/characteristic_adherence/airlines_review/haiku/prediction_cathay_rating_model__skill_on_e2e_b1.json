@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 10,
+  "added_columns": [
+    "primary_complaint_category",
+    "seat_comfort_reality",
+    "cabin_crew_professionalism",
+    "food_quality_consistency",
+    "operational_reliability_issue",
+    "ground_staff_competence_empowerment",
+    "service_delivery_consistency",
+    "premium_amenity_cost_cutting",
+    "premium_class_value_perception",
+    "passenger_class_factor"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.765,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.725,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.745,
+    "hallucination_rate": 0.7
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_complaint_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "rationale": "Strong axis for identifying pain points to target for rating uplift. Mostly well-grounded, though sample 3 (a glowing praise review) is labeled 'staff_service' as complaint which is a category-scope mislabel, and sample 4 similarly praises staff yet is flagged staff_service.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "seat_comfort_reality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Adds a qualitative read of seat experience beyond the numeric Seat Comfort score, useful for cabin optimisation. Values track source ('cramped close', 'seats hardly recline' -> tradeoffs); silent rows correctly Unknown.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "cabin_crew_professionalism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "rationale": "Useful service-quality axis. Sample 1 labeled 'rushed_or_absent' is a reasonable read of 'no staff to help'. Sample 2 labels crew 'rushed_or_absent' though text is about gate/delay ground ops, not cabin crew — a stretch. Sample 5 'polite_but_detached' from 'staff excellent' contradicts the source.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "food_quality_consistency",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "rationale": "Reasonable axis for menu/catering optimisation. But sample 3 ('enjoyed their meals') and sample 5 ('food good'/'dinner poor') mapped to 'average_acceptable' understates/flattens clearly stated signals; sample 4 has no food comment yet gets 'average_acceptable' rather than Unknown.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "operational_reliability_issue",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Directly relevant to route/operations optimisation. Well grounded: delay->flight_delay, no-op rows->none_reported. Sample 1 diversion/overnight stranding arguably an operational issue but marked none_reported, a minor miss.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "ground_staff_competence_empowerment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "rationale": "Distinct from cabin crew, useful for ground service redesign. Sample 1 'unhelpful_rigid' well grounded. But samples 2-5, which give no ground-staff information, are confidently labeled 'adequate_standard' rather than Unknown — invented specifics on silent rows.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "service_delivery_consistency",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "rationale": "Somewhat useful but overlaps heavily with the crew/service columns and has no NULL bucket, meaning every row is confidently classified even when text gives no consistency signal (sample 1). Risks fabricated confidence.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "premium_amenity_cost_cutting",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "rationale": "Cost-cutting perception is a relevant lever. Silent rows correctly Unknown. But samples 3 and 4 mapped to 'amenities_maintained' with no amenity-cost discussion in text — an unwarranted specific.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "premium_class_value_perception",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Useful for premium-cabin ROI analysis. Sample 5 'minimal_class_difference' is a fair read of the disappointing regional business class; silent rows correctly Unknown.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "passenger_class_factor",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.55,
+        "rationale": "Class is analytically relevant but largely redundant with the existing original 'Class' column. Grounding is questionable: samples 1 and 2 labeled 'business' with no class stated in the source text, an unsupported specific.",
+        "hallucination_observed": true
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns give genuine new analytical axes (complaint drivers, seat/food/crew qualitative reads, operational issues, premium value) that are well aligned to the MD's route/service optimisation goal, and most values are sound readings of the source. Weaknesses: several columns lack a NULL/unknown bucket (service_delivery_consistency, passenger_class_factor) or assign confident specifics on rows where the text is silent (ground_staff 'adequate_standard', class 'business'), and some labels flatten or contradict clear praise (crew 'polite_but_detached' from 'staff excellent'). passenger_class_factor is also largely redundant with the original Class column. Overall useful but with recurring unwarranted-specificity grounding issues."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

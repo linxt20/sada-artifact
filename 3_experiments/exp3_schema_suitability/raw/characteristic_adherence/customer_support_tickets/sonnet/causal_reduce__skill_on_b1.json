@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can support teams reduce ticket resolution time?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "issue_category",
+    "operational_severity",
+    "technical_complexity",
+    "affected_scope",
+    "requires_escalation",
+    "root_cause_domain",
+    "customer_urgency_signal",
+    "workaround_available",
+    "data_or_billing_sensitivity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.8611,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.8467,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.8539,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A strong grouping axis; teams can compare resolution_minutes across categories. Sample categorisations (billing, auth, outage, feature request, bug) are all sound readings of the source text."
+      },
+      {
+        "name": "operational_severity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Severity is a meaningful driver of resolution time and distinct from priority. Values track the text well (service_down for 502 outage, single_user for one user's issues)."
+      },
+      {
+        "name": "technical_complexity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A 1-5 complexity scale is a genuine axis to model resolution time. Groundedness is somewhat softer since exact numeric levels are inferred, but the assignments are plausible readings of the descriptions."
+      },
+      {
+        "name": "affected_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Blast radius is useful and partly correlated with severity but adds a distinct dimension. Values are well grounded (entire_tenant for Acme outage, single_user for individual reports)."
+      },
+      {
+        "name": "requires_escalation",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Escalation need is highly relevant to resolution time. Some values are inferred rather than stated (e.g. engineering_escalation for the SSO session-drop ticket where the customer only wants confirmation), a slightly confident inference, but generally reasonable."
+      },
+      {
+        "name": "root_cause_domain",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Root-cause domain gives a useful axis to route/analyse. Some assignments are speculative (auth session drop labeled auth_or_identity is fine; classifying complex cases risks over-confidence), but samples are defensible readings."
+      },
+      {
+        "name": "customer_urgency_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Urgency signals plausibly affect prioritisation and resolution speed. Values well grounded: explicit_deadline (Friday book close), active_business_event (board presentation), no_urgency_stated where silent."
+      },
+      {
+        "name": "workaround_available",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Presence of a workaround plausibly relates to resolution urgency/time. Values reasonable (workaround_exists for the sed step, not_applicable for feature request), though many rows default to no_workaround which may be over-asserted when text is silent."
+      },
+      {
+        "name": "data_or_billing_sensitivity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Sensitivity flag is useful for identifying tickets needing careful handling. Dominated by not_present (200), reducing leverage somewhat, but values are well grounded (billing_discrepancy for the duplicate line item)."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.84,
+    "rationale": "The added columns provide multiple genuine, distinct axes (category, severity, scope, complexity, urgency, escalation, root cause) that let an analyst group and model resolution_minutes to answer how to reduce resolution time. There is mild redundancy between severity/scope and between category/root_cause, but each still contributes a separable dimension. Groundedness is generally strong: sampled values are sound readings of the source text, with silent rows correctly defaulting to not_present/no_urgency_stated. The softest spots are inferred numeric complexity and some confidently assigned escalation/root-cause labels, but no clear contradictions or invented facts were observed."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 9
+}

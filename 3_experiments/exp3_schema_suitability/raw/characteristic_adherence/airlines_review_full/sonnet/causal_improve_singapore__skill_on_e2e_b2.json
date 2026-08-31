@@ -1,0 +1,123 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "crew_service_quality",
+    "food_quality_issue",
+    "seat_comfort_issue",
+    "disruption_handling_quality",
+    "customer_service_resolution_quality",
+    "ground_service_quality",
+    "ife_quality",
+    "cabin_class_experience_gap",
+    "service_decline_perception",
+    "service_consistency_across_legs"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.02,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.05,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "overall_rating_recommendation (Overall Rating + Recommended)",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate actionable cause (quality of crew service) whose effect on the overall rating/recommendation is being attributed. It is a driver/treatment, not a common cause of another treatment and the outcome."
+      },
+      {
+        "name": "food_quality_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate service-aspect cause of the outcome. Treatment/driver, not a confounder that would need adjustment."
+      },
+      {
+        "name": "seat_comfort_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Service-aspect driver of the overall rating. A candidate treatment, not a common cause of both a treatment and the outcome."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How disruptions were handled is a candidate cause of satisfaction/recommendation. Treatment, not confounder."
+      },
+      {
+        "name": "customer_service_resolution_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Resolution quality is a candidate driver of the outcome. Treatment, not a common cause of another aspect and the outcome."
+      },
+      {
+        "name": "ground_service_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Ground/check-in experience is a candidate driver of the overall rating. Treatment, not confounder."
+      },
+      {
+        "name": "ife_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Inflight entertainment quality is a candidate service-aspect cause of the rating. Treatment/driver."
+      },
+      {
+        "name": "cabin_class_experience_gap",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The gap between class expectation and delivered experience sits ON the path from the concrete service aspects to dissatisfaction/low rating; it is a proximal (dis)satisfaction mediator rather than a common cause. Adjusting for it as a confounder would be an error."
+      },
+      {
+        "name": "service_decline_perception",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A perceived-decline attitude is a near-outcome affective judgement lying between actual service and the recommendation decision. It is a mediator/proxy of the outcome, not a common cause of a treatment and the outcome."
+      },
+      {
+        "name": "service_consistency_across_legs",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Consistency/inconsistency of service across legs is itself a candidate driver (or moderator) of the outcome, not a common cause of another aspect quality and the rating."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "crew_service_quality",
+      "food_quality_issue",
+      "seat_comfort_issue",
+      "disruption_handling_quality",
+      "customer_service_resolution_quality",
+      "ground_service_quality",
+      "ife_quality",
+      "service_consistency_across_legs"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.05,
+    "rationale": "The augmentation performs a fine-grained DRIVER DECOMPOSITION: it surfaces many plausible candidate treatments (crew, food, seat, disruption handling, customer-service resolution, ground service, IFE, cross-leg consistency), each an actionable aspect whose effect on the overall rating/recommendation one might attribute. However, the technical claim for causal attribution also requires CONFOUNDERS surfaced from the data -- variables that cause BOTH a given treatment and the outcome and therefore must be adjusted to avoid biased attribution. No such column was added. Genuine confounders here would be passenger/flight context such as Type of Traveller, Class, Route, or Verified status (which shape both how good a given service aspect is AND the overall rating), yet these live only in the original table and were not introduced or operationalised as adjustment variables by the operator. Worse, two added columns (cabin_class_experience_gap and service_decline_perception) are mediators / near-outcome attitudes on the causal path; treating them as confounders would over-control and induce bias. Thus the causal-estimation setup is only half-built: treatments are richly present, but the confounder-surfacing capability under test is essentially absent, so confounder_quality is very low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

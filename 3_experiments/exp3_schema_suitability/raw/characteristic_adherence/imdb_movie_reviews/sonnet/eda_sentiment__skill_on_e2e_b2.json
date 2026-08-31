@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "overall_craft_verdict",
+    "script_writing_quality",
+    "plot_originality",
+    "acting_quality",
+    "reviewer_emotional_response",
+    "rewatch_intent",
+    "comparative_benchmark",
+    "explicit_recommendation",
+    "genre_expectation_met"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.4667,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.7,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "overall_craft_verdict",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean ordinal quality scale (masterpiece..unwatchable) with well-separated categories, but it is essentially a proxy for overall sentiment/label_pos itself. Grouping on it largely restates the focus rather than opening an external relationship."
+      },
+      {
+        "name": "script_writing_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A thematic dimension (writing craft) with interpretable, well-separated categories. It is a distinct aspect of a review that can be segmented and compared against sentiment to reveal which themes track positive vs negative labels."
+      },
+      {
+        "name": "plot_originality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories about narrative originality; a genuine review theme that can be cross-tabbed against sentiment. 'not_present' is frequent but categories remain meaningful for comparison."
+      },
+      {
+        "name": "acting_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A separable performance theme with clear categories; strong candidate for segmentation against sentiment to explore theme differences."
+      },
+      {
+        "name": "reviewer_emotional_response",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categories are interpretable but the valence axis (positive vs negative emotion) is nearly collinear with label_pos, so it mostly restates the focus rather than exposing an external theme."
+      },
+      {
+        "name": "rewatch_intent",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Behavioral-intent dimension that correlates with but is not identical to sentiment; segmenting on it can reveal how engagement themes vary and is an informative external variable."
+      },
+      {
+        "name": "comparative_benchmark",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Captures a distinct rhetorical theme (comparison to peers/classics) with interpretable categories. Heavily 'not_present' (189) reduces power, but the remaining categories still support meaningful comparison."
+      },
+      {
+        "name": "explicit_recommendation",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean recommend/advise-against scale, but it is close to a direct expression of sentiment polarity and thus largely restates label_pos rather than a separate theme."
+      },
+      {
+        "name": "genre_expectation_met",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "An expectation-fulfillment theme distinct from raw sentiment; interpretable categories that can be segmented to explore how met/failed expectations relate to positive vs negative labels."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.7,
+    "rationale": "The set is well-designed for exploratory analysis: all columns use interpretable, well-separated categorical scales rather than opaque scores, and several (script, plot, acting, genre expectations, comparisons, rewatch intent) capture distinct review THEMES that can be cross-tabbed against sentiment to answer the query. The main weakness is redundancy: overall_craft_verdict, reviewer_emotional_response, and explicit_recommendation are near-proxies for label_pos and mostly restate the focus, and some columns are dominated by 'not_present', limiting segmentation power. Still, a majority provide genuine external, associational thematic variables, supporting good but not maximal informativeness."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

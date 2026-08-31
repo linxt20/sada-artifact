@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "clinical_category",
+    "visit_purpose",
+    "acuity_level",
+    "chief_complaint_type",
+    "body_system",
+    "condition_chronicity",
+    "primary_care_action"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.792,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The clinical nature of the patient's presenting concern at each visit (what the patient came in for, categorized by type, acuity, and body system)",
+    "per_column": [
+      {
+        "name": "clinical_category",
+        "supports_focus": true,
+        "rationale": "Directly typologizes the clinical concern (chronic disease, acute illness, injury, etc.), which is the core of the query about 'types of concerns'."
+      },
+      {
+        "name": "visit_purpose",
+        "supports_focus": true,
+        "rationale": "Characterizes the reason/purpose framing of the concern (new problem, follow-up, routine), a coherent facet of the presenting concern."
+      },
+      {
+        "name": "acuity_level",
+        "supports_focus": true,
+        "rationale": "Adds severity/urgency facet to the concern, differentiating types by how pressing they are."
+      },
+      {
+        "name": "chief_complaint_type",
+        "supports_focus": true,
+        "rationale": "The most literal decomposition of the presenting concern (pain, dyspnea, skin lesion), central to identifying concern types."
+      },
+      {
+        "name": "body_system",
+        "supports_focus": true,
+        "rationale": "Organizes concerns by anatomical/physiological system, a standard and coherent facet of clinical concern classification."
+      },
+      {
+        "name": "condition_chronicity",
+        "supports_focus": true,
+        "rationale": "Temporal facet (acute vs chronic) of the concern; complements type without merely restating it."
+      },
+      {
+        "name": "primary_care_action",
+        "supports_focus": false,
+        "rationale": "Captures the clinical RESPONSE/disposition rather than the patient's presenting concern; it is a downstream outcome, slightly off the 'concerns patients come in with' focus."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.85,
+    "rationale": "Six of seven columns cohere tightly around a single inferable focus: the clinical nature of the patient's presenting concern. They form a well-differentiated multi-facet structure (category, purpose, acuity, chief complaint, body system, chronicity) at a useful, non-trivial granularity, each cutting the concern along a distinct axis rather than restating one another. The lone weak point is primary_care_action, which describes the provider's response rather than the incoming concern, drifting slightly from the query's focus on what patients 'come in with'. This minor scatter caps but does not undermine coherence. The implied focus is clearly actionable: an analyst can profile concern types, cross-tabulate acuity by body system, and prioritize service lines. Structure quality is high but not perfect due to the one off-axis (outcome) column and some overlap between clinical_category and condition_chronicity."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

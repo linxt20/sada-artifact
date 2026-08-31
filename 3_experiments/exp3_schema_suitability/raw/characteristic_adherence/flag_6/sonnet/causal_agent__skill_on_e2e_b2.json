@@ -1,0 +1,109 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some agents have longer resolution times?",
+  "focus_variable": "agent_resolution_discrepancy",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "assigned_resolver_match",
+    "incident_category",
+    "incident_severity_signal",
+    "failure_mode",
+    "affected_scope",
+    "is_ticket_unresolved"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.72,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.72,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "agent_resolution_discrepancy (resolution time)",
+    "per_column": [
+      {
+        "name": "assigned_resolver_match",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the assigned agent matched the actual resolver is a candidate cause (a handoff/reassignment signal) whose effect on resolution time is plausibly being attributed. It reads as the intervention variable rather than a background common cause."
+      },
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category (email, vpn, database) plausibly influences both which agent/handoff pattern occurs (specialists route certain categories) and the intrinsic resolution time, so it is a genuine common cause that must be adjusted for."
+      },
+      {
+        "name": "incident_severity_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Severity (outage vs degraded) affects both routing/staffing (severe incidents get different handling) and resolution duration, making it a plausible common cause of treatment and outcome."
+      },
+      {
+        "name": "failure_mode",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The technical failure mode plausibly drives both who is assigned (skill match) and how long resolution takes; a genuine common cause not implied by the query."
+      },
+      {
+        "name": "affected_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (individual vs office-wide) plausibly influences escalation/assignment and directly affects effort and time, so it is a common cause of both treatment and outcome."
+      },
+      {
+        "name": "is_ticket_unresolved",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether a ticket is still unresolved is downstream of both agent behavior and time; it is effectively an outcome/collider rather than a pre-treatment common cause and should not be adjusted for."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "assigned_resolver_match"
+    ],
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "incident_severity_signal",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "failure_mode",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "affected_scope",
+        "named_in_query": false,
+        "plausibility": 0.75
+      }
+    ],
+    "confounder_quality": 0.72,
+    "rationale": "The set genuinely sets up a causal estimation: assigned_resolver_match serves as the treatment candidate for resolution-time discrepancy, and four incident-characteristic variables (category, severity, failure_mode, scope) are surfaced from the data as plausible common causes of both agent assignment and resolution time. None of these confounders were named or implied in the sparse query ('Why do some agents have longer resolution times?'), so they demonstrate the capability under test. is_ticket_unresolved is a downstream collider/outcome, not a confounder, and should not be treated as one. Overall this is a reasonably strong causal-attribution schema, with the main weakness being one collider inclusion."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

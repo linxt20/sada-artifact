@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "is_travel",
+    "amount_above_travel_median",
+    "missing_processed_date",
+    "dept_travel_decline_rate",
+    "user_travel_submission_count"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "is_travel",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "A scope/selection flag identifying travel expenses. The query is explicitly about travel expenses, so this merely defines the population rather than serving as a treatment or confounder in the causal estimation."
+      },
+      {
+        "name": "amount_above_travel_median",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A binarized indicator of high expense amount relative to travel median. This is a plausible candidate cause of declines (large amounts more likely rejected) and can be read as a treatment whose effect on state_declined is under attribution."
+      },
+      {
+        "name": "missing_processed_date",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether processing was completed relates to how the claim was handled. Processing status is plausibly a downstream consequence of both the outcome (declined items may never be processed) and other factors, making it more of a collider/mediator than a common cause upstream of treatment."
+      },
+      {
+        "name": "dept_travel_decline_rate",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Department-level baseline decline propensity plausibly influences both which expenses get submitted/approved (treatment exposure) and the outcome, and departments vary in spending patterns; a plausible common cause that must be adjusted for. However, computing it from the outcome risks leakage."
+      },
+      {
+        "name": "user_travel_submission_count",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A user's submission volume proxies experience/behavior that can drive both the amounts/types claimed (treatment) and the likelihood of decline (outcome), acting as a common cause surfaced from the data."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "amount_above_travel_median"
+    ],
+    "confounders": [
+      {
+        "name": "dept_travel_decline_rate",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "user_travel_submission_count",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "A treatment is present (amount_above_travel_median) and two candidate confounders (department decline propensity, user submission behavior) were surfaced from the data rather than named in the query, showing some real causal reasoning. However, the confounders are constructed partly from the outcome itself (dept_travel_decline_rate is a direct aggregate of decline outcomes, risking leakage/near-circularity), and missing_processed_date is better characterized as a collider/mediator than a confounder, weakening the causal setup. is_travel is only a scope flag named in the query. Overall the columns partially, but imperfectly, realise a causal-attribution design."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

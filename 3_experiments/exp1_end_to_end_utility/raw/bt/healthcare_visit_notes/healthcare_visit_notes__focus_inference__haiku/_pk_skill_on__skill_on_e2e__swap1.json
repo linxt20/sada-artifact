@@ -1,0 +1,136 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "skill_on",
+  "swap": true,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.68,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Acute Diagnosis | 115 | 46.0%",
+        "why": "concrete counts per concern type"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "ECG shows ST elevation in V2-V4... [Emergency, V-0008]",
+        "why": "row-level quotes"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Emergency: 25 acute diagnoses (89% of Emergency visits)",
+        "why": "cross-domain segmentation"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Nearly 3 in 5 visits (46%)",
+        "why": "46% is not 3 in 5, contradiction"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Cardiovascular | 47 | 18.8%",
+        "why": "counts and percentages"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "60+ years: 87 visits (34.8%)",
+        "why": "numeric breakdowns"
+      },
+      {
+        "dimension": "depth",
+        "quote": "reflecting higher cardiovascular and chronic disease prevalence",
+        "why": "causal reasoning across demographics"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "43.6% require urgent or emergency",
+        "why": "internally consistent totals"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [
+      {
+        "column": "concern_type",
+        "quote": "using the TAPP-generated column `concern_type`",
+        "dependent": true
+      },
+      {
+        "column": "visit_stage_in_continuum",
+        "quote": "TAPP column `visit_stage_in_continuum`",
+        "dependent": true
+      }
+    ],
+    "B": [
+      {
+        "column": "primary_clinical_object",
+        "quote": "primary_clinical_object (identifying the concern domain)",
+        "dependent": true
+      },
+      {
+        "column": "visit_episode_type",
+        "quote": "visit_episode_type (characterizing the encounter purpose)",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "A offers richer row-level evidence and segmentation despite a coherence slip, edging out B.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

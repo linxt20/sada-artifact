@@ -1,0 +1,60 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "focus_variable": "product_satisfaction",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "performance_vs_expectation",
+    "content_or_creative_quality_issue"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "product_satisfaction",
+    "per_column": [
+      {
+        "name": "performance_vs_expectation",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "This captures whether the product works as advertised. It is a perceived-quality outcome that sits on the causal path between seller actions (e.g., accurate listings, better products) and satisfaction, not a lever the seller directly sets. It is more a mediator/proxy for satisfaction itself than an intervenable treatment or a confounder."
+      },
+      {
+        "name": "content_or_creative_quality_issue",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Describes content/creative quality problems experienced in the product. Again this is a downstream perception on the path to satisfaction rather than an actionable seller-set treatment or a common cause of both a treatment and satisfaction."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "treatment_intervenable": false,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query is a what-if seller-intervention question: it seeks a lever a seller can SET or CHANGE to raise satisfaction. Neither added column is an intervenable treatment. Both are perceived quality/performance assessments that function as mediators (or near-restatements) of satisfaction rather than actionable levers (e.g., price, description accuracy, packaging, shipping method, support policy). No column plays the role of a confounder (a common cause of both a treatment and the outcome), and none introduces confounders beyond those named in the query. The technical claim for the causal/what-if subtype is therefore not satisfied: there is no settable treatment and no adjusted-for confounders."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 2
+}

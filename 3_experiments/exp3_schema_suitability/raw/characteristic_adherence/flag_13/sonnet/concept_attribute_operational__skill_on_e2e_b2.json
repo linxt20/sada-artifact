@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What operational burdens appear in incident descriptions?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_pattern",
+    "affected_resource_type",
+    "incident_scope",
+    "task_nature",
+    "cross_resolver",
+    "off_hours_incident",
+    "recurrence_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3878,
+    "facet_fraction": 0.625,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.55,
+    "mece": 0.6205,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Categorizes the type of incident (database, email, VPN) rather than an aspect of the burden it imposes. It is a descriptive taxonomy of the incident subject matter, not a part of operational burden itself."
+      },
+      {
+        "name": "failure_pattern",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "Describes the technical mode of failure (connectivity failure, access denied). This is a source/cause of burden, not a constitutive aspect of the burden concept."
+      },
+      {
+        "name": "affected_resource_type",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Identifies what infrastructure is affected. This characterizes the incident's target, not a facet of the operational burden."
+      },
+      {
+        "name": "incident_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Scope/blast radius (system-wide vs user-specific) is a genuine constitutive dimension of how much operational burden an incident imposes -- breadth of impact is an aspect OF burden."
+      },
+      {
+        "name": "task_nature",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The nature of work required (break-fix, access request, maintenance) is an aspect of the operational effort/burden -- it partly constitutes what the burden consists of."
+      },
+      {
+        "name": "cross_resolver",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether resolution spans multiple resolver groups is a coordination-cost aspect of operational burden -- a constitutive part of the effort dimension."
+      },
+      {
+        "name": "off_hours_incident",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Timing (off-hours) is a real burden aspect since after-hours handling imposes additional operational cost -- an aspect OF the burden."
+      },
+      {
+        "name": "recurrence_signal",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Recurrence reflects repeated/ongoing burden, a temporal-persistence aspect of operational burden that is constitutive of its magnitude."
+      }
+    ],
+    "facet_columns": [
+      "incident_scope",
+      "task_nature",
+      "cross_resolver",
+      "off_hours_incident",
+      "recurrence_signal"
+    ],
+    "non_facet_columns": [
+      "incident_category",
+      "failure_pattern",
+      "affected_resource_type"
+    ],
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.55,
+    "rationale": "Only five of eight columns qualify as constitutive facets of operational burden. incident_category, failure_pattern, and affected_resource_type describe WHAT the incident is or its cause/target, not aspects of the burden it imposes -- they are external descriptors, not meronymic parts. Among the true facets, mutual exclusivity is fairly good: scope, task nature, coordination (cross-resolver), timing, and recurrence tap distinct dimensions, though incident_scope and cross_resolver partially co-vary (breadth often drives cross-team involvement), and recurrence/off-hours both index temporal burden with modest overlap. Exhaustiveness is only moderate: key burden dimensions such as resolution effort/duration, priority/urgency severity, volume, and rework are not directly captured; the set leans on categorical incident attributes and leaves the effort-magnitude and time-to-resolve aspects of burden underrepresented."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

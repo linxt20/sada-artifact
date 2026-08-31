@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "description_specificity",
+    "expense_purpose",
+    "source_id_present",
+    "entry_origin",
+    "ci_vendor",
+    "department_group",
+    "asset_category",
+    "processed_date_present",
+    "ci_hardware_class"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.6978,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.8056,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.7517,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "description_specificity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A meaningful axis for the query about description signals predicting decline. Mostly grounded in short_description phrasing, but one sample labels 'Automatically generated asset entry for hardware component' as 'generic_template' while a similar auto-generated phrase elsewhere is 'specific_named_asset', showing some inconsistency in reading the source."
+      },
+      {
+        "name": "expense_purpose",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Categorizing purpose is a strong grouping axis directly relevant to the query. Values largely track short_description, but the distinction between 'asset_procurement' and 'asset_registration' is inconsistently applied across near-identical descriptions, indicating some unsupported categorization."
+      },
+      {
+        "name": "source_id_present",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A boolean presence flag on an existing column offers limited but real analytical leverage as a decline predictor. Directly derivable from source_id, well grounded."
+      },
+      {
+        "name": "entry_origin",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Manual vs auto-generated origin is a plausible and useful signal for decline. Well supported by 'Automated'/'Procurement' wording in short_description."
+      },
+      {
+        "name": "ci_vendor",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Vendor extracted cleanly from the ci field (Dell, AWS→cloud_provider). Useful as a comparison axis, though vendor relevance to travel-expense decline is somewhat indirect."
+      },
+      {
+        "name": "department_group",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Grouping departments could help, but this appears to largely restate the existing 'department' column and the evidence samples give no source text supporting the assigned department, making values hard to verify and possibly asserted."
+      },
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A useful categorical axis (hardware/travel/cloud/software). Well grounded in short_description and ci content."
+      },
+      {
+        "name": "processed_date_present",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Presence of processed_date is a plausible decline-related signal (unprocessed items). Correctly derived, including 'nan'→False."
+      },
+      {
+        "name": "ci_hardware_class",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Hardware class extracted from ci model strings; reasonable and NULL/Unknown for non-hardware rows is correct behavior. Only weakly tied to travel-expense decline, hence moderate usefulness."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.8,
+    "rationale": "Most added columns provide genuine new axes (specificity, purpose, origin, presence flags) relevant to predicting declines, though several skew toward the asset/hardware framing rather than the travel-expense focus of the query. Groundedness is generally strong—extractions from ci and short_description are sound and silent rows are handled with Unknown/NULL—but some categorical judgments (procurement vs registration, description_specificity) are applied inconsistently across near-identical source text, and department_group values are not verifiable from the provided evidence."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

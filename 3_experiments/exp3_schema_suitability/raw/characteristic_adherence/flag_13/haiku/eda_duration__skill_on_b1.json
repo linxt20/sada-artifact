@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "incident_severity_signal",
+    "infrastructure_target",
+    "resolution_complexity_indicator",
+    "time_of_incident_context",
+    "repeat_incident_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7417,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.6959,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Derives a clean category from short_description (connect->connectivity, database, printing->hardware), well grounded. However, the original table already has a 'category' column, so it partially overlaps; still, a normalized/refined category from free text can add leverage for grouping resolution duration. Moderate usefulness given redundancy risk."
+      },
+      {
+        "name": "incident_severity_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Individual vs widespread/outage is a meaningful axis distinct from the existing priority field and directly relevant to resolution duration. Grounding is reasonable for clearly-scoped texts (single-user 'Cannot connect' -> individual_access) but 'widespread_impact'/'system_outage' require inference the short_description may not always support, so some values could be over-asserted."
+      },
+      {
+        "name": "infrastructure_target",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well grounded mapping from description to target (WiFi/VPN->network, printing->user_device). But it tracks incident_category very closely (network<->connectivity, database<->database), making it largely a restatement, reducing its independent analytical value for this query."
+      },
+      {
+        "name": "resolution_complexity_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Directly framed around resolution effort, so highly relevant to duration analysis. However labels like 'server_side_failure' vs 'client_side_configuration' are inferred causes the short_description often does not establish (e.g. 'Unable to access online database' -> server_side_failure is an assumption). Meaningful risk of confident specifics beyond evidence."
+      },
+      {
+        "name": "time_of_incident_context",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derived from opened_at timestamp (18:14->after_hours, 8:50/7:34 near boundary but defensible). A legitimate new axis that could correlate with resolution duration. Well grounded."
+      },
+      {
+        "name": "repeat_incident_flag",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A repeat flag is analytically useful for duration. But nothing in the provided per-row source text (short_description, opened_at, closed_by) reliably establishes repetition; the same 'Cannot connect to office VPN' text appears as both True and False, indicating the value is not consistently derivable from stated fields. Weak grounding."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.72,
+    "rationale": "Most columns give real axes for grouping resolution duration beyond the existing category/priority fields (severity signal, time-of-day, complexity, repeat flag). incident_category and infrastructure_target overlap heavily with each other and with the original category column, lowering their marginal value. Grounding is strong for extraction/time-based columns but weaker for inferred-cause columns (resolution_complexity_indicator, repeat_incident_flag) where labels assert specifics the short text does not clearly support, evidenced by identical source text yielding different repeat flags."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

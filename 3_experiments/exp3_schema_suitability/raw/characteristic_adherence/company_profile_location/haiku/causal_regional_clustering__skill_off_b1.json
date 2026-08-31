@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "n_added_columns": 4,
+  "added_columns": [
+    "Industry",
+    "Region_Cluster",
+    "Is_VC_Firm",
+    "Global_Presence"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.6625,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7188,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Industry",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Industry is a strong grouping axis for explaining why firms cluster in a region (e.g. semiconductors in South Bay). However groundedness is compromised by misclassifications: '280 Group' (Product Management training/consulting) labeled 'AI/ML' with no textual support, and Accel (a VC) labeled 'Other'. Many rows are plausibly derived, but observable errors lower the score."
+      },
+      {
+        "name": "Region_Cluster",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly central to a query about regional location; it aggregates address/geo into meaningful sub-regions to compare against. Values track address/city/lat-long (Sand Hill Road -> Peninsula, Santa Cruz Ave -> South Bay is defensible). Well grounded in original geographic columns."
+      },
+      {
+        "name": "Is_VC_Firm",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A useful binary given Sand Hill Road's VC concentration is a real regional phenomenon relevant to the query. Mostly grounded (5AM Ventures -> Yes correct), but Accel is a well-known VC described as partnering with founders and was marked 'No', a defensible-but-arguably-missed reading that shows some unreliability."
+      },
+      {
+        "name": "Global_Presence",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Somewhat relevant to location decisions, but the source descriptions rarely state geographic reach, making values hard to ground. Sampled rows default to 'No' where text is silent; this may be a reasonable default but for many rows the label is not truly derivable, and skewed near-constant (184/15) distribution limits leverage."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.68,
+    "rationale": "Region_Cluster and Industry give genuine new axes to group and compare for a query about regional location choice, and Is_VC_Firm captures a real region-specific signal (Sand Hill Road). Global_Presence is weaker and often not derivable from silent descriptions. Groundedness is generally acceptable but undercut by observable Industry misclassifications (280 Group -> AI/ML, Accel -> Other) and inconsistent VC labeling, indicating the categorizer sometimes asserts beyond the text."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 4
+}

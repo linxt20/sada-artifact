@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "product_category",
+    "functional_performance_verdict",
+    "content_quality_dimension",
+    "comparison_reference_type"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.748,
+    "focus_coherence": 0.88,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The aspect/dimension of the purchase experience that each Amazon review actually discusses (review topical facets, differentiated by product type)",
+    "per_column": [
+      {
+        "name": "product_category",
+        "supports_focus": true,
+        "rationale": "Establishes the type of purchase, which conditions which aspects are relevant (content quality for media vs. functional performance for physical goods). Serves as a contextual anchor for the aspect decomposition."
+      },
+      {
+        "name": "functional_performance_verdict",
+        "supports_focus": true,
+        "rationale": "Captures the functional/performance aspect reviewers talk about for physical products -- a distinct, data-inferable facet of the purchase."
+      },
+      {
+        "name": "content_quality_dimension",
+        "supports_focus": true,
+        "rationale": "Captures the content/artistic aspect (plot, acting, writing) relevant to media purchases -- a complementary facet, not a restatement of the functional one."
+      },
+      {
+        "name": "comparison_reference_type",
+        "supports_focus": true,
+        "rationale": "Captures whether/how reviewers frame the purchase relative to alternatives -- a genuine and distinct aspect of what reviewers discuss."
+      }
+    ],
+    "focus_coherence": 0.88,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.85,
+    "rationale": "The added columns collectively centre on a single coherent focus: the differentiated aspects of the purchase that reviewers actually talk about. Three columns are true topical facets (functional performance, content quality, comparison framing) and use meaningful 'not_present/no_comparison' sentinels to mark which aspect is engaged per review, which is exactly what the query ('what different aspects... actually talking about') asks. product_category is a sensible conditioning anchor rather than an aspect itself, but it strengthens rather than scatters the focus by explaining why different aspect columns apply to different rows. The structure is at a useful granularity with differentiated sub-values (narrative_plot, pacing, does_not_work, etc.), not a single restatement or generic noise. The focus is clearly actionable: an analyst can quantify which aspects dominate, segment by product type, and target improvements. Minor deductions: some overlap in coverage across media-oriented columns and the aspect set is not exhaustive (e.g., price/value, shipping/service aspects are absent), slightly narrowing the 'different aspects' claim."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

@@ -1,0 +1,93 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "Review_Length",
+    "Rating_Variance",
+    "Complaint_Count",
+    "Low_Rating_Count",
+    "Has_Major_Complaint",
+    "Overall_Low",
+    "Service_Comfort_Gap"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 6,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome",
+    "per_column": [
+      {
+        "name": "Review_Length",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Bare text length of the review. It is a property of the review text, not a cause of the flight being non-recommended; at most a proxy/collider driven by the reviewer's experience. Generic, mechanical feature with no causal standing."
+      },
+      {
+        "name": "Rating_Variance",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Variance across the sub-ratings is a downstream summary of the same ratings that drive recommendation. It sits on/after the causal path (function of outcomes-correlated ratings), not a common cause of any treatment and the outcome."
+      },
+      {
+        "name": "Complaint_Count",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Number of complaints extracted from the review reflects the negative experience that then leads to a non-recommendation. It lies on the causal path between the underlying service failures and the outcome, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "Low_Rating_Count",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Count of low sub-ratings is essentially the mechanism producing non-recommendation; a near-deterministic descendant of the ratings that drive the outcome, not a common cause."
+      },
+      {
+        "name": "Has_Major_Complaint",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Presence of a major complaint is part of the causal path to non-recommendation, expressing the same dissatisfaction rather than an upstream common cause of a distinct treatment."
+      },
+      {
+        "name": "Overall_Low",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Binarised low Overall Rating is a near-proxy of the recommendation decision itself; overall rating and recommendation are co-determined by the experience. It is a descendant/mediator, not a confounder."
+      },
+      {
+        "name": "Service_Comfort_Gap",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Gap between service and comfort sub-ratings is a derived experience measure on the path to (non-)recommendation, not a common cause of a treatment and the outcome."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "No column is a candidate CAUSE (treatment) whose effect on non-recommendation is being attributed while being distinct from the outcome mechanism. Every substantive added column (Complaint_Count, Low_Rating_Count, Has_Major_Complaint, Overall_Low, Service_Comfort_Gap, Rating_Variance) is a downstream descendant/mediator/collider of the same dissatisfaction that determines recommendation, and Review_Length is a generic text feature. Crucially, the system supplied NO confounder -- no variable that plausibly causes both a treatment and the outcome (e.g., route difficulty, aircraft type, prior expectation, traveller sub-segment) is surfaced. Because there is neither a clean treatment nor any adjusted-for confounder, the causal-attribution claim is not realised."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

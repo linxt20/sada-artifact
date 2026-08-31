@@ -1,0 +1,120 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "n_added_columns": 11,
+  "added_columns": [
+    "neg_word_count",
+    "pos_word_count",
+    "neg_phrase_count",
+    "negated_pos_count",
+    "intensified_neg_count",
+    "sentiment_ratio",
+    "exclamation_count",
+    "caps_word_count",
+    "question_count",
+    "short_title_flag",
+    "composite_neg_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 11,
+    "n_judged_columns": 11,
+    "analytical_usefulness": 0.6227,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.8182,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7205,
+    "hallucination_rate": 0.1818
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "neg_word_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Count of negative lexicon words is a direct, groundable signal strongly relevant to predicting negative satisfaction. Samples align reasonably with source text (e.g. 'disappointed' etc.), though row 3 with clearly negative content scoring 0 shows some lexicon gaps."
+      },
+      {
+        "name": "pos_word_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Positive word count gives a complementary axis for contrasting satisfaction; values are extractable from text and broadly consistent with samples."
+      },
+      {
+        "name": "neg_phrase_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Multi-word negative phrase detection adds signal beyond unigram counts; heavily skewed to 0 but still a legitimate distinct axis. Sample values plausible."
+      },
+      {
+        "name": "negated_pos_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Negated positive constructs ('not good') capture a nuance that raw sentiment misses, genuinely useful for this query. Very sparse but grounded."
+      },
+      {
+        "name": "intensified_neg_count",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Intensified negativity is a meaningful predictor axis; sparse (mostly 0) but derivable from text and not redundant."
+      },
+      {
+        "name": "sentiment_ratio",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A normalized sentiment score is relevant, but sample values are suspect: row 1 (strongly negative content) gets +0.0357 and row 5 (strongly positive) gets -0.0177, contradicting the text. The near-zero magnitudes suggest a weak/unreliable derivation, undermining groundedness and usefulness."
+      },
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Punctuation counts are trivially and accurately extractable; weak but non-zero predictive leverage for emotional intensity."
+      },
+      {
+        "name": "caps_word_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "All-caps word count is a plausible emphasis/anger signal, directly countable. Fairly generic but a distinct stylistic axis."
+      },
+      {
+        "name": "question_count",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Rhetorical-question count can weakly indicate frustration; accurately extractable. Low leverage but a legitimate axis."
+      },
+      {
+        "name": "short_title_flag",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A title-length flag is a fairly generic structural feature with limited connection to satisfaction; grounded and easily computed but weak analytical leverage."
+      },
+      {
+        "name": "composite_neg_score",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A blended negativity score is directly on-target for the query and gives a rankable axis. However it inherits the flawed sentiment components: row 1 (very negative) scores +3.3 as if positive-negativity, and row 5 (positive) gets -1.8, so sign consistency is questionable in samples."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns provide multiple genuine, distinct lexical/stylistic axes (negative and positive counts, negation, intensification, punctuation, caps) directly aligned with predicting negative satisfaction, so overall usefulness is solid despite some low-leverage generic flags. Most count-based columns are accurately and transparently derivable from the source text. The main groundedness concern is the sentiment_ratio and the composite_neg_score, whose sampled values contradict the evident polarity of the source reviews (strongly negative row scored positive, strongly positive row scored negative), indicating an unreliable derivation for those two columns."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 11
+}

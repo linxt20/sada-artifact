@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "pedagogy_adaptation_quality",
+    "student_engagement_signal",
+    "peer_social_interaction_loss",
+    "teacher_feedback_responsiveness",
+    "subject_format_compatibility",
+    "instructional_design_mode"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8333,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.7283,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7808,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "pedagogy_adaptation_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "A genuine axis distinguishing how well instruction adapted to the format, directly relevant to satisfaction drivers. Values are mostly warranted (ED-0002 'exemplary', ED-0003 'absent_or_negligible'), but ED-0001 marked 'adequate' despite the text describing lessons that 'don't click' and technical breakdown, a weakly supported read."
+      },
+      {
+        "name": "student_engagement_signal",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Engagement is a core candidate driver of satisfaction and gives a useful grouping axis. Values track the text well (ED-0005 silent cameras -> disengaged, ED-0002 kids showing up -> active). ED-0001 'passive_compliant' is a defensible inference from 'I miss raising my hand'."
+      },
+      {
+        "name": "peer_social_interaction_loss",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A distinct social dimension useful for explaining dissatisfaction. Well grounded where text mentions it (ED-0003 'zero peer interaction' -> severe). But ED-0001 'moderate' and ED-0002 'minimal' are asserted where the source says nothing about peer interaction, and ED-0005 'severe' conflates disengagement with peer loss."
+      },
+      {
+        "name": "teacher_feedback_responsiveness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Feedback quality is a plausible satisfaction driver and a useful axis. However several values are unsupported: ED-0003 and ED-0005 lack any statement about feedback timing yet are labeled 'delayed_or_minimal', and ED-0004 'prompt_and_detailed' is not evidenced by the text."
+      },
+      {
+        "name": "subject_format_compatibility",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Whether a subject suits remote delivery is a strong analytical axis and pairs with the existing subject column. Reads are mostly sound (algebra/whiteboard issues -> low; recorded history lectures -> high). Reasonable inferences overall."
+      },
+      {
+        "name": "instructional_design_mode",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Delivery mode is a legitimate factor to segment on. ED-0004 'asynchronous_rich' (recorded, pause-at-own-pace) is well grounded. But 'synchronous_live_interactive' is over-applied to ED-0003 (platform logs out, self-done worksheet) and ED-0001 where the mode is not clearly synchronous, showing some unsupported specificity."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.72,
+    "rationale": "All six added columns supply distinct, non-redundant analytical axes (pedagogy quality, engagement, peer loss, feedback, subject fit, delivery mode) that directly serve a query about drivers of low learning satisfaction; none are near-constant or trivial restatements. Groundedness is moderate: extractions are strong where the source explicitly discusses a theme, but several columns confidently assert categories (peer interaction, feedback timing, synchronous mode) for rows whose text is silent on those dimensions, rather than using an 'unknown' value. This over-confident inference is the main quality risk."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

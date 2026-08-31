@@ -1,0 +1,93 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "industry_domain",
+    "specialized_talent_focus",
+    "venture_ecosystem_dependency",
+    "company_maturity_stage"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "industry_domain",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Industry sector plausibly drives both where a company locates (industries agglomerate in specific regions) and is itself a candidate cause. It functions as a common driver of location choice; surfaced from the description text, not named in the query."
+      },
+      {
+        "name": "specialized_talent_focus",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Talent needs both influence which region a company chooses (proximity to talent pools) and correlate with industry/tech type. A plausible common cause of location; not named in query. Some risk it is a mediator of industry->region, but as a driver of location it is defensible as a confounder."
+      },
+      {
+        "name": "venture_ecosystem_dependency",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Dependence on the VC ecosystem plausibly causes companies to locate near funding hubs and reflects business type, acting as a common cause of location. Surfaced from data, not named in query."
+      },
+      {
+        "name": "company_maturity_stage",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Maturity stage can influence location decisions (early-stage clustering near incubators/VC vs. established firms) and correlates with other treatment candidates. Not named in query."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [
+      {
+        "name": "industry_domain",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "specialized_talent_focus",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "venture_ecosystem_dependency",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "company_maturity_stage",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The outcome is regional_cluster (where a company is based). The added columns are all plausible drivers of location surfaced from the text, and none were named in the query, which is positive. However, the technical claim requires a clear TREATMENT-CONFOUNDER structure: one candidate cause whose effect is being attributed, plus variables that confound THAT specific treatment-outcome relationship. Here no column is designated as the treatment; all four are undifferentiated candidate causes of the outcome. Without a nominated treatment, these variables cannot function as confounders (which must be common causes of BOTH a treatment and the outcome), so the causal-estimation setup is incomplete. The columns are better described as a bundle of parallel predictors than a treatment plus adjustment set, and several (e.g., talent focus, venture dependency) risk being mediators of one another. The system surfaced sensible variables but did not structure them into an identifiable causal attribution, so it only partially realises the claim."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

@@ -1,0 +1,74 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "affected_component",
+    "scope_context",
+    "recurrence_signal",
+    "resolution_same_day"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6367,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7083,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.6725,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Directly answers the query by grouping tickets into recurring problem types. Values (vpn, network, database, email) are sound readings of the short_description text. Some overlap with the original 'category' column but the added values appear more granular/reliable, giving genuine grouping leverage."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "Provides an orthogonal axis (how it failed: connection_failure, outage, access_denied) that is very useful for characterising recurring problems. Extractions match text well (e.g. 'Cannot connect' -> connection_failure). Some inference like 'not working properly' -> outage is a defensible but slightly strong reading; overall well grounded."
+      },
+      {
+        "name": "affected_component",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "Gives a useful component-level grouping axis. Most values are warranted (WiFi -> network_infrastructure, VPN -> remote_access). However some are strong inferences: 'Cannot connect to database' -> server_side and 'Email system' -> client_application are guesses not explicitly stated in the terse text, so groundedness is only moderate."
+      },
+      {
+        "name": "scope_context",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "rationale": "Scope (individual vs department vs production) is a reasonable analytical dimension. Where the text names a department it is well grounded; but 'individual_user' as the dominant value (313) is largely inferred by default when the text is silent, which risks asserting scope the source does not support."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.02,
+        "source_groundedness": 0.1,
+        "rationale": "Constant 'true' for all 500 rows. Near-constant column adds zero analytical leverage and cannot be grounded per-row since it distinguishes nothing; asserting recurrence uniformly is unsupported by the source text."
+      },
+      {
+        "name": "resolution_same_day",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "rationale": "Derivable from opened_at/closed_at timestamps and correctly computed in samples. However it addresses resolution speed, not 'recurring types of problems', so its usefulness for THIS specific query is limited."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.78,
+    "rationale": "The core columns (incident_category, failure_mode, affected_component, scope_context) form multiple genuine, well-grounded axes for identifying recurring problem types, directly serving the query. recurrence_signal is a dead constant that is both useless and unsupported, and resolution_same_day is well grounded but off-topic for this query. Some component/scope values rely on strong inference from terse descriptions, moderately lowering groundedness. No completeness penalty applied."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

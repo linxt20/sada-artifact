@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "Expectation_Gap",
+    "Airline_Avg_Rating",
+    "Review_Sentiment",
+    "Review_Detail_Level",
+    "Value_Perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.48,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.64,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.56,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Expectation_Gap",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Appears to be a signed deviation (e.g., a review's overall rating vs. the airline benchmark), which gives a genuine new axis for spotting over/under-performing reviews and outliers — useful for an exploratory 'what to focus on' query. Values track sentiment direction correctly (positive reviews positive, 'dreadful' review -3.8), so they are derivable from the rating fields present in the table. Docked because the exact construction is opaque and some magnitudes look off (a glowing 9/10 review scores only +1.0 while a comparably strong 'excellent on all fronts' review scores +4.4), suggesting inconsistent derivation."
+      },
+      {
+        "name": "Airline_Avg_Rating",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A per-airline aggregate of Overall Rating gives an analyst a benchmark to compare individual reviews against and to rank airlines — a legitimate grouping/comparison axis for this query. It is a constant within each airline group but that is expected for an aggregate. Values are directly derivable by averaging the existing Overall Rating over the Airline field, and the shared 6.54 across the Singapore-route samples is internally consistent."
+      },
+      {
+        "name": "Review_Sentiment",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A 4-way sentiment label is a reasonable and central axis for a review corpus (more leverage than a bare binary flag), helping segment the free text. However groundedness is weak: the clearly negative 'seats are dreadful / dreadful headphones' review is labeled 'Mixed', and the unambiguously positive 'Excellent performance on all fronts... definitely choose again' review is also labeled 'Mixed'. These contradict the source text and indicate an unreliable classifier."
+      },
+      {
+        "name": "Review_Detail_Level",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "This is effectively a bucketed proxy for review length/verbosity, the kind of raw-length signal that adds little analytical leverage for identifying the 'key points' the query asks about. Groundedness is fine — the labels track the length of the sampled reviews (short review → Brief, long review → Detailed), so values are derivable from the text."
+      },
+      {
+        "name": "Value_Perception",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (≈87% 'Fair') and largely a re-bucketing of the existing 'Value For Money' original column, so it offers little new discriminating power for the analysis. Groundedness is moderate: it is plausibly derived from the Value For Money score, but labeling a 9/10 'amazing' flight and an 'excellent on all fronts' review both as merely 'Fair' is questionable, and the source text shown does not clearly support the assignments (though a default 'Fair' is not an outright invention)."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.62,
+    "rationale": "The set mixes genuinely useful comparison axes (Airline_Avg_Rating as a benchmark, Expectation_Gap for outlier detection) with low-leverage additions (Review_Detail_Level is essentially text length; Value_Perception is near-constant and redundant with the existing Value For Money column). Sentiment is a fitting axis for a review table but is only moderately useful given a generic query. Groundedness is generally acceptable — aggregates and length/rating-derived fields are derivable from the table — but is dragged down by Review_Sentiment, which mislabels both a strongly negative and a strongly positive review as 'Mixed', a clear contradiction of the source text."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_key_focus_points",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

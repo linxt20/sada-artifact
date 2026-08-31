@@ -1,0 +1,61 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "focus_variable": "audience_dissatisfaction",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "writing_plot_issue",
+    "emotional_response_failure"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "audience_dissatisfaction",
+    "per_column": [
+      {
+        "name": "writing_plot_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Captures a candidate cause of dissatisfaction -- weak plot, poor dialogue, incoherent narrative. This is a plausible treatment/driver whose effect on the outcome is being attributed, not a common cause of another treatment."
+      },
+      {
+        "name": "emotional_response_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause of dissatisfaction (film fails to move audience, unearned emotion). This is a driver/treatment, not a confounder that jointly causes another treatment and the outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "writing_plot_issue",
+      "emotional_response_failure"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns surface plausible candidate causes (drivers) of audience dissatisfaction, so a treatment is present. However, the causal-attribution claim requires CONFOUNDERS -- variables that plausibly cause BOTH a treatment and the outcome and must be adjusted for to avoid biased attribution. No such variables were added. Both columns are alternative candidate causes/treatments, essentially decomposing dissatisfaction into thematic buckets, with no adjustment set to deconfound the attribution. Since no confounders were surfaced, the capability under test (surfacing common causes not named in the query) is not demonstrated."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 2
+}

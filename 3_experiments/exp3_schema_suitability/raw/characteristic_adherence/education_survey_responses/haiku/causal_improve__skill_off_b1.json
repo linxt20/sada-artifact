@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can educators improve learning satisfaction?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "key_satisfaction_factors",
+    "primary_barrier",
+    "innovation_present",
+    "engagement_quality"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.745,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.785,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "key_satisfaction_factors",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Extracts the salient drivers/friction points from each open response, giving a groupable axis directly tied to 'how to improve satisfaction'. Values in the samples (technical_support, creativity_household_materials, asynchronous_flexibility_multimedia) are sound readings of the source text. The vocabulary is extremely fragmented (many near-unique compound labels), which weakens grouping leverage somewhat, but it still offers genuine thematic content."
+      },
+      {
+        "name": "primary_barrier",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Naming the main obstacle is directly relevant to improving satisfaction and provides a compare/model axis. Sample values (technical_issues, disengagement, none) are well grounded in the text; NULL for silent rows is acceptable. However the very high NULL count (96) plus highly fragmented labels reduce practical leverage, and 'technical_issues_personalization' for ED-0003 slightly overreaches but is still defensible from the text."
+      },
+      {
+        "name": "innovation_present",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "A clean, low-cardinality yes/partial/no flag that partitions the data well and is useful for correlating innovative practice with satisfaction. Sample assignments are reasonable (kitchen-chemistry=yes, frozen algebra whiteboard=no), though 'innovation' is a mild inference on borderline rows; still warranted by the text."
+      },
+      {
+        "name": "engagement_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "An ordinal engagement scale is a strong new analytical axis distinct from the numeric satisfaction score, enabling grouping and modeling on a dimension central to the query. Sample gradings align with the text tone (silent muted juniors=low, kids show up ready=high, crying second grader=very_low). Some subjectivity but clearly warranted."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.83,
+    "rationale": "All four columns give genuine, non-redundant axes (thematic factors, barriers, an innovation flag, and an engagement scale) that materially support answering how educators can improve satisfaction; none merely restate the existing satisfaction score. Values in the row evidence are sound readings of the open responses, with appropriate NULL/none handling for silent rows and no invented facts. Main limitation is the heavy label fragmentation in the two free-text-derived columns, which lowers—but does not negate—their grouping leverage."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

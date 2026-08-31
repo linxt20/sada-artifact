@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "issue_nature",
+    "requires_physical_intervention",
+    "recurrence_signal",
+    "scope_context",
+    "self_resolved_by_assignee",
+    "urgency_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6375,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.6625,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.65,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean categorization of the incident type derived directly from short_description (printer, database, network). Gives a strong grouping axis for finding recurring issue clusters that drive inefficiency. Values are well-grounded in the source text."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Orthogonal axis capturing HOW things fail (not_responding, connectivity_failure, physical_damage). Useful for diagnosing recurring failure patterns. Mostly well-read from text; 'not_responding' for vague 'not working properly' is a reasonable inference, and NULL is used appropriately for silent rows."
+      },
+      {
+        "name": "issue_nature",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Coarser classification (hardware_failure, software_error) that overlaps substantially with failure_mode and incident_category; values like connectivity_failure/performance_degradation are literally duplicated across columns, reducing its added leverage. Still grounded and provides a higher-level grouping."
+      },
+      {
+        "name": "requires_physical_intervention",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A boolean tied to whether on-site work is needed—relevant to resolution effort/inefficiency. Somewhat inferable from category/failure_mode but adds an actionable axis. Groundedness is moderate since it is an inference; the database row labeled False and printer True are reasonable."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Directly on-topic for the query, but 92% of rows are True and single-line short descriptions provide no evidence that an incident recurs. Marking 'Internet connectivity lost' and generic printer tickets as recurring is a confident assertion the source text does not support, so groundedness is weak and its near-constant distribution limits usefulness."
+      },
+      {
+        "name": "scope_context",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes individual vs shared vs infrastructure scope, a genuinely useful axis for prioritizing which recurring issues cause the most disruption. Reasonably inferred from category and phrasing (office printer -> shared_office_resource, floor 3 network -> network_infrastructure)."
+      },
+      {
+        "name": "self_resolved_by_assignee",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "Would be relevant to resolution efficiency, but nothing in the short_description or timestamps indicates whether the assignee self-resolved. The True/False labels appear invented (e.g., True for the network row) and are not derivable from the provided source fields."
+      },
+      {
+        "name": "urgency_signal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Useful to relate severity to inefficiency, and there is an existing priority column making it partly redundant. Some labels are defensible from wording (connectivity lost -> immediate_attention), but 'standard' vs 'immediate' is largely an inference not clearly stated in text."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns provide several genuinely useful, orthogonal grouping axes (incident_category, failure_mode, scope_context) that directly support finding recurring drivers of resolution inefficiency, and these are well-grounded in the short_description text. Weaknesses: issue_nature overlaps heavily with the other categorical columns, and recurrence_signal and self_resolved_by_assignee assert facts (recurrence, who resolved) that single-line ticket text and the provided timestamps do not support, with near-constant skewed distributions—the two clearest hallucination cases. Overall the set is on-topic and mostly grounded but marred by a couple of unsupported inferred booleans."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

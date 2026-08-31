@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "usability_or_design_issue",
+    "value_for_price_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.735,
+    "analytical_usefulness__table_level": 0.74,
+    "source_groundedness": 0.89,
+    "source_groundedness__table_level": 0.89,
+    "b1_overall": 0.8125,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "usability_or_design_issue",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorising reviews by usability/design problem type (feature_mismatch, setup_difficulty, ergonomic_fit, etc.) gives sellers a concrete, actionable axis directly tied to the improvement query. The 'not_present' value dominates (190) because most sampled reviews are for media/dolls with no such issue, which is correct behaviour rather than a fault. Sampled values are sound readings of silent source texts."
+      },
+      {
+        "name": "value_for_price_perception",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Price/value perception is a distinct and relevant axis for improving satisfaction; sellers can act on 'overpriced' vs 'good_value' signals. Values are well-grounded: AMZ-0005 explicitly discusses cost being worth it ('costs more...but well worth it') mapped to premium_quality_justifies, and silent rows correctly get 'not_evaluated'. AMZ-0004 good_value is a slightly generous read but plausibly warranted. No fabrication observed."
+      }
+    ],
+    "analytical_usefulness": 0.74,
+    "source_groundedness": 0.89,
+    "rationale": "Both added columns provide genuine, non-redundant analytical axes (design/usability issues and price-value perception) that directly support the query on how sellers can improve satisfaction. Neither restates an original column nor is a trivial sentiment flag. Values across the samples are sound extractions or categorisations, with appropriate 'not_present'/'not_evaluated' defaults for silent rows and no hallucinated specifics."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 2
+}

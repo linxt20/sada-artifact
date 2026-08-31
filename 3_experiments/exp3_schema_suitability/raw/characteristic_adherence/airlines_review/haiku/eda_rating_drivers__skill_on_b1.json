@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "crew_warmth_engagement",
+    "seat_comfort_problem",
+    "meal_quality_consistency",
+    "premium_value_perception",
+    "cost_cutting_perception",
+    "communication_responsiveness_failure",
+    "ground_staff_service_quality",
+    "aircraft_cabin_freshness",
+    "post_covid_service_change"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7167,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.7389,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7278,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_warmth_engagement",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "A genuine review theme axis directly relevant to grouping ratings by crew warmth. Well-grounded where crew is discussed (samples 1,3,4,5). In sample 2 the review never mentions crew yet 'low_warmth_robotic' is asserted, an unwarranted inference, hence some groundedness loss."
+      },
+      {
+        "name": "seat_comfort_problem",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful binary theme flag, though partly redundant with the existing 'Seat Comfort' rating column. Values track the source text well (dreadful seats -> True; comfortable -> False)."
+      },
+      {
+        "name": "meal_quality_consistency",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Meaningful theme axis; NULL used correctly for silent rows overall. However sample 2 never mentions food yet 'poor_quality' is asserted rather than NULL, an unsupported inference that lowers groundedness."
+      },
+      {
+        "name": "premium_value_perception",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Relevant value axis somewhat overlapping 'Value For Money'. Several samples assert 'value_justified'/'overpriced' where the text makes no value/price statement (e.g., samples 2,3,4,5 barely address value), indicating confident specifics from silence."
+      },
+      {
+        "name": "cost_cutting_perception",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Interesting angle but heavily inferred. 'premium_justified'/'visible_cutbacks' assigned to rows that never discuss cost-cutting (sample 2 only mentions seats/IFE), so values often outrun the source."
+      },
+      {
+        "name": "communication_responsiveness_failure",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful failure-theme flag. Conservative 'False' defaults for silent rows are reasonable, so groundedness is acceptable."
+      },
+      {
+        "name": "ground_staff_service_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Distinct axis (ground vs cabin crew) valuable for the query. But reviews rarely mention ground staff; assigning 'helpful_efficient' to onboard-only reviews (samples 3,4,5) invents a fact rather than marking neutral/unknown."
+      },
+      {
+        "name": "aircraft_cabin_freshness",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Good theme axis with correct NULL usage on many rows. Sample 4 ('older aircraft... good condition') labelled 'new_modern' contradicts the text, and sample 2 'aged_dated' is unsupported."
+      },
+      {
+        "name": "post_covid_service_change",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Niche but potentially useful axis; 'no_comparison_made' dominates and is correctly applied to rows that make no temporal comparison, keeping it well grounded."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns provide multiple genuine thematic axes (crew, seats, meals, value, ground staff, cabin, post-covid) that give real leverage for grouping Overall Rating by Type of Traveller and Class, so table-level usefulness is solid despite mild overlap with existing rating columns. The main weakness is groundedness: the evidence samples reveal a strongly correlated 'all-positive' or 'all-negative' pattern where columns assert specifics (ground staff, cost-cutting, value, cabin, meals) for rows whose text is silent on those topics, and sample 4 even contradicts the text ('older aircraft' -> 'new_modern'). Where NULL/neutral defaults are used, behaviour is correct and not penalised."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

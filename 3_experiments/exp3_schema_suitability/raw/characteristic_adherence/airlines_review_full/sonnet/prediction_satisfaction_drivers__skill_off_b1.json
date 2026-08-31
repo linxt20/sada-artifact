@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "Service_Score_Mean",
+    "Weakest_Service_Dim",
+    "Value_Gap",
+    "Airline_Avg_Rating",
+    "Rating_vs_Airline_Avg",
+    "Is_Premium_Class",
+    "Satisfaction_Tier",
+    "Service_Score_Std"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6863,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.8488,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.7675,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Service_Score_Mean",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "A composite average of the five service sub-ratings (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment, Value For Money). This is a legitimate aggregate driver that lets the analyst regress/compare overall service quality against Overall Rating rather than juggling five columns. Values sit on 0.2 increments, consistent with a mean of five 1-5 scores, and are deterministically derivable from existing numeric columns. The row-3 case (glowing prose but mean 2.8, high spread) looks odd, but that reflects reviewer star-vs-prose inconsistency in the source data, not an invented value."
+      },
+      {
+        "name": "Weakest_Service_Dim",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Identifying which service dimension is lowest per row gives real diagnostic leverage for 'what drags satisfaction down' per airline. Derived from the existing numeric sub-ratings, so grounded. Weakness: for rows where all dimensions are equal (Service_Score_Std = 0, e.g. rows 1/4/5) there is no true minimum and the label appears to default to 'Seat Comfort', which likely inflates that category (2465) and makes the value arbitrary/unsupported for tied rows. Not a fabricated fact, but a soft-grounding issue."
+      },
+      {
+        "name": "Value_Gap",
+        "analytical_usefulness": 0.74,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Appears to be Value-For-Money minus the mean of the other service dimensions (0.25 increments are consistent with a 4-value mean subtracted from an integer). This captures whether perceived value outstrips or lags actual service quality — a genuine new axis, not a mere restatement. Computable from existing columns, so well grounded."
+      },
+      {
+        "name": "Airline_Avg_Rating",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Airline-level mean Overall Rating — directly on-point for a query about satisfaction 'across the different airlines,' providing the benchmark to rank/compare carriers. All five sampled rows share 6.542 (same Singapore-route airline), consistent with a group aggregate, and back-solving Rating_vs_Airline_Avg reproduces plausible 1-10 Overall Ratings (9,3,10,10,10) matching the prose sentiment. Strongly grounded."
+      },
+      {
+        "name": "Rating_vs_Airline_Avg",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Row Overall Rating minus its airline average — a within-airline normalization of the target. Verified arithmetically against the samples (e.g. 2.458 + 6.542 = 9, matching the '9/10' review). It is useful for spotting over/under-performers, but it is a linear transform of the outcome variable itself plus another added column, so it offers limited *independent* driver leverage. Groundedness is high."
+      },
+      {
+        "name": "Is_Premium_Class",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Binary flag collapsing the existing Class column into premium vs non-premium — a reasonable grouping axis for comparing satisfaction by cabin. Somewhat redundant with the original Class column (it is a coarsening rather than new information). Grounded: row 4 explicitly 'economy class' maps to 0, consistent."
+      },
+      {
+        "name": "Satisfaction_Tier",
+        "analytical_usefulness": 0.42,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "high/mid/low binning of the Overall Rating (9→high, 3→low, 10→high in the samples). Well grounded, but for a query asking what *drives* Overall Rating this is essentially a coarsened restatement of the target variable — largely circular and offering little new analytical leverage as an explanatory axis."
+      },
+      {
+        "name": "Service_Score_Std",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Standard deviation across the five service sub-ratings, capturing consistency vs unevenness of experience — a genuinely distinct axis from the mean and a plausible driver of satisfaction. Computable from existing columns; std = 0.0 correctly signals identical sub-scores (rows 1/4/5) and 2.049 signals a very uneven profile (row 3). Grounded."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.85,
+    "rationale": "Most added columns provide genuine, distinct analytical axes for the query 'what drives Overall Rating across airlines': the service composite (mean/std), the weakest-dimension diagnostic, the value-vs-service gap, and especially the airline-level benchmark all give real grouping/modeling leverage beyond the raw columns. A couple are weaker — Satisfaction_Tier is a near-restatement (binning) of the target Overall Rating, and Rating_vs_Airline_Avg is a transform of the outcome plus another added column — so they add limited independent explanatory power. Groundedness is strong overall: every column is a deterministic computation over existing numeric/categorical columns (service ratings, Class, Overall Rating, Airline), and the sampled rows back-solve to values consistent with the source (Overall Ratings matching the prose sentiment, economy→non-premium). The main soft spot is Weakest_Service_Dim's apparent tie-break default to 'Seat Comfort' on all-equal rows, which makes that label arbitrary for a chunk of rows. No outright fabrications observed."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

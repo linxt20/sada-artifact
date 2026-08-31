@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What market-expansion focus should analysts study?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "industry_vertical",
+    "business_model_category",
+    "expansion_maturity_stage",
+    "geographic_ecosystem_position",
+    "ecosystem_strategic_role",
+    "expansion_maturity_signal",
+    "silicon_valley_ecosystem_position"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.51,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The market-expansion potential of companies within a regional (Silicon Valley) tech ecosystem, characterized by industry, business model, growth maturity, geographic clustering, and strategic role.",
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "supports_focus": true,
+        "rationale": "Segments companies by sector, a core facet for identifying where market-expansion opportunity concentrates."
+      },
+      {
+        "name": "business_model_category",
+        "supports_focus": true,
+        "rationale": "Business model is a meaningful predictor of expansion dynamics and complements the industry facet."
+      },
+      {
+        "name": "expansion_maturity_stage",
+        "supports_focus": true,
+        "rationale": "Directly names growth/maturity stage, central to a market-expansion focus."
+      },
+      {
+        "name": "geographic_ecosystem_position",
+        "supports_focus": true,
+        "rationale": "Geographic clustering is a coherent facet for expansion, though it duplicates silicon_valley_ecosystem_position."
+      },
+      {
+        "name": "ecosystem_strategic_role",
+        "supports_focus": true,
+        "rationale": "Role within the ecosystem adds a structural relational facet relevant to expansion."
+      },
+      {
+        "name": "expansion_maturity_signal",
+        "supports_focus": true,
+        "rationale": "Coherent with focus but is a near-duplicate of expansion_maturity_stage, adding redundancy rather than new structure."
+      },
+      {
+        "name": "silicon_valley_ecosystem_position",
+        "supports_focus": true,
+        "rationale": "Near-identical to geographic_ecosystem_position; redundant restatement of the same geographic facet."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.8,
+    "rationale": "The columns collectively centre on one coherent, data-inferable focus: profiling companies in a Silicon Valley tech ecosystem for market-expansion analysis. Industry, business model, maturity stage, geographic position, and strategic role form a genuine multi-facet analytical structure at a useful granularity, and the inferred focus is clearly actionable for an analyst. Structure_quality is penalized because two facets are effectively duplicated: expansion_maturity_signal restates expansion_maturity_stage, and silicon_valley_ecosystem_position restates geographic_ecosystem_position (nearly identical value distributions). This redundancy means the set has only ~5 distinct facets rather than 7, reflecting imperfect differentiation, but the core structure remains sound."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

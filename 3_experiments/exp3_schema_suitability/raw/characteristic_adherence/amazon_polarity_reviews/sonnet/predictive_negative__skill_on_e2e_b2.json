@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "complaint_category",
+    "performance_gap",
+    "disappointment_intensity",
+    "complaint_scope",
+    "return_action_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.44,
+    "predictor_fraction": 0.8,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "complaint_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The presence/type of complaint is a review signal that lies outside the pos/neg label and is not a deterministic restatement of it (a review can complain yet be net positive, or be positive with no complaint). It plausibly carries strong predictive signal about dissatisfaction while remaining a distinct extracted feature."
+      },
+      {
+        "name": "performance_gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures whether the product met/fell below spec or made misleading claims. This is a substantive content-derived signal distinct from the satisfaction label; meeting spec vs below spec is a legitimate predictor of satisfaction rather than a mere relabeling of it."
+      },
+      {
+        "name": "disappointment_intensity",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Disappointment intensity is essentially the affective magnitude of (dis)satisfaction itself. It is close to a direct restatement/graded version of the focus label rather than an independent predictor, so it risks leaking the outcome it is meant to predict."
+      },
+      {
+        "name": "complaint_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope of the complaint (entire product vs specific feature vs seller) is a structural attribute of the review content that is not identical to the label and can plausibly refine prediction of overall satisfaction while remaining a separable feature."
+      },
+      {
+        "name": "return_action_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Behavioral intent such as returning, requesting a refund, or warning others is a review-expressed signal distinct from the numeric satisfaction label. It correlates with dissatisfaction but is a separately observable action, functioning as a legitimate predictor rather than a definitional restatement."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.55,
+    "rationale": "Four of the five columns are extracted content signals (complaint type, performance gap, complaint scope, return/warning behavior) that lie outside the label and plausibly carry predictive leverage about satisfaction, so as a set they offer meaningful signal beyond raw title/content. However these features are heavily correlated with each other and with negativity, and 'disappointment_intensity' is effectively a graded restatement of the outcome (borderline leakage), which caps the genuine incremental leverage. Net predictive utility is moderate."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "focus_variable": "incident_inefficiency_reasons",
+  "concept": "incident_inefficiency_reasons",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_days",
+    "issue_type",
+    "assignee_avg_resolution_days",
+    "is_high_priority",
+    "issue_type_frequency",
+    "inefficiency_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0289,
+    "facet_fraction": 0.1667,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.15,
+    "mece": 0.1732,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_inefficiency_reasons",
+    "per_column": [
+      {
+        "name": "resolution_days",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Resolution duration is an outcome/measure of (in)efficiency, not a constitutive aspect of the reasons driving it. It is a symptom, not a facet of the reason concept."
+      },
+      {
+        "name": "issue_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The nature/category of the underlying issue is a genuine aspect OF why incidents are inefficient to resolve (e.g., hardware vs software vs network drivers of difficulty)."
+      },
+      {
+        "name": "assignee_avg_resolution_days",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A performance metric of the assignee that may correlate with inefficiency but is an external driver/measure, not a constitutive part of the inefficiency-reason concept."
+      },
+      {
+        "name": "is_high_priority",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Priority is a contextual attribute of the incident, not an aspect OF the reasons for inefficiency; it is a potential moderator/predictor."
+      },
+      {
+        "name": "issue_type_frequency",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is a derived aggregate count of issue_type, redundant with issue_type and adding no distinct facet; it overlaps entirely with an existing column."
+      },
+      {
+        "name": "inefficiency_pattern",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A composite label combining priority/category/delay flags; it restates the whole inefficiency concept as a bundled tag rather than isolating one non-overlapping facet, and duplicates is_high_priority and delay signals."
+      }
+    ],
+    "facet_columns": [
+      "issue_type"
+    ],
+    "non_facet_columns": [
+      "resolution_days",
+      "assignee_avg_resolution_days",
+      "is_high_priority",
+      "issue_type_frequency",
+      "inefficiency_pattern"
+    ],
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.15,
+    "rationale": "The concept 'incident_inefficiency_reasons' calls for constitutive causal facets of why resolution is inefficient (e.g., process/handoff delays, categorization/routing errors, skill/staffing gaps, information/diagnostic gaps, tooling issues). Only issue_type qualifies as a genuine aspect OF the reasons. The remaining columns are outcome measures (resolution_days, assignee_avg_resolution_days), contextual predictors (is_high_priority), a redundant aggregate of issue_type (issue_type_frequency), or a bundled restatement of the whole concept (inefficiency_pattern). Mutual exclusivity is low because issue_type, issue_type_frequency, and inefficiency_pattern overlap, and duration measures repeat. Exhaustiveness is very low: with only one true facet, the main constitutive dimensions of inefficiency reasons are largely uncovered."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

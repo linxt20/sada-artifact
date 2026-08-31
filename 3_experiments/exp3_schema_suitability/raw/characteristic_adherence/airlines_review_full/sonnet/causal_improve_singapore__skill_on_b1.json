@@ -1,0 +1,120 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 11,
+  "added_columns": [
+    "cabin_crew_attitude",
+    "service_proactivity",
+    "ground_service_quality",
+    "ife_quality",
+    "disruption_handling_quality",
+    "complaint_resolution_outcome",
+    "digital_system_failure",
+    "value_for_money_perception",
+    "service_decline_perceived",
+    "cabin_class_product_gap",
+    "flight_duration_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 11,
+    "n_judged_columns": 11,
+    "analytical_usefulness": 0.7364,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8091,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7728,
+    "hallucination_rate": 0.2727
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_attitude",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Crew attitude is one of the strongest drivers of overall rating and recommendation, so this is a genuinely valuable grouping axis for the query. Groundedness is mostly sound (samples 1,3,4,5 warm_attentive are clearly warranted), but sample 2 (a review only about seats/IFE, silent on crew) was labelled 'indifferent' -- inventing a specific attitude the text does not support rather than emitting NULL."
+      },
+      {
+        "name": "service_proactivity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A distinct and useful angle (proactive vs on-request vs absent service), only partly overlapping crew attitude. However it shows the same silence-to-negative pattern: sample 2 is silent on service yet was labelled 'absent_neglectful', asserting a shortcoming the source does not state; other samples are well grounded."
+      },
+      {
+        "name": "ground_service_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Breaks out ground touchpoints (check-in, connection, boarding, seat assignment, lounge) that are not captured by any original column and are actionable for improving low-recommendation flights. All samples correctly read as 'no_issue' where no ground problem is mentioned."
+      },
+      {
+        "name": "ife_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Distinguishes IFE failure modes (dated content, hardware, wifi) beyond the bare 'Inflight Entertainment' score, useful for pinpointing fixes. Samples 1,2,5 are well grounded (modern_functional / hardware_malfunction from explicit text), but sample 4 was labelled 'modern_functional' despite the review never mentioning IFE -- an invented specific."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "How disruptions are handled is a plausible driver of non-recommendation and provides a new axis absent from the originals. All samples correctly coded 'no_disruption'; the 'no_disruption' default for silent rows is appropriate."
+      },
+      {
+        "name": "complaint_resolution_outcome",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures whether complaints were resolved -- directly relevant to recovering dissatisfied passengers. Samples correctly show 'no_complaint_raised' when none is mentioned, and the category values are well defined and actionable."
+      },
+      {
+        "name": "digital_system_failure",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean flag that partly overlaps ground_service (check-in) and ife (wifi) columns and offers limited additional analytical leverage on its own. Values in the samples ('False') are consistent with the texts, so groundedness is fine, but usefulness is modest."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Largely restates the existing original 'Value For Money' rating, so it adds little new analytical axis. Values also appear inferred from overall sentiment rather than explicit price/value statements (e.g., sample 2 is silent on price yet coded 'poor_value_premium_not_justified'), a warranted-but-loose inference."
+      },
+      {
+        "name": "service_decline_perceived",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A somewhat niche narrative flag (perceived decline over time) that can help segment loyalty-driven dissatisfaction, giving moderate leverage. Sample values ('False') are consistent with texts that do not mention any decline."
+      },
+      {
+        "name": "cabin_class_product_gap",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Framing experience relative to class expectations is a useful lens for improving specific cabins, and it is more holistic than the individual rating columns. Sample codings (dreadful seats->below, food praise->exceeds) are reasonable readings, with only mild subjectivity."
+      },
+      {
+        "name": "flight_duration_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Duration is a clean grouping variable (long/medium/short haul) reliably derivable from the Route city-pairs, letting the analyst see whether non-recommendation clusters on particular haul lengths. All samples map correctly from route/text."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.78,
+    "rationale": "Most added columns supply genuine new diagnostic axes (crew attitude, service proactivity, ground service, IFE failure modes, disruption and complaint handling, class-product gap, haul length) that are directly relevant to diagnosing why passengers do not recommend and how to improve ratings. Two columns are weaker: value_for_money_perception is largely redundant with the original 'Value For Money' rating, and digital_system_failure is a narrow boolean overlapping other columns. Groundedness is generally good and silence is often handled correctly, but there is a recurring failure mode of coding negative/specific attributes (indifferent, absent_neglectful, modern_functional) on rows whose text is silent on that dimension, which invents facts rather than returning NULL; this is visible in the attitude, proactivity, and IFE columns and modestly lowers overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 11
+}

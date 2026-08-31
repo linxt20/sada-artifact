@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit-note signals suggest high urgency?",
+  "focus_variable": "urgency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "symptom_severity",
+    "onset_acuity",
+    "presentation_type",
+    "organ_system_involved",
+    "visit_purpose",
+    "diagnostic_workup_urgency"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4334,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.65,
+    "leakage_rate": 0.3333
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "urgency",
+    "per_column": [
+      {
+        "name": "symptom_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Clinical severity extracted from the note is distinct from urgency and plausibly carries strong predictive signal about it without restating it."
+      },
+      {
+        "name": "onset_acuity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How fast symptoms developed (sudden/acute vs chronic) is a legitimate note-derived predictor of urgency, not a restatement of it."
+      },
+      {
+        "name": "presentation_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of presentation (acute illness, trauma, wellness) is a separate clinical categorization that plausibly correlates with urgency."
+      },
+      {
+        "name": "organ_system_involved",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The organ system affected is orthogonal to urgency itself and can modulate risk/urgency signal; a valid predictor."
+      },
+      {
+        "name": "visit_purpose",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Values like 'urgent_sick_visit' and 'emergency_evaluation' essentially encode the urgency of the visit, largely restating the focus variable rather than predicting it."
+      },
+      {
+        "name": "diagnostic_workup_urgency",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Categories explicitly graded as urgent/emergent workup are downstream, urgency-labeled decisions determined by the outcome, constituting leakage/restatement of urgency."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.65,
+    "rationale": "Four columns (symptom_severity, onset_acuity, presentation_type, organ_system_involved) are genuine note-derived predictors that lie outside the focus and add real predictive leverage about urgency. Two columns (visit_purpose, diagnostic_workup_urgency) embed the word/concept 'urgent/emergent' and effectively restate or leak the urgency outcome. As a set the predictors provide substantial legitimate signal, but the leaking columns inflate apparent utility and must be discounted."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_high",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

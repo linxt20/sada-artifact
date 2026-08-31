@@ -1,0 +1,120 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "n_added_columns": 11,
+  "added_columns": [
+    "product_category",
+    "taste_quality_verdict",
+    "flavor_profile_match",
+    "product_effectiveness_verdict",
+    "primary_complaint_type",
+    "food_safety_concern",
+    "product_quality_change",
+    "repeat_purchase_intent",
+    "brand_comparison_mention",
+    "use_context",
+    "health_dietary_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 11,
+    "n_judged_columns": 11,
+    "analytical_usefulness": 0.7818,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8364,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.8091,
+    "hallucination_rate": 0.0909
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A strong grouping axis for understanding what products the reviews cover. Categories in samples (pet_food, snack, candy, beverage) are sound readings of the text."
+      },
+      {
+        "name": "taste_quality_verdict",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A finer sentiment axis than the raw Score, useful for pinpointing quality attention items. Sample verdicts align well with text tone; NULL for silent rows is fine."
+      },
+      {
+        "name": "flavor_profile_match",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures expectation mismatch, actionable for product/labeling issues. Samples like 'not_as_labeled' for the mislabeled peanuts and 'wrong_flavor_type' for medicinal soda are well grounded."
+      },
+      {
+        "name": "product_effectiveness_verdict",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Somewhat useful but 'effectiveness' is an odd frame for taste-driven food reviews and overlaps with taste/flavor verdicts. Labeling the mislabeled-peanut review 'did_not_work' is a stretch reading."
+      },
+      {
+        "name": "primary_complaint_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly serves the 'worth attention/actionable' query by categorizing complaints. Sample assignments (mislabeling, taste_flavor, no_complaint) are well supported."
+      },
+      {
+        "name": "food_safety_concern",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A high-priority actionable flag. But marking the size/salting mislabeling review 'True' overstates it as a safety concern when the text describes only a labeling error, indicating some unwarranted positives."
+      },
+      {
+        "name": "product_quality_change",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Detecting reports of a product getting worse over time is actionable but very rare (2%), giving limited leverage. Sample False values are correct for one-off reviews."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Loyalty/churn signal is valuable for actionability. Values are grounded, with appropriate Unknown/NULL for silent rows."
+      },
+      {
+        "name": "brand_comparison_mention",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A boolean flag with modest leverage on its own, but plausibly useful for competitive signals. Sample False values are consistent with texts lacking comparisons."
+      },
+      {
+        "name": "use_context",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Adds a genuine segmentation axis (pet, baking, infant, gift). Sample assignments are reasonable, though 'personal_daily_consumption' is a default fallback that may over-assign."
+      },
+      {
+        "name": "health_dietary_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Dietary/health axis is actionable and non-trivial. 'none_mentioned' correctly dominates and matches the silent sample texts."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.84,
+    "rationale": "The added columns provide multiple genuine, non-redundant analytical axes (category, complaint type, dietary, use context, repurchase intent) that directly serve the query about what's in the reviews and what's actionable. Values are largely sound readings of the source text with appropriate unknown handling for silent rows. Minor weaknesses: product_effectiveness_verdict is an awkward frame that overlaps with taste columns, product_quality_change offers thin leverage, and food_safety_concern shows an overstated positive (labeling error flagged as safety). These are moderate, not disqualifying, so both dimensions score solidly above threshold."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 11
+}

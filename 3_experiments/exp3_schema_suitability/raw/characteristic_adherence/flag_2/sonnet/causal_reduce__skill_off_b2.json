@@ -1,0 +1,106 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce incident resolution time?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "assignee_avg_resolution_hours",
+    "category_avg_resolution_hours",
+    "resolution_vs_assignee_avg",
+    "priority_urgency_score",
+    "no_handoff"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 0.6667,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the outcome itself (resolution_time expressed in hours), not a treatment or confounder."
+      },
+      {
+        "name": "assignee_avg_resolution_hours",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Assignee skill/speed proxy is a common cause: it influences how quickly incidents are resolved and can correlate with which cases get assigned to whom. Not named in the query. However it borders on being a proxy for assignment lever rather than a clean adjustment variable."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category difficulty is a common cause affecting resolution time and correlating with treatments like assignment/handoff. Category exists in the original table but its difficulty summary is not named in the analytical query text."
+      },
+      {
+        "name": "resolution_vs_assignee_avg",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A residual computed from the outcome minus the assignee average; it is a transformation of the outcome, not a pre-treatment confounder."
+      },
+      {
+        "name": "priority_urgency_score",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Priority/urgency is a common cause of both handling/assignment decisions and resolution time. Priority is present in the original table and clearly implied as relevant context, though it could also be viewed as an intervenable lever (triage assignment)."
+      },
+      {
+        "name": "no_handoff",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether an incident was handled without reassignment/handoff is an intervenable operational lever an actor can set (routing/assignment policy), plausibly affecting resolution time."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "no_handoff"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "assignee_avg_resolution_hours",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "priority_urgency_score",
+        "named_in_query": true,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "One genuinely intervenable treatment is present: no_handoff represents a settable routing/assignment policy that could reduce resolution time, satisfying claim (a). For claim (b), there are plausible confounders. category difficulty and assignee-average speed are common causes of both handoff/assignment and resolution time and are NOT named in the query, demonstrating some capability. priority_urgency is a valid confounder but is essentially named in the query context (priority column). However, the set is weakened by two of the six columns being outcome transformations (resolution_hours, resolution_vs_assignee_avg) rather than adjustment variables, and by the confounders being coarse aggregate proxies that partly overlap with the treatment mechanism (assignment). No confounder is adjusted for temporal/pre-treatment status explicitly. Overall the interventional framing is only partially realised."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

@@ -1,0 +1,126 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "focus_variable": "satisfaction_score",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "taste_quality",
+    "health_outcome",
+    "ingredient_transparency_trust",
+    "value_proposition_price_parity",
+    "product_quality_verdict",
+    "consistency_quality_control",
+    "convenience_usability",
+    "intended_use_effectiveness",
+    "repeat_purchase_commitment",
+    "seller_recommendation_endorsement",
+    "expectation_fulfillment"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.5237,
+    "predictor_fraction": 0.7273,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_score",
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated ordinal categories (excellent/good/acceptable/poor) describing a genuine product attribute that can be grouped and compared against satisfaction."
+      },
+      {
+        "name": "health_outcome",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct interpretable categories capturing health effects; an external associational dimension that segments cleanly for comparison against satisfaction."
+      },
+      {
+        "name": "ingredient_transparency_trust",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable trust/transparency categories, a real product attribute distinct from satisfaction; supports meaningful segmentation."
+      },
+      {
+        "name": "value_proposition_price_parity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear value/price categories that form an external dimension groupable against satisfaction."
+      },
+      {
+        "name": "product_quality_verdict",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "An overall quality verdict (excellent/good/poor) is essentially a paraphrase of overall satisfaction rather than a distinct attribute; largely restates the focus."
+      },
+      {
+        "name": "consistency_quality_control",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Consistency/QC categories are an interpretable, well-separated attribute distinct from overall satisfaction."
+      },
+      {
+        "name": "convenience_usability",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable convenience scale; a real product attribute suitable for segmentation against satisfaction."
+      },
+      {
+        "name": "intended_use_effectiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Effectiveness-for-purpose categories are interpretable and distinct, supporting relationship discovery."
+      },
+      {
+        "name": "repeat_purchase_commitment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary intent-to-repurchase; interpretable segmentation, though it partly reflects rather than explains satisfaction. Still an informative associational split."
+      },
+      {
+        "name": "seller_recommendation_endorsement",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "A would-recommend endorsement is a near-synonym of satisfaction/positive sentiment rather than a product attribute; largely restates the focus."
+      },
+      {
+        "name": "expectation_fulfillment",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Meeting/exceeding expectations is effectively a restatement of satisfaction rather than an independent attribute that would explain it."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.72,
+    "rationale": "Most columns are genuine, well-separated, interpretable product attributes (taste, health outcome, transparency, value, consistency, convenience, effectiveness) that a human explorer can segment on and compare against satisfaction, directly serving the query about which attributes associate with higher scores. Several columns, however, restate the focus rather than opening an external relationship: product_quality_verdict, seller_recommendation_endorsement, and expectation_fulfillment are essentially overall-satisfaction proxies. Non-trivial NULL rates in some columns modestly weaken comparisons. As a set, the schema supports informative relationship discovery well but is diluted by the restatement columns."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 11
+}

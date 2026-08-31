@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "reason_category",
+    "urgency_score",
+    "duration_vs_dept_median",
+    "age_group_order",
+    "is_complex_visit"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.774,
+    "analytical_usefulness__table_level": 0.79,
+    "source_groundedness": 0.906,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.84,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "reason_category",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.83,
+        "hallucination_observed": true,
+        "rationale": "Categorizing free-text reasons into clinical systems is exactly the new axis the query needs to relate reasons to urgency/duration across dept/age. Most samples are well-grounded (Respiratory for URI, Musculoskeletal for knee, Dermatological for acne). However, the first row is an annual physical exam explicitly denying chest pain/dyspnea yet was labeled 'Cardiovascular' (a lipid panel/BP does not make the visit cardiovascular; 'Preventive/Wellness' fits), showing occasional misreading."
+      },
+      {
+        "name": "urgency_score",
+        "analytical_usefulness": 0.62,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "A numeric encoding of the existing 'urgency' column (Routine=1, Urgent=2, higher=3). Faithfully derived from the source, but largely redundant with the original urgency field; its added leverage is only the ordinal-numeric convenience for modeling, hence moderate usefulness."
+      },
+      {
+        "name": "duration_vs_dept_median",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Deviation of visit duration from its department median directly supports the query's duration-across-department dimension, normalizing for baseline dept differences. Derivable from visit_duration_min and department. Values are plausible; not independently verifiable per-row from the text snippets but consistent with a computed statistic."
+      },
+      {
+        "name": "age_group_order",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Ordinal encoding of the existing age_group column, enabling ordered grouping/correlation. Grounded in the original field but mostly a restatement, so limited new analytical leverage."
+      },
+      {
+        "name": "is_complex_visit",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A complexity flag offers a genuine new axis to segment visits when relating reason to urgency/duration. The derivation criterion is opaque, but the samples (all routine/urgent single-issue visits flagged 0) are reasonable. Moderate groundedness given the undocumented rule."
+      }
+    ],
+    "analytical_usefulness": 0.79,
+    "source_groundedness": 0.9,
+    "rationale": "The set provides genuinely useful axes for the query: reason_category and duration_vs_dept_median are the strongest, giving new grouping/comparison leverage aligned with reasons, duration, and department. urgency_score and age_group_order are faithful but largely redundant numeric re-encodings of existing columns, offering only modeling convenience. Groundedness is generally high and reasonable readings dominate, with one notable misclassification (a wellness physical labeled Cardiovascular) as the main hallucination signal. No scores were lowered for completeness."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

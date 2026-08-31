@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined expense submissions?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "missing_source_id",
+    "amount_bracket",
+    "processing_lag_days",
+    "user_decline_rate",
+    "category_decline_rate",
+    "department_decline_rate"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7667,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.7709,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binary flag for missing source_id is derivable directly from the source_id column and is a plausible data-quality axis that could correlate with declines. It is somewhat generic/near-binary, limiting leverage, but it does offer a real grouping variable for the query."
+      },
+      {
+        "name": "amount_bracket",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Bucketing amount into Low/Medium/High is a genuine new categorical axis for comparing decline rates by expense size, directly relevant to the query. Values are a sound derivation from the original amount column, though exact thresholds cannot be fully verified from samples."
+      },
+      {
+        "name": "processing_lag_days",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Time between opened_at and processed_date is a strong analytical axis; long lags may drive declines. Values look derived from date fields. Sentinel -1 for missing processed_date is reasonable, but conflating a real 'unknown' with a numeric lag value slightly muddies groundedness and could distort analysis if not treated as a flag."
+      },
+      {
+        "name": "user_decline_rate",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Aggregated per-user decline rate is highly relevant for identifying users driving declines. It is computable from user + state across the table. Mild leakage/circularity risk (derived from the target 'state') and it is an aggregate rather than a per-row reading, but values are internally warranted."
+      },
+      {
+        "name": "category_decline_rate",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Per-category decline rate gives a useful grouping axis for the query. Derivable from category + state. Same target-derived circularity caveat, but the values are consistent within samples and grounded in existing columns."
+      },
+      {
+        "name": "department_decline_rate",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Per-department decline rate is a natural axis to target interventions and is derivable from department + state. The 0.44 value for some departments highlights real signal. Aggregate/target-derived caveats apply but values are grounded."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.77,
+    "rationale": "The added columns collectively provide multiple genuine analytical axes (amount size, processing lag, and decline rates by user/category/department) that directly support the query on reducing declined submissions. Values are soundly derived from existing table columns with no evident invented facts. Minor concerns: the decline-rate columns are aggregates derived partly from the target state (mild circularity), and the -1 sentinel in processing_lag_days conflates missingness with a numeric value; missing_source_id is comparatively generic. No hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

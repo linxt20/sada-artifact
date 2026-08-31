@@ -1,0 +1,125 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "large",
+  "ok": true,
+  "confidence": 0.9,
+  "scores_a": {
+    "specificity": 3,
+    "evidence": 3,
+    "depth": 3,
+    "actionability": 3,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "evidence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "15 incidents specifically describe \"printer not working properly\"",
+        "why": "some concrete counts"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "approximately 40% of all hardware incidents",
+        "why": "vague estimate rather than exact"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "182 hardware incidents ... only 133 unique problem descriptions",
+        "why": "internally consistent framing"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Printer Issues | 81 | 44.5%",
+        "why": "exact counts and percentages per type"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "not_functioning (84%) | component_failure (95%)",
+        "why": "claims tied to column-level metrics"
+      },
+      {
+        "dimension": "depth",
+        "quote": "infrastructure failures drive disproportionate criticality despite lower incidence",
+        "why": "cross-group causal reasoning"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "component replacement for peripherals ... infrastructure-grade redundancy",
+        "why": "decision-ready recommendations"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "problem_manifestation",
+        "quote": "The augmented `problem_manifestation` column captures how hardware failures are experienced",
+        "dependent": true
+      },
+      {
+        "column": "failure_mechanism",
+        "quote": "The `failure_mechanism` column reveals the root cause class",
+        "dependent": true
+      },
+      {
+        "column": "affected_scope",
+        "quote": "The `affected_scope` column cleanly separates single-user, shared, and infrastructure assets",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B provides precise quantified categorization across manifestation, mechanism, and scope, far exceeding A's estimates.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "adv_food",
+    "adv_staff",
+    "adv_seat_comfort",
+    "adv_entertainment",
+    "adv_value",
+    "adv_lounge",
+    "adv_punctuality",
+    "adv_cleanliness",
+    "advantage_attribute_count",
+    "top_advantage_attribute"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.84,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.9,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.87,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "adv_food",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "rationale": "Binary flag for food being praised gives a genuine grouping axis to correlate advantage attributes with high ratings. Samples confirm accurate extraction (food praised = 1, silent = 0).",
+        "hallucination_observed": false
+      },
+      {
+        "name": "adv_staff",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "rationale": "Staff-service advantage flag is directly analytically relevant. Samples all correctly mark crew praise as 1; grounded in text.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "adv_seat_comfort",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Seat comfort advantage flag is a useful attribute axis. Sample 3 review calls seating uncomfortable and correctly gives 0; other positives correctly 1. Well grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "adv_entertainment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Entertainment advantage flag adds a distinct axis. Movie-praise rows correctly 1, silent rows 0. Grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "adv_value",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Value-for-money advantage flag is useful and distinct from the numeric original column since it captures textual praise. Samples show 0 where value not mentioned; consistent.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "adv_lounge",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Lounge advantage flag adds a specific attribute. Sample 4 mentions comfortable lounge and correctly gives 1; other rows silent = 0. Grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "adv_punctuality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Punctuality advantage flag is a useful axis. Sample 4 mentions late departure yet flag is 0, which is correct (not an advantage). Grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "adv_cleanliness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Cleanliness advantage flag is a plausible distinct axis; all samples 0 where cleanliness not praised. Grounded, though only weakly evidenced in provided samples.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "advantage_attribute_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "rationale": "Sum of the advantage flags; provides a useful density measure to correlate with high ratings. Counts match the flags in every sample. Somewhat derivative but adds a modeling axis.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "top_advantage_attribute",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Identifies the dominant praised attribute, useful for grouping. Choice among tied flags is somewhat arbitrary (a fixed priority is applied) but derivable; NULL for zero-advantage rows is correct.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.9,
+    "rationale": "The added columns decompose textual praise into distinct advantage attributes, which directly serves the query of finding common advantage attributes among highly rated airlines. Each flag offers a real grouping/comparison axis and is soundly extracted from the review text in all provided samples, with silent rows correctly set to 0/NULL. The count and top-attribute columns are somewhat derivative of the flags but still add analytical leverage. No hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 10
+}

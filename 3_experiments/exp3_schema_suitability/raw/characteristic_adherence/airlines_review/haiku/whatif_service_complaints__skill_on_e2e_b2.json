@@ -1,0 +1,113 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "primary_service_complaint_category",
+    "complaint_frequency_pattern",
+    "cabin_class",
+    "aircraft_cabin_condition",
+    "cabin_crew_service_tone",
+    "food_quality_consistency",
+    "multi_complaint_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "primary_service_complaint_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Identifies which cabin-service complaint dominates; the query's intervention is 'eliminating the most common cabin-service complaints', so this is the intervenable treatment lever - airlines can act to remove specific complaint categories."
+      },
+      {
+        "name": "complaint_frequency_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an issue is isolated vs recurring/systemic influences both which complaints arise (treatment) and how severely they depress ratings (outcome). Not named in query."
+      },
+      {
+        "name": "cabin_class",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Travel class shapes both the type/likelihood of service complaints and baseline satisfaction/rating. It is a common cause not named in the query (Class exists in original table but not referenced in the query text)."
+      },
+      {
+        "name": "aircraft_cabin_condition",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Physical cabin condition affects both the occurrence of complaints (cleanliness, comfort) and the overall rating independently. Not named in query."
+      },
+      {
+        "name": "cabin_crew_service_tone",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Crew tone is largely a manifestation of the service experience that lies on the causal path between service delivery and complaints/rating rather than a pre-treatment common cause; treated as mediator, not counted as confounder."
+      },
+      {
+        "name": "food_quality_consistency",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Food quality is itself part of the service experience being complained about (a component of the treatment/mechanism), so it is a mediator rather than an independent confounder."
+      },
+      {
+        "name": "multi_complaint_pattern",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether there are multiple vs single vs no complaints is downstream of both underlying service quality and rating dissatisfaction; it is an effect/summary of complaints rather than a common cause, closer to a collider/outcome-adjacent variable."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_service_complaint_category"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "complaint_frequency_pattern",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "cabin_class",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "aircraft_cabin_condition",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The set correctly establishes an intervenable treatment: the dominant cabin-service complaint category is something airlines can act to eliminate, matching the what-if intervention in the query. Several columns provide genuine pre-treatment confounders not named in the query (cabin_class, aircraft_cabin_condition, complaint_frequency_pattern), which is the capability under test. However, several other added columns (cabin_crew_service_tone, food_quality_consistency, multi_complaint_pattern) are mediators or colliders on the service->complaint->rating path rather than common causes, so they do not strengthen the confounding-adjustment claim. Confounder coverage is moderate rather than strong."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

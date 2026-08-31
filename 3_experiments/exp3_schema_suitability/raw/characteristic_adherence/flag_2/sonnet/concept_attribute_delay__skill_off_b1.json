@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some incidents take longer to resolve?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "priority_numeric",
+    "category_mismatch",
+    "opened_hour",
+    "opened_day_of_week",
+    "is_weekend"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.725,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8083,
+    "source_groundedness__table_level": 0.81,
+    "b1_overall": 0.7667,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is the direct target metric of the query -- time to resolve. Derivable from opened_at and closed_at. Values are plausibly warranted (elapsed time between timestamps); the many NULLs correctly reflect unresolved/open incidents. Highly useful as the outcome variable."
+      },
+      {
+        "name": "priority_numeric",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Numeric extraction of the existing priority field enables grouping/correlation with resolution time, a plausible driver. Slightly redundant with the original priority column but adds modeling convenience; well grounded."
+      },
+      {
+        "name": "category_mismatch",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A flag for whether the short_description conflicts with the assigned category could plausibly relate to slower resolution (misrouting). However, groundedness is uncertain: judging a 'mismatch' requires a subjective mapping, and sample rows (e.g. 'Email system not working' flagged 1 without visible category) make the derivation hard to verify."
+      },
+      {
+        "name": "opened_hour",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Hour of day opened is a reasonable axis (off-hours tickets may resolve slower). Grounded in opened_at. Minor concern: sample rows show opened_hour values that don't obviously match the shown timestamps (only sys_updated_on/closed_at shown), but opened_at exists in the table so derivation is plausible."
+      },
+      {
+        "name": "opened_day_of_week",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Day-of-week gives a genuine grouping axis for resolution-time differences (weekday vs weekend staffing). Derivable from opened_at and consistent with is_weekend in samples."
+      },
+      {
+        "name": "is_weekend",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to resolution delays, but largely redundant with opened_day_of_week (a restatement/derivative). Well grounded and consistent with the day-of-week values in samples."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.81,
+    "rationale": "The added columns provide the core outcome variable (resolution_hours) plus several plausible explanatory axes (priority, timing, category mismatch) that directly serve the 'why do some incidents take longer' query. Most are well grounded in existing timestamp/priority fields. Weaknesses: is_weekend is largely a derivative of opened_day_of_week, and category_mismatch relies on a subjective derivation that is hard to verify from the samples. No clear hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

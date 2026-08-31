@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "is_not_recommended",
+    "service_consistency_gap",
+    "has_critical_service_failure",
+    "poor_value_perception",
+    "premium_with_low_rating",
+    "high_service_variance",
+    "expectation_inflation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.4571,
+    "analytical_usefulness__table_level": 0.45,
+    "source_groundedness": 0.6071,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.5321,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_not_recommended",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "This is a trivial binary inversion of the existing original 'Recommended' column. It carries no information not already present, so it adds no new analytical axis for a query that already keys on Recommended=no. Values are fully grounded (sample 1 glowing review -> 0, sample 2 negative review -> 1)."
+      },
+      {
+        "name": "service_consistency_gap",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "A per-review consistency/gap metric could in principle help locate uneven service, but the produced values are opaque and, crucially, it is roughly the arithmetic negative of 'expectation_inflation' (sample1 -5.0 vs 5.0; sample4/5 -5.0 vs 5.0), making it a near-restatement. A review explicitly described as 'consistently good' still gets -5.0, so the value does not actually reflect 'consistency.' Likely computed from numeric rating columns present in the table, so not clearly invented, but weakly justified."
+      },
+      {
+        "name": "has_critical_service_failure",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Flagging critical failures is topically relevant to improvement, but it fires on 73% of rows AND directly contradicts source text: 'Flight was amazing... 9/10' and 'Excellent performance on all fronts' are both marked =1. Assigning a critical failure to clearly glowing reviews is unsupported by the source, and the near-universal firing rate also blunts its discriminative value."
+      },
+      {
+        "name": "poor_value_perception",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A thresholded 'poor value' flag gives a usable grouping axis for why passengers do not recommend, though it partly restates the existing 'Value For Money' rating. Sample values are consistent with the text (dreadful seats -> 1, amazing/excellent/good -> 0)."
+      },
+      {
+        "name": "premium_with_low_rating",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A genuine interaction axis (Class x low Overall Rating) that isolates high-value premium passengers who rated poorly -- directly actionable for the improvement query and not derivable from any single existing column alone. Samples are all 0 and consistent (all shown rows are either economy or high-rating)."
+      },
+      {
+        "name": "high_service_variance",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Overlaps conceptually with service_consistency_gap and adds limited independent leverage. Grounding is weak: 'Excellent performance on all fronts' (an explicitly uniform experience) is flagged as high variance =1, contradicting the source, though sample 1/4/5 are handled correctly."
+      },
+      {
+        "name": "expectation_inflation",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "An ambiguous gap-style score that broadly tracks review sentiment/Overall Rating (high for praise, negative for complaints) and is essentially the negative twin of service_consistency_gap, so it is largely redundant. Values are directionally consistent with the text and plausibly derived from rating columns, but they mostly re-encode existing rating signal."
+      }
+    ],
+    "analytical_usefulness": 0.45,
+    "source_groundedness": 0.55,
+    "rationale": "The set contains a couple of genuinely useful new axes (premium_with_low_rating isolates high-value dissatisfied customers; poor_value_perception offers a usable segmentation), but is diluted by redundancy and weak grounding elsewhere. is_not_recommended merely restates the original Recommended column; service_consistency_gap and expectation_inflation are near arithmetic mirrors of each other and largely re-encode the Overall Rating signal; high_service_variance overlaps the same consistency idea. Groundedness is mixed: several columns read the text soundly, but has_critical_service_failure and high_service_variance assign failure/variance flags to reviews explicitly described as 'amazing' or 'excellent on all fronts,' contradicting the source, and has_critical_service_failure fires on 73% of rows. Overall moderate quality on both necessary conditions."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

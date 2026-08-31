@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What patient needs appear in visit notes?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "clinical_domain",
+    "presenting_problem_family",
+    "intervention_scope",
+    "care_continuity_type",
+    "severity_or_acuity_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.81,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.844,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.827,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "clinical_domain",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a clinical grouping axis beyond raw department, useful for aggregating patient needs. Values are well-grounded (dermatology labeled Specialty_Surgical is a slight stretch but defensible as a categorization scheme). Partially derivable from existing department column but adds a coarser clinical lens."
+      },
+      {
+        "name": "presenting_problem_family",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly addresses the query about patient needs by categorizing the presenting problem. Values are sound readings of the reason_for_visit text (viral URI as Symptom_Evaluation, knee twist as Injury_or_Trauma). Strong new grouping axis."
+      },
+      {
+        "name": "intervention_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Captures what care was delivered/needed, a genuine axis for analyzing needs. Values largely warranted from text (labs->Diagnostic, adapalene+doxycycline->Medication_Adjustment). MI follow-up 'continue regimen' as Medication_Adjustment is a mild overreach but defensible."
+      },
+      {
+        "name": "care_continuity_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes new vs follow-up vs preventive care, a useful modeling axis not present in originals. Values well-grounded (post-MI follow-up correctly Post_Intervention_Follow_Up; acne as new problem correct)."
+      },
+      {
+        "name": "severity_or_acuity_signal",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Adds an acuity dimension beyond the original urgency column, though partially correlated with it. Values are sound readings (stable post-MI as Stable_Routine, acute knee injury as Acute_Unstable). Some redundancy with urgency limits leverage slightly."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns collectively provide multiple genuine, non-trivial axes (problem family, intervention, continuity, acuity, domain) for analyzing patient needs from visit notes, directly serving the query. None are near-constant or mere restatements, though severity and domain partially overlap existing urgency/department columns. Produced values are consistently sound categorizations of the source reason_for_visit text with no invented facts observed; occasional labels (dermatology as Specialty_Surgical, stable regimen as Medication_Adjustment) are mild stretches within a defensible scheme rather than hallucinations."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

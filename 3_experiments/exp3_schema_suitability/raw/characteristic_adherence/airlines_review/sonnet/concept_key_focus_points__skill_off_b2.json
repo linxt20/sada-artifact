@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 5,
+  "added_columns": [
+    "Sentiment",
+    "Issues_Flagged",
+    "Key_Focus_Point",
+    "Needs_Attention",
+    "Review_Length"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.1,
+    "mece": 0.1414,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "Sentiment",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Overall positive/negative sentiment is a holistic summary of the review's evaluation, i.e. a restatement of the whole quality judgment rather than a specific aspect OF service quality."
+      },
+      {
+        "name": "Issues_Flagged",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A multi-label list (seat; delay; food; staff; entertainment) bundles several aspects into one column. It re-aggregates facets rather than isolating a single non-overlapping aspect, so it duplicates the aspects captured by dedicated facet columns."
+      },
+      {
+        "name": "Key_Focus_Point",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This picks which single aspect dominates a review; it is a meta-selector over facets, not itself an aspect OF service quality, and its values overlap with the underlying facets."
+      },
+      {
+        "name": "Needs_Attention",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A downstream action flag (Yes/No) derived from quality; it is a consequence/decision about quality, not a constitutive part of it."
+      },
+      {
+        "name": "Review_Length",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A mechanical text metric of the review string; it says nothing about any aspect of the airline's service quality."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "Sentiment",
+      "Issues_Flagged",
+      "Key_Focus_Point",
+      "Needs_Attention",
+      "Review_Length"
+    ],
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.1,
+    "rationale": "None of the added columns are constitutive facets (parts) of airline_service_quality. Genuine facets already exist in the original table (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment, Value For Money), but the augmentation added holistic restatements (Sentiment, Key_Focus_Point, Issues_Flagged), a downstream decision flag (Needs_Attention), and a mechanical text metric (Review_Length). Issues_Flagged, Key_Focus_Point and Sentiment substantially overlap in the aspects they reference, hurting mutual exclusivity, and no set of clean part-of aspects is introduced, so exhaustiveness against the concept is very low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

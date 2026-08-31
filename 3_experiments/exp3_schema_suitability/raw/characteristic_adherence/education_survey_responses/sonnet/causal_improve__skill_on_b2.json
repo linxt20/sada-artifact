@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can educators improve learning satisfaction?",
+  "focus_variable": "learning_satisfaction",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "teacher_instructional_quality",
+    "differentiation_support",
+    "content_delivery_format",
+    "peer_social_learning_quality",
+    "student_engagement_level",
+    "subject_remote_fit"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "learning_satisfaction",
+    "per_column": [
+      {
+        "name": "teacher_instructional_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Educators can set/change instructional quality (adaptive vs minimal effort); an intervenable lever directly under the actor's control."
+      },
+      {
+        "name": "differentiation_support",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether/how differentiation is provided is a decision educators can make; a settable pedagogical action."
+      },
+      {
+        "name": "content_delivery_format",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Format (live, project-based, flipped, async) is a configurable choice educators can assign; a clear intervenable lever."
+      },
+      {
+        "name": "peer_social_learning_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Educators can foster community/peer interaction; a designable, changeable condition. Partly an outcome of engagement, but primarily a manipulable environment factor."
+      },
+      {
+        "name": "student_engagement_level",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Engagement lies on the causal path from instructional/format interventions to satisfaction; it is a mechanism, not a common cause, so it must not be adjusted as a confounder."
+      },
+      {
+        "name": "subject_remote_fit",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Subject's inherent suitability for the delivery context is a common cause: it shapes which delivery formats/instruction are used AND independently affects satisfaction. A genuine confounder to adjust for; subject exists in the original table but its remote-fit is not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "teacher_instructional_quality",
+      "differentiation_support",
+      "content_delivery_format",
+      "peer_social_learning_quality"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "subject_remote_fit",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The added columns supply multiple genuinely intervenable treatments (instructional quality, differentiation, delivery format, peer learning) that educators can set, satisfying the intervenability requirement. However, the causal design is weak on confounding: only subject_remote_fit functions as a true common cause of treatment and outcome, and it is only loosely implied by the original 'subject' column rather than named in the query. student_engagement_level is a mediator (on the causal path), not a confounder, and would bias the counterfactual estimate if adjusted for. No confounders addressing student-level baseline factors (prior ability, motivation, resources) or selection into formats are provided, so the set does not adequately support reading off the interventional effect."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

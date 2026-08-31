@@ -1,0 +1,50 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "aspects_discussed",
+    "num_aspects"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.8075,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The film aspects/dimensions reviewers focus on (e.g., cinematography, acting, plot, music, effects, overall quality)",
+    "per_column": [
+      {
+        "name": "aspects_discussed",
+        "supports_focus": true,
+        "rationale": "Directly extracts the multi-label set of film aspects each review discusses, which is precisely the focus concept the query asks about."
+      },
+      {
+        "name": "num_aspects",
+        "supports_focus": true,
+        "rationale": "Count of distinct aspects per review; a coherent facet describing the breadth/intensity of aspect coverage, structurally derived from and complementing the aspect set."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "rationale": "Both columns centre tightly on a single, data-inferable focus: which film aspects reviewers attend to. 'aspects_discussed' captures the categorical aspect set (cinematography, acting, plot, music, effects, overall_quality) and 'num_aspects' adds a coherent quantitative facet (coverage breadth). This is not a grab-bag nor a mere restatement of review_text. The structure is sound but modest: it provides the aspect set plus a count, without further decomposition (e.g., per-aspect sentiment or aspect-by-label breakdown), which slightly limits structure_quality. The focus is clearly actionable -- an analyst can quantify aspect frequency, correlate aspects with label_pos, and study review depth."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

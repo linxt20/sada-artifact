@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What operational burdens appear in incident descriptions?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_symptom",
+    "affected_resource_scope",
+    "incident_blast_radius",
+    "self_resolved",
+    "recurrent_caller",
+    "off_hours_incident",
+    "recurrence_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3277,
+    "facet_fraction": 0.625,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.5,
+    "mece": 0.5244,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes the type/domain of the incident (database, email, VPN), not an aspect of the burden it imposes. It classifies what broke, which is a predictor of burden, not a part of it."
+      },
+      {
+        "name": "failure_symptom",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Captures the nature of the failure (connectivity, access denied, outage). This characterizes the fault, not the operational burden as an aspect; it is a driver of burden rather than a constitutive part."
+      },
+      {
+        "name": "affected_resource_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Where the burden falls (server-side, network, client-side) is a genuine dimension of operational burden -- which part of the operation must be engaged. Borderline but part-of the burden's locus."
+      },
+      {
+        "name": "incident_blast_radius",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Scope of impact (individual vs system-wide vs location) is a constitutive aspect of how large the operational burden is -- an impact-magnitude facet."
+      },
+      {
+        "name": "self_resolved",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the incident resolved without intervention directly speaks to the effort/handling burden -- a facet of the operational load actually incurred."
+      },
+      {
+        "name": "recurrent_caller",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A property of the caller, not an aspect of the burden. It may correlate with burden but is not a constitutive part of it."
+      },
+      {
+        "name": "off_hours_incident",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Timing (off-hours) is a facet of operational burden because it modulates the cost/effort of handling -- a temporal-load aspect of the burden."
+      },
+      {
+        "name": "recurrence_signal",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Recurrence is a genuine aspect of ongoing operational burden (repeated work), though it overlaps heavily with recurrent_caller in intent."
+      }
+    ],
+    "facet_columns": [
+      "affected_resource_scope",
+      "incident_blast_radius",
+      "self_resolved",
+      "off_hours_incident",
+      "recurrence_signal"
+    ],
+    "non_facet_columns": [
+      "incident_category",
+      "failure_symptom",
+      "recurrent_caller"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.5,
+    "rationale": "Only a subset of the added columns are true meronymic facets of operational_burden. incident_category and failure_symptom describe what/how the incident failed -- external predictors that classify the fault rather than aspects of the burden itself. recurrent_caller is a caller attribute. Among the facet-like columns, recurrence_signal and recurrent_caller substantially overlap (both encode recurrence), and off_hours_incident, blast_radius, and self_resolved each touch different aspects but overlap loosely on 'handling effort', lowering mutual exclusivity. Exhaustiveness is moderate: the set touches impact scope, locus, timing, resolution effort, and recurrence, but omits central burden dimensions such as time-to-resolve / effort-hours, staffing/escalation cost, SLA/priority pressure, and reopen/backlog load. As a whole the column set leans toward classifying incidents rather than cleanly decomposing the burden concept into MECE constitutive parts."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

@@ -1,0 +1,84 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "resolution_hours",
+    "category_avg_resolution_hours",
+    "category_workload_rank",
+    "is_high_workload_category",
+    "counterfactual_resolution_hours"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Numeric realization of resolution_time, the focus/outcome variable itself."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Aggregate summary of the outcome by category; a derived statistic of the outcome, not a confounder or treatment."
+      },
+      {
+        "name": "category_workload_rank",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Operationalizes 'ticket types that create the heaviest agent workload' — the lever the query proposes to reduce. Ranking of category by workload; category/type is a configurable/assignable property so it is broadly intervenable, and this is exactly what the query names."
+      },
+      {
+        "name": "is_high_workload_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Binary flag for the high-workload ticket types explicitly named in the query as the intervention target."
+      },
+      {
+        "name": "counterfactual_resolution_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A projected outcome value under the intervention; it is a computed counterfactual of the outcome, not an adjustment variable."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "category_workload_rank",
+      "is_high_workload_category"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns operationalize the treatment (high-workload ticket categories) and the outcome (resolution_hours), plus a directly computed counterfactual outcome. The treatment is arguably intervenable as it maps to the 'ticket types' lever the query proposes to reduce, and it is exactly what the query names. However, the decisive test — supplying CONFOUNDERS (common causes of both treatment and outcome) that are NOT already named in the query — is entirely failed. There are NO confounder columns at all: priority, complexity, assignment_group capacity, caller/requester characteristics, or time-of-arrival factors that jointly drive both which category a ticket falls into and how long it takes to resolve are never added. Instead the operator simply computes a counterfactual by mechanically imputing a mean resolution time (~214), which is naive adjustment with no confounder control and even produces nonsensical negative resolution hours. Because no unnamed confounders are provided and no adjustment set is constructed, the interventional claim is not realised."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

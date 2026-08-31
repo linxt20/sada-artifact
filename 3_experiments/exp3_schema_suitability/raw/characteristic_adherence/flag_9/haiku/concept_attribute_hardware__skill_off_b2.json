@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "focus_variable": "hardware_hiccups",
+  "concept": "hardware_hiccups",
+  "n_added_columns": 3,
+  "added_columns": [
+    "hardware_component",
+    "issue_type",
+    "is_critical_hardware"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3496,
+    "facet_fraction": 0.6667,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.5,
+    "mece": 0.5244,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "hardware_hiccups",
+    "per_column": [
+      {
+        "name": "hardware_component",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The affected component (printer, monitor, keyboard, etc.) is a genuine constitutive aspect OF a hardware issue -- the 'what part of the hardware' facet. It carves the concept along a valid dimension."
+      },
+      {
+        "name": "issue_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The nature of the malfunction (connection issue, display issue, overheating, power/boot) is an aspect OF the hardware hiccup -- the 'what kind of failure' facet. Note some values ('Hardware Issue') are near-restatements and 'Display Issue' overlaps with the Monitor component, weakening exclusivity."
+      },
+      {
+        "name": "is_critical_hardware",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A criticality/severity flag is an assessment attribute or predictor of impact, not a constitutive part of what the hardware hiccup IS. It describes importance, not an aspect of the issue itself."
+      }
+    ],
+    "facet_columns": [
+      "hardware_component",
+      "issue_type"
+    ],
+    "non_facet_columns": [
+      "is_critical_hardware"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.5,
+    "rationale": "Two of three columns are genuine facets of a hardware hiccup: the affected component and the type/nature of failure. These are legitimate MECE-style dimensions, but mutual exclusivity is only moderate because failure-type values partly recapitulate component identity (e.g., 'Display Issue' <-> Monitor, 'Color/Print Issue' <-> Printer) and 'Hardware Issue' is a restatement of the whole. Exhaustiveness is moderate: component and failure-mode are covered, but other constitutive aspects (e.g., symptom manifestation, when-in-lifecycle it occurs, resolution type) are absent. The third column, is_critical_hardware, is a severity/importance predictor rather than a constitutive part-of facet, so it fails the meronymy test."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

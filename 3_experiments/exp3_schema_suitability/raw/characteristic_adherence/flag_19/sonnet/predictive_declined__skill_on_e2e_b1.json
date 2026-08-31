@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an expense will be declined?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "asset_form_factor",
+    "asset_vendor",
+    "is_premium_or_nonstandard_asset",
+    "is_travel_related",
+    "has_source_id",
+    "has_processed_date",
+    "description_specificity",
+    "ci_identifier_quality",
+    "submitting_department"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7111,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.6805,
+    "hallucination_rate": 0.4444
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_form_factor",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A useful categorical axis to group declines by asset type. Mostly grounded in ci/short_description, but the 'iPod touch / ISP Services' row is labeled cloud_service, an unwarranted read of the source text."
+      },
+      {
+        "name": "asset_vendor",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Vendor extracted from ci/description gives a genuine grouping axis. Samples are sound (Dell, other); 'other' is a reasonable fallback for silent rows."
+      },
+      {
+        "name": "is_premium_or_nonstandard_asset",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Non-standard/premium status is a plausible decline signal. Groundedness is moderate: the criterion is somewhat subjective and samples show only 'False', with no clear evidence for how 'true' is warranted, but no contradiction observed."
+      },
+      {
+        "name": "is_travel_related",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Travel-related flag is a reasonable expense-policy axis for declines. Sample values (all False for hardware/service items) are consistent with the source text."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Presence-of-source_id is a plausible provenance signal, but it is a near-mechanical restatement of an existing original column and thus low leverage. Sample groundedness is questionable: the RAM row has a processed_date yet has_source_id=False while the iPod row has_source_id=True with no visible source_id in the sample, so the mapping is not clearly derivable."
+      },
+      {
+        "name": "has_processed_date",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly and correctly derived from the existing processed_date column (nan -> False). Perfectly grounded but largely redundant with an original column, limiting analytical leverage."
+      },
+      {
+        "name": "description_specificity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Specificity/vagueness of a description is a strong potential decline signal (vague requests get declined). Sample categorizations align well with the source text."
+      },
+      {
+        "name": "ci_identifier_quality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Quality of the CI identifier is a reasonable data-hygiene axis for declines. But 'Random Access Memory Component' and 'ISP Services' labeled 'named_model' are shaky reads; these are generic labels, not named models."
+      },
+      {
+        "name": "submitting_department",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Department could be a useful grouping axis, but an original 'department' column already exists, making this largely redundant. Values appear invented/inconsistent: no department source is shown in samples, and assignments look arbitrary, suggesting fabrication rather than extraction."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.68,
+    "rationale": "The set offers several genuinely useful axes for predicting declines: asset type/vendor, description specificity, CI identifier quality, travel and premium flags. Groundedness is generally acceptable, with values mostly derivable from ci/short_description/processed_date and reasonable fallbacks for silent rows. However, several columns show hallucination or redundancy issues: asset_form_factor and ci_identifier_quality mis-read some generic items, submitting_department appears fabricated and duplicates an existing column, and has_source_id/has_processed_date are near-mechanical restatements of original columns with limited leverage."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

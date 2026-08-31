@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_hours",
+    "priority_tier",
+    "topic_cluster",
+    "sla_status"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.825,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.8,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Derived from opened_at and closed_at, this gives a genuine continuous metric for analyzing resolution speed, a core axis for incident ticket analysis. Values are computable from timestamps present in the table; NULLs for unresolved/open rows are appropriate. Cannot fully verify arithmetic without opened_at samples, but the approach is sound."
+      },
+      {
+        "name": "priority_tier",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "The original table already contains a 'priority' column, so this is largely a categorization/restatement of existing data, limiting the new analytical leverage. It still offers a cleaner grouping axis. Values plausibly map from priority, though the mapping isn't directly verifiable from the text samples shown (short_description alone doesn't dictate priority)."
+      },
+      {
+        "name": "topic_cluster",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A strong new axis: clustering free-text short_description into topical categories enables grouping and comparison the raw text cannot easily support. The sample values (VPN/intranet -> Network, database access -> Database, software update -> Software/Access) are sound readings of the source text."
+      },
+      {
+        "name": "sla_status",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A binary SLA breach flag is analytically valuable for prioritizing which incidents matter. However, the table contains no SLA target definition, so labeling 407 rows 'Breached' requires an undisclosed threshold assumption not grounded in the source. The classification is plausibly derived from resolution_hours but asserts a specific SLA boundary the text does not support."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns collectively provide meaningful new axes for analyzing incident tickets: resolution time, topical clustering, and SLA breach status all give real analytical leverage for the query, while priority_tier is weaker as it largely restates the existing priority column. Groundedness is generally solid via extraction from timestamps and free text, but sla_status relies on an SLA threshold not present in the table, introducing an ungrounded specific."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "instructional_pacing_issue",
+    "asynchronous_content_benefit",
+    "hands_on_or_lab_gap",
+    "peer_interaction_quality",
+    "teacher_feedback_responsiveness",
+    "subject_remote_format_fit",
+    "emotional_affect_during_class",
+    "curiosity_and_intrinsic_motivation_trajectory"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7312,
+    "analytical_usefulness__table_level": 0.74,
+    "source_groundedness": 0.7837,
+    "source_groundedness__table_level": 0.79,
+    "b1_overall": 0.7574,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "instructional_pacing_issue",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Pacing (too_fast/too_slow) is a plausible driver of low satisfaction and gives a real grouping axis. Values match evidence: ED-0001 'three problems ahead' -> too_fast, ED-0004 self-paced -> appropriate. Heavily skewed to not_present but that is honest silence, not penalized."
+      },
+      {
+        "name": "asynchronous_content_benefit",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing reusable/rewatchable vs livestream_only is a useful modality axis. ED-0004 pause/rewatch -> reusable is well grounded. However ED-0005 -> livestream_only is a somewhat confident inference from 'discussion' with no explicit format cue, and the near-absence of not_present suggests over-assignment where text is silent."
+      },
+      {
+        "name": "hands_on_or_lab_gap",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Lab/hands-on gap is a meaningful axis for subjects that suffer remotely. ED-0002 kitchen-chemistry -> partial_simulation_support is reasonable. Mostly not_applicable, which is honest for silent rows."
+      },
+      {
+        "name": "peer_interaction_quality",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Peer interaction is a strong candidate predictor and well categorized. ED-0003 'zero peer interaction' -> isolated_individual, ED-0005 'cameras off... silent' -> cameras_muted_silent are precise, faithful readings."
+      },
+      {
+        "name": "teacher_feedback_responsiveness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Feedback responsiveness is a plausible satisfaction driver. ED-0003 'teacher can't tell when she's lost' -> no_interaction is sound. Values track the text; many not_present is honest."
+      },
+      {
+        "name": "subject_remote_format_fit",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "The axis is useful, but the label 'excellent_fit_discussion_based' vs 'poor_fit_hands_on_dependent' conflates fit judgment with format type and is over-asserted. ED-0002 (chemistry labs) -> excellent_fit_discussion_based contradicts the hands-on nature; ED-0004 (history) mapped to a discussion label though respondent praised recorded lectures. Confident specifics not clearly warranted."
+      },
+      {
+        "name": "emotional_affect_during_class",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Emotional affect is more than a bare sentiment flag (graded categories incl. distressed_crying) and offers analytic leverage. ED-0003 'cries' -> distressed_crying, ED-0001 frustration -> anxious_frustrated are faithful."
+      },
+      {
+        "name": "curiosity_and_intrinsic_motivation_trajectory",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Motivation trajectory is a useful axis but risks restating emotional_affect, and 'trajectory' asserts change over time that many single responses do not support. ED-0004/ED-0002 growth is warranted, but ED-0001/ED-0003 -> declining_lost_passion infers a trajectory from a snapshot of dissatisfaction, an over-confident temporal claim."
+      }
+    ],
+    "analytical_usefulness": 0.74,
+    "source_groundedness": 0.79,
+    "rationale": "The added columns supply several genuinely distinct axes (pacing, peer interaction, feedback, affect, hands-on gap) that are well suited to predicting low learning satisfaction from open responses, and most values are faithful, well-categorized readings of the source text with honest not_present/not_applicable handling for silent rows. Two columns lose points on groundedness: subject_remote_format_fit over-asserts a fit judgment that sometimes contradicts the text (chemistry labs labeled discussion-based), and the curiosity/motivation 'trajectory' column infers directional change from snapshot responses and partly restates emotional affect. Overall a solid, mostly grounded and analytically useful set."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

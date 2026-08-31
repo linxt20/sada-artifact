@@ -1,0 +1,104 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can clinics improve triage and scheduling?",
+  "focus_variable": "triage_and_scheduling_efficiency",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_problem_category",
+    "clinical_acuity_signal",
+    "intervention_intensity",
+    "comorbidity_or_complexity_flag",
+    "scheduling_action_recommendation"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.8,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.8,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "triage_and_scheduling_efficiency",
+    "per_column": [
+      {
+        "name": "primary_problem_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The clinical nature of the visit is a common cause of both what scheduling action is chosen and the resulting efficiency; not an intervenable lever, and not named in the query."
+      },
+      {
+        "name": "clinical_acuity_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Acuity/severity drives both the scheduling/triage decision and the efficiency outcome. It overlaps with the pre-existing 'urgency' column but is framed as a finer signal; it is an immutable clinical state, so a confounder rather than treatment."
+      },
+      {
+        "name": "intervention_intensity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The intensity of clinical intervention required is a common cause of both scheduling choice and efficiency; a state of the case rather than something the scheduler freely sets, so treated as confounder."
+      },
+      {
+        "name": "comorbidity_or_complexity_flag",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Patient complexity influences both which scheduling action is appropriate and the efficiency achieved; an immutable patient attribute, hence a confounder, not named in the query."
+      },
+      {
+        "name": "scheduling_action_recommendation",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The scheduling/triage action assigned to a visit is a lever a clinic can actually SET or CHANGE (e.g. same-day slot vs routine vs ED), making it a valid intervenable treatment on triage/scheduling efficiency."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "scheduling_action_recommendation"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "primary_problem_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "clinical_acuity_signal",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "intervention_intensity",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "comorbidity_or_complexity_flag",
+        "named_in_query": false,
+        "plausibility": 0.8
+      }
+    ],
+    "confounder_quality": 0.8,
+    "rationale": "The added set realises a genuine what-if structure: scheduling_action_recommendation is a settable/decidable lever (a valid intervenable treatment on triage/scheduling efficiency), and the remaining four columns are plausible common causes of both the chosen scheduling action and the efficiency outcome. All four confounders are clinical/patient states that go beyond what the terse query ('How can clinics improve triage and scheduling?') named or implied, demonstrating the capability under test. None are mediators or colliders of the treatment-outcome path. The main caveat is that clinical_acuity_signal partially duplicates the existing 'urgency' column, but it still functions as a confounder."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

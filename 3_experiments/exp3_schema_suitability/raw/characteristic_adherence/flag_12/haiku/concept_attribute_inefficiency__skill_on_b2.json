@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "focus_variable": "incident_inefficiency_reasons",
+  "concept": "incident_inefficiency_reasons",
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_category_primary",
+    "specific_issue_mechanism",
+    "issue_recurrence_pattern",
+    "diagnostic_clarity",
+    "assigned_technician_proxy"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3447,
+    "facet_fraction": 0.6,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_inefficiency_reasons",
+    "per_column": [
+      {
+        "name": "issue_category_primary",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The type/category of the underlying issue (printer, hardware, software, connectivity) is a constitutive aspect OF what the recurring issue is -- it answers 'what kind of issue' as a part of the reason space."
+      },
+      {
+        "name": "specific_issue_mechanism",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The specific failure mechanism (display_malfunction, paper_jam, network_outage) is a finer-grained aspect OF the issue itself, describing the concrete nature of the recurring problem."
+      },
+      {
+        "name": "issue_recurrence_pattern",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Recurrence pattern (repeated_device_type, systemic_pattern, single_mention) is an aspect OF the 'recurring' dimension of the reason -- it characterizes how the issue repeats, a constitutive facet of a recurring-issue concept."
+      },
+      {
+        "name": "diagnostic_clarity",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the issue was clearly diagnosed is a property of the handling/resolution process, not a part OF the issue reason itself. It is an external factor affecting inefficiency rather than a constitutive aspect of the issue."
+      },
+      {
+        "name": "assigned_technician_proxy",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "The identity of the assigned technician is a handler attribute (already largely present as assigned_to), not an aspect OF the issue reason. It is an external actor, not a facet of the concept, and risks being a restatement of existing columns."
+      }
+    ],
+    "facet_columns": [
+      "issue_category_primary",
+      "specific_issue_mechanism",
+      "issue_recurrence_pattern"
+    ],
+    "non_facet_columns": [
+      "diagnostic_clarity",
+      "assigned_technician_proxy"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "rationale": "Three of the five columns are genuine facets of the recurring-issue concept: category (what type), mechanism (specific failure mode), and recurrence pattern (how it repeats). However, issue_category_primary and specific_issue_mechanism substantially overlap -- the mechanism values (display_malfunction, paper_jam, network_outage) are essentially finer instances of the same category dimension, so they carve largely the same aspect at two granularities, lowering mutual exclusivity. diagnostic_clarity is a process/handling attribute (external predictor of inefficiency) rather than a part of the issue reason, and assigned_technician_proxy is an external actor that restates an existing table column, so neither is constitutive. Exhaustiveness is moderate: the set captures the 'what/how' of issues but leaves out other constitutive aspects of inefficiency reasons such as knowledge/resource gaps, process/handoff friction, or root-cause layer, and the two non-facets consume slots without covering the concept."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

@@ -1,0 +1,106 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What patient needs appear in visit notes?",
+  "focus_variable": "patient_needs",
+  "concept": "patient_needs",
+  "n_added_columns": 8,
+  "added_columns": [
+    "visit_purpose_category",
+    "clinical_problem_type",
+    "acuity_complexity_level",
+    "care_continuity_stage",
+    "intervention_need_type",
+    "specialist_referral_need",
+    "diagnostic_workup_need",
+    "preventive_or_screening_need"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.7141,
+    "facet_fraction": 1.0,
+    "n_facets": 8,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.85,
+    "mece": 0.7141,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "patient_needs",
+    "per_column": [
+      {
+        "name": "visit_purpose_category",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The category of purpose (acute complaint, chronic management, prevention) is an aspect of what the patient needs from the visit -- a constitutive facet of the need."
+      },
+      {
+        "name": "clinical_problem_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The clinical problem domain (cardiovascular, musculoskeletal, etc.) captures the substantive 'what is needed help with' facet -- the medical content of the need."
+      },
+      {
+        "name": "acuity_complexity_level",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Acuity/complexity is the severity/intensity aspect of the need, a legitimate constitutive dimension of how much and what kind of attention is required."
+      },
+      {
+        "name": "care_continuity_stage",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the need is a new problem vs ongoing follow-up vs surveillance is the temporal/continuity aspect of the need."
+      },
+      {
+        "name": "intervention_need_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The type of intervention needed (procedure, medication, observation) is a direct constitutive part of the patient's need -- what care action is required."
+      },
+      {
+        "name": "specialist_referral_need",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Referral need is a specific care-coordination facet of the patient's need; it is a part-of the need bundle, not an external predictor."
+      },
+      {
+        "name": "diagnostic_workup_need",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The diagnostic workup required (imaging, labs) is a constitutive facet of the need -- what investigation the patient requires."
+      },
+      {
+        "name": "preventive_or_screening_need",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Preventive/screening need is a distinct facet of patient needs, capturing the prevention-oriented component of care required."
+      }
+    ],
+    "facet_columns": [
+      "visit_purpose_category",
+      "clinical_problem_type",
+      "acuity_complexity_level",
+      "care_continuity_stage",
+      "intervention_need_type",
+      "specialist_referral_need",
+      "diagnostic_workup_need",
+      "preventive_or_screening_need"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.85,
+    "rationale": "All eight columns are genuine part-of aspects of 'patient_needs' rather than external predictors, causes, or restatements, so each qualifies as a constitutive facet. Exhaustiveness is high: the set covers purpose, clinical domain, acuity, continuity stage, intervention, referral, diagnostics, and prevention -- most main constitutive dimensions of what a patient needs (a psychosocial/education need facet is a modest gap). Mutual exclusivity is only moderate: several facets overlap conceptually. 'visit_purpose_category' (e.g., preventive_wellness, medication_management, post_procedure_followup) substantially re-encodes distinctions captured by 'preventive_or_screening_need', 'intervention_need_type', and 'care_continuity_stage'. Likewise 'intervention_need_type' and 'specialist_referral_need'/'diagnostic_workup_need' all describe the care-action dimension and partially co-vary. These overlaps mean the facets do not cleanly carve the concept into non-overlapping aspects, lowering the ME score."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review facets differ by sentiment label?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "quality_defect_presence",
+    "expectation_gap_type",
+    "explicit_recommendation",
+    "usage_fit_audience"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "quality_defect_presence",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated categories (defect types vs not_present). This is an external facet that can be cross-tabulated against sentiment to reveal that negative reviews concentrate defect mentions."
+      },
+      {
+        "name": "expectation_gap_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear, meaningful categories describing types of unmet expectation. Well-distributed and groupable, enabling comparison of how expectation gaps differ across sentiment labels."
+      },
+      {
+        "name": "explicit_recommendation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal, interpretable stance scale (advise_against to strongly_recommend). Highly associated with sentiment but remains a distinct facet with good category separation, ideal for segmentation. Some restatement risk since recommendation tracks sentiment closely, but it is a genuinely different variable."
+      },
+      {
+        "name": "usage_fit_audience",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories describing fit for intended use/audience. Well-separated and groupable, allowing exploration of how usage-fit framing differs by sentiment."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.85,
+    "rationale": "All four columns are external, associational facets with interpretable, well-separated categorical scales that can be grouped and cross-tabulated against label_pos. None merely restate the focus verbatim, though explicit_recommendation is strongly correlated with sentiment and edges toward redundancy. Distributions are balanced enough (not near-constant) to support meaningful comparison. As a set they directly serve the query 'how do review facets differ by sentiment label,' realising the EDA claim well."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

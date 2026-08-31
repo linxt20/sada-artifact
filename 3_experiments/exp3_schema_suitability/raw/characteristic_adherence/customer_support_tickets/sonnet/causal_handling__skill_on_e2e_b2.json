@@ -1,0 +1,139 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do handling times differ by channel and priority?",
+  "focus_variable": "handling_time_gap",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "issue_category",
+    "operational_severity",
+    "customer_impact_type",
+    "scope_blast_radius",
+    "root_cause_domain",
+    "requires_engineering_escalation",
+    "technical_complexity",
+    "workaround_available"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.75,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 7,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 7,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.75,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "handling_time_gap",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of issue plausibly drives both which channel/priority a ticket is routed through (treatment) and how long it takes to handle (outcome), making it a genuine common cause surfaced from the issue_description text."
+      },
+      {
+        "name": "operational_severity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Severity plausibly influences the assigned priority/channel and independently affects handling time, so it is a common cause not stated in the query."
+      },
+      {
+        "name": "customer_impact_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Impact type can shape prioritization/channel choice and also the effort needed, plausibly a common cause; not named in the query."
+      },
+      {
+        "name": "scope_blast_radius",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Blast radius affects both priority assignment and handling effort, a plausible common cause surfaced from text."
+      },
+      {
+        "name": "root_cause_domain",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The technical domain of the root cause can influence which channel/team handles it and the time required; arguably a common cause though it borders on being determined post-triage."
+      },
+      {
+        "name": "requires_engineering_escalation",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Escalation is more plausibly a consequence of priority/channel on the causal path to longer handling time rather than a common cause; adjusting for it would block part of the effect."
+      },
+      {
+        "name": "technical_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity plausibly drives both priority/channel routing and handling time independently, a genuine common cause not named in the query."
+      },
+      {
+        "name": "workaround_available",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Availability of a workaround can influence assigned priority and the handling effort/time, a plausible common cause; some risk it is downstream of triage."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "channel",
+      "priority"
+    ],
+    "confounders": [
+      {
+        "name": "issue_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "operational_severity",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "customer_impact_type",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "scope_blast_radius",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "technical_complexity",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "root_cause_domain",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "workaround_available",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.75,
+    "rationale": "The treatments (channel and priority) come from the original table, and the added columns are dominated by variables that plausibly cause BOTH the treatment (routing/prioritization) and the outcome (handling time): issue category, operational severity, customer impact, blast radius, and technical complexity are strong common causes surfaced from the issue_description text rather than copied from the query, which only names 'channel' and 'priority'. This demonstrates real causal reasoning. One added column (requires_engineering_escalation) is better read as a mediator on the treatment→outcome path, and a couple (root_cause_domain, workaround_available) sit closer to triage outputs, slightly lowering quality; but the majority are genuine, non-query-named confounders."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

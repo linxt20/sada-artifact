@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "focus_variable": "regional_fit",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "current_delivery_model",
+    "geographic_dependency_level",
+    "customer_interaction_mode",
+    "physical_asset_footprint",
+    "business_model_scaling_trait"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 4,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "regional_fit",
+    "per_column": [
+      {
+        "name": "current_delivery_model",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query explicitly proposes shifting the business/delivery model toward service-oriented; this column captures that intervenable lever (platform_service, managed_service, product_only, hybrid). A company could actually change its delivery model, so it is settable."
+      },
+      {
+        "name": "geographic_dependency_level",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Degree of dependence on geography is more plausibly a channel THROUGH which a localized/service model affects regional fit than a common cause of both. It is downstream of the model choice, so it functions as a mediator rather than a confounder."
+      },
+      {
+        "name": "customer_interaction_mode",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Interaction mode (remote_digital, on_site_field, embedded_partner) is largely determined by the delivery model and in turn shapes regional fit; it lies on the causal path, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "physical_asset_footprint",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Physical asset footprint is a consequence of the business/delivery model (product vs service) and affects regional fit through required infrastructure; it is on the pathway, hence a mediator."
+      },
+      {
+        "name": "business_model_scaling_trait",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Scaling traits (linearly_scalable, local_partnerships_required, network_effects_based) are properties determined by the model and mediate its effect on regional fit; not a common cause of the intervention."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "current_delivery_model"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added set correctly identifies an intervenable treatment (current_delivery_model), matching the query's proposed shift toward a service-oriented/localized model, satisfying claim (a). However, claim (b) fails: none of the remaining columns are confounders. They are all downstream consequences of the business model (geographic dependency, interaction mode, asset footprint, scaling trait) that sit on the causal path to regional fit, making them mediators. Conditioning on mediators would block or distort the very effect the what-if question asks about. No common cause of both the model choice and regional fit (e.g., industry sector, firm size/maturity, funding, founding location) was added. Thus the interventional set-up is incomplete: it lacks the confounders needed to identify the counterfactual effect, and it risks introducing post-treatment bias."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

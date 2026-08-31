@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "crew_warmth_engagement",
+    "seat_comfort_problem",
+    "meal_quality_consistency",
+    "premium_value_perception",
+    "cost_cutting_perception",
+    "communication_responsiveness_failure",
+    "ground_staff_service_quality",
+    "aircraft_cabin_freshness",
+    "post_covid_service_change"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "crew_warmth_engagement",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated categories (high_warmth / low_warmth_robotic / mixed) that capture a review theme distinct from the numeric rating and can be segmented against it."
+      },
+      {
+        "name": "seat_comfort_problem",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary flag with a healthy 750/150 split; easy to group on and compare rating distributions, though it partially overlaps the existing Seat Comfort column."
+      },
+      {
+        "name": "meal_quality_consistency",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct, interpretable food-theme categories; the ~171 NULLs still leave three well-populated groups for comparison."
+      },
+      {
+        "name": "premium_value_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Value/price perception theme with clear categories, well-suited to segmentation across Class; some conceptual overlap with Value For Money but adds a themed angle."
+      },
+      {
+        "name": "cost_cutting_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable cutback-perception categories, well distributed; a meaningful theme to correlate with rating, though it overlaps semantically with premium_value_perception."
+      },
+      {
+        "name": "communication_responsiveness_failure",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary service-failure flag with a usable 672/228 split; groupable and interpretable against rating."
+      },
+      {
+        "name": "ground_staff_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear ordered/nominal categories capturing a distinct service touchpoint; well-populated groups enable meaningful comparison."
+      },
+      {
+        "name": "aircraft_cabin_freshness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable cabin-age theme; the 450 NULLs weaken it, but the remaining three categories are still comparable against rating."
+      },
+      {
+        "name": "post_covid_service_change",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories; however the dominant 'no_comparison_made' (471) plus a tiny 'service_improved' (35) make some contrasts thin, though still usable."
+      }
+    ],
+    "n_predictors": 9,
+    "relationship_informativeness": 0.82,
+    "rationale": "All added columns are external, associational review-theme variables expressed as interpretable, well-separated categorical or binary segments rather than opaque scores, directly supporting exploration of which themes correlate with higher/lower Overall Rating across Type of Traveller and Class. They are theme-decomposed and do not merely restate the numeric focus. Deductions: several columns overlap conceptually (premium_value_perception vs. cost_cutting_perception; seat_comfort_problem/meal_quality partly echo existing sub-ratings), and a few carry heavy NULL or near-constant dominant categories (aircraft_cabin_freshness at 450 NULLs, post_covid_service_change dominated by 'no_comparison_made'), which limits comparison power for those specific fields. As a set, however, the columns strongly enable discovery of interpretable relationships."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

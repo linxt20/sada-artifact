@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "is_travel",
+    "amount_above_travel_median",
+    "missing_processed_date",
+    "dept_travel_decline_rate",
+    "user_travel_submission_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.8,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_travel",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Flagging travel vs non-travel is essential to isolate the population the query targets and to compute decline rates on the relevant subset. Values in samples are non-travel hardware/cloud rows correctly marked 0, consistent with short_description/ci text."
+      },
+      {
+        "name": "amount_above_travel_median",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Binning amount against the travel median gives a clean axis to test whether high-cost claims drive declines. Derivable from the original amount column, though the median reference is dataset-level; sample rows are non-travel yet still get a flag, which is a defensible relative comparison rather than an invented fact."
+      },
+      {
+        "name": "missing_processed_date",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A missing-processed-date flag is a plausible operational signal that could correlate with declines, giving modest analytical leverage. Values are directly and correctly derived from processed_date (nan -> 1, present -> 0) as the samples confirm."
+      },
+      {
+        "name": "dept_travel_decline_rate",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A per-department travel decline rate directly answers 'which factors contribute most' by ranking departments, a strong grouping axis. Values are aggregate statistics computed from department + state, which is warranted, though not verifiable at the single-row level and applied even to non-travel rows."
+      },
+      {
+        "name": "user_travel_submission_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Per-user submission volume is a useful behavioral axis to test whether frequent submitters see more declines. Derived from grouping by user; reasonable, though it is an aggregate not checkable per row and appears on non-travel rows in the samples."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns provide genuine, distinct axes—travel scoping, cost tier, data-quality flag, and department/user aggregate signals—that directly support explaining and ranking drivers of travel-expense declines. None are trivially redundant or constant. Groundedness is generally sound: flags map cleanly to source fields, and the aggregate-rate columns are warranted derivations from category/department/user/state, with no invented specifics observed. Minor concern is that relative/aggregate columns are attached to non-travel rows, but this does not constitute hallucinated content."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

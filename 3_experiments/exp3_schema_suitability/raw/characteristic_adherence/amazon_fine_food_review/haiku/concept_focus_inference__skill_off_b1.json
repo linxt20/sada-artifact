@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "helpfulness_ratio",
+    "review_length",
+    "mentions_quality_issues",
+    "mentions_value_price",
+    "mentions_delivery",
+    "low_score_with_issue",
+    "high_satisfaction_indicator"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6643,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7357,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "helpfulness_ratio",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derived from HelpfulnessNumerator/Denominator; gives a useful axis to weight which reviews matter most for improvement actions. Slightly redundant with existing columns but adds a normalized comparable metric."
+      },
+      {
+        "name": "review_length",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw token/word count is generic and adds little analytical leverage for identifying improvement actions. Values are trivially derivable from Text, so groundedness is high."
+      },
+      {
+        "name": "mentions_quality_issues",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Highly relevant axis for pinpointing improvement actions. However the 'Not as Advertised' peanuts row (a clear quality/accuracy complaint) is flagged 0, indicating unreliable extraction that misses genuine quality issues."
+      },
+      {
+        "name": "mentions_value_price",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful for isolating price-related feedback. The taffy 'great price' row is correctly flagged 1 and silent rows are 0, consistent with the source."
+      },
+      {
+        "name": "mentions_delivery",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Delivery is a legitimate actionable theme. The taffy row is correctly flagged 1, but the peanuts row (no delivery mention; a labeling issue) is flagged 1, a clear misread that undermines reliability."
+      },
+      {
+        "name": "low_score_with_issue",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A composite low-score-plus-problem flag is directly on-target for prioritizing improvement actions. But it inherits the flawed issue detection (peanuts complaint not captured), so values are not consistently trustworthy."
+      },
+      {
+        "name": "high_satisfaction_indicator",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A satisfaction flag contrasts well with issue flags for identifying what to improve, though it borders on a bare sentiment restatement of Score. Sample values largely align with the review tone."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.7,
+    "rationale": "Most added columns give genuine actionable axes (issue/price/delivery mentions, helpfulness weighting, low-score-with-issue) directly relevant to identifying improvement actions; review_length is the weakest, being generic. Groundedness is mixed: helpfulness_ratio and price/satisfaction flags read the source soundly, but the issue- and delivery-detection columns show clear misclassifications in the samples (the 'Not as Advertised' row misses a quality issue and spuriously flags delivery), which propagate into the composite low_score_with_issue column."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category_primary",
+    "asset_portability_context",
+    "record_creation_signal",
+    "vendor_brand_primary",
+    "processing_lag_indicator",
+    "asset_specification_richness",
+    "asset_expense_purpose"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7071,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7429,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_primary",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizing expenses into laptop/desktop/service/etc. gives a strong grouping axis for spend analysis. Values are well-grounded in short_description and ci text, though the 'peripheral' label for a RAM component is a slightly loose read."
+      },
+      {
+        "name": "asset_portability_context",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a portability lens useful for policy/asset-management questions. Somewhat derivative of asset_category (laptop->mobile, desktop->fixed), but not a pure restatement. Values follow soundly from category readings."
+      },
+      {
+        "name": "record_creation_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A provenance dimension is potentially actionable. But distinctions like 'acquisition' vs 'registration' vs 'manual_provision' appear inferred from phrasing cues that the source text only weakly supports; 'automatic_generated' as the dominant value is not visibly grounded in the sampled rows, suggesting some fabrication."
+      },
+      {
+        "name": "vendor_brand_primary",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Vendor breakdown is highly useful for spend consolidation. Dell/HP/Lenovo are well-grounded in text. However, mapping 'Cloud Database Service' to 'AWS' is an unwarranted confident specific where the text names no vendor, indicating some invented attribution."
+      },
+      {
+        "name": "processing_lag_indicator",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A processing-delay flag could be actionable, but its meaning is opaque and it seems tied to whether processed_date exists (nan->False). As a bare boolean derived from date presence rather than an actual lag computation, its analytical leverage and grounding are limited."
+      },
+      {
+        "name": "asset_specification_richness",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Essentially a proxy for text specificity/category (high vs generic vs service_abstracted), largely redundant with asset_category and a near-metadata measure that adds little new analytical axis for expense actionability. Values track the source text reasonably."
+      },
+      {
+        "name": "asset_expense_purpose",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Purpose classification (provisioning/travel/service/subscription/maintenance) directly supports understanding what spend is actionable. Somewhat correlated with category but adds a distinct intent dimension. Values are sound readings of the descriptions."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.75,
+    "rationale": "The set provides several genuinely useful analytical axes for expense analysis: category, vendor, and expense purpose are strong grouping/comparison dimensions well-grounded in the description and ci fields. Portability and specification-richness are more derivative of category, and processing_lag is a thin boolean, dragging usefulness down. Groundedness is generally good, but there are notable confident-specific hallucinations: inferring 'AWS' as vendor for a generic cloud service and the fine-grained record_creation_signal distinctions not clearly supported by the source text."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

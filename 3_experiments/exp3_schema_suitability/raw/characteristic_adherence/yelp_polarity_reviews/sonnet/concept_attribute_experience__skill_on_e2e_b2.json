@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "focus_variable": "satisfaction_and_complaint_facets",
+  "concept": "satisfaction_and_complaint_facets",
+  "n_added_columns": 4,
+  "added_columns": [
+    "food_quality_rating",
+    "service_staff_sentiment",
+    "service_failure_type",
+    "atmosphere_sentiment"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6,
+    "facet_fraction": 1.0,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.6,
+    "mece": 0.6,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "satisfaction_and_complaint_facets",
+    "per_column": [
+      {
+        "name": "food_quality_rating",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Food quality is a core dimension along which diners express satisfaction or complaint; it is an aspect OF the review's satisfaction/complaint content."
+      },
+      {
+        "name": "service_staff_sentiment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Service/staff experience is a constitutive facet of restaurant satisfaction and complaint themes."
+      },
+      {
+        "name": "service_failure_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "This is a sub-facet within the service dimension, categorizing specific complaint modes; it is a part-of the complaint side of the concept, though it overlaps heavily with service_staff_sentiment's negative pole."
+      },
+      {
+        "name": "atmosphere_sentiment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Atmosphere/ambiance is a distinct aspect of the dining experience along which satisfaction/complaint is expressed."
+      }
+    ],
+    "facet_columns": [
+      "food_quality_rating",
+      "service_staff_sentiment",
+      "service_failure_type",
+      "atmosphere_sentiment"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.6,
+    "rationale": "All four columns are genuine part-of facets of the review satisfaction/complaint concept (food, service, atmosphere) rather than external predictors or causes, so the meronymy claim holds. However, mutual exclusivity is weakened: service_staff_sentiment and service_failure_type both decompose the SAME service dimension, with the failure-type column essentially elaborating the negative pole of the sentiment column — these overlap rather than carving non-overlapping aspects, and the concept ends up double-weighted toward service. Exhaustiveness is moderate: food, service, and atmosphere are covered, but other well-established satisfaction/complaint facets (price/value, cleanliness/hygiene, wait time/reservation, portion size, order accuracy beyond service) are absent, leaving significant constitutive aspects uncovered."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

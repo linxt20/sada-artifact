@@ -1,0 +1,69 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "product_quality_defect_mentioned",
+    "performance_inadequacy_type",
+    "value_for_money_concern"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "product_quality_defect_mentioned",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of negative sentiment (product defects). It is one of the 'factors' the query wants attributed, and functions as a treatment/cause of the outcome rather than a common cause of another treatment."
+      },
+      {
+        "name": "performance_inadequacy_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause of negative reviews (product does not perform). Parallel factor, treated as a cause of the outcome, not a confounder of another cause."
+      },
+      {
+        "name": "value_for_money_concern",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause of negative sentiment (price/value grievance). Also a factor to be attributed, i.e., a competing cause of the outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "product_quality_defect_mentioned",
+      "performance_inadequacy_type",
+      "value_for_money_concern"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns are all candidate causes (competing grievance types) of the negative-review outcome, which fits the 'which factors contribute the most' framing as a set of parallel treatments. However, the technical claim requires BOTH a treatment AND confounders -- variables that are common causes of both a treatment and the outcome and must be adjusted for to avoid biased attribution. No such confounders were surfaced. There are no columns capturing common causes like product category, price tier, brand, reviewer propensity, or product age that would jointly drive both the grievance type and the sentiment. With multiple correlated grievance factors and no adjustment variables, any 'contributes the most' attribution is confounded. The operator supplied treatments but failed the decisive test: it surfaced no confounders (named_in_query=false ones) demonstrating genuine causal reasoning."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

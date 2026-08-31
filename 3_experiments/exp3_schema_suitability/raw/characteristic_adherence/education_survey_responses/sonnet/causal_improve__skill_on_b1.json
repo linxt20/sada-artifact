@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can educators improve learning satisfaction?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "teacher_instructional_quality",
+    "differentiation_support",
+    "content_delivery_format",
+    "peer_social_learning_quality",
+    "student_engagement_level",
+    "subject_remote_fit"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8917,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.8217,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8567,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "teacher_instructional_quality",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant axis for how educators can improve satisfaction; distinguishes adaptive vs minimal teaching. Values are well-grounded readings (e.g. ED-0002 'creative/adaptive' -> high_adaptive; ED-0003 teacher can't tell she's lost -> low_minimal_effort). ED-0001 'adequate_routine' is a defensible read though the source mostly cites tech issues rather than teacher effort."
+      },
+      {
+        "name": "differentiation_support",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Strong analytical axis for improving satisfaction via individualized support. Some values are inferential beyond the text: ED-0002 'moderate_office_hours' invents an office-hours specific not stated; ED-0001/ED-0004 'minimal_generic' is a weak-evidence default. ED-0003 'absent' is well grounded (teacher can't tell when she's lost)."
+      },
+      {
+        "name": "content_delivery_format",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Useful format dimension to compare satisfaction across modalities. Mostly grounded (ED-0004 recorded lectures + clips, ED-0002 project-based). But ED-0003 labeled 'mixed' when text only mentions a worksheet/reading platform, and ED-0004 'mixed' despite text describing recorded lectures only — some values not clearly warranted."
+      },
+      {
+        "name": "peer_social_learning_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Peer interaction is a distinct, actionable driver of satisfaction. Values are soundly derived: ED-0003 'zero peer interaction' -> absent; ED-0005 silent chat/cameras off -> absent; ED-0001 'thin_but_present' is a mild default but ED-0001 mentions missing raising hand, plausibly thin."
+      },
+      {
+        "name": "student_engagement_level",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Engagement is a core outcome-adjacent axis to correlate with satisfaction and interventions. Well grounded: ED-0002 show up on time -> highly_engaged; ED-0005 cameras off/silent -> disengaged; ED-0003 crying/logged out -> disengaged. ED-0001 'passively_compliant' is a reasonable read of a frustrated but attending student."
+      },
+      {
+        "name": "subject_remote_fit",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures how well a subject translates to remote delivery — a genuine grouping axis for targeting improvements. Values track the text: algebra whiteboard freezes -> low_fit, kitchen-chemistry works -> high_fit, discussion-based juniors -> low_fit. Somewhat conflated with tech issues vs true subject fit but broadly warranted."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.82,
+    "rationale": "All six columns provide distinct, actionable axes (teaching quality, differentiation, format, peer learning, engagement, subject fit) that directly serve the query on improving learning satisfaction; none are near-constant or trivially redundant. Source groundedness is generally strong — most values are sound extractions or warranted categorizations of the open responses. Minor unwarranted specifics appear (e.g. 'moderate_office_hours' inventing office hours, and a couple 'mixed' format labels where the text describes a single modality), and some low-evidence default categories, lowering groundedness modestly but not indicating systematic fabrication."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

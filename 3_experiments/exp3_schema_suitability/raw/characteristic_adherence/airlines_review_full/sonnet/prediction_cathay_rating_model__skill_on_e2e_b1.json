@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 10,
+  "added_columns": [
+    "cabin_crew_attitude",
+    "proactive_crew_service_presence",
+    "meal_quality_rating",
+    "meal_timing_appropriateness",
+    "seat_comfort_issue_type",
+    "disruption_type",
+    "disruption_handling_quality",
+    "cabin_class_experience_vs_expectation",
+    "premium_economy_value_gap",
+    "service_decline_vs_pre_covid"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.605,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.642,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.6235,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_attitude",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "A well-differentiated categorical axis (warm/polite/cold/rude) that adds qualitative nuance beyond the numeric Staff Service score and is highly relevant to a 'optimise service' model. Samples are sound: 'cabin crew are the best/genuine' -> warm_and_proactive, 'staff excellent' -> warm_and_proactive, and the no-help/no-reply and no-communication rows -> cold_or_indifferent. Rows 1-2 describe ground/gate staff rather than cabin crew, so those are mild extensions, but the readings are defensible."
+      },
+      {
+        "name": "proactive_crew_service_presence",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Values track evidence well ('Josh came to ask if they enjoyed their meals' -> True; 'attend to everyone's needs' -> True; help-absent rows -> False). But it largely restates the 'proactive' facet already captured by cabin_crew_attitude=warm_and_proactive, so it offers little independent analytical leverage."
+      },
+      {
+        "name": "meal_quality_rating",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A useful categorical food axis, though partly redundant with the existing Food & Beverages rating. Groundedness is uneven: rows genuinely silent on food (row 3 only mentions crew asking about meals) are still scored 'acceptable' rather than Unknown, and clearly positive food ('great food options') is under-rated as 'acceptable'. Correct Unknowns on the food-silent disruption rows help."
+      },
+      {
+        "name": "meal_timing_appropriateness",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Weak, niche axis for this query, and poorly grounded: none of the sampled texts discuss WHEN meals were served, yet the column confidently emits True/False (rows 3-5 -> True, row 2 -> False) with no supporting evidence. This asserts specifics the source is silent on."
+      },
+      {
+        "name": "seat_comfort_issue_type",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Actionable failure-mode taxonomy (legroom/narrow/recline/broken) that goes beyond the numeric Seat Comfort score and directly supports service optimisation. Samples are accurate ('cramped/smaller seats' -> legroom_insufficient; 'seats hardly recline' -> poor_padding_or_recline). Minor over-assertion: seat-silent row 3 is set to 'adequate_or_comfortable' as a default, while genuine silence is handled with Unknown elsewhere."
+      },
+      {
+        "name": "disruption_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Highly relevant operational axis for an MD optimising routes/ops. However row 1 describes a weather diversion and being stranded overnight in Melbourne (a clear diversion/missed-connection disruption) yet is labelled 'no_disruption', contradicting the text and even its own poorly_handled disruption-handling value. Row 2 (2h delay) is correctly captured."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Useful complement to disruption_type for prioritising recovery processes. Text readings are reasonable (no staff/no reply -> poorly_handled; smooth flights -> not_applicable), but row 2's poorly-communicated delay is set to not_applicable, and the interaction with disruption_type=no_disruption on row 1 is internally inconsistent."
+      },
+      {
+        "name": "cabin_class_experience_vs_expectation",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A clean ordinal satisfaction gradient that reads the samples well (stranded -> severely_below; best-ever crew -> exceeded; mixed reviews -> met). Its analytical value is dampened because it largely mirrors overall satisfaction, i.e. the Overall Rating target the model is trying to predict, risking redundancy/leakage rather than a new independent driver."
+      },
+      {
+        "name": "premium_economy_value_gap",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (696 false / 48 true) and applicable to only a narrow cabin subset, giving little grouping leverage across the full dataset. Grounding is acceptable in samples (all False on rows not discussing premium economy), functioning as a conservative default."
+      },
+      {
+        "name": "service_decline_vs_pre_covid",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Heavily skewed/near-constant and weakly grounded. Row 1 is flagged True (service declined vs pre-COVID) despite the text making no COVID or temporal-comparison claim at all, an invented specific. Requires a comparative baseline the reviews rarely provide, so most values are unsupported inferences."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.6,
+    "rationale": "The set contributes several genuinely valuable new axes for a service/route optimisation model: cabin_crew_attitude, seat_comfort_issue_type, disruption_type and disruption_handling_quality give actionable qualitative and failure-mode structure beyond the existing numeric ratings. Usefulness is diluted by weaker members: proactive_crew_service_presence restates cabin_crew_attitude, cabin_class_experience_vs_expectation largely mirrors the Overall Rating target, and premium_economy_value_gap and service_decline_vs_pre_covid are near-constant with little grouping power. On groundedness, positive/clearly-stated rows are read soundly and true silences are often correctly left Unknown/False, but there are real over-assertions and one contradiction: meal_timing_appropriateness and service_decline_vs_pre_covid emit confident values on topics the text never addresses, meal_quality defaults silent rows to 'acceptable', and disruption_type mislabels an obvious weather diversion as 'no_disruption' while its own handling column calls it poorly_handled. Net: moderately-to-quite useful with mixed, occasionally unsupported grounding."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

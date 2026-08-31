@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "focus_variable": "hardware_incident",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "affected_system_domain",
+    "software_keyword_present",
+    "description_action_type"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 3,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "hardware_incident",
+    "per_column": [
+      {
+        "name": "affected_system_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, human-readable categories (software_application, hardware_device, database, network_infrastructure, etc.) that can be segmented against hardware_incident. Highly informative for exploring what signals a hardware problem, since 'hardware_device' directly contrasts with other domains. Note: partial overlap with the focus concept, but it is a broader categorical axis rather than a pure restatement."
+      },
+      {
+        "name": "software_keyword_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary categories with a reasonable split (351/249). Interpretable and groupable: presence of software terminology is an associational signal that inversely relates to hardware incidents. Somewhat mechanical (keyword flag), but the categories are meaningful and well-separated."
+      },
+      {
+        "name": "description_action_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated action categories (failure_malfunction, installation_request, connectivity_issue, access_recovery, etc.) derived from the description. These are external associational segments that let an explorer compare which action types co-occur with hardware incidents. Minor NULLs but categories remain meaningful."
+      }
+    ],
+    "n_predictors": 3,
+    "relationship_informativeness": 0.82,
+    "rationale": "All three columns provide interpretable, well-separated categorical segmentations that can be grouped and compared against the hardware_incident focus, directly serving the query about description signals of hardware problems. affected_system_domain and description_action_type offer rich multi-category axes, while software_keyword_present gives a clean contrastive binary. None are opaque scores or near-constant, and none are pure restatements of the focus (affected_system_domain overlaps but adds a broader domain taxonomy). The set robustly supports discovering interpretable relationships; slight deduction because software_keyword_present is somewhat mechanical and affected_system_domain partially encodes the target concept."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

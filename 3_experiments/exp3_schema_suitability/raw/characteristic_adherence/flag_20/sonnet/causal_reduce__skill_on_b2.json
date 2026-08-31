@@ -1,0 +1,89 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce declined travel expenses?",
+  "focus_variable": "travel_expense_declined_status",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "expense_category",
+    "entry_method",
+    "asset_action_type",
+    "has_source_id",
+    "ci_brand"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.04,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.1,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "travel_expense_declined_status",
+    "per_column": [
+      {
+        "name": "expense_category",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "The query is specifically about travel expenses; expense_category identifies which records are travel vs. other, effectively a scoping/subsetting attribute already implied by the query. It is not an intervenable lever for reducing declines."
+      },
+      {
+        "name": "entry_method",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How an expense is entered (manual/automated/self_input) is a configurable, settable process property an actor could change, and it plausibly affects whether the expense is declined (e.g., manual entry causing errors). This is a valid intervenable lever."
+      },
+      {
+        "name": "asset_action_type",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Asset action types (registration, procurement, deployment) pertain to hardware asset records, not travel expenses. Largely irrelevant to the travel-expense outcome."
+      },
+      {
+        "name": "has_source_id",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A generic data-completeness flag. Could be a mediator of data-quality issues but is not clearly a common cause of a settable treatment and the outcome; treated as ambiguous/generic."
+      },
+      {
+        "name": "ci_brand",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Vendor/brand of the configuration item; mostly hardware-oriented and not an intervenable lever for reducing travel-expense declines, nor a clear confounder of entry_method."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "entry_method"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "expense_category",
+        "named_in_query": true,
+        "plausibility": 0.3
+      }
+    ],
+    "confounder_quality": 0.1,
+    "rationale": "One plausibly intervenable treatment is present (entry_method: a settable process property that could affect decline rates). However, the columns essentially fail the confounding test. A valid what-if requires common causes of BOTH the treatment (entry_method) and the outcome (decline status) that are NOT already named in the query. The only confounder-like column, expense_category, is scoping already implied by the query, and its causal link to entry_method is weak. The other added columns (asset_action_type, ci_brand, has_source_id) are hardware/asset-oriented and largely irrelevant to travel-expense declines — they do not function as confounders adjusting the entry_method→decline effect. No unnamed, high-plausibility confounder is supplied, so the interventional identification claim is not realised."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

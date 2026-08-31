@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "focus_variable": "inefficient_resolution",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "reassignment_signal",
+    "hardware_failure_severity",
+    "affected_asset_type",
+    "shared_vs_personal_asset",
+    "repeat_incident_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4583,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.1667
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "inefficient_resolution",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Category of the incident (printer, network, etc.) is known at intake and plausibly correlates with resolution difficulty; lies outside the focus variable."
+      },
+      {
+        "name": "reassignment_signal",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the ticket was reassigned is itself a hallmark of an inefficient handling process. It typically only becomes known during/after resolution and is largely a component of what 'inefficient resolution' means, so it leaks the outcome rather than predicting it independently."
+      },
+      {
+        "name": "hardware_failure_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Severity of the underlying hardware fault is an intrinsic property of the problem, knowable early, and plausibly drives how hard/slow resolution is without restating the outcome."
+      },
+      {
+        "name": "affected_asset_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of asset (printer, server, laptop) is an intake attribute that plausibly carries signal about resolution effort; outside the focus and non-deterministic of it."
+      },
+      {
+        "name": "shared_vs_personal_asset",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the asset is shared or personally assigned is a stable attribute known upfront; shared assets may involve coordination/access issues affecting efficiency. Legitimate predictor."
+      },
+      {
+        "name": "repeat_incident_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether this is a recurring incident is knowable from history at intake and is a plausible driver of harder/slower resolution without restating the outcome."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.55,
+    "rationale": "Five of six columns are legitimate, intake-time predictors describing the nature of the incident and asset (category, asset type, severity, shared/personal, repeat status), giving a model meaningful leverage beyond the original scheduling/identity fields. However, incident_category and affected_asset_type are near-duplicates of each other, reducing independent signal, and reassignment_signal leaks the outcome since reassignment is a core marker/component of inefficient resolution and is only known during processing. The set carries moderate genuine predictive value."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

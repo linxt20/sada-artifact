@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What factors explain low review scores?",
+  "focus_variable": "low_review_score",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "product_consistency_change",
+    "product_category"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "low_review_score",
+    "per_column": [
+      {
+        "name": "product_consistency_change",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A binary indicator that the product's formulation/consistency changed. This is a plausible candidate cause whose effect on low review scores can be attributed -- a reviewer noting a consistency change is a mechanism that could drive dissatisfaction. It functions as the treatment being evaluated."
+      },
+      {
+        "name": "product_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Product category plausibly influences both whether a consistency change occurs/is reported (some categories like coffee/snacks are more prone to formulation complaints) and the baseline propensity for low scores (some categories attract harsher reviews). It is a common cause of both treatment and outcome and must be adjusted for to avoid confounding, and it was surfaced from the data rather than named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "product_consistency_change"
+    ],
+    "confounders": [
+      {
+        "name": "product_category",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "The added columns do set up a rudimentary causal estimation: 'product_consistency_change' serves as a clear treatment (a candidate observed cause of low scores), and 'product_category' serves as a confounder that was surfaced from the data (not named or implied in the generic query), plausibly affecting both the treatment and the outcome. This satisfies the decisive test that at least one confounder be system-surfaced. However, the set is thin: only a single confounder is provided, and its status as a genuine common cause of the specific treatment is moderate rather than strong (category could act partly as an effect modifier or independent driver). Key alternative confounders (e.g., price, brand, reviewer strictness, time period) are absent, limiting confidence in unbiased attribution."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 2
+}

@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "adv_staff",
+    "adv_food",
+    "adv_seat_comfort",
+    "adv_entertainment",
+    "adv_value",
+    "adv_punctuality",
+    "adv_cleanliness",
+    "adv_attribute_count",
+    "is_high_rating"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7222,
+    "analytical_usefulness__table_level": 0.74,
+    "source_groundedness": 0.8056,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7639,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "adv_staff",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A binary 'staff praised' flag is directly on-topic for identifying advantage attributes of high-rated airlines and gives a clean axis to group/compare on (partly overlaps the original 'Staff Service' rating, but the text-derived explicit-praise signal is distinct). Positives that appear (S1, S5) are well grounded, but S3 ('staff well-trained on hospitality') was missed and coded 0, a false negative that contradicts the text; no invented positives observed."
+      },
+      {
+        "name": "adv_food",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Useful advantage axis relevant to the query. Correctly fires in S1 and S3 and correctly stays 0 in S2/S5. However S4, where food was the explicit highlight ('What amazed me most was how much food was available - 2 full meals'), was coded 0, a clear miss that undercuts groundedness. No fabricated positives."
+      },
+      {
+        "name": "adv_seat_comfort",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly useful advantage attribute for the query. Values track the text well across all samples: 1 for 'legroom spacious' (S1), 'comfortable flight' (S4), 'seat was comfortable' (S5); correctly 0 for the 'seats dreadful' review (S2). No unsupported assertions."
+      },
+      {
+        "name": "adv_entertainment",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A legitimate advantage axis for the query. Correct in S1 (IFE variety) and correctly 0 where entertainment was criticized (S2). But S5 explicitly praises 'wide range of movies' yet is coded 0 — a false negative. No invented positives."
+      },
+      {
+        "name": "adv_value",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Relevant advantage attribute, though ~96% zero (306/8100) makes it near-constant and it overlaps the original 'Value For Money' column, reducing leverage. In all samples no value-for-money claim is made and the flag is correctly 0, i.e. sound 'not stated' behaviour."
+      },
+      {
+        "name": "adv_punctuality",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a genuinely new axis with no original-column counterpart, directly relevant to comparing advantages of high-rated airlines. None of the sampled reviews mention timeliness and the flag is correctly 0 throughout, appropriate silent-row behaviour."
+      },
+      {
+        "name": "adv_cleanliness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "New attribute not captured by any original column, useful for the query. Grounded in S1 ('well sanitized', 'bathroom kept clean'); S3's 1 from 'aircraft well-maintained' is a defensible inference. S4's 'good condition' left at 0 is a minor borderline miss, not a fabrication."
+      },
+      {
+        "name": "adv_attribute_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A derived sum of the individual advantage flags; somewhat redundant with them but offers a distinct 'breadth of praise' axis that can be modelled against high rating. Verified consistent with the flags in every sample (S1=5, S3=2, S4=1, S5=2); it inherits any recall errors from the underlying flags but adds no new fabrication."
+      },
+      {
+        "name": "is_high_rating",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Operationalizes the query's 'high overall rating' target so advantages can be grouped/compared against it, which is central to the analysis; it is a binarization of the existing 'Overall Rating' column so somewhat redundant. Sample labels are consistent with review sentiment (9/10 and 'excellent'→1, harsh negative→0)."
+      }
+    ],
+    "analytical_usefulness": 0.74,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns are well-aligned with the query: a set of binary advantage flags plus a breadth count and a high-rating target let an analyst group high-rated reviews and see which advantages recur — exactly the requested analysis. Several flags (staff, food, seat, entertainment, value) partly overlap existing structured rating columns, and adv_value is near-constant, which trims usefulness, while punctuality/cleanliness add genuinely new axes. Groundedness is generally sound with no fabricated positives, but the samples reveal recurring false negatives (missed staff in S3, missed food highlight in S4, missed movies in S5), indicating recall gaps that modestly lower groundedness rather than any hallucination."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_advantage_attributes",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 9
+}

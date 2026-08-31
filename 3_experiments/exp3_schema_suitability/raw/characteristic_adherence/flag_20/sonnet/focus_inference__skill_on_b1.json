@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category",
+    "asset_form_factor",
+    "ci_brand_family",
+    "procurement_action_type",
+    "has_source_id",
+    "has_processing_lag",
+    "department_group"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6714,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.8186,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.745,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizes CI/description into asset types (hardware_endpoint, travel_item, cloud_service), giving a genuine grouping axis for expense analysis. Values are well-grounded readings of the ci/short_description text."
+      },
+      {
+        "name": "asset_form_factor",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds finer granularity (laptop, desktop, server, vehicle) derivable from CI strings like 'Dell Latitude'/'OptiPlex Desktop'. NULLs for silent rows are acceptable. Some inference (AWS EC2 -> server form factor) is reasonable."
+      },
+      {
+        "name": "ci_brand_family",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Extracts brand (dell, hp, apple, cloud_provider) directly from CI text, enabling vendor-level spend grouping. Grounded and only mildly redundant with asset_category."
+      },
+      {
+        "name": "procurement_action_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes new_acquisition vs registration_tracking vs rental from short_description phrasing. Useful classification, though the new_acquisition/registration_tracking split for near-identical 'new hardware asset' vs 'automated creation' descriptions looks somewhat arbitrary and weakly grounded."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean presence flag that is trivially derivable from an existing original column (source_id). Adds little analytical leverage, but values are exactly grounded."
+      },
+      {
+        "name": "has_processing_lag",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Derived from opened_at vs processed_date; a genuine derived signal that could flag delayed processing. Grounded (NaN processed_date -> False is sound), though the lag threshold is opaque."
+      },
+      {
+        "name": "department_group",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Rolls up the original department column into groups, a useful aggregation axis. Mapping is plausible but not verifiable from the sampled source text, and it is largely a restatement of an existing original column."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.82,
+    "rationale": "Most added columns give real grouping axes (asset_category, form_factor, brand_family, procurement action, department_group) useful for understanding travel-expense records and are soundly grounded in the ci/short_description text. has_source_id is a trivial presence flag on an existing column, and procurement_action_type/department_group show some weakly warranted mapping, lowering the aggregate. No clear hallucinations observed; NULL handling for silent rows is appropriate."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

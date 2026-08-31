@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "rating_consistency",
+    "primary_complaint",
+    "aspect_variance",
+    "sentiment_mismatch",
+    "rating_consistency.1",
+    "primary_complaint.1",
+    "aspect_variance.1",
+    "sentiment_mismatch.1"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.21,
+    "focus_coherence": 0.6,
+    "structure_quality": 0.35,
+    "focus_actionability": 0.6,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The internal coherence/reliability of each review's ratings together with its dominant dissatisfaction driver — i.e., how self-consistent a review is (across sub-ratings, overall rating, and text tone) and which single aspect it complains about most.",
+    "per_column": [
+      {
+        "name": "rating_consistency",
+        "supports_focus": true,
+        "rationale": "Flags whether a review's sub-ratings/overall cohere; a direct facet of the 'review coherence/reliability' focus."
+      },
+      {
+        "name": "primary_complaint",
+        "supports_focus": true,
+        "rationale": "Identifies the dominant complaint aspect (service/seat/etc.), directly answering 'which aspect is worth analyzing', though ~64% NULL limits coverage."
+      },
+      {
+        "name": "aspect_variance",
+        "supports_focus": true,
+        "rationale": "Measures spread across the aspect ratings; a coherent facet of internal rating consistency."
+      },
+      {
+        "name": "sentiment_mismatch",
+        "supports_focus": true,
+        "rationale": "Compares text tone vs numeric rating; extends the coherence/reliability concept to text-vs-score agreement."
+      },
+      {
+        "name": "rating_consistency.1",
+        "supports_focus": false,
+        "rationale": "Verbatim duplicate of rating_consistency; adds no analytical information and signals mechanical/broken output."
+      },
+      {
+        "name": "primary_complaint.1",
+        "supports_focus": false,
+        "rationale": "Verbatim duplicate of primary_complaint; pure redundancy."
+      },
+      {
+        "name": "aspect_variance.1",
+        "supports_focus": false,
+        "rationale": "Verbatim duplicate of aspect_variance; pure redundancy."
+      },
+      {
+        "name": "sentiment_mismatch.1",
+        "supports_focus": false,
+        "rationale": "Verbatim duplicate of sentiment_mismatch; pure redundancy."
+      }
+    ],
+    "focus_coherence": 0.6,
+    "structure_quality": 0.35,
+    "focus_actionability": 0.6,
+    "rationale": "The four UNIQUE columns do cohere around a single inferable focus: the internal consistency/reliability of a review's ratings (rating_consistency, aspect_variance, sentiment_mismatch) plus the dominant complaint driver (primary_complaint). That is a genuine, non-trivial focus an analyst could act on — e.g., segment on 'inconsistent' reviews or drill into 'service' as the top complaint — so coherence and actionability are moderate-to-good, not vacuous sentiment/length features. However, structure_quality is heavily penalised: every column is duplicated verbatim (.1 copies with identical distributions), which is a mechanical defect yielding zero added structure and signalling a broken pipeline. Beyond duplication, the set mixes two threads (meta rating-reliability vs. content complaint topic) rather than forming one clean faceted decomposition, and primary_complaint is ~64% NULL, weakening the one column that most directly serves the query's 'which aspect' need."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

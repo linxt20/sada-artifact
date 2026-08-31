@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some agents have longer resolution times?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "assigned_agent",
+    "incident_category",
+    "issue_complexity",
+    "incident_severity_proxy",
+    "resolution_mechanism"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.74,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.56,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.65,
+    "hallucination_rate": 0.8
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "The query is about per-agent resolution times, so an agent identifier is the natural grouping axis. However, the original table already contains 'assigned_to' and 'closed_by', making this column largely redundant. Groundedness is moderate: the sample source texts shown contain no agent name, yet specific agents are confidently produced; presumably these come from the original 'assigned_to' field rather than the shown short_description, but as displayed the values are not clearly supported."
+      },
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorising incidents by type gives a genuine axis to explain resolution-time variation (some categories take longer), and is not a bare restatement despite an existing 'category' column since it is derived from the free-text description. The values are well-grounded readings of short_description (database access, VPN, network, software)."
+      },
+      {
+        "name": "issue_complexity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Complexity is directly relevant to why resolution times differ, a strong new modelling axis. But groundedness is weak: the short descriptions are terse and give little basis for a low/medium/high complexity judgement. Labels like 'low_complexity' for 'Unable to access the database' appear to be unwarranted confident inferences rather than sound readings of the text."
+      },
+      {
+        "name": "incident_severity_proxy",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A severity/impact proxy is a useful lens for explaining longer resolutions. However, assigning 'high_impact_infrastructure' vs 'medium_individual_access' from a one-line description is an inferential leap the source only weakly supports; the specific severity tier is largely asserted, not grounded."
+      },
+      {
+        "name": "resolution_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "The mechanism required to resolve an incident plausibly drives resolution time, so this is analytically valuable. But the source text describes symptoms, not fixes; the table has no resolution notes. Producing 'server_restart_required' for 'Unable to access the database' invents an unstated fact, so values are poorly grounded."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.55,
+    "rationale": "Most added columns supply genuine new axes (category, complexity, severity, resolution mechanism) directly relevant to explaining resolution-time variation, so table-level usefulness is high; assigned_agent is the weakest due to redundancy with existing 'assigned_to'. Groundedness is the main concern: incident_category reads well from the descriptions, but complexity, severity, and especially resolution_mechanism are confident inferences the terse source text does not clearly support, and no resolution/effort notes appear in the sampled rows to justify them."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

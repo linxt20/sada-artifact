@@ -1,0 +1,118 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "is_travel_related",
+    "expense_category_type",
+    "asset_class",
+    "entry_method",
+    "has_source_id",
+    "ci_specificity",
+    "processing_lag_band",
+    "department_confounder"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 0.6667,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "is_travel_related",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "Restates the query's scope filter (travel expenses) rather than proposing a causal driver of declines; a selection/scope flag, not a treatment or confounder."
+      },
+      {
+        "name": "expense_category_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Expense type plausibly affects both how an expense is entered/handled (treatment-side) and the likelihood of decline, so it is a plausible common cause; not explicitly named in query."
+      },
+      {
+        "name": "asset_class",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The kind of item purchased can influence both procurement/entry path and approval outcome; a plausible surfaced common cause."
+      },
+      {
+        "name": "entry_method",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The candidate cause whose effect on declines is being attributed: manual vs automated registration is a manipulable process variable plausibly driving approval outcomes."
+      },
+      {
+        "name": "has_source_id",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Presence of a source id is largely a downstream consequence of entry method / processing, likely on the path to decline rather than a common cause; adjusting for it risks mediator bias."
+      },
+      {
+        "name": "ci_specificity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Quality/specificity of the CI descriptor is a consequence of how the record was entered, sitting on the path from entry method to decline; more mediator than common cause."
+      },
+      {
+        "name": "processing_lag_band",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Processing lag is downstream of both the record and its handling/outcome (declined items may not be processed); conditioning on it risks collider/mediator bias, not a valid confounder."
+      },
+      {
+        "name": "department_confounder",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Department plausibly causes both entry practices and decline rates, a genuine common cause; however 'department' is already present in the original table and effectively named, so not novel surfacing."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "entry_method"
+    ],
+    "confounders": [
+      {
+        "name": "expense_category_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "asset_class",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "department_confounder",
+        "named_in_query": true,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "A plausible treatment (entry_method) is present, and a few added columns (expense_category_type, asset_class) qualify as genuinely surfaced common causes not named in the query. However, department is a relabelled existing column that is effectively named, and several columns (has_source_id, ci_specificity, processing_lag_band) are mediators/colliders downstream of entry/processing rather than confounders -- adjusting for them would bias attribution. is_travel_related merely restates query scope. Only a partial realisation of causal-attribution structure with mixed confounder quality."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

@@ -1,0 +1,69 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "focus_variable": "audience_dissatisfaction",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "writing_quality_issue",
+    "plot_originality_rating",
+    "character_development_quality"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "audience_dissatisfaction",
+    "per_column": [
+      {
+        "name": "writing_quality_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Captures a candidate cause of dissatisfaction (weak screenplay, clichéd script, incoherent plot). This is a plausible treatment/cause whose effect on satisfaction is being attributed, surfaced from the review text rather than named in the generic 'why dissatisfied' query."
+      },
+      {
+        "name": "plot_originality_rating",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another quality dimension of the film that plausibly drives dissatisfaction. It is a candidate cause, not a common cause of another treatment and the outcome, so it functions as a parallel treatment rather than a confounder."
+      },
+      {
+        "name": "character_development_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another film-quality attribute plausibly causing dissatisfaction. Like the others it is a candidate cause of the outcome, not a common cause of a treatment and the outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "writing_quality_issue",
+      "plot_originality_rating",
+      "character_development_quality"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply several plausible candidate causes (treatments) of audience dissatisfaction—writing quality, plot originality, character development—all surfaced from the review text. However, they are essentially parallel outcome-quality features rather than a designated treatment plus adjustment set. Crucially, NO confounders are provided: there is no variable that plausibly causes both one of these quality attributes AND dissatisfaction and would need to be adjusted for (e.g., genre, budget, reviewer expectation/predisposition, star popularity, prior franchise attachment). Without any confounders, the added columns do not set up a valid causal ESTIMATION and cannot deliver unbiased attribution. The decisive test (surfacing genuine common causes not named in the query) is not met because there are zero confounders at all."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

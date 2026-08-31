@@ -1,0 +1,124 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "failure_symptom_type",
+    "affected_system_component",
+    "scope_specificity",
+    "recurrence_signal",
+    "assignee_resolver_match",
+    "environment_context",
+    "caller_profile",
+    "ticket_open_state"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "failure_symptom_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The nature of the failure (cannot_connect, service_down, access_denied) is a plausible candidate cause of longer resolution times -- a diagnosable underlying cause the query asks about."
+      },
+      {
+        "name": "affected_system_component",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Which component failed (email_server, database_server, vpn_gateway) is a candidate underlying cause of resolution duration; different components take different times to fix."
+      },
+      {
+        "name": "scope_specificity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Blast radius (individual vs system_wide) plausibly drives both the type/severity of failure being triaged (treatment) and the resolution time (outcome), so it is a common cause that must be adjusted for. It is not on the path caused by the symptom itself."
+      },
+      {
+        "name": "recurrence_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the issue is recurring plausibly influences both which failure/component is involved and how long resolution takes (known recurring issues may be faster or chronically hard), a common cause upstream of both."
+      },
+      {
+        "name": "assignee_resolver_match",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the assignee ended up being the resolver is downstream of routing/handling; it is a consequence of the ticket handling process on the path to resolution time, not an upstream common cause."
+      },
+      {
+        "name": "environment_context",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The environment (remote_access, production, office_local) plausibly affects both which failures/components arise and the difficulty/time to resolve, a common cause not implied by the query."
+      },
+      {
+        "name": "caller_profile",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Caller type (end_user vs itil_internal) can influence both the kind of issue reported and prioritization/effort applied, affecting resolution time; a plausible upstream common cause."
+      },
+      {
+        "name": "ticket_open_state",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether the ticket is still open is downstream of / jointly determined by resolution progress; conditioning on open-state relative to resolution time risks selection/collider bias, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "failure_symptom_type",
+      "affected_system_component"
+    ],
+    "confounders": [
+      {
+        "name": "scope_specificity",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "recurrence_signal",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "environment_context",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "caller_profile",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The system supplies genuine candidate treatments (failure_symptom_type, affected_system_component) representing the 'underlying causes' the query seeks, satisfying (a). For (b), several confounders (scope_specificity, recurrence_signal, environment_context, caller_profile) are plausible common causes of both the failure characteristics and resolution time, and critically none were named in the query (which only named priority and category), so they demonstrate the capability under test. However confounder quality is only moderate: assignee_resolver_match is a mediator and ticket_open_state is a collider/selection variable, and adjusting for those would be errors. The genuine confounders are plausible but not tightly argued as common causes of the specific treatments, so quality sits mid-range."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

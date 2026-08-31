@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do handling times differ by channel and priority?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_category",
+    "operational_urgency",
+    "technical_complexity",
+    "scope_of_impact",
+    "root_cause_domain",
+    "workaround_available"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8333,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8417,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8375,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorising the free-text issue gives a genuine new axis to explain handling-time differences beyond channel/priority. Samples align well with source text (billing_inquiry, feature_request, outage all correct)."
+      },
+      {
+        "name": "operational_urgency",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Adds an urgency dimension distinct from the raw priority field and plausibly correlated with resolution time. Values are well-warranted readings: 'time_deadline_stated' for the Friday deadline, 'active_outage_declared' for the 14-min outage."
+      },
+      {
+        "name": "technical_complexity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A 1-5 complexity score is a strong candidate driver of handling time. It is an inferred/subjective rating rather than directly stated, but the sample scores are defensible readings of the described issues, so groundedness is moderate."
+      },
+      {
+        "name": "scope_of_impact",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Blast-radius categorisation is a meaningful axis for explaining effort/time. Samples grounded: single_user for individual reports, entire_tenant for 'all members of the Acme tenant'."
+      },
+      {
+        "name": "root_cause_domain",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Domain grouping offers useful stratification. Mostly grounded, but some inference: labelling the CS-0003 502 outage 'infrastructure_and_networking' is reasonable but not explicit, and auth/data domains are well supported. Slight risk of confident specifics where text is thin."
+      },
+      {
+        "name": "workaround_available",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Presence of a workaround plausibly affects urgency and handling. Somewhat coarse and partly inferred (many defaulted to 'no_workaround'), but sample values are sound: 'customer_has_workaround' for the manual sed step, 'not_present' for feature request."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.85,
+    "rationale": "All six columns give genuinely distinct axes (category, urgency, complexity, scope, root-cause domain, workaround) that a downstream analyst could group and model on to explain handling-time variation beyond the existing channel/priority fields; none are near-constant or trivially redundant. Values in the row_evidence_samples are consistent, warranted readings of the source text, with only mild inference on the subjective complexity score and some root-cause assignments. No clear hallucinations observed; silent-row defaults ('not_present') are appropriate."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What company traits explain regional clustering?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_sector",
+    "enterprise_vs_consumer_focus",
+    "company_stage_signal",
+    "profitability_or_funding_model",
+    "service_delivery_model",
+    "cloud_native_architecture"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "primary_sector",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated industry categories that can be segmented and cross-tabulated against regional clusters; a classic company trait for explaining regional specialization."
+      },
+      {
+        "name": "enterprise_vs_consumer_focus",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean, low-cardinality B2B/B2C/hybrid split that is easy to group on and compare across regions; an external associational trait."
+      },
+      {
+        "name": "company_stage_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-labeled maturity categories (established, growth, venture-backed, etc.) that support meaningful regional comparison; interpretable ordinal-ish segmentation."
+      },
+      {
+        "name": "profitability_or_funding_model",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable funding-model categories, though it substantially overlaps with company_stage_signal (venture-backed vs bootstrapped), somewhat reducing marginal informativeness."
+      },
+      {
+        "name": "service_delivery_model",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct, interpretable delivery-model buckets; adds a business-model dimension, though it partially correlates with primary_sector and enterprise focus."
+      },
+      {
+        "name": "cloud_native_architecture",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary trait that is interpretable and segmentable, but is a narrower/derivative signal that overlaps with service_delivery_model's cloud_saas category."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.72,
+    "rationale": "All six columns are external, interpretable company traits with well-separated categories that can be grouped and cross-tabulated against regional_cluster, satisfying the EDA claim of opening informative, human-understandable relationships around the focus. None merely restate the geographic focus. The main weakness is redundancy: company_stage_signal and profitability_or_funding_model largely encode the same venture-backed-vs-established axis, and cloud_native_architecture overlaps with service_delivery_model's cloud_saas bucket, so as a set they cover fewer independent dimensions (sector, business orientation, maturity/funding, delivery model) than the count of columns suggests. Still, the set strongly supports discovering interpretable trait-to-region relationships."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_regional",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

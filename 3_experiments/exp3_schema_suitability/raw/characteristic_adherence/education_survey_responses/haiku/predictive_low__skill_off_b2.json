@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "technical_issues",
+    "isolation_disconnection",
+    "hands_on_learning_missing",
+    "engagement_complaints",
+    "instruction_quality_gaps",
+    "young_learner_struggle",
+    "parent_stress_burden",
+    "subject_specific_hardship",
+    "negative_signals_count",
+    "predicted_low_satisfaction"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.52,
+    "predictor_fraction": 0.8,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.65,
+    "leakage_rate": 0.2
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "technical_issues",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Binary flag extracted from open response indicating technical problems; lies outside the satisfaction score and plausibly correlates with lower satisfaction."
+      },
+      {
+        "name": "isolation_disconnection",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Themed complaint signal about isolation; a legitimate external feature carrying predictive signal without restating the focus."
+      },
+      {
+        "name": "hands_on_learning_missing",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Content-based flag for missing hands-on learning; distinct from the outcome and plausibly predictive."
+      },
+      {
+        "name": "engagement_complaints",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Extracted engagement-complaint signal; external predictor with plausible link to satisfaction."
+      },
+      {
+        "name": "instruction_quality_gaps",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Flag for instruction quality issues; a genuine predictor not derived from the score itself."
+      },
+      {
+        "name": "young_learner_struggle",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Theme about young learners struggling; external signal that may predict satisfaction."
+      },
+      {
+        "name": "parent_stress_burden",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Parent-stress theme extracted from text; plausible predictor outside the focus variable."
+      },
+      {
+        "name": "subject_specific_hardship",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Subject-difficulty signal from open response; legitimate external feature."
+      },
+      {
+        "name": "negative_signals_count",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This is a deterministic aggregate of the other negative flags; while not derived from the score itself, it is redundant with its components and is essentially a hand-built proxy for low satisfaction rather than an independent predictor. As a summed count of negative themes it borders on restating the intended target construct."
+      },
+      {
+        "name": "predicted_low_satisfaction",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A column literally predicting/labelling low satisfaction is a target proxy — either derived from the focus (leakage) or a restatement of the outcome to be predicted; not a valid independent feature."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.65,
+    "rationale": "Eight of the ten columns are theme-level binary flags mined from the open_response text (technical issues, isolation, missing hands-on learning, engagement complaints, instruction gaps, young-learner struggle, parent stress, subject hardship). These lie outside the satisfaction score, are not deterministic functions of it, and plausibly carry genuine predictive signal about low satisfaction — a solid set of engineered features. However, 'negative_signals_count' is a mechanical aggregate of the other flags (redundant and constructed to mirror the target), and 'predicted_low_satisfaction' is an explicit target proxy that leaks/restates the focus variable. Excluding those two, the set gives real, non-trivial predictive leverage beyond the original columns, hence moderate-to-good utility."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

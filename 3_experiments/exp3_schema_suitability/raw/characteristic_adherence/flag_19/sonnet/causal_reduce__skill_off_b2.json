@@ -1,0 +1,96 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce declined expense submissions?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "missing_source_id",
+    "amount_bracket",
+    "processing_lag_days",
+    "user_decline_rate",
+    "category_decline_rate",
+    "department_decline_rate"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.25,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.25,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether a submission is missing a source_id is a settable data-quality property of the submission; an actor could enforce that source_id is provided, making it an intervenable lever plausibly affecting decline."
+      },
+      {
+        "name": "amount_bracket",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Amount is largely determined by the underlying expense and drives decline risk; it is an intrinsic attribute rather than a lever one would set to reduce declines, and it can act as a common cause across submission types. Treated here as a covariate/confounder, not a true intervenable treatment."
+      },
+      {
+        "name": "processing_lag_days",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Processing lag is measured relative to processing/decision events (values like -1 suggest it is defined post-outcome). It is downstream of or contemporaneous with the decision, so it behaves as a mediator/collider rather than a pre-treatment confounder."
+      },
+      {
+        "name": "user_decline_rate",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "An aggregate of the outcome itself (historical decline rate per user). Being a function of the outcome, it is a leakage/proxy feature, not a clean confounder or intervenable treatment."
+      },
+      {
+        "name": "category_decline_rate",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Aggregated outcome rate by category; encodes the outcome and is not an intervenable lever nor a proper pre-treatment confounder."
+      },
+      {
+        "name": "department_decline_rate",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Aggregated outcome rate by department; a mechanical outcome-derived summary, not a confounder of a treatment nor a settable lever."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "missing_source_id"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "amount_bracket",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.25,
+    "rationale": "The query is explicitly interventional ('How can we reduce...'). Only missing_source_id qualifies as a genuinely intervenable treatment (a data-quality requirement an actor can enforce). However, the schema does not set up a proper causal design around it: the decline-rate columns (user/category/department) are aggregates of the OUTCOME itself, which are leakage-style features rather than confounders, and processing_lag_days is post-decision (mediator/collider). Only amount_bracket serves as a plausible, not-named-in-query confounder, and even it is a weak, generic covariate. No confounder was identified that is a common cause of the missing_source_id treatment specifically. The set therefore only weakly realises the what-if claim: a lever is present, but confounder adjustment for that lever is essentially absent."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

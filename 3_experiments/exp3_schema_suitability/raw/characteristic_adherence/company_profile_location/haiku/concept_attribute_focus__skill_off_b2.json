@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What market-expansion focus should analysts study?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "Industry_Focus",
+    "Geographic_Region",
+    "Market_Expansion_Stage"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.612,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Market-expansion potential of companies, characterized by industry sector, geographic location, and growth/maturity stage",
+    "per_column": [
+      {
+        "name": "Industry_Focus",
+        "supports_focus": true,
+        "rationale": "Industry sector is a core dimension for assessing which markets/segments offer expansion opportunities; a data-inferable facet from company description."
+      },
+      {
+        "name": "Geographic_Region",
+        "supports_focus": true,
+        "rationale": "Geographic region directly supports market-expansion analysis (where markets are concentrated or underserved); derivable from address/lat-long."
+      },
+      {
+        "name": "Market_Expansion_Stage",
+        "supports_focus": true,
+        "rationale": "Maturity/growth stage is central to identifying expansion candidates and readiness; directly names the focus, though values are somewhat inconsistent (e.g., 'Growth Stage' vs 'Growth Stage Focus', 'Nonprofit', 'R&D Center' are off-taxonomy)."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.8,
+    "rationale": "The three columns converge coherently on a single implied focus: company market-expansion potential viewed through industry, geography, and maturity/growth stage. These are distinct, complementary facets at a useful granularity rather than a grab-bag or single restatement, so coherence and actionability are strong. Structure quality is dampened because Market_Expansion_Stage mixes conceptual dimensions (lifecycle stage, entity type like 'Nonprofit'/'R&D Center'/'Incubator', and a redundant 'Growth Stage Focus' duplicate), weakening it as a clean predictor facet. Overall the set genuinely proposes and structures an actionable focus, with minor taxonomic noise preventing top marks."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

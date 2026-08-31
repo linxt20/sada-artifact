@@ -1,0 +1,95 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_device_type",
+    "problem_severity_level",
+    "assigned_technician",
+    "caller_identity",
+    "description_detail_level",
+    "systemic_recurrence",
+    "assignee_closure_alignment",
+    "resolution_approach",
+    "business_impact_domain"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.5722,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.6333,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.6028,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_device_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Extracts device/component category from short_description, giving a strong grouping axis. Samples align well (printer, network, database->software is reasonable)."
+      },
+      {
+        "name": "problem_severity_level",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "A failure-type categorization derived from the description; useful for grouping. Mostly grounded, though labeling most items 'functional_failure' is a loose inference and 'data_loss_risk' style labels risk overreach on silent text."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.6,
+        "rationale": "Redundant with the existing original 'assigned_to' column, so adds little analytical leverage. Groundedness moderate since it appears to restate existing data but no assignee field is shown in samples to verify directly."
+      },
+      {
+        "name": "caller_identity",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.6,
+        "rationale": "Duplicates the existing 'caller_id' column; trivially redundant. Values plausibly restate existing data but the caller field is not in the evidence samples to confirm."
+      },
+      {
+        "name": "description_detail_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Classifies how specific/generic the description is, a genuine meta axis useful for data-quality analysis. Samples align well (location_referenced for 'floor 3', generic_malfunction for vague printer issues)."
+      },
+      {
+        "name": "systemic_recurrence",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "rationale": "Recurrence would be an interesting axis, but the source text (a single short_description) does not indicate whether an incident is a first occurrence or recurring. Labeling 'Printer not working properly' as 'recurring_component' is an unsupported inference."
+      },
+      {
+        "name": "assignee_closure_alignment",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "rationale": "Comparing assigned_to vs closed_by is a legitimate operational axis, but the evidence samples lack those fields, and the true/false assignment cannot be verified from provided text; some inferential risk."
+      },
+      {
+        "name": "resolution_approach",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "rationale": "Useful axis for grouping remediation types. However the text describes only the problem, not the resolution taken, so mapping to specific approaches (hardware_replacement, etc.) is partly inferred and could assert an action not recorded."
+      },
+      {
+        "name": "business_impact_domain",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "rationale": "Impact categorization is a helpful analytical axis. Some mappings are reasonable (productivity for printer), but assigning 'data_integrity' to a DB connection issue is a specific inference the text does not clearly support."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.65,
+    "rationale": "Several added columns (incident_device_type, description_detail_level, and to a lesser degree problem_severity_level, resolution_approach, business_impact_domain) provide genuinely new grouping/analysis axes well-grounded in the short_description. Two columns (assigned_technician, caller_identity) are largely redundant restatements of existing original columns, lowering usefulness. Groundedness is dragged down by columns that infer facts the single-line description cannot support (systemic_recurrence, resolution_approach, and specific business-impact labels), where confident specifics are asserted over silent text."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 9
+}

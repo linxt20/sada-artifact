@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals are linked to longer resolution duration values?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "resolution_duration_seconds",
+    "resolution_duration_tier",
+    "priority_numeric",
+    "opened_hour",
+    "is_off_hours_open",
+    "assignee_avg_resolution_seconds",
+    "category_avg_resolution_seconds",
+    "is_high_severity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7625,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.885,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.8237,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_duration_seconds",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is the target variable itself, derivable from opened_at/closed_at timestamps. Central to the query on resolution duration; enables direct modeling and correlation."
+      },
+      {
+        "name": "resolution_duration_tier",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Bucketing of duration into short/medium/long/very_long gives a clean grouping axis for comparing signals. Grounded as a transform of the duration; sample tiers align with the second values shown."
+      },
+      {
+        "name": "priority_numeric",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Numeric encoding of the existing priority column; a plausible driver of resolution duration and useful for modeling. Well grounded in the priority field."
+      },
+      {
+        "name": "opened_hour",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.98,
+        "hallucination_observed": false,
+        "rationale": "Hour extracted from opened_at; a legitimate temporal signal that could correlate with duration. Sample values match timestamps exactly."
+      },
+      {
+        "name": "is_off_hours_open",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Off-hours flag derived from opened_hour; reasonable signal for duration. Note row 3 (17:40) flagged 0 while row 2 (18:14) flagged 1, suggesting a defined threshold; generally consistent though partly redundant with opened_hour."
+      },
+      {
+        "name": "assignee_avg_resolution_seconds",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Per-assignee historical mean resolution time; a strong grouped signal for the query. Derivable by aggregating over closed_by/assigned_to within the table; values are group-level constants consistent with samples."
+      },
+      {
+        "name": "category_avg_resolution_seconds",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Per-category mean resolution time; useful grouped signal derivable from category aggregation. Consistent across samples."
+      },
+      {
+        "name": "is_high_severity",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (474 vs 26) and largely redundant with priority_numeric, so limited analytical leverage. Derivable from priority but adds little new axis."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.88,
+    "rationale": "Most added columns provide genuine, distinct axes (duration target, tiers, priority, temporal hour, per-assignee and per-category averages) directly relevant to identifying signals linked to longer resolution. Values are sound transforms/aggregations of present fields and match the row evidence. is_high_severity is weak (near-constant and redundant with priority), but per scope rules this does not drag down the overall set much. No hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

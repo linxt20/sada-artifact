@@ -1,0 +1,81 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "resolution_hours",
+    "issue_type",
+    "assignment_group_mismatch",
+    "resolver_is_assignee",
+    "resolution_hours_vs_group_median",
+    "opened_hour",
+    "opened_on_weekend"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7271,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8529,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.79,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.95,
+        "rationale": "This is the dependent variable of the query -- resolution time. Derivable from opened_at and closed_at/sys_updated_on, both present. Values are sound readings of timestamps. Directly essential for the analysis."
+      },
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "rationale": "Categorises the underlying cause from short_description (VPN->connectivity, database->database, email->email). This is exactly the 'underlying causes' axis the query asks about, distinct from the coarse original category column. Row evidence shows sound extraction."
+      },
+      {
+        "name": "assignment_group_mismatch",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.7,
+        "rationale": "A plausible driver of longer resolution (misrouting) and a genuine new axis. Groundedness is moderate: it presumably compares assignment_group vs closed_by/resolver group, which is derivable, but the exact rule is opaque and the sample row (email, mismatch=1) cannot be independently verified from shown text."
+      },
+      {
+        "name": "resolver_is_assignee",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Compares assigned_to vs closed_by -- both original columns present, so derivable. A reasonable operational driver of delay. Somewhat overlapping conceptually with assignment_group_mismatch but offers a distinct row-level axis."
+      },
+      {
+        "name": "resolution_hours_vs_group_median",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "rationale": "Largely a transform of resolution_hours (deviation from assignment_group median), so partially redundant with an added column. It can aid within-group comparison, but the query already asks to control for priority/category rather than group. Values derivable but heavily dependent on internal aggregation."
+      },
+      {
+        "name": "opened_hour",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "rationale": "Cleanly derived from opened_at. Time-of-day could plausibly relate to resolution time (off-hours queueing), giving a mild new axis, but it is generic and not an 'underlying cause' in the causal sense the query targets."
+      },
+      {
+        "name": "opened_on_weekend",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "rationale": "Derived from opened_at, well grounded. Weekend openings plausibly extend resolution due to reduced staffing -- a legitimate, if secondary, explanatory axis distinct from the raw hour."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.85,
+    "rationale": "The set provides the target metric (resolution_hours), the key 'underlying cause' axis (issue_type), and several plausible operational/temporal drivers, all of which give real analytical leverage for explaining longer resolution times. Groundedness is generally strong: most columns are derivable from present timestamps and identity/group fields, with issue_type well supported by short_description evidence. Weaker spots are the routing/mismatch flags (opaque derivation rules, hard to verify from samples) and resolution_hours_vs_group_median (partly redundant transform of resolution_hours). No clear hallucinations observed in the provided row evidence."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

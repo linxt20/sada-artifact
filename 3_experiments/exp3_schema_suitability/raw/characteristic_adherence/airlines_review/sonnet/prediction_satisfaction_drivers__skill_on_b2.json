@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_attitude",
+    "crew_proactivity",
+    "service_consistency",
+    "operational_disruption_type",
+    "disruption_handling_quality",
+    "post_flight_resolution_quality",
+    "special_needs_accommodation"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.72,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "crew_attitude",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Extracted qualitative crew attitude from review text. It is a distinct behavioral driver that lies outside the rating and plausibly influences satisfaction without restating or leaking the outcome."
+      },
+      {
+        "name": "crew_proactivity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether crew were proactive/reactive/absent is an observable service behavior distinct from the overall rating and carries genuine predictive signal."
+      },
+      {
+        "name": "service_consistency",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Consistency of service is a service-quality attribute separate from the rating; plausibly predictive. Some correlation with existing service columns, but not a deterministic restatement of the focus."
+      },
+      {
+        "name": "operational_disruption_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of operational disruption (delay, cancellation, etc.) is an objective event outside the rating and a strong plausible driver of satisfaction. Not leakage."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How disruptions were handled is a distinct service dimension that plausibly predicts satisfaction and is not a component or restatement of the rating."
+      },
+      {
+        "name": "post_flight_resolution_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Quality of post-flight issue resolution is a separate operational/service variable that plausibly drives the rating without being a deterministic function of it."
+      },
+      {
+        "name": "special_needs_accommodation",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether special needs were accommodated is an outside factor that could influence satisfaction. Weak due to heavy class imbalance (37 true), but still a legitimate predictor."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.72,
+    "rationale": "All seven added columns are legitimate predictors derived from the review text that lie outside the overall_rating and are not restatements, components, or leakage. They introduce genuinely new dimensions (crew behavior, service consistency, operational disruptions and their handling, post-flight resolution, special-needs accommodation) that the original structured ratings do not fully capture, giving a model meaningful additional leverage. Utility is strong but not maximal: several features partly overlap with existing Staff Service / service ratings, and special_needs_accommodation is severely imbalanced, limiting incremental signal."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

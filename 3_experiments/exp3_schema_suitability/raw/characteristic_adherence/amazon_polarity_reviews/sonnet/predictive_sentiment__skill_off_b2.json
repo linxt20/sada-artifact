@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review facets differ by sentiment label?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "review_word_count",
+    "review_sentence_count",
+    "exclamation_count",
+    "question_count",
+    "caps_word_count",
+    "positive_word_count",
+    "negative_word_count",
+    "has_personal_pronoun",
+    "avg_word_length"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.3889,
+    "predictor_fraction": 0.7778,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.5,
+    "interpretable_fraction": 0.4444
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "review_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Review length is a plausible external facet that could differ by sentiment, but as a raw count it is very fine-grained (many singleton values). Without binning it supports comparison only weakly; interpretable as 'longer vs shorter' but not cleanly segmented."
+      },
+      {
+        "name": "review_sentence_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Sentence count is an interpretable structural facet with a compact, well-populated range (mostly 2-8), so it can be grouped and compared against sentiment meaningfully."
+      },
+      {
+        "name": "exclamation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Exclamation usage is an intuitive expressive facet plausibly linked to sentiment. Distribution is near-constant zero but has a usable none/some contrast, allowing a meaningful segmentation."
+      },
+      {
+        "name": "question_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Interpretable in principle, but 232/250 are zero — so near-constant that essentially no meaningful comparison across sentiment can be drawn."
+      },
+      {
+        "name": "caps_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "All-caps emphasis is an interpretable stylistic facet plausibly associated with strong sentiment; a none/some split is usable despite skew toward zero."
+      },
+      {
+        "name": "positive_word_count",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Counting positive lexicon words is essentially a proxy for the sentiment label itself; it restates the focus rather than opening an external associational relationship."
+      },
+      {
+        "name": "negative_word_count",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Like positive_word_count, this is a direct lexical proxy for sentiment and largely restates label_pos rather than providing an independent facet."
+      },
+      {
+        "name": "has_personal_pronoun",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean binary facet (personal/impersonal framing) with a reasonable split (203/47), easily grouped and compared against sentiment."
+      },
+      {
+        "name": "avg_word_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "A near-constant continuous score clustered tightly around ~4.4 with fine-grained decimals; it is opaque and offers little separable structure for meaningful comparison."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.5,
+    "rationale": "The set mixes genuinely useful, interpretable facets (sentence_count, exclamation_count, caps_word_count, has_personal_pronoun) that can be segmented and compared against sentiment, with two lexical counts (positive/negative_word_count) that merely restate the sentiment focus, and near-useless columns (question_count is near-constant, avg_word_length is opaque and near-constant, raw word_count is overly fine-grained). Several columns support interpretable relationship discovery, but a substantial portion are restatements or non-informative, yielding moderate overall informativeness."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some agents have longer resolution times?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "priority_numeric",
+    "category_type",
+    "is_critical",
+    "assigned_to_experience",
+    "category_incident_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.5083,
+    "source_groundedness__table_level": 0.42,
+    "b1_overall": 0.6291,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.15,
+        "hallucination_observed": true,
+        "rationale": "Directly the dependent variable for the query (resolution time), so highly useful in principle. But values are unsound: many negative hours and figures not reconcilable with the timestamps shown (closed_at equals sys_updated_on, opened_at not reflected). The produced numbers appear miscomputed/invented rather than a valid closed-minus-opened span."
+      },
+      {
+        "name": "priority_numeric",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A numeric encoding of the existing priority column gives a clean axis to group/model resolution time against. Largely redundant with the original priority but adds modeling leverage; values are a sound reading of the source."
+      },
+      {
+        "name": "category_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Rolls category into higher-level buckets (Infrastructure/Software/Other), a reasonable grouping axis for comparing resolution times. Mappings shown (database, VPN, intranet -> Infrastructure; software update -> Software) are sound categorisations of the source text."
+      },
+      {
+        "name": "is_critical",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binary flag derived from priority (=1 for priority 1). Grounded and consistent (88 criticals match 88 priority-1 rows), but largely a restatement of priority_numeric, giving limited new analytical leverage."
+      },
+      {
+        "name": "assigned_to_experience",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.1,
+        "hallucination_observed": true,
+        "rationale": "Agent experience would be a strong explanatory axis for why some agents are slower — highly relevant. But the table contains no experience/tenure information; the near-uniform 0..N ramp distribution and constant 0/1 values on samples indicate a fabricated or index-based synthetic value not derivable from the source."
+      },
+      {
+        "name": "category_incident_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.15,
+        "hallucination_observed": true,
+        "rationale": "Category workload/volume could plausibly relate to resolution time, so conceptually useful. However the smooth 0,1,2,3... ramp and per-row values (all 0 on Infrastructure samples) do not correspond to any aggregable count grounded in the table; appears to be an invented/index-like value."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.42,
+    "rationale": "The added columns target the right constructs for the query (resolution duration, priority/criticality, category, agent experience, category volume). However groundedness is the major weakness: the core resolution_hours is miscomputed with impossible negative values, and assigned_to_experience and category_incident_count assert quantities with no supporting field in the source, showing telltale synthetic ramp distributions. priority_numeric, category_type, and is_critical are well grounded; is_critical is somewhat redundant with priority."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

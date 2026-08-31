@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "industry_sector",
+    "company_type",
+    "company_maturity",
+    "core_tech_domain",
+    "cloud_infra_signal",
+    "market_segment",
+    "customer_type",
+    "delivery_model",
+    "hardware_software_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Industry composition varies by region (e.g., semiconductors in Silicon Valley, life science hubs elsewhere), so this extracted attribute plausibly carries signal about regional cluster without restating or leaking it."
+      },
+      {
+        "name": "company_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "VC investors, startups vs established corporations concentrate differently across regions; a legitimate predictor derived from description text."
+      },
+      {
+        "name": "company_maturity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Stage distribution differs by regional ecosystem (early-stage-heavy hubs vs mature enterprise regions); plausible predictive signal, external to the focus."
+      },
+      {
+        "name": "core_tech_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Tech specializations cluster geographically (e.g., semiconductor/chip design, biotech genomics); carries regional signal and is not a restatement of the cluster label."
+      },
+      {
+        "name": "cloud_infra_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Weaker but plausible: infrastructure orientation can correlate with regional tech culture; a legitimate, if modest, predictor."
+      },
+      {
+        "name": "market_segment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "B2B vs B2C mix differs across regional ecosystems; a valid external feature with modest predictive value."
+      },
+      {
+        "name": "customer_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Target customer verticals (financial services, healthcare, tech) concentrate regionally, providing plausible signal for cluster prediction."
+      },
+      {
+        "name": "delivery_model",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "SaaS vs hardware vs services delivery correlates with regional industry structure; a legitimate feature, though signal is moderate."
+      },
+      {
+        "name": "hardware_software_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Hardware vs software orientation maps to regional specializations (hardware hubs vs software hubs); external and plausibly predictive."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.6,
+    "rationale": "All added columns are semantic attributes extracted from the business description that lie outside the regional_cluster focus and none restate or leak it. Industry, tech domain, company type, and maturity plausibly carry real geographic signal because tech specializations and ecosystem stages cluster regionally, giving genuine predictive leverage beyond the raw text and the already-present lat/long. Several columns (cloud_infra_signal, delivery_model, market_segment, hardware_software_signal) are collinear with industry/tech domain and add diminishing marginal signal, so the set as a whole is a solid but somewhat redundant predictor bundle rather than a maximally diverse one."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

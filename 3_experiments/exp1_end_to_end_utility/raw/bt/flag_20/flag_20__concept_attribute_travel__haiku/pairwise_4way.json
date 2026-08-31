@@ -1,0 +1,1261 @@
+[
+  {
+    "var_a": "original",
+    "var_b": "skill_off",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "EXP00000212 — Travel expense for laptop purchase / Dell Latitude 7400 (Processed, amount 1262)",
+          "why": "concrete row IDs, ci, amount, state"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "61 are Declined, 52 Processed, 18 Pending, and 15 Submitted",
+          "why": "numeric breakdown tied to rows"
+        },
+        {
+          "dimension": "depth",
+          "quote": "similar items appear across both Processed and Declined states",
+          "why": "cross-state comparison reasoning"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Priority review should focus on Travel rows with ci values for laptops/devices",
+          "why": "dataset-specific decision guidance"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "64.4% of travel expenses (94/146) have flagged \"Unresolved Status\"",
+          "why": "quantified but relies on unclear policy_risks column"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "$7,984: \"Automatically generated expense line for creation of travel accessory\"",
+          "why": "concrete amounts and descriptions"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "The dataset variant uses a \"skill_off\" LLM configuration",
+          "why": "meta-commentary introduces inconsistency about data source"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A gives richer concrete row-level evidence and cleaner reasoning, while B leans on ambiguous meta-columns and self-references.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.75,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "64.4% of travel expenses (94/146)",
+          "why": "quantified risk share"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Mandate source_id for all travel expenses",
+          "why": "specific recommendation"
+        },
+        {
+          "dimension": "depth",
+          "quote": "State ... Declined 61 41.8%",
+          "why": "status distribution analysis"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "EXP00000437 — Company Car Model X (Processed, 7078)",
+          "why": "row-level IDs, ci, amounts"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Dell Latitude 7400 (5), Dell Latitude 7490 (4)",
+          "why": "concrete counts of ci values"
+        },
+        {
+          "dimension": "depth",
+          "quote": "state is Processed despite similar items being declined elsewhere",
+          "why": "cross-state comparison"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Priority review should focus on Travel rows with ci values for laptops/devices",
+          "why": "targeted decision"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B ties claims to concrete row IDs, ci values, and counts with balanced caveats, edging out A's aggregate-level analysis.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "EXP00000342 — Travel expense for new asset acquisition / Laptop Lenovo ThinkPad X1 Carbon (Submitted, 6031)",
+          "why": "concrete row IDs, CI values, amounts"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "61 are Declined, 52 Processed, 18 Pending, and 15 Submitted",
+          "why": "state counts tied to numbers"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Priority review should focus on Travel rows with ci values for laptops/devices",
+          "why": "specific, decision-ready targeting"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "table with Pre-approval/Receipt/Approval decline rates and avg amounts",
+          "why": "segmentation by approval type"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "19 declined high-value records averaging $6,403",
+          "why": "quantified subgroup"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "41.8% Declined (61 records)... 41.4% decline rate",
+          "why": "shifting decline-rate framing"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A grounds every risk in concrete row-level evidence and is decision-ready, while B is broader but relies on unverifiable derived percentages with some inconsistency.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.75,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "145 of 146 travel records marked with personal_use_risk_indicator = True",
+          "why": "column-tied numeric claim"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Pre-approval Required | 65 | 46.2% | $4,430",
+          "why": "segmentation by approval type"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "require manual entry for items over $2K",
+          "why": "specific control recommendation"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "EXP00000342 — Travel expense for new asset acquisition / Laptop Lenovo ThinkPad X1 Carbon",
+          "why": "row-level identifiers and values"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "All 146 Travel rows have blank source_id",
+          "why": "concrete column-based control finding"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "supports misclassification and control risk more strongly than confirmed policy violation",
+          "why": "calibrated, non-contradictory claim"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Priority review should focus on Travel rows with ci values for laptops/devices",
+          "why": "decision-ready targeting"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B ties claims to specific rows and columns with better-calibrated conclusions, edging out A's aggregate-only evidence.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "EXP00000212 — Travel expense for laptop purchase / Dell Latitude 7400 (Processed, amount 1262)",
+          "why": "concrete row-level IDs, ci, state, amount"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "In 146 Travel rows, 61 are Declined, 52 Processed, 18 Pending, and 15 Submitted",
+          "why": "counts tie claims to data"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "supports misclassification and control risk more strongly than confirmed policy violation",
+          "why": "consistent caveat about evidence limits"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Priority review should focus on Travel rows with ci values for laptops/devices",
+          "why": "decision-ready targeting"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Vehicle Assets 63.6% ... 1.52× baseline",
+          "why": "quantified segment rates"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Personal Travel Signal 85.0% prevalence ... Personal Travel Misclassification",
+          "why": "cross-segment risk profiling"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Personal Travel + Delay 36.7% | 0.88× baseline",
+          "why": "labels 'elevated risk' yet below-baseline decline contradicts framing"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A grounds risks in concrete rows without unverifiable derived columns while B relies on described-but-unlisted semantic flags and contains framing contradictions.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.8,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 2
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 2,
+        "score_b": 5,
+        "delta_a_minus_b": -3,
+        "winner": "B",
+        "margin": "large"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "Personal Travel + Delay | 36.7% | 0.88× baseline",
+          "why": "cross-factor segmentation with relative risk"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Personal Travel Misclassification (85.0% prevalence)",
+          "why": "inconsistent with '20.5%' and other figures; state counts differ from B"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "EXP00000212 — Travel expense for laptop purchase / Dell Latitude 7400 (Processed, amount 1262)",
+          "why": "concrete row-level IDs, amounts, states"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "61 are Declined, 52 Processed, 18 Pending, and 15 Submitted",
+          "why": "verifiable counts across states"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "supports misclassification and control risk more strongly than confirmed policy violation",
+          "why": "acknowledges limits, no contradictions"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Priority review should focus on Travel rows with ci values for laptops/devices",
+          "why": "decision-ready targeting"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B gives concrete row-level evidence and stays internally consistent, while A relies on unverifiable TAPP columns and contains contradictory prevalence figures.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.78,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "64.4% of travel expenses (94/146)",
+          "why": "numeric counts with denominators"
+        },
+        {
+          "dimension": "depth",
+          "quote": "20 expenses combine high amount with unresolved status",
+          "why": "cross-flag combination"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Mandate source_id for all travel expenses",
+          "why": "specific action"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "$7,984: \"Automatically generated expense line...\"",
+          "why": "concrete row example"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "table: Pre-approval Required | 65 | 46.2% | $4,430",
+          "why": "segmentation by approval type with decline rates"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "54.1% (79 of 146) from Customer Support",
+          "why": "departmental breakdown"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "19 declined high-value records averaging $6,403",
+          "why": "specific numeric aggregate"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "require manual entry for items over $2K",
+          "why": "concrete threshold action"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides richer cross-group segmentation (approval type, department, vendor) with tied numbers, giving greater depth and specificity.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "Pre-approval Required | 65 | 46.2% | $4,430",
+          "why": "cross-group decline/amount comparison"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "19 declined high-value records averaging $6,403",
+          "why": "concrete magnitudes"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "require manual entry for items over $2K",
+          "why": "specific threshold action"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "64.4% of travel expenses (94/146) have flagged \"Unresolved Status\"",
+          "why": "column-tied numeric claim"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "$7,984: \"Automatically generated expense line...\"",
+          "why": "row-level detail"
+        },
+        {
+          "dimension": "depth",
+          "quote": "100% of travel expenses (146/146) lack source_id",
+          "why": "cross-category comparison"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A provides deeper segmentation and richer decision-ready actions with consistent numeric evidence.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.83,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "64.4% of travel expenses (94/146)",
+          "why": "concrete counts and rates"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "$7,984: \"Automatically generated expense line...\"",
+          "why": "row-level numeric example"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Mandate source_id for all travel expenses",
+          "why": "specific recommendation"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "Vehicle Assets 63.6% 1.52× baseline",
+          "why": "segmented relative-risk comparison"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "20 of 146 travel expenses ... Declined 10 (50%)",
+          "why": "table-backed segment metrics"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Corporate Boeing 747",
+          "why": "concrete description examples"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Personal Travel Signal 41.1% 0.98×",
+          "why": "consistent baseline comparisons"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides deeper segmented decline-rate comparisons and richer numeric evidence across risk categories.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "Personal Travel + Delay | 36.7% | 0.88× baseline",
+          "why": "cross-segment risk comparison with relative risk"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Vehicle Assets | 63.6% | 1.52× baseline",
+          "why": "concrete magnitudes and category rates"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Category B: Personal Travel Misclassification (85.0% prevalence)",
+          "why": "inconsistent with earlier personal-travel figures"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "100% of travel expenses (146/146) lack source_id",
+          "why": "concrete column-based finding"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "$7,984: \"Automatically generated expense line for creation of travel accessory\"",
+          "why": "specific row-level values"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Declined | 61 | 41.8%",
+          "why": "consistent status distribution and honest limitations"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper cross-segment risk analysis despite some prevalence inconsistencies, while B is cleaner but shallower.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "145 of 146 travel records marked with personal_use_risk_indicator = True",
+          "why": "numeric claim tied to column"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Standardize \"travel_equipment\" categorization with required subcategories",
+          "why": "specific decision-ready action"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "99.3% travel records flagged for personal use risk",
+          "why": "consistent framing"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "Vehicle Assets | 63.6% | 1.52× baseline",
+          "why": "cross-group relative risk comparison"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Corporate Boeing 747",
+          "why": "concrete description sample"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "50% decline rate ... 2.2× higher decline likelihood than baseline",
+          "why": "quantified segment risk"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B offers stronger segmentation and relative-risk comparisons across distinct risk categories.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_on",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "Personal Travel + Delay | 36.7% | 0.88× baseline",
+          "why": "intersectional segmentation with relative risk"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Vehicle Assets | 63.6% | 1.52× baseline",
+          "why": "numeric decline rates tied to categories"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Manual: 23 records (77%)",
+          "why": "counts of 15+23=38 but percentages inconsistent, plus 85% vs 13.7% category prevalence conflict"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "actionability",
+          "quote": "require manual entry for items over $2K",
+          "why": "specific decision-ready thresholds"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Pre-approval Required | 65 | 46.2% | $4,430",
+          "why": "approval-type table with numbers"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "54.1% (79 of 146) from Customer Support",
+          "why": "concrete departmental breakdown"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B is more internally consistent and actionable while equally specific; A has richer intersectional depth but internal number/prevalence contradictions.",
+    "validation_warnings": []
+  }
+]

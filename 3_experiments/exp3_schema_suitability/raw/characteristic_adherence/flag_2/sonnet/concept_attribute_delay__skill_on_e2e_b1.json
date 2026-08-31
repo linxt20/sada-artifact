@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some incidents take longer to resolve?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "failure_pattern",
+    "scope_indicator",
+    "assignment_lag",
+    "assignee_workload_signal",
+    "reassignment_indicator",
+    "remote_context",
+    "caller_repeat_reporter",
+    "incident_is_open_unresolved"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.6722,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.6861,
+    "hallucination_rate": 0.4444
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents (vpn, database, email, network) gives a strong axis to compare resolution times across incident types. Values are well-grounded in short_description text; partly overlaps existing 'category' but the finer granularity adds leverage."
+      },
+      {
+        "name": "failure_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Failure mode (connection_failure, service_down, sync_crash) is a genuine new grouping axis relevant to why some incidents take longer. Values are reasonable readings of descriptions, though some ('service_down' for 'Email system not working properly') are mild inferences."
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual vs department-wide vs outage) is highly relevant to resolution effort. However some values overreach: 'WiFi connectivity issue in the sales department' -> department_wide is warranted, but many outage_wide/production_environment labels are not clearly supported by terse descriptions, and 'VPN connection issue' -> individual_user is a guess where text is silent on scope."
+      },
+      {
+        "name": "assignment_lag",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Time-to-assignment is directly relevant to resolution duration. But grounding is questionable: the samples show only sys_updated_on and closed_at (equal), with no opened_at/assignment timestamp shown; e.g. same-timestamp rows are labeled 'same_day', 'next_day', and 'multi_day' inconsistently, suggesting values may not be soundly derived from available time fields."
+      },
+      {
+        "name": "assignee_workload_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Assignee workload is a plausible driver of delay and can be derived by aggregating assigned_to counts. The high/low binning is a defensible computed signal, though the threshold is opaque; 'unassigned' aligns with missing assignee."
+      },
+      {
+        "name": "reassignment_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Reassignment (ticket bouncing) is relevant to longer resolution. But the table exposes no assignment history; with only one assigned_to and assignment_group column, a per-row true/false reassignment flag is not soundly derivable and appears asserted (290 true) without supporting evidence."
+      },
+      {
+        "name": "remote_context",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A remote/VPN context flag is somewhat useful but largely a restatement derivable from incident_category (vpn/network). Values are reasonably grounded in description text (VPN=true)."
+      },
+      {
+        "name": "caller_repeat_reporter",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Near-constant (all 500 = true), providing zero discriminating power for analysis. It also asserts every caller is a repeat reporter, which cannot be validated from the shown single-incident rows and is likely an unsupported blanket claim."
+      },
+      {
+        "name": "incident_is_open_unresolved",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Open/unresolved status is relevant (open tickets are by definition slower), derivable from state/closed_at. Somewhat redundant with existing 'state', but the boolean is a convenient analytical axis and grounded."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.65,
+    "rationale": "Most added columns (incident_category, failure_pattern, scope_indicator, assignee_workload_signal, incident_is_open_unresolved) provide genuine new axes to explain resolution-time variation and are largely grounded in the description and status fields. However, several columns show grounding weaknesses: assignment_lag appears inconsistently derived from the available timestamps, reassignment_indicator asserts history the table does not expose, and caller_repeat_reporter is both near-constant (no analytical value) and an unsupported blanket true. Overall the set is useful for the query but carries meaningful hallucination risk in the temporal/history-derived flags."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 9
+}

@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "focus_variable": "travel_policy_risk",
+  "concept": "travel_policy_risk",
+  "n_added_columns": 3,
+  "added_columns": [
+    "travel_policy_risk_flags",
+    "travel_policy_risk_level",
+    "travel_policy_risk_count"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0882,
+    "facet_fraction": 0.3333,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.35,
+    "exhaustiveness": 0.2,
+    "mece": 0.2646,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "travel_policy_risk",
+    "per_column": [
+      {
+        "name": "travel_policy_risk_flags",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is a single multi-valued enumeration of specific risk instances bundled into one column, not a decomposition into distinct constitutive facets. It restates the whole concept (the set of identified risks) rather than carving it into non-overlapping aspects like risk type, severity, approval requirement, etc."
+      },
+      {
+        "name": "travel_policy_risk_level",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Severity/level is a genuine aspect OF a risk (a meronymic dimension), capturing the intensity facet of the concept."
+      },
+      {
+        "name": "travel_policy_risk_count",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A count is a scalar summary/aggregate derived from the flags column, not a constitutive aspect of the risk concept itself. It measures how many risks, which is a magnitude of the whole rather than a distinct part-of facet."
+      }
+    ],
+    "facet_columns": [
+      "travel_policy_risk_level"
+    ],
+    "non_facet_columns": [
+      "travel_policy_risk_flags",
+      "travel_policy_risk_count"
+    ],
+    "mutual_exclusivity": 0.35,
+    "exhaustiveness": 0.2,
+    "rationale": "The columns do not constitute a proper MECE faceted decomposition of 'travel_policy_risk'. Only risk_level is a true facet (the severity dimension). The flags column bundles the entire concept into one multi-valued enumeration rather than splitting it into orthogonal aspects (e.g., risk category/type, approval authority required, monetary threshold, policy-violation status), and the count is merely a derived aggregate of the flags, overlapping with it and adding no distinct facet. Because two of three columns restate/derive from the whole, mutual exclusivity is weak and the constitutive aspects of the concept are largely uncovered."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

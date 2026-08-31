@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "hardware_scope",
+    "intermittent_failure",
+    "requires_hardware_replacement"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.6833,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.5667,
+    "source_groundedness__table_level": 0.57,
+    "b1_overall": 0.625,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Provides a genuine axis (workstation vs server vs office-specific) to group hardware problem kinds, directly relevant to the query. Grounding is mixed: the software-install rows correctly map to Unknown and the MySQL row plausibly to server_infrastructure, but distinctions like 'single_workstation' vs 'office_location_specific' likely require detail the short_description often does not contain, risking confident specifics where text is silent."
+      },
+      {
+        "name": "intermittent_failure",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Intermittency is a meaningful hardware-problem attribute, but here it is near-constant (575 false / 25 true), reducing analytical leverage. Defaulting to 'false' for silent rows conflates 'not intermittent' with 'not stated'; the true/false split may assert a specific where the source text gives no evidence, so a false value is not always a warranted reading."
+      },
+      {
+        "name": "requires_hardware_replacement",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Whether replacement is needed is a useful distinguishing axis for hardware incidents. However most short_descriptions do not state remediation, so a confident 'false' (or 'true') is often an inference the text does not support; treating silence as false risks unwarranted specifics rather than an 'unknown' value."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.57,
+    "rationale": "All three columns add real analytical axes for characterising hardware problems beyond the original fields, with hardware_scope being the strongest. Grounding is the weaker dimension: scope handles silent (software) rows well with Unknown, but the two boolean columns default to 'false' for rows whose text gives no evidence either way, asserting specifics the source does not support and leaving intermittent_failure near-constant."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

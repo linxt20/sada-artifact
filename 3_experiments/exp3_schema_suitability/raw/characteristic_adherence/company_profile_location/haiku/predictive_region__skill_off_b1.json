@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "dominant_industry",
+    "description_length",
+    "is_b2b",
+    "has_rd_focus",
+    "tech_depth_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.51,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.69,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.6,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "dominant_industry",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Industry categorization is a strong feature for predicting regional clusters and gives a genuine grouping axis. However groundedness is shaky: 23andMe (ancestry/health) tagged 'ai_ml' and 280 Group (product management training/consulting) tagged 'ai_ml' are unsupported by the source text, indicating misclassification for several rows."
+      },
+      {
+        "name": "description_length",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.95,
+        "rationale": "Binned text length is exactly the kind of generic surface feature that adds little analytical leverage for predicting regional clusters. Values are trivially and correctly derivable from the text.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "is_b2b",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A B2B/B2C axis is a plausibly useful feature. But grounding is questionable: 280 Group (training/certification/consulting for enterprises) and 5AM Ventures / Accel (VC firms serving founders) are all labeled 'no', which seems inconsistent with clearly business-facing descriptions, suggesting unreliable labeling."
+      },
+      {
+        "name": "has_rd_focus",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "An R&D flag could help distinguish deep-tech clusters, but it is near-constant (6 of 199 'yes'), giving limited discriminative leverage. Sampled 'no' values are reasonable readings of the given descriptions."
+      },
+      {
+        "name": "tech_depth_score",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A graded technical-depth signal offers a real modeling axis beyond a binary flag. It is heavily skewed toward 0 (137/199), reducing but not eliminating usefulness. Sampled values are defensible inferences from the text, though the scoring basis is not always transparent."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.62,
+    "rationale": "The set contains genuinely useful axes for cluster prediction (dominant_industry, tech_depth_score, and to a degree is_b2b), but also weak or generic ones (description_length, near-constant has_rd_focus). Groundedness is undermined by observable misclassifications in the samples: 'ai_ml' assigned to an ancestry/health company and a product-management consultancy, and 'no' B2B labels for clearly business-facing firms. These indicate the categorical judgments are not consistently sound readings of the source text."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

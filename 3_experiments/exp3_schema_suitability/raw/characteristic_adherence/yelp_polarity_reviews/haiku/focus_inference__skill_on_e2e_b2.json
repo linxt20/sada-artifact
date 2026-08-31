@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "service_sentiment",
+    "service_failure_type",
+    "food_product_sentiment",
+    "product_quality_dimension",
+    "value_pricing_sentiment"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.855,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Aspect-based decomposition of the Yelp dining experience (service, food/product quality, and value/pricing) with per-aspect sentiment and sub-dimension detail",
+    "per_column": [
+      {
+        "name": "service_sentiment",
+        "supports_focus": true,
+        "rationale": "Captures sentiment toward the service aspect -- a core experiential facet reviewers discuss."
+      },
+      {
+        "name": "service_failure_type",
+        "supports_focus": true,
+        "rationale": "Drills into specific service problems (rude, slow, inattentive), giving actionable granularity within the service facet."
+      },
+      {
+        "name": "food_product_sentiment",
+        "supports_focus": true,
+        "rationale": "Sentiment toward the food/product aspect, a second coherent experiential facet."
+      },
+      {
+        "name": "product_quality_dimension",
+        "supports_focus": true,
+        "rationale": "Decomposes food quality into flavor, temperature, portion, freshness -- a well-differentiated sub-facet structure."
+      },
+      {
+        "name": "value_pricing_sentiment",
+        "supports_focus": true,
+        "rationale": "Sentiment toward the value/price aspect, completing a standard aspect trio for dining reviews."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "rationale": "The columns centre tightly on one coherent, data-inferable focus: aspect-based analysis of the dining experience. They cover three canonical experiential aspects (service, food, value) and pair a sentiment column with a categorical sub-dimension column for two of them (failure_type, quality_dimension), yielding a genuine two-level analytical structure rather than a single restatement or generic noise. This directly answers 'what aspects are reviewers talking about' and lets an analyst quantify which aspects drive positive/negative experience and why. Minor gaps: value/pricing lacks a parallel sub-dimension column, and other plausible aspects (ambiance/atmosphere, cleanliness, wait/reservation) are absent, slightly narrowing full coverage of 'aspects of experience' -- but the realised set is disciplined, differentiated, and clearly actionable."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

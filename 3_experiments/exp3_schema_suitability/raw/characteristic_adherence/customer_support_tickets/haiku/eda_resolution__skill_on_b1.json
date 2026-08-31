@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_category",
+    "blocker_status",
+    "affected_user_scope",
+    "issue_type_specificity",
+    "cross_system_dependency",
+    "actionability"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8233,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.7992,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly provides the 'issue themes' axis the query asks for. Categorizations are well-grounded (billing duplicate line item -> billing_issue, session drops -> auth_access, feature enhancement -> feature_request). CS-0003 502 outage labeled performance_degradation is a defensible reading though 'integration/outage' might fit better; still sound."
+      },
+      {
+        "name": "blocker_status",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "A blocking/urgency axis adds leverage beyond raw priority and can correlate with resolution time. Some values are inferential: CS-0001 (wants corrected invoice before Friday) marked True is a stretch, and CS-0005 (added manual workaround) marked True is arguable since a workaround exists. Reasonable but occasionally over-asserts blocking where text is softer."
+      },
+      {
+        "name": "affected_user_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Scope of impact is a genuine new grouping axis plausibly linked to resolution time. Values mostly grounded (all Acme tenant members -> entire_tenant; single customer invoice -> single_user). CS-0004 'power users'/'multiple_users' is inferred from 'power users' phrasing—reasonable but the text does not clearly state multiple affected users."
+      },
+      {
+        "name": "issue_type_specificity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes bug/outage/config/feature types, a useful modeling axis partly distinct from issue_category. Mostly grounded, but CS-0001 labeled account_admin_action fits (needs corrected invoice issued), and CS-0002 session-drop labeled reproducible_bug conflicts somewhat with the customer's own SSO-config suspicion; borderline but defensible."
+      },
+      {
+        "name": "cross_system_dependency",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "A dependency flag is a reasonable axis for resolution-time analysis. However CS-0002 (customer suspects SSO config push from their IT/external system) marked False, and CS-0003 (gateway/infrastructure) marked False look inconsistent, while CS-0005 (Snowflake pipeline) correctly True. Some values contradict the evident external dependency in the text."
+      },
+      {
+        "name": "actionability",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "Who must act is analytically valuable and relates to resolution time. But grounding is uneven: CS-0002 marked customer_config_change though the customer wants confirmation from support, and CS-0004 (feature request needing eng) marked internal_eng_fix_required is fine, whereas CS-0001 billing correction as support_escalation is defensible. Several assignments are speculative given silent text."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.77,
+    "rationale": "The added columns give multiple genuine grouping axes (theme, scope, blocker, type, dependency, actionability) that directly serve a query about how resolution time varies by theme/channel/priority; none are near-constant or trivial restatements. Groundedness is generally good for extractive categorizations (issue_category, affected_user_scope) but weaker for inferential flags—cross_system_dependency and actionability show some values that conflict with or over-assert beyond the source text."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

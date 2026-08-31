@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do resolution duration values vary across tickets?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "infrastructure_component",
+    "assigned_technician",
+    "problem_scope",
+    "issue_complexity_signal",
+    "caller_recurrence_status",
+    "self_closure_indicator",
+    "temporal_shift_indicator"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7125,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.6188,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.6657,
+    "hallucination_rate": 0.375
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing tickets by type gives a genuine axis to compare resolution durations. Values track short_description well (WiFi->connectivity, database->database, printing->printer). Partly redundant with existing 'category' column but the derived text-based categorization adds leverage."
+      },
+      {
+        "name": "infrastructure_component",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A finer-grained component axis (vpn, wifi, database) that is soundly extracted from short_description. Overlaps substantially with incident_category but adds some finer detail useful for duration comparison."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Technician identity is a plausible driver of duration variation, but values appear derived from closed_by (already present) and several samples contradict the source: closed_by 'Charlie Whitherspoon' -> beth_anglin, closed_by 'Luke Wilson' -> charlie_whitherspoon. Mismatches suggest fabricated/misaligned assignment; largely redundant with existing assigned_to/closed_by columns."
+      },
+      {
+        "name": "problem_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual vs system-wide) is a strong potential explanatory axis for duration. However the source text rarely states scope; 'Cannot connect to office VPN' -> system_wide vs single_location inconsistently across near-identical rows, indicating unwarranted specificity/invention beyond what text supports."
+      },
+      {
+        "name": "issue_complexity_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Complexity is highly relevant to resolution duration. But labels like 'access_escalation' for 'Cannot connect to office WiFi' are not supported by the terse descriptions; the mapping asserts specifics the text does not establish, indicating inference beyond the source."
+      },
+      {
+        "name": "caller_recurrence_status",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Recurrence could plausibly relate to duration and is in principle derivable by aggregating caller_id across rows, so partly grounded. Sample rows lack caller_id evidence to verify, and the high/low frequency distinction is not clearly justified, lowering confidence."
+      },
+      {
+        "name": "self_closure_indicator",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Whether a ticket was self-closed could correlate with duration. Derivable in principle by comparing closed_by to caller_id, but samples show no caller_id to confirm the True/False values, so groundedness is uncertain; also somewhat generic binary flag."
+      },
+      {
+        "name": "temporal_shift_indicator",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Time-of-day shift is a well-grounded derivation from opened_at and a plausible driver of resolution speed. Some boundary labels are questionable (8:50 -> business_hours ok; 17:40 -> after_hours vs 18:14 -> after_hours reasonable), overall soundly derived from timestamps."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.6,
+    "rationale": "Most columns provide genuine new axes (category, component, scope, complexity, shift) to explain duration variation, so table-level usefulness is solid despite some redundancy among the category/component pair and with existing columns. Groundedness is mixed: text-extraction columns (incident_category, infrastructure_component, temporal_shift_indicator) are well supported, but assigned_technician contradicts closed_by in multiple samples, and problem_scope and issue_complexity_signal assert specifics the terse descriptions do not warrant, showing hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

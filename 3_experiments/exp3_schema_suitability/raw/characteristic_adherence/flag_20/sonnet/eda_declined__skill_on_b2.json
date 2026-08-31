@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "description_specificity",
+    "expense_purpose",
+    "source_id_present",
+    "entry_origin",
+    "ci_vendor",
+    "department_group",
+    "asset_category",
+    "processed_date_present",
+    "ci_hardware_class"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "description_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly derived from the description text (the query's focus signal), with three clean, interpretable buckets that can be cross-tabbed against decline rate. Well-separated categories."
+      },
+      {
+        "name": "expense_purpose",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable purpose categories inferred from the description; strong associational variable for segmenting decline rates, with reasonable category balance."
+      },
+      {
+        "name": "source_id_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary flag with a decent split (327/173) that can be compared against decline; captures provenance/completeness signal without restating the focus."
+      },
+      {
+        "name": "entry_origin",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Manual vs auto-generated origin is an interpretable, well-separated segmentation plausibly associated with decline rate."
+      },
+      {
+        "name": "ci_vendor",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Vendor categories are interpretable and groupable; a reasonable external axis to compare against decline, though some low-frequency tail categories."
+      },
+      {
+        "name": "department_group",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable organizational segmentation with well-populated categories; classic axis for comparing decline rates across departments."
+      },
+      {
+        "name": "asset_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear, well-separated category axis (hardware/travel/cloud/etc.) suitable for grouped comparison against decline."
+      },
+      {
+        "name": "processed_date_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary presence flag with balanced split (295/205); interpretable and comparable, though may partly proxy processing state rather than being fully independent of outcome."
+      },
+      {
+        "name": "ci_hardware_class",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable hardware-type segmentation; usable despite a large NULL segment (152), which itself forms a comparable group."
+      }
+    ],
+    "n_predictors": 9,
+    "relationship_informativeness": 0.82,
+    "rationale": "As a set, the columns provide multiple external, interpretable axes (description specificity, purpose, provenance flags, entry origin, vendor, department, asset/hardware category) that a human can group on and cross-tabulate against decline rate. Categories are well-separated with human-readable labels rather than opaque scores, satisfying the EDA claim. None merely restates state_declined. Minor deductions: processed_date_present may be partly downstream of the outcome (potential leakage into the decline relationship), and several columns carry sizable NULL or long low-frequency tails; but overall the set supports discovering meaningful, interpretable relationships."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

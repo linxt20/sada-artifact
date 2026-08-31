@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "focus_variable": "agent_workload_burden",
+  "concept": "agent_workload_burden",
+  "n_added_columns": 3,
+  "added_columns": [
+    "resolution_days",
+    "workload_intensity",
+    "critical_infrastructure"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0943,
+    "facet_fraction": 0.3333,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.2,
+    "mece": 0.2828,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "agent_workload_burden",
+    "per_column": [
+      {
+        "name": "resolution_days",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Time-to-resolution is a genuine constitutive aspect of workload burden -- the temporal/duration component of how much effort a ticket consumes. It is a part-of the burden concept, not merely an external driver."
+      },
+      {
+        "name": "workload_intensity",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is essentially a renamed synonym of the whole concept (workload burden itself) rather than a distinct aspect OF it. It restates the target as a single aggregate score, so it does not carve out a specific non-overlapping facet."
+      },
+      {
+        "name": "critical_infrastructure",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether a ticket concerns critical infrastructure is an attribute of the ticket that may PREDICT or CAUSE higher burden, but it is not itself a constitutive part of the agent's workload. It is an external driver, not an aspect of the burden."
+      }
+    ],
+    "facet_columns": [
+      "resolution_days"
+    ],
+    "non_facet_columns": [
+      "workload_intensity",
+      "critical_infrastructure"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.2,
+    "rationale": "Only resolution_days qualifies as a true constitutive facet (the temporal/duration dimension of burden). 'workload_intensity' restates the whole concept rather than decomposing a distinct aspect, and its meaning overlaps with the target itself and with resolution_days, lowering mutual exclusivity. 'critical_infrastructure' is an external predictor/cause, not a part-of facet. As a set, the columns fail to cover the main constitutive aspects of workload burden -- e.g. effort/handling steps, number of reassignments or touches, complexity, communication/interaction volume, and cognitive/priority load are all absent -- so exhaustiveness is low. The decomposition does not satisfy the MECE faceted-decomposition claim."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

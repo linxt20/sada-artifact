@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit reasons point to different departments?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "presentation_type",
+    "acute_vs_chronic",
+    "primary_system",
+    "severity_level",
+    "population_context"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.724,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.88,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.802,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "presentation_type",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.93,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the visit into presentation types (screening, acute, chronic mgmt, trauma), giving a strong new axis to correlate with department. Sample values are well-grounded readings of the reason text."
+      },
+      {
+        "name": "acute_vs_chronic",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Acute/chronic axis is useful for department differentiation, though it partially overlaps conceptually with presentation_type. Values match the source text (twisting injury=acute, MI follow-up=chronic_stable)."
+      },
+      {
+        "name": "primary_system",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Body-system categorization is highly relevant since departments map closely to systems; provides a clean grouping axis. Values are accurate extractions (knee=musculoskeletal, cough=respiratory, acne=dermatologic)."
+      },
+      {
+        "name": "severity_level",
+        "analytical_usefulness": 0.62,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Severity adds some leverage but overlaps with the existing urgency column and with acute_vs_chronic. The MI follow-up 'moderate' and stable acne 'moderate' labels are somewhat interpretive but defensible; mostly grounded."
+      },
+      {
+        "name": "population_context",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This largely restates the existing age_group column, offering little new analytical leverage for a department-mapping query. Values are well grounded, but redundancy lowers usefulness."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.88,
+    "rationale": "Most added columns (presentation_type, primary_system, acute_vs_chronic) give genuine new axes strongly relevant to linking visit reasons to departments, and the sampled values are sound readings of the source text with sensible 'not_present' handling. Severity_level is partly redundant with urgency, and population_context largely duplicates the existing age_group, reducing their marginal usefulness, but no hallucinations are observed and groundedness is consistently high."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

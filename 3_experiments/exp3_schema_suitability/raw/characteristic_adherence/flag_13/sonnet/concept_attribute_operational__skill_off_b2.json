@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What operational burdens appear in incident descriptions?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 3,
+  "added_columns": [
+    "operational_burden_flags",
+    "operational_burden_count",
+    "primary_operational_burden"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.15,
+    "mece": 0.1732,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "operational_burden_flags",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is a single multi-label field that packs all burden types into one pipe-delimited value rather than carving the concept into distinct, separately-named facet columns. The tokens (connectivity_issue, server_outage, access_denied, database_burden, email_service_burden, software_failure, performance_degradation, hardware_issue) are plausibly aspects OF operational burden, but they are collapsed into one column, so the column itself is a restatement of the whole concept, not a decomposition into MECE facets. It also mixes heterogeneous dimensions (fault type like server_outage/software_failure vs. affected service like email/database vs. symptom like performance_degradation), which are not mutually exclusive aspects."
+      },
+      {
+        "name": "operational_burden_count",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A count of how many burden tokens were detected is a derived summary/cardinality metric of the concept, not a constitutive aspect OF the burden. It is a mechanical roll-up, not a facet."
+      },
+      {
+        "name": "primary_operational_burden",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This selects the single dominant burden category, again re-labeling the whole concept rather than isolating one aspect of it. It is a classification of the concept, not a part-of facet."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "operational_burden_flags",
+      "operational_burden_count",
+      "primary_operational_burden"
+    ],
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.15,
+    "rationale": "The technical claim requires the added columns to be constitutive facets (parts) of operational_burden, each an 'aspect OF' the concept realized as a separate, non-overlapping dimension. Instead, all three columns operate on a single flat taxonomy of burden categories: one packs every category into a multi-label field, one counts them, and one picks the primary one. None isolates a distinct constitutive aspect of the concept (e.g., a dedicated column per burden dimension such as service impact, resolution effort, recurrence, resource contention). The underlying category tokens are also not MECE among themselves: they conflate fault type, affected service, and symptom, so several can co-occur (connectivity_issue|server_outage|database_burden), violating mutual exclusivity. Exhaustiveness is judged low because the schema captures only one axis (a type label) of the multi-dimensional notion of operational burden and omits effort, impact scope, and duration dimensions. The set is essentially a single multi-label classifier presented in three views, not a faceted decomposition, so it fails the test."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

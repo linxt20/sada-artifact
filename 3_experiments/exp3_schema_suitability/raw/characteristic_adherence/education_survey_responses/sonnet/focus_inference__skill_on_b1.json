@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different themes do students raise in these open responses?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "instructional_quality",
+    "student_engagement_level",
+    "hands_on_loss_severity",
+    "social_community_impact",
+    "unexpected_positive_outcome"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.79,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.804,
+    "source_groundedness__table_level": 0.81,
+    "b1_overall": 0.797,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "instructional_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Gives a meaningful thematic axis (quality/adaptiveness of instruction) that supports grouping open responses. Values track the source well: ED-0003's neglect signals map to absent_or_neglectful, ED-0002's creative labs to highly_adaptive. ED-0001 rated 'adequate' is defensible though the response leans negative (tech failures, poor pacing), a mild over-read."
+      },
+      {
+        "name": "student_engagement_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Engagement is a genuine theme students raise, and an ordinal scale allows grouping/comparison. Slight risk of redundancy with satisfaction_1to5, but engagement is a distinct construct. Values are mostly warranted (ED-0003 'cries' -> 1, ED-0004 self-paced enjoyment -> 5), though the 1-5 numeric precision imputes finer granularity than silent text always supports (e.g., ED-0002 '4')."
+      },
+      {
+        "name": "hands_on_loss_severity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Captures a specific, non-trivial theme (loss of hands-on/lab experience) that is a real analytical axis. Values are grounded: ED-0002 kitchen-chemistry -> mitigated_by_kit_or_simulation, non-lab subjects -> not_present/not_applicable. Reasonable handling of silent rows."
+      },
+      {
+        "name": "social_community_impact",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Strong thematic axis capturing peer interaction/community effects, including the 'unexpectedly_strengthened' nuance that adds analytical leverage. Values track source: ED-0003 'zero peer interaction' -> strong_loss, ED-0005 silent class -> strong_loss. ED-0001's 'miss raising my hand' -> strong_loss is a slightly aggressive reading but defensible."
+      },
+      {
+        "name": "unexpected_positive_outcome",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Surfaces silver-lining themes as a distinct categorical axis, directly relevant to theme discovery. Well grounded: ED-0002 -> curriculum_innovation, ED-0004 documentary clips -> expanded_access_to_resources, negatives -> not_present. Good conservative behaviour on silent rows."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.81,
+    "rationale": "The added columns collectively decompose the open responses into distinct, analytically useful thematic axes (instruction, engagement, hands-on loss, community, positive outcomes) that directly serve the 'what themes do students raise' query, offering multiple new grouping dimensions rather than trivial restatements. Values are largely sound readings of the source text with sensible not_present/not_applicable handling for silent rows. Minor over-reads (e.g., ED-0001 rated 'adequate' despite a negative response; numeric engagement precision) are present but no clear fabrications, so groundedness remains high."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

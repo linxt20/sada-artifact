@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "focus_variable": "airline_competitive_advantage",
+  "concept": "airline_competitive_advantage",
+  "n_added_columns": 3,
+  "added_columns": [
+    "is_high_rating",
+    "advantages_text",
+    "high_rating_advantages"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.1,
+    "exhaustiveness": 0.1,
+    "mece": 0.1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_competitive_advantage",
+    "per_column": [
+      {
+        "name": "is_high_rating",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A boolean flag on overall rating. It is not an aspect OF competitive advantage but a segmentation variable / outcome used to filter which airlines are high-rated. It restates the query condition, not a part of the concept."
+      },
+      {
+        "name": "advantages_text",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A concatenated multi-label string bundling all advantage aspects (Comfort; Food & Beverages; Service Quality; etc.) into one field. It re-states the whole concept as a blob rather than carving it into separate, non-overlapping facet columns. The constitutive aspects are packed together, not decomposed."
+      },
+      {
+        "name": "high_rating_advantages",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Same bundled advantage string as advantages_text but nulled out for non-high-rated rows. It duplicates the whole-concept restatement and conditions it on the rating flag; it is neither a distinct facet nor a decomposition."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "is_high_rating",
+      "advantages_text",
+      "high_rating_advantages"
+    ],
+    "mutual_exclusivity": 0.1,
+    "exhaustiveness": 0.1,
+    "rationale": "A faceted decomposition would add one column per constitutive aspect of airline_competitive_advantage (e.g., separate Service Quality, Comfort, Food & Beverages, Punctuality, Cleanliness, Entertainment, Lounge, New Aircraft, WiFi columns), each capturing an 'aspect OF' the concept. Instead, the operator added a rating filter flag plus two near-identical concatenated multi-label strings that pack all advantages into a single field. No column isolates a single facet: the aspects overlap within the same cells, so mutual exclusivity is essentially absent, and although the underlying aspects are collectively present, they are not exposed AS separate facets, so the decomposition claim fails. is_high_rating is an external segmentation variable, and the two advantage-text columns are whole-concept restatements (one merely a conditioned duplicate of the other), lowering mutual exclusivity further."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

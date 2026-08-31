@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "focus_variable": "food_quality",
+  "concept": "food_quality",
+  "n_added_columns": 3,
+  "added_columns": [
+    "taste_quality",
+    "convenience_usability",
+    "comparative_positioning"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1491,
+    "facet_fraction": 0.3333,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.8,
+    "exhaustiveness": 0.25,
+    "mece": 0.4472,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "food_quality",
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Taste/flavor is a core sensory aspect OF food quality; a genuine part-of relationship. It is arguably the most central constitutive facet of the concept."
+      },
+      {
+        "name": "convenience_usability",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Ease of preparation, portability, and shelf-stability describe usability/logistics of the product, not an intrinsic aspect of the FOOD's quality. A food can be inconvenient yet high quality and vice versa, so this is a separate concept dimension rather than a facet OF food quality."
+      },
+      {
+        "name": "comparative_positioning",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "'Preferred / superior / inferior to competitors' is an overall relative judgment OF quality, not a distinct constitutive aspect of it. It restates the whole concept as a ranking rather than decomposing it into a part."
+      }
+    ],
+    "facet_columns": [
+      "taste_quality"
+    ],
+    "non_facet_columns": [
+      "convenience_usability",
+      "comparative_positioning"
+    ],
+    "mutual_exclusivity": 0.8,
+    "exhaustiveness": 0.25,
+    "rationale": "Only taste_quality is a true meronymic facet of food_quality. convenience_usability targets a different product concept (usability/logistics), and comparative_positioning is a holistic restatement of overall quality rather than a part of it. The three columns do not overlap much with each other (hence reasonable mutual exclusivity), but as a decomposition of food_quality they fail badly on exhaustiveness: obvious constitutive facets such as freshness, texture/mouthfeel, aroma/smell, ingredient quality, and healthiness/nutrition are entirely absent, and two of the three columns are not facets at all."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

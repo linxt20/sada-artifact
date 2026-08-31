@@ -1,0 +1,61 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What factors explain low review scores?",
+  "focus_variable": "low_review_score",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "misleading_description",
+    "ingredient_health_risk"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "low_review_score",
+    "per_column": [
+      {
+        "name": "misleading_description",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "This captures a candidate cause of a low score -- the product description being misleading (undisclosed limitations, false claims, not as pictured). This is a plausible driver of dissatisfaction and thus functions as a treatment/candidate cause whose effect on the outcome is being attributed. It is not a common cause of any other treatment, so it does not serve as a confounder; it is itself a treatment."
+      },
+      {
+        "name": "ingredient_health_risk",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "This captures another candidate cause -- perceived health risks of ingredients (added sugar, allergens, additives) that could drive a reviewer to leave a low score. It is a parallel candidate cause, not a common cause of the other treatment and the outcome, so it is a treatment rather than a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "misleading_description",
+      "ingredient_health_risk"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "Both added columns are candidate causes (treatments) of the outcome, extracted from the review text -- they enumerate reasons a review might be negative. However, the technical claim requires BOTH a treatment AND confounders: variables that plausibly cause both a treatment and the outcome and must be adjusted for to avoid biased attribution. No such common-cause variable is supplied. There is no reviewer characteristic, product category, price, expectation level, or purchase context that would confound the treatment-outcome relationship. The two columns are essentially two candidate treatments with no adjustment set, so the causal estimation is not set up: attribution here would be an unadjusted comparison. The decisive confounder-surfacing test is therefore not satisfied (there are zero confounders to surface)."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 2
+}

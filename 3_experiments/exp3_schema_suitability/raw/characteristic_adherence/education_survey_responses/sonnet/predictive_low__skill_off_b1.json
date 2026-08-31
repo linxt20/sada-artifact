@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "open_neg_tech_signals",
+    "open_neg_engagement_signals",
+    "open_neg_social_signals",
+    "open_neg_comprehension_signals",
+    "open_neg_teacher_signals",
+    "open_neg_emotional_signals",
+    "open_pos_signals",
+    "open_neg_categories_hit",
+    "open_net_neg_per100words",
+    "open_predicts_low_satisfaction"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.725,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.57,
+    "source_groundedness__table_level": 0.57,
+    "b1_overall": 0.6475,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "open_neg_tech_signals",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A themed negative-signal count gives a genuine axis for predicting low satisfaction. But grounding is shaky: ED-0001's clear tech complaints (camera freezes, whiteboard won't load) get tech=2 correctly, yet ED-0003's explicit tech issue (platform logs her out) is coded tech=0, and ED-0005 gets tech=1 despite no tech complaint. Extraction is inconsistent."
+      },
+      {
+        "name": "open_neg_engagement_signals",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Useful thematic axis, but ED-0005 explicitly describes an engagement/participation failure (cameras off, chat silent, performing to a wall) and is coded 0. The near-all-zero distribution plus this miss suggests unreliable detection."
+      },
+      {
+        "name": "open_neg_social_signals",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Peer-interaction signal is a legitimate predictor axis. ED-0001 social=1 is defensible ('raise my hand quietly'). But ED-0003 states 'zero peer interaction' and is coded social=0 — a clear miss of an explicit signal."
+      },
+      {
+        "name": "open_neg_comprehension_signals",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Comprehension/'don't click' signals are relevant. ED-0001 (=1) and ED-0003 (=1, teacher can't tell she's lost) are reasonable readings, though category boundaries with teacher signals look blurred."
+      },
+      {
+        "name": "open_neg_teacher_signals",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Teacher-related complaints are a plausible axis, but grounding is poor: ED-0003 gets teacher=2, yet the text only says 'the teacher can't tell when she's lost' (arguably comprehension, not teacher blame), and the =2 magnitude is unsupported. Miscategorization observed."
+      },
+      {
+        "name": "open_neg_emotional_signals",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Emotional distress is a strong predictor of dissatisfaction. ED-0003 emotional=1 ('cries before every reading session') is well-grounded, though ED-0001's 'I miss...' emotional tone was scored 0."
+      },
+      {
+        "name": "open_pos_signals",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Positive-signal count offers a useful contrasting axis for a low-satisfaction query. Values track the text well: ED-0002=2, ED-0004=1, ED-0005=1 ('grading manageable') are sound readings."
+      },
+      {
+        "name": "open_neg_categories_hit",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A breadth-of-negativity aggregate is somewhat useful but largely a deterministic roll-up of the six negative columns, so it inherits their grounding errors and adds limited independent leverage."
+      },
+      {
+        "name": "open_net_neg_per100words",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A length-normalized net negativity is a plausible modeling feature, but it derives from the noisy signal counts and produces oddly precise values; e.g. ED-0002's positive response yields -5.4054 and ED-0005 yields 0.0 despite clear frustration, reflecting upstream miscounts."
+      },
+      {
+        "name": "open_predicts_low_satisfaction",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "This binary essentially restates the answer the query seeks and is a derived roll-up of the other columns rather than a new axis; it also risks circularity. ED-0005 flagged 0 despite substantial frustration illustrates its derived unreliability."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.57,
+    "rationale": "The themed negative-signal columns and the positive-signal count provide genuine new axes to group and model open-response content against satisfaction, which directly serves the query; the aggregate and the binary 'predicts_low_satisfaction' are more derivative/circular and add less independent leverage. Groundedness is the weaker dimension: several explicit signals are missed or misassigned across categories (ED-0003's stated tech and peer-interaction issues coded 0; ED-0005's clear engagement failure coded 0; teacher=2 overstated), and the per-100-words metric inherits and amplifies these counting errors with spurious precision. Overall the columns are useful but inconsistently extracted."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

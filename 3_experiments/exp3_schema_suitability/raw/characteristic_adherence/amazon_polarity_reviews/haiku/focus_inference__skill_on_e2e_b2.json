@@ -1,0 +1,44 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 1,
+  "added_columns": [
+    "competitor_or_alternative_comparison"
+  ],
+  "metrics": {
+    "n_added_columns": 1,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.06,
+    "focus_coherence": 0.6,
+    "structure_quality": 0.1,
+    "focus_actionability": 0.4,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Aspects/topics of the purchase experience that Amazon reviewers discuss",
+    "per_column": [
+      {
+        "name": "competitor_or_alternative_comparison",
+        "supports_focus": true,
+        "rationale": "Whether the review compares to competitors/alternatives is a legitimate single aspect reviewers talk about, so it aligns with the aspect-decomposition focus. However, it is only ONE facet and does not constitute a structured set of aspects."
+      }
+    ],
+    "focus_coherence": 0.6,
+    "structure_quality": 0.1,
+    "focus_actionability": 0.4,
+    "rationale": "The query asks for the DIFFERENT aspects reviewers discuss, implying a multi-facet decomposition (e.g., price, quality, shipping, usability, customer service, comparison). Only a single boolean aspect column was added. With just one facet there is no way to assess coherence across multiple columns, and the structure is essentially a single restatement of one dimension rather than a differentiated aspect set. It centres on a plausible aspect (so focus is coherent-ish), but it fails structure_quality because a single boolean cannot represent the range of 'different aspects' requested, and actionability is limited since an analyst learns only comparison presence, not the spread of topics."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 1
+}

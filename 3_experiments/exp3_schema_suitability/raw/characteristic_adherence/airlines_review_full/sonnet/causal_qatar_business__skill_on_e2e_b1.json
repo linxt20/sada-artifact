@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 3,
+  "added_columns": [
+    "seat_product_received",
+    "inflight_service_quality",
+    "service_consistency_across_sectors"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.6833,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.5867,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.635,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "seat_product_received",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Seat hardware is a genuinely useful axis for the query: angled-flat/recliner vs QSuite/lie-flat could plausibly correlate with non-recommended verdicts, giving a real grouping variable that is not present among the original numeric columns. However groundedness is only moderate. The QSuite value (sample 4) is explicitly stated in the text, and the silent baggage-complaint row correctly returns Unknown -- both good. But three of five samples assert very specific configurations (standard_lie_flat_1x2x1 for Auckland-Doha and Doha-London; angled_flat_2x2x2 for the Doha-Montreal broken-seat review) that the source text never states; these are aircraft/route inferences from outside knowledge, and 'seat reclined on its own / wouldn't stay up' does not actually indicate an angled-flat product. Confident specifics where the text is silent lower the score."
+      },
+      {
+        "name": "inflight_service_quality",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Service quality is central to explaining dissatisfaction, and the categorical (including an 'inconsistent' level) adds a usable axis, though it partially overlaps with the original 'Staff Service' rating so it is not a fully fresh signal. Groundedness is fairly strong: 'inconsistent' for the aisle-good/wife-slow review, 'excellent' for the two praise-heavy reviews, and 'good' for the 'no complaints about service onboard' row are all sound readings. The weak point is the broken-seat review (sample 1) labelled 'poor', where the text describes a seat malfunction rather than poor service -- a mild conflation of overall negativity with service quality rather than an outright invention."
+      },
+      {
+        "name": "service_consistency_across_sectors",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.48,
+        "hallucination_observed": true,
+        "rationale": "The 'across sectors' framing partly restates the 'inconsistent' level already captured by inflight_service_quality, reducing its independent leverage. More importantly, groundedness is weak: the concept requires multi-sector evidence, yet it is confidently applied to single-sector flights. Sample 4 (Frankfurt-Melbourne via Doha, uniformly praised) legitimately supports 'consistent_high', and the silent row is correctly Unknown, but sample 1 (single Doha-Montreal flight) is labelled 'variable_across_sectors' with no sector comparison possible, and sample 2's variability was within the cabin (aisle vs. wife's seat), not across sectors. These are confident claims the text does not support."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.58,
+    "rationale": "All three columns target plausible drivers of a non-recommended verdict (seat hardware, service level, service consistency) and offer grouping/comparison axes beyond the raw numeric ratings, so overall analytical usefulness is decent; service_consistency_across_sectors is the weakest because it largely restates the 'inconsistent' signal of inflight_service_quality. Groundedness is the main concern: inflight_service_quality reads the text soundly and handles silent rows correctly, but seat_product_received frequently invents specific cabin layouts (1x2x1, 2x2x2) not stated in the reviews, and service_consistency_across_sectors asserts cross-sector variability from single-sector or within-cabin evidence. Correct Unknown values on genuinely silent rows are handled well and are not penalised."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 3
+}

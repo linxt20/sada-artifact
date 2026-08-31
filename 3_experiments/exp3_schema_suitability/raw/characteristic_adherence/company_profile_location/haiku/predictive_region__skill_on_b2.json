@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "primary_industry",
+    "business_model_type",
+    "market_target",
+    "service_delivery_model",
+    "tech_stack_focus",
+    "innovation_intensity",
+    "customer_segment_type"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "primary_industry",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Industry composition varies systematically across regions (e.g., semiconductors/hardware concentrate in certain hubs), so it lies outside the geographic focus yet plausibly carries predictive signal about regional cluster."
+      },
+      {
+        "name": "business_model_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Business model mix differs by region (VC/investment vs. managed services vs. platform), providing legitimate predictive signal without restating or leaking location."
+      },
+      {
+        "name": "market_target",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether firms target enterprise vs. consumer markets correlates with regional ecosystems; a valid external predictor, though low-variance here (heavily enterprise-skewed) limits its leverage."
+      },
+      {
+        "name": "service_delivery_model",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Delivery model (cloud vs. physical product vs. professional services) varies with regional industrial character and is derived from description, not from geography, so it is a legitimate predictor."
+      },
+      {
+        "name": "tech_stack_focus",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Technology specialization clusters geographically (biotech/genomics, security, robotics hubs), giving genuine external signal about regional cluster."
+      },
+      {
+        "name": "innovation_intensity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "R&D-heavy vs. operational focus tends to concentrate near research corridors and hubs, a plausible non-leaking predictor of region."
+      },
+      {
+        "name": "customer_segment_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Customer segment (Fortune 500, startups, government) correlates with regional business ecosystems and is external to geographic coordinates, so it is a legitimate predictor."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.6,
+    "rationale": "All added columns are semantically derived from the business description and are external to the geographic focus variable (regional_cluster), with no leakage or restatement of location. Each plausibly carries regional signal because industry, tech, and market characteristics cluster geographically. However, several features are highly correlated with one another (industry, business model, service delivery, tech stack all track the same software/SaaS-dominant profile) and some are low-variance (market_target, customer_segment nearly constant on the enterprise value), which reduces the marginal, independent leverage the set adds beyond a strong industry signal. Note that Latitude/Longitude already in the original table make regional_cluster nearly determinable, so incremental utility of these text features is moderate rather than high."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

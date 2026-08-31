@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals indicate a hardware incident is in the anomaly window?",
+  "focus_variable": "is_hardware_anomaly_window",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_symptom_type",
+    "incident_action_type",
+    "affected_system_scope",
+    "incident_volume_burst",
+    "recurrence_signal",
+    "software_trigger_present",
+    "caller_repeat_reporter"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.63,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.72,
+    "leakage_rate": 0.125
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "is_hardware_anomaly_window",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "The focus is whether a HARDWARE incident is in the anomaly window; incident_category directly includes 'hardware' vs software/network/etc., so it largely restates the 'hardware' half of the target rather than serving as an external predictor."
+      },
+      {
+        "name": "failure_symptom_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Symptom categories (no_power, overheating, physical_damage, crash_shutdown) are external observable signals that plausibly correlate with hardware anomalies without deterministically defining the anomaly-window label."
+      },
+      {
+        "name": "incident_action_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Action type (break_fix vs update/access request) is an operational attribute that carries signal about hardware failures without restating the anomaly-window target."
+      },
+      {
+        "name": "affected_system_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope (single_device, peripheral, server_infrastructure) is an external descriptor plausibly predictive of hardware incidents; it does not deterministically encode the target."
+      },
+      {
+        "name": "incident_volume_burst",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A burst flag captures temporal clustering, which is a genuine external signal for an 'anomaly window' distinct from the hardware/label itself."
+      },
+      {
+        "name": "recurrence_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Recurrence of similar incidents is an external behavioral pattern that plausibly predicts anomaly windows without restating the label."
+      },
+      {
+        "name": "software_trigger_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Indicates a software cause; being NEGATIVELY associated with hardware anomalies, it is a legitimate external discriminator, not a component of the target."
+      },
+      {
+        "name": "caller_repeat_reporter",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the caller is a repeat reporter is an external contextual feature plausibly correlated with anomaly windows and not derivable from the target."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.72,
+    "rationale": "The set is mostly composed of legitimate external predictors spanning symptom, scope, action, temporal-burst, recurrence, and caller behavior dimensions, giving a model substantive leverage beyond the original ITSM fields. The main weakness is incident_category, which overlaps directly with the 'hardware' portion of the target and constitutes leakage/restatement. Excluding that, the remaining columns are diverse and plausibly signal-bearing, yielding solid but not maximal predictive utility."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "predictive_hardware",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

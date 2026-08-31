@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "cabin_crew_attitude",
+    "food_quality_signal",
+    "service_decline_perception",
+    "amenity_and_product_gap",
+    "ground_service_quality",
+    "disruption_handling_quality",
+    "cs_resolution_quality",
+    "airline_decline_narrative",
+    "premium_cabin_value_judgment"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.4284,
+    "focus_coherence": 0.63,
+    "structure_quality": 0.68,
+    "focus_actionability": 0.82,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Perceived quality of the airline SERVICE experience across passenger touchpoints (cabin crew, ground handling, disruption management, customer-service resolution) — including whether that service is perceived to be declining.",
+    "per_column": [
+      {
+        "name": "cabin_crew_attitude",
+        "supports_focus": true,
+        "rationale": "Directly characterises in-flight staff service — a core touchpoint of the inferred service-quality focus, with nuanced non-trivial categories."
+      },
+      {
+        "name": "food_quality_signal",
+        "supports_focus": false,
+        "rationale": "This is a product/catering facet rather than a service-interaction touchpoint; it sits on the periphery of a service-quality focus and pulls the set toward general 'experience aspects'."
+      },
+      {
+        "name": "service_decline_perception",
+        "supports_focus": true,
+        "rationale": "Captures whether the reviewer perceives a deterioration in service — squarely on-focus, though it substantially overlaps with airline_decline_narrative."
+      },
+      {
+        "name": "amenity_and_product_gap",
+        "supports_focus": false,
+        "rationale": "Amenity/product provisioning is a product dimension, not a service-interaction quality; contributes to breadth rather than to the service focus."
+      },
+      {
+        "name": "ground_service_quality",
+        "supports_focus": true,
+        "rationale": "A distinct service touchpoint (pre-flight ground handling) — a coherent facet of the service-quality focus."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "supports_focus": true,
+        "rationale": "How disruptions are managed is a high-signal service touchpoint; well-differentiated categories at a useful granularity."
+      },
+      {
+        "name": "cs_resolution_quality",
+        "supports_focus": true,
+        "rationale": "Post-contact customer-service resolution is another service touchpoint; complements the journey-based decomposition."
+      },
+      {
+        "name": "airline_decline_narrative",
+        "supports_focus": true,
+        "rationale": "On-focus (perceived decline) but near-duplicative of service_decline_perception; both are booleans with almost identical distributions, adding little incremental structure."
+      },
+      {
+        "name": "premium_cabin_value_judgment",
+        "supports_focus": false,
+        "rationale": "A value-for-money/product-tier judgment rather than a service-interaction quality; another dimension that widens the set beyond a single focus."
+      }
+    ],
+    "focus_coherence": 0.63,
+    "structure_quality": 0.68,
+    "focus_actionability": 0.82,
+    "rationale": "A clear majority of columns (cabin crew, ground service, disruption handling, CS resolution, plus two decline flags) do converge on a single, data-inferable focus: the perceived quality of the airline SERVICE experience across touchpoints and whether it is declining. That gives it more than a grab-bag character. However, coherence is diluted by three columns (food_quality_signal, amenity_and_product_gap, premium_cabin_value_judgment) that belong to a PRODUCT/value dimension rather than service interaction — under a strict single-focus reading these read as aspect enumeration ('here are all the things in the reviews') rather than facets of one focus. Structure is otherwise sound: the service touchpoints form a genuine journey-based decomposition at a useful, non-restating granularity with semantically rich categorical values (not mechanical token/length/bare-sentiment features), but it is weakened by the near-redundant pair service_decline_perception / airline_decline_narrative. Actionability is high: 'which service touchpoint drives dissatisfaction / is service declining' is a concrete, investigable framing an analyst can act on."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

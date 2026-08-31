@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a travel expense will be declined?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "asset_category",
+    "expense_origin_method",
+    "asset_action_type",
+    "source_id_present",
+    "processing_lag_bucket",
+    "submitting_department",
+    "vendor_brand",
+    "description_specificity",
+    "is_non_standard_item",
+    "hardware_asset_subtype"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.585,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.6675,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorises the expense type (hardware/travel/cloud etc.), well grounded in short_description and ci. Useful to isolate travel rows for the query, but is more of a routing dimension than a decline signal; moderate leverage."
+      },
+      {
+        "name": "expense_origin_method",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Manual vs automated vs procurement origin is a plausible decline signal (manual entries may face more scrutiny). Grounded in phrasings like 'Automated' or 'Procurement of'; the procurement_request vs manual distinction is somewhat inferred but reasonable."
+      },
+      {
+        "name": "asset_action_type",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Action taxonomy derivable from descriptions, but largely redundant with asset_category and expense_origin_method (e.g. registration_tracking tracks 'automated'). Modest new leverage."
+      },
+      {
+        "name": "source_id_present",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Trivially derived boolean from existing source_id column; near-restatement of an original field, so low novelty. But missing source_id is a plausible decline signal, giving some usefulness. Fully grounded."
+      },
+      {
+        "name": "processing_lag_bucket",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Buckets processed_date lag; 'not_processed' for nan is correct behaviour. Processing lag / not-yet-processed is a strong candidate signal for declines. Grounded in processed_date vs opened_at, though exact bucketing not fully verifiable from samples."
+      },
+      {
+        "name": "submitting_department",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with the original 'department' column. Values look questionable: hardware/cloud rows attributed to Customer_Support and Sales with no supporting text in samples, suggesting the department is not actually readable from the shown source text."
+      },
+      {
+        "name": "vendor_brand",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Extracts brand from ci (Dell, AWS, Samsonite). Well grounded and gives a genuine grouping axis; vendor could correlate with non-standard/declined expenses."
+      },
+      {
+        "name": "description_specificity",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes specific vs auto-generated vs placeholder descriptions, a reasonable proxy for scrutiny/decline risk. Grounded in description phrasing, though 'auto_generated_template' vs 'specific_model_named' boundary is judgment-based."
+      },
+      {
+        "name": "is_non_standard_item",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant: non-standard items are a classic decline trigger. However the derivation criteria are opaque and not clearly warranted by the sampled source text, lowering groundedness confidence."
+      },
+      {
+        "name": "hardware_asset_subtype",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Reasonable subtype extraction (laptop/desktop) with correct NULL for non-hardware, but an AWS EC2 cloud service was labelled 'server' as a hardware subtype, a mislabel. Also tangential to a TRAVEL-expense decline query."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns provide several genuinely useful axes for predicting declines (origin method, processing lag, description specificity, non-standard flag, vendor), though a notable cluster is hardware-centric and tangential to the travel-expense focus of the query, and a few (source_id_present, submitting_department, asset_action_type) largely restate original columns or each other. Groundedness is generally sound with correct handling of missing values, but there are hallucination concerns: submitting_department values appear unsupported by the shown text, and a cloud service was mislabelled with a hardware 'server' subtype. Overall the set clears both necessary conditions moderately well."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

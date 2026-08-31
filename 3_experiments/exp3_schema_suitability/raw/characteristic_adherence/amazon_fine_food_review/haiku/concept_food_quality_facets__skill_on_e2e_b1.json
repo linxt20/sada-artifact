@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "taste_quality",
+    "convenience_usability",
+    "comparative_positioning"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8333,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.6933,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7633,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "Directly targets the query about distinct aspects of food quality; taste is a core axis and the descriptor values (excellent/bland/artificial/bitter) give real grouping leverage. Groundedness is mostly sound: 'good', 'excellent', 'artificial' (medicinal flavor) are well-read. However the peanut row is labeled 'poor' when the complaint is mislabeling/sizing, not taste, so the value overreaches the source somewhat."
+      },
+      {
+        "name": "convenience_usability",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Convenience/usability is a legitimate distinct aspect and adds a new axis beyond taste, useful for the query. Silent rows correctly become NULL. But the first sample text says nothing about ease of use yet is labeled 'straightforward', a confident specific the text does not support; the large 'straightforward'/'very_easy' counts raise concern that this label is often inferred without evidence."
+      },
+      {
+        "name": "comparative_positioning",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Comparative framing (superior/inferior/preferred) is a meaningful, distinct analytical axis. However groundedness is weak in samples: the dog food text does not compare to competitors yet is 'preferred'; the taffy text has no comparison yet 'preferred'; the confection labeled 'unique_unavailable' is not warranted. Values frequently assert positioning the source is silent on."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.68,
+    "rationale": "The three columns each provide a genuinely distinct aspect of food-quality reviews (taste, convenience, comparative positioning), which is exactly what the query asks for; none is near-constant, redundant, or a trivial length/sentiment flag. On groundedness, taste_quality is largely well-read, but convenience_usability and comparative_positioning both show a tendency to assign confident specific labels ('straightforward', 'preferred') to rows whose source text does not mention convenience or comparison, indicating over-inference rather than principled NULLs. Overall useful but with moderate grounding concerns."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

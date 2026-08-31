@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "mentions_service",
+    "mentions_food_quality",
+    "mentions_wait_time",
+    "mentions_price",
+    "mentions_cleanliness",
+    "mentions_atmosphere",
+    "exclamation_count",
+    "positive_words_count",
+    "negative_words_count"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.56,
+    "predictor_fraction": 0.7778,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.7778
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "mentions_service",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag with interpretable categories; directly captures a review theme that can be segmented and compared across sentiment. Core to the query about differing themes."
+      },
+      {
+        "name": "mentions_food_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear binary theme indicator with well-separated 0/1 groups; enables comparison of food-quality mentions between positive and negative reviews."
+      },
+      {
+        "name": "mentions_wait_time",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable theme flag; wait-time mentions are a meaningful associational variable to cross-tabulate against sentiment."
+      },
+      {
+        "name": "mentions_price",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary price-theme indicator, well-separated categories, directly supports theme-vs-sentiment exploration."
+      },
+      {
+        "name": "mentions_cleanliness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable theme flag; somewhat rare (19 positives) but still yields a meaningful comparison across sentiment."
+      },
+      {
+        "name": "mentions_atmosphere",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary atmosphere-theme indicator with clear categories; supports segmentation against the focus."
+      },
+      {
+        "name": "exclamation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Stylistic count with an interpretable scale that can be bucketed; associational with sentiment intensity, though more mechanical and not a 'theme' per se. Weakly informative for the theme-focused query."
+      },
+      {
+        "name": "positive_words_count",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Lexicon-based positive word count is essentially a proxy of the sentiment label itself; it restates the focus rather than opening an external relationship, and reveals little about differing themes."
+      },
+      {
+        "name": "negative_words_count",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Negative-lexicon count closely mirrors the sentiment label; largely restates the focus and is not an external thematic dimension."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.72,
+    "rationale": "The six 'mentions_*' theme flags are exactly the kind of interpretable, well-separated segmentation variables the query needs: they let an explorer cross-tabulate distinct review themes (service, food, wait, price, cleanliness, atmosphere) against positive/negative sentiment. These squarely satisfy the exploratory claim. exclamation_count adds a mildly informative but mechanical stylistic dimension. The two lexicon word-count columns largely restate the sentiment label and are near-duplicative of the focus, weakening the set. Overall the theme flags carry strong, interpretable relationship value, so the set scores well but is dragged down by the restatement columns."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

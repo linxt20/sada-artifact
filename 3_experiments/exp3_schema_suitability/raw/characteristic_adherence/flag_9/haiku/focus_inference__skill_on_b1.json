@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "failure_mode",
+    "hardware_severity_indicator",
+    "problem_scope"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8067,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7233,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.765,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorizing the kind of hardware failure (connectivity_loss, not_powering_on, physical_damage, etc.), giving a clean grouping axis. Values track the source text well: 'Unable to establish connection to MySQL server' -> connectivity_loss, and software-install rows correctly return Unknown/NULL. Slight caution as many rows appear to be non-hardware (software install) yet the operator sensibly abstains via NULL."
+      },
+      {
+        "name": "hardware_severity_indicator",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Adds a severity/nature axis (complete_failure, partial_malfunction, intermittent_issue) that is a distinct dimension from failure_mode and can support comparison. However it overlaps somewhat conceptually with failure_mode, and severity of a hardware issue is often not stated in a terse short_description, so labels like 'complete_failure' can be weakly warranted inferences. Silent rows correctly return Unknown/NULL, which supports groundedness."
+      },
+      {
+        "name": "problem_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual_workstation, server_infrastructure, shared_device) is a genuinely useful grouping axis orthogonal to failure_mode. The MySQL-server row -> server_infrastructure is well grounded. However, software-installation rows with no scope cue are confidently labeled 'individual_workstation', and the column has almost no NULLs (only 4), indicating the operator invents a specific scope where the text is silent rather than abstaining."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.72,
+    "rationale": "All three columns give distinct, query-relevant axes (failure type, severity, scope) that let an analyst characterize kinds of hardware problems. failure_mode is the strongest and best grounded, with appropriate abstention on silent rows. hardware_severity_indicator is useful but partly inferential. problem_scope is analytically valuable but shows hallucination: it asserts a specific scope for nearly every row (only 4 NULLs) even when the short_description gives no location/scope cue, defaulting to 'individual_workstation'. Overall the added set is useful and mostly grounded, with source-groundedness pulled down by problem_scope's over-confident defaults."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

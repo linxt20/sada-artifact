@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "reviewer_expectation_source",
+    "product_category_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.76,
+    "analytical_usefulness__table_level": 0.76,
+    "source_groundedness": 0.725,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7425,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "reviewer_expectation_source",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "As a new axis capturing the reviewer's baseline/expectation framing, this offers genuine analytical leverage for explaining negative reviews (e.g. disappointed enthusiasts vs casual buyers). However groundedness is shaky: the categories often assert an expectation source the text does not clearly support. For AMZ-0002 'brand_loyalty_disappointed' is a plausible read (prior familiarity with Lamott), but AMZ-0001 labeled 'casual_buyer' is largely inferred, and 'expert_or_enthusiast_baseline' for AMZ-0005 is inference from tone. The 'not_present' values for silent rows are appropriate. The categories require confident inference that the source frequently only weakly warrants."
+      },
+      {
+        "name": "product_category_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Product category is a strong, non-trivial grouping axis directly relevant to identifying which product types attract negative reviews. Values are well grounded: doll -> physical_consumer_good, Lamott book -> media_book, Eamon music -> media_film_or_music, skin cream -> physical_consumer_good, Bicycle Thieves DVD -> media_film_or_music are all sound readings of the text. Categories are inferred but clearly warranted by content."
+      }
+    ],
+    "analytical_usefulness": 0.76,
+    "source_groundedness": 0.72,
+    "rationale": "Both columns provide genuine new grouping axes relevant to the query on drivers of negative reviews, neither being redundant with the original label/title/content columns. product_category_type is well grounded and highly useful. reviewer_expectation_source is conceptually useful but its finer categories often rest on confident inference that the source text only weakly supports, producing occasional overreach (a hallucination concern). Overall the added columns pass the necessary conditions, with the expectation column being the weaker of the two on groundedness."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 2
+}

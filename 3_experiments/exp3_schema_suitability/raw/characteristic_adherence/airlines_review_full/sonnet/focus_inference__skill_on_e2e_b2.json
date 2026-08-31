@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_demeanor",
+    "food_quality_signal",
+    "ground_service_quality",
+    "complaint_resolution_outcome",
+    "service_failure_severity",
+    "cabin_class_product_mismatch",
+    "service_consistency_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.68,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Service quality and service failures across the airline journey (crew, ground, food, complaint handling), treated as the aspect most worth analyzing",
+    "per_column": [
+      {
+        "name": "cabin_crew_demeanor",
+        "supports_focus": true,
+        "rationale": "A concrete facet of in-flight service quality (attitude/behaviour of crew), directly central to a service-experience focus."
+      },
+      {
+        "name": "food_quality_signal",
+        "supports_focus": true,
+        "rationale": "Captures the catering/meal facet of the service experience, with meaningful failure modes (special_meal_failure, ran_out_of_choice)."
+      },
+      {
+        "name": "ground_service_quality",
+        "supports_focus": true,
+        "rationale": "Extends the service focus to the pre/post-flight touchpoints (check-in, gate), a distinct but coherent facet."
+      },
+      {
+        "name": "complaint_resolution_outcome",
+        "supports_focus": true,
+        "rationale": "Service-recovery dimension: how well failures were handled. Complements the failure facets and is highly on-focus."
+      },
+      {
+        "name": "service_failure_severity",
+        "supports_focus": true,
+        "rationale": "An aggregate severity gradient over the service experience; ties the individual facets into an overall failure-intensity axis."
+      },
+      {
+        "name": "cabin_class_product_mismatch",
+        "supports_focus": true,
+        "rationale": "Slightly more product/value-oriented than pure service, but still frames delivered experience vs. expectation, so it stays within the same coherent concept (least central of the set)."
+      },
+      {
+        "name": "service_consistency_signal",
+        "supports_focus": true,
+        "rationale": "A temporal-consistency facet of service quality; on-focus, though its data-inferability from a single review is somewhat strained."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The query names no focus, so the system had to propose one. Six of seven columns converge tightly on a single, data-inferable concept — service quality/service failure across the journey (crew demeanor, ground service, food, complaint resolution, overall severity, consistency), with only cabin_class_product_mismatch drifting slightly toward product/value. This is clearly ONE coherent focus rather than a scattered grab-bag, so coherence is high. The structure is well differentiated: multiple distinct service facets (crew, ground, food, recovery) plus an aggregating severity axis and a temporal-consistency signal, at a useful categorical granularity with informative failure modes — not a single restatement nor undifferentiated noise; the one small weakness is that service_failure_severity partly overlaps as a roll-up of the facets and consistency is hard to infer per-review, so structure is strong but not perfect. The implied focus (service failures and their resolution) is exactly the kind of thing an airline analyst can act on — target crew training, ground operations, catering, and complaint handling — so actionability is high. Not marked as failing on any dimension because the set genuinely realises a coherent, structured, actionable inferred focus rather than generic length/sentiment filler."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

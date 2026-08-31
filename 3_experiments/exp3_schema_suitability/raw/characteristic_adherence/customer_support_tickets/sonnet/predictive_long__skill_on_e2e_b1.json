@@ -1,0 +1,128 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "n_added_columns": 12,
+  "added_columns": [
+    "ticket_category",
+    "product_area",
+    "is_active_outage",
+    "business_impact_type",
+    "urgency_driver",
+    "root_cause_mechanism",
+    "is_regression",
+    "affected_user_scope",
+    "involves_third_party_integration",
+    "involves_data_integrity_risk",
+    "has_security_or_compliance_dimension",
+    "workaround_available"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 12,
+    "n_judged_columns": 12,
+    "analytical_usefulness": 0.8125,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.8313,
+    "hallucination_rate": 0.1667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "ticket_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Clean categorization of the issue type; a strong grouping axis for resolution-time analysis. Sample values (billing_inquiry, access_auth, outage, feature_request, bug) all match the source text well."
+      },
+      {
+        "name": "product_area",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Product area is a useful modeling dimension and largely well-grounded (billing_payments, auth_sso, dashboard_analytics correct). NULLs are appropriate for silent rows. The feature_request row mapped to admin_settings (pin reports to nav rail) is a slightly loose inference but defensible."
+      },
+      {
+        "name": "is_active_outage",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Binary outage flag is a plausible predictor of resolution effort and grounded (CS-0003 explicitly an outage=True, others False). Some redundancy with ticket_category=outage but adds a clean boolean axis."
+      },
+      {
+        "name": "business_impact_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct impact typology gives good analytical leverage. Samples grounded (revenue_at_risk for invoice/finance close, presentation_or_demo_deadline for board presentation). Minor tension: CS-0001 'revenue_at_risk' vs urgency_driver 'financial_close' overlaps, but readings are defensible."
+      },
+      {
+        "name": "urgency_driver",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures why a ticket is urgent, useful for prioritization/time modeling. Grounded on samples. Somewhat overlapping with business_impact_type but offers a different framing (driver vs impact)."
+      },
+      {
+        "name": "root_cause_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Root cause is highly relevant to resolution difficulty. But some values are speculative: CS-0001 invoice duplicate labeled 'data_corruption_or_inconsistency' and CS-0003 502 error labeled 'infrastructure_or_capacity' assert a specific cause the text does not confirm. Category is useful but groundedness is weakened by confident inference."
+      },
+      {
+        "name": "is_regression",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Whether a post-deploy regression is a plausible resolution-time signal. Grounded: CS-0005 'after the 4.7 release' -> True is correct; others False. Partially redundant with root_cause_mechanism=regression_after_deploy but adds a clean boolean."
+      },
+      {
+        "name": "affected_user_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Blast radius is a strong axis for resolution effort. Samples grounded (entire_tenant for 'all members of Acme tenant', single_user for individual reports). CS-0005 'entire_tenant' is a reasonable read of an account-wide export behavior."
+      },
+      {
+        "name": "involves_third_party_integration",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Third-party involvement can lengthen resolution, so relevant. Grounded on CS-0005 (Snowflake pipeline). But CS-0002 marked True for an SSO config push is questionable—SSO IT config is customer-side, not clearly a third-party integration failure; a mild overreach."
+      },
+      {
+        "name": "involves_data_integrity_risk",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Data integrity risk is a meaningful complexity signal. CS-0005 (BOM breaks ingestion) and CS-0001 (duplicate line item) are defensible True readings, though CS-0001 is arguably a billing display issue rather than true data corruption—borderline but reasonable."
+      },
+      {
+        "name": "has_security_or_compliance_dimension",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Security/compliance flag is a plausible driver of longer handling. Sample values all False and consistent with texts. Adds a distinct axis not captured elsewhere."
+      },
+      {
+        "name": "workaround_available",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether a workaround exists relates to urgency/resolution pressure. Grounded: CS-0005 'added a manual sed step' -> workaround_documented_by_customer is a sound read; not_applicable for feature request is correct silent-handling."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.84,
+    "rationale": "The added columns collectively provide rich, distinct axes—category, product area, blast radius, root cause, regression status, impact/urgency, and complexity flags—that are genuinely useful for modeling what makes a ticket slow to resolve, well beyond trivial or near-constant fields. Some flags overlap slightly (is_regression vs root_cause_mechanism; urgency_driver vs business_impact_type), but each still offers usable grouping leverage. Groundedness is generally strong with appropriate NULL/not_applicable handling for silent rows. The main weakness is a few confidently specific inferences—especially root_cause_mechanism and involves_third_party_integration—that assert mechanisms the source text does not explicitly confirm, lightly lowering groundedness on those columns."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 12
+}

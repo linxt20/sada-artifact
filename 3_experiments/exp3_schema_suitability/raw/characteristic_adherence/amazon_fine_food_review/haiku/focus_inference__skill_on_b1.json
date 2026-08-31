@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "satisfaction_driver",
+    "primary_quality_issue",
+    "product_category",
+    "health_nutrition_mention",
+    "price_value_perception",
+    "repeat_purchase_intent",
+    "recommendation_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.8143,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8571,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.8357,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "satisfaction_driver",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Gives a strong grouping axis for what drives positive reviews, directly serving the query. Values are sound readings of source text (taste_quality for dog food/taffy). The 'comparison_superiority' label for the mislabeled-peanuts row is a slight stretch but not fabricated."
+      },
+      {
+        "name": "primary_quality_issue",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Highly actionable axis identifying what's wrong per review, central to 'worth attention.' Values well-grounded: 'product_defect' for mislabeled peanuts, 'taste_flavor_deviation' for medicinal flavor, 'no_issue' where appropriate."
+      },
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Enables segmentation of reviews by product type, a genuine grouping axis. Mostly sound, though 'condiment' for a soda extract is debatable; still a warranted inference from text."
+      },
+      {
+        "name": "health_nutrition_mention",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A boolean flag offering a modest but real filter axis for health-related content. Somewhat generic but distinct from other columns. Values consistent with source (dog food quality flagged true; taffy false)."
+      },
+      {
+        "name": "price_value_perception",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful ordinal axis for value sentiment, actionable for pricing analysis. Values grounded: 'good_value' for great-price taffy, correctly NULL/Unknown where price is not discussed."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Meaningful loyalty signal for actionability. Somewhat correlated with recommendation but distinct construct. Grounding is a bit inferential (few reviews explicitly state repurchase), but readings are reasonable warranted inferences rather than fabrications."
+      },
+      {
+        "name": "recommendation_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures explicit recommend/not signal, useful but partially redundant with repeat_purchase_intent and Score. Values well-grounded ('highly recommend' -> True; not-as-advertised -> False)."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.86,
+    "rationale": "The added columns collectively provide strong, distinct analytical axes (driver of satisfaction, quality issue, category, value perception, loyalty/recommendation) that directly serve the query about what's in the reviews and what's actionable. Some overlap exists between repeat_purchase_intent and recommendation_signal, and health_nutrition_mention is a plainer boolean, but none are near-constant or trivially redundant. Values across the evidence samples are sound readings of the source text, with appropriate use of Unknown/NULL for silent rows and no observed hallucinations; only minor interpretive stretches (e.g., 'comparison_superiority', 'condiment') appear."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

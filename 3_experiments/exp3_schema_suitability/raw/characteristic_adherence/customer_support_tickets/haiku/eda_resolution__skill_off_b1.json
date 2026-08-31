@@ -1,0 +1,40 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "n_added_columns": 1,
+  "added_columns": [
+    "issue_theme"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 1,
+    "n_judged_columns": 1,
+    "analytical_usefulness": 0.95,
+    "analytical_usefulness__table_level": 0.95,
+    "source_groundedness": 0.93,
+    "source_groundedness__table_level": 0.93,
+    "b1_overall": 0.94,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.93,
+        "hallucination_observed": false,
+        "rationale": "The query explicitly asks how resolution time varies across 'issue themes', which are not present in the original columns (only free-text issue_description). This column supplies exactly the missing grouping axis, giving genuine analytical leverage to compare resolution_minutes across themes alongside channel and priority. Values are sound categorisations of the source text: CS-0001 (duplicate invoice line item) -> Billing/Pricing; CS-0002 (session drops / SSO) -> Authentication; CS-0003 (502 gateway outage) -> Infrastructure/Outage; CS-0004 (pin favourite reports enhancement) -> Feature Request are all well grounded. CS-0005 (stray BOM breaking Snowflake ingestion) as 'Integration' is defensible though arguably Data/Export-related; still a reasonable reading. A sensible 'Other' bucket handles ambiguous rows. No invented facts observed."
+      }
+    ],
+    "analytical_usefulness": 0.95,
+    "source_groundedness": 0.93,
+    "rationale": "The single added column directly instantiates the 'issue theme' dimension named in the query, derived from otherwise unstructured issue_description text, providing a real new axis to group and compare resolution time. Sampled values are faithful, warranted categorisations of the source text with no hallucinated specifics; one borderline case (BOM/export labelled Integration) is a minor interpretive stretch rather than an unsupported assertion."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 1
+}

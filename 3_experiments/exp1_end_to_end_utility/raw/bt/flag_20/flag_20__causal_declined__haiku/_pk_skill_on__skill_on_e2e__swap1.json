@@ -1,0 +1,135 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "skill_on",
+  "swap": true,
+  "winner": "A",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.8,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "61 out of 146 travel expenses declined (41.8%)",
+        "why": "precise counts with denominators"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Travel Indicator + Source ID Presence Interaction",
+        "why": "multi-factor cross-tab reasoning"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "not necessarily stricter approval criteria",
+        "why": "carefully distinguishes rate vs volume"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "highest-risk combination ... 43.0% decline rate, n=142",
+        "why": "concrete segment magnitudes"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "actionability",
+        "quote": "Implement mandatory processing lag designation at submission time",
+        "why": "decision-ready recommendations"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Unknown | 67.2% | 39/58",
+        "why": "numeric table"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "100% of declined expenses have no processed_date",
+        "why": "A notes processed_date null is inherent to declined, so B's 'unknown lag' predictor is likely circular"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [
+      {
+        "column": "asset_category",
+        "quote": "asset_category column reveals ... travel_equipment",
+        "dependent": true
+      },
+      {
+        "column": "travel_expense_indicator",
+        "quote": "travel_expense_indicator column perfectly identifies",
+        "dependent": true
+      },
+      {
+        "column": "acquisition_driver",
+        "quote": "acquisition_driver column stratifies expenses",
+        "dependent": true
+      },
+      {
+        "column": "source_id_presence",
+        "quote": "source_id_presence column reveals a strong inverse relationship",
+        "dependent": true
+      },
+      {
+        "column": "department_origin",
+        "quote": "department_origin column ... mirrors original department",
+        "dependent": false
+      }
+    ],
+    "B": []
+  },
+  "reason": "A is more rigorous with interaction analysis and avoids circular reasoning, while B's dominant factor conflates decline-inherent null metadata with causation.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

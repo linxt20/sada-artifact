@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_service_complaint_presence",
+    "crew_attentiveness_deficit",
+    "food_quality_complaint",
+    "seat_comfort_complaint",
+    "entertainment_system_complaint",
+    "service_recovery_indicator",
+    "cabin_class"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6357,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.7471,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.6914,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_service_complaint_presence",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "This is the top-level flag the counterfactual query hinges on (presence of a cabin-service complaint), giving a direct axis to compare Overall Rating with vs. without complaints. Well-balanced distribution. In the samples it correctly reads positive reviews as False and the seat/hardware complaint review as True, so values are soundly grounded in the text."
+      },
+      {
+        "name": "crew_attentiveness_deficit",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Crew attentiveness is a core cabin-service complaint type, so it provides a genuine decomposition axis for the 'most common complaint' part of the query. Sample reviews praising or not mentioning crew are correctly marked False; grounded in text."
+      },
+      {
+        "name": "food_quality_complaint",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Food/beverage service is plausibly part of cabin service and gives a distinct complaint category useful to the query, though it partly overlaps the original 'Food & Beverages' rating; the text-derived complaint flag still adds granularity. Reviews praising food ('delicious', 'plentiful') are correctly False."
+      },
+      {
+        "name": "seat_comfort_complaint",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Seat comfort is a hard-product issue rather than strictly cabin service, and it substantially overlaps the existing 'Seat Comfort' rating column, so its analytical leverage for THIS query is reduced. Values are well grounded: the 'seat far too narrow / poor padding' review is correctly flagged True and comfortable-seat reviews False."
+      },
+      {
+        "name": "entertainment_system_complaint",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Entertainment is peripheral to 'cabin service' and overlaps the original 'Inflight Entertainment' column, limiting usefulness. More seriously, in the first sample the review explicitly praises the IFE ('has many variety of shows, music, etc.') yet the flag is set to True, directly contradicting the source text — an observed error that undercuts groundedness."
+      },
+      {
+        "name": "service_recovery_indicator",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Service recovery is tangential to a query about eliminating complaints (it concerns how failures were handled, not complaint prevalence), so its leverage is limited. The near-exact 50/50 split is suspicious and hints at partly arbitrary assignment; the five samples are all False and consistent with texts that describe no failure/recovery, so groundedness is moderate but hard to confirm."
+      },
+      {
+        "name": "cabin_class",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "This is essentially a restatement of the pre-existing original 'Class' column (Economy/Business/Premium_Economy/First), adding no new grouping axis, so analytical usefulness is low. Values themselves look sound (e.g., 'flying in economy class' → Economy); the 'Business' value not evident in one sample's text is plausibly sourced from the original Class field, so groundedness is moderate-to-high."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.73,
+    "rationale": "The core complaint flags (overall presence, crew attentiveness, food) give real, well-distributed axes to run the counterfactual on Overall Rating and are the strongest part of the set. Seat-comfort and entertainment complaints are more tangential to 'cabin service' and overlap existing rating columns, and cabin_class is essentially redundant with the original 'Class' column, dragging holistic usefulness to moderate. Groundedness is generally solid — silent/positive rows are read correctly — but there is a clear contradiction error in entertainment_system_complaint (flagging a complaint on a review that praises the IFE), plus a suspiciously balanced service_recovery split, which keep the table-level groundedness short of high."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "whatif_service_complaints",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 7
+}

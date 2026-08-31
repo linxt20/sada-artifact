@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What company traits explain regional clustering?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_sector",
+    "enterprise_vs_consumer_focus",
+    "company_stage_signal",
+    "profitability_or_funding_model",
+    "service_delivery_model",
+    "cloud_native_architecture"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6833,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.6167,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.65,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_sector",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Sector categorization is a strong axis for explaining regional clustering. Values are well-grounded in descriptions (23andMe->healthcare, 5AM->VC). 280 Group as software_saas is a slight stretch (it's a consulting/training firm) but defensible."
+      },
+      {
+        "name": "enterprise_vs_consumer_focus",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "B2B vs B2C is a genuine grouping dimension distinct from sector. Values track the text well (23andMe->consumer, Addepar->enterprise). Sound inference."
+      },
+      {
+        "name": "company_stage_signal",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Stage could plausibly relate to clustering, but the descriptions rarely state maturity. Labels like 'established_profitable' for 23andMe and 'growth_stage' for 280 Group are confident inferences the marketing-style source text does not support, indicating fabricated specificity."
+      },
+      {
+        "name": "profitability_or_funding_model",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Substantially redundant with company_stage_signal (venture-backed correlates directly). VC firms are correctly derivable, but 'venture_capital_backed' for Addepar and 'bootstrapped_or_established' for 23andMe are asserted without textual support."
+      },
+      {
+        "name": "service_delivery_model",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Adds a delivery axis, but overlaps with primary_sector/service model. VC firms labeled 'consulting_services' is a poor fit. 'cloud_saas' for 23andMe is inferred, not stated in the text."
+      },
+      {
+        "name": "cloud_native_architecture",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A boolean architecture flag is weakly relevant to regional clustering and is almost never derivable from marketing descriptions. All samples default to False with no textual basis, indicating unsupported guessing."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.62,
+    "rationale": "The sector, B2B/B2C, and (to a lesser extent) delivery-model columns provide genuine grouping axes for explaining regional clustering and are largely grounded in the descriptions. However, the stage, funding, and cloud-native columns lean heavily on inferences the marketing-style text does not support (confident specifics about maturity, funding, and architecture), and funding/stage overlap conceptually. Grounding is mixed: clear for VC firms and sectors, but several defaulted or asserted values lack textual warrant."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_regional",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

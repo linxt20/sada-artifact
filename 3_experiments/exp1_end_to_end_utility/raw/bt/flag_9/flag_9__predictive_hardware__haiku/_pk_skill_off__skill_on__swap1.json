@@ -1,0 +1,104 @@
+{
+  "var_a": "skill_on",
+  "var_b": "skill_off",
+  "swap": true,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.82,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 3,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "179 of 182 hardware incidents (98%) have recurrence_flag=True",
+        "why": "numeric column reference"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "93 incidents ... 51% ... meet all three criteria",
+        "why": "defines anomaly by conjunction but 98% recurrence undercuts discriminative value"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "Mean of 10.77 incidents in the previous 7 days ... only 0.67",
+        "why": "contrastive numeric comparison"
+      },
+      {
+        "dimension": "depth",
+        "quote": "16x difference between anomaly and non-anomaly",
+        "why": "group comparison with magnitude"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "hardware_incidents_last_7d ≥ 1",
+        "why": "concrete threshold signal"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "decision-tree approach for real-time identification",
+        "why": "specific ranked signals"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B contrasts anomaly vs non-anomaly groups with concrete numeric thresholds and causal caveats, giving deeper, more decision-ready analysis.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "n_added_columns": 10,
+  "added_columns": [
+    "asset_category",
+    "ci_form_factor",
+    "travel_context",
+    "asset_brand",
+    "record_action_type",
+    "creation_method",
+    "processing_lag_band",
+    "source_id_present",
+    "department_group",
+    "is_miscellaneous_ci"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.62,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.735,
+    "hallucination_rate": 0.1
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizes CIs into meaningful asset types (hardware, cloud, travel), giving a strong grouping axis. Values are well-grounded in the ci/short_description text (e.g. Dell Latitude -> hardware_endpoint, AWS EC2 -> cloud_service)."
+      },
+      {
+        "name": "ci_form_factor",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Finer-grained form factor (laptop/desktop/server) is derivable from ci strings and adds a useful sub-grouping. Partially redundant with asset_category but still a distinct axis. Well grounded."
+      },
+      {
+        "name": "travel_context",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to the travel-expense query, separating travel vs non-travel items. Grounded in source text, though the dominance of 'not_travel' for hardware raises questions about whether these are truly travel expenses."
+      },
+      {
+        "name": "asset_brand",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Brand extraction (Dell, HP, AWS, Samsonite) offers a genuine axis for spend/vendor analysis and is directly extractable from ci strings."
+      },
+      {
+        "name": "record_action_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Categorizes lifecycle action (procurement/registration/provisioning) from short_description; a reasonable inference and useful for grouping. Some categories (allocation, maintenance_upgrade) rely on inference but appear warranted."
+      },
+      {
+        "name": "creation_method",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Manual vs automated is clearly cued by phrases like 'Automated creation'/'Automatically generated'. A binary flag but offers a legitimate comparison axis; well grounded."
+      },
+      {
+        "name": "processing_lag_band",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Bands the lag between opened_at and processed_date, a useful operational-efficiency axis. Derivable from date columns; 'not_processed' correctly handles nan dates."
+      },
+      {
+        "name": "source_id_present",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A bare presence/absence flag on an existing column; low analytical leverage and largely trivial, though correctly grounded."
+      },
+      {
+        "name": "department_group",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Appears near-redundant with the existing 'department' column. More concerning, department is not present in the sampled source_text yet specific groups (Customer_Support, Sales) are asserted per row, so groundedness cannot be confirmed and values may be invented relative to shown evidence."
+      },
+      {
+        "name": "is_miscellaneous_ci",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Near-constant flag (483 false / 17 true) with little discriminating power for this query. Grounded but low leverage."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.83,
+    "rationale": "Most added columns provide genuine new axes (asset_category, form_factor, brand, travel_context, action_type, processing_lag) that are well-grounded in the ci and short_description text, directly supporting analysis of these expense records. A few columns are weak: source_id_present and is_miscellaneous_ci add little leverage, and department_group is largely redundant with an existing column while asserting per-row department values not visible in the sampled source text, raising a groundedness concern. Overall the set is useful and mostly grounded."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 10
+}

@@ -1,0 +1,69 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "reviewer_expectation_source",
+    "product_category_type"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "reviewer_expectation_source",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The reviewer's expectation baseline (casual buyer vs. expert vs. brand-loyal-disappointed) plausibly shapes both the underlying experience/quality of product they engage with (a candidate treatment) and the review valence outcome; disappointed brand loyalists and expert baselines drive harsher judgments. It is a pre-existing attribute of the reviewer, not a mediator on a single treatment path, and it is not named in the query, so it surfaces a genuine common-cause candidate."
+      },
+      {
+        "name": "product_category_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Product category plausibly influences both which quality/attribute drivers are relevant (the treatment domain) and the base rate of negative sentiment (e.g., media books/films attract more polarized valence). It is a stable pre-treatment characteristic, not on a single mediating path, and it was not named in the query."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [
+      {
+        "name": "reviewer_expectation_source",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "product_category_type",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The query asks for causal attribution: which factors cause predominantly negative reviews (label_pos). A valid causal setup needs (a) an explicit TREATMENT -- the candidate cause whose effect is estimated -- and (b) confounders that cause BOTH the treatment and the outcome. Here NO treatment column is present. Both added columns are context/segmentation variables that plausibly act as common causes, but with no treatment defined, they cannot be confounders in the strict sense (a confounder is defined relative to a treatment). They function more as effect-modifiers or covariates. Since the decisive requirement -- a candidate cause (treatment) to attribute -- is absent, the causal estimation is not set up. The columns were surfaced from data rather than copied from the query, which is positive, but the attribution structure is incomplete, so confounder_quality is low."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 2
+}

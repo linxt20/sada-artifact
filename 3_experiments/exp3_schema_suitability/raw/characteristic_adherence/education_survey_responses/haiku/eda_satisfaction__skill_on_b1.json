@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "subject_domain_affordance_for_remote",
+    "teacher_innovation_and_adaptation",
+    "student_interactive_participation_enabled",
+    "peer_community_and_social_learning",
+    "conceptual_depth_versus_compliance",
+    "hands_on_practical_subject_constraint",
+    "student_attention_and_focus_capacity",
+    "parent_partnership_intensity_and_burden",
+    "teacher_workload_and_emotional_toll"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.8078,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7378,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.7728,
+    "hallucination_rate": 0.1111
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "subject_domain_affordance_for_remote",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A meaningful new axis for grouping satisfaction by how well a subject suits remote learning, complementing the subject column. Values are reasonable readings (algebra frozen whiteboard = poorly_suited; recorded history lectures = naturally_suited), though it partly conflates subject affordance with delivery quality/tech issues rather than the subject itself."
+      },
+      {
+        "name": "teacher_innovation_and_adaptation",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Captures a distinct theme (teacher creativity) useful for correlating with satisfaction. Kitchen-chemistry = highly_creative is well grounded. However applying it to a parent's or student's response where teacher effort is only indirectly implied (ED-0001 'not_present', ED-0003 'minimal_effort') is somewhat inferential but defensible."
+      },
+      {
+        "name": "student_interactive_participation_enabled",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Strong axis directly tied to satisfaction drivers. Cameras-off/muted = silenced_muted and pause-and-note = enabled_voice_agency are sound readings, though labeling the self-paced-notes student as 'enabled_voice_agency' is a stretch since it is individual, not interactive."
+      },
+      {
+        "name": "peer_community_and_social_learning",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Distinct social-learning theme, useful for analysis. 'zero peer interaction' = peer_isolation and silent-suited responses use not_present appropriately. Mostly grounded, with occasional inference where peer dynamics are not explicit."
+      },
+      {
+        "name": "conceptual_depth_versus_compliance",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Adds a learning-quality dimension separate from participation. 'make it real instead of dates' = deepened_understanding is well grounded; but assigning surface_compliance to ED-0001 (student can't keep up) reads compliance into a text primarily about tech failure, a mild overreach."
+      },
+      {
+        "name": "hands_on_practical_subject_constraint",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Potentially useful for lab/practical subjects, and correctly uses not_present for most rows. But labeling algebra (ED-0001) and early reading (ED-0003) as 'fundamentally_compromised' hands-on constraint is unwarranted—neither is a hands-on/practical subject and the text says nothing about practical components. This invents a constraint the source does not support."
+      },
+      {
+        "name": "student_attention_and_focus_capacity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Engagement/attention is a relevant axis for satisfaction. 'show up on time' = sustained_engagement and 'take notes at own pace' = sustained_engagement are reasonable; but tagging ED-0001 as 'rapid_disengagement' extrapolates from frustration to attention span, a modest inference."
+      },
+      {
+        "name": "parent_partnership_intensity_and_burden",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Useful especially for parent-role rows; 'doing worksheet ourselves' = overwhelming_parental_demand is well grounded and not_present is used correctly for silent rows. Tagging ED-0001 'parent_overhead_frustration' is a slight overreach since that response is from a student with no parental mention."
+      },
+      {
+        "name": "teacher_workload_and_emotional_toll",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Clear distinct theme with strong grounding: 'performing to a wall' = burnout_grief_unsustainable, 'manageable' = increased_workload_manageable, and not_present used appropriately for non-teacher rows. Well-behaved silent handling."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.73,
+    "rationale": "The added columns collectively provide a rich, non-redundant set of thematic axes (subject affordance, innovation, participation, community, depth, attention, parent burden, teacher toll) that give genuine leverage for cross-tabulating open-response themes against satisfaction, role, grade, and subject—well aligned with the query. Groundedness is generally good, with sound extractions and appropriate not_present handling for silent rows. The main weakness is the hands_on_practical_subject_constraint column, which asserts 'fundamentally_compromised' for non-practical subjects (algebra, reading) where the text gives no such warrant, plus scattered over-inferences elsewhere (e.g., applying teacher/parent themes to rows where those actors are not discussed). Per scope rules, no penalty was applied for completeness."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

@@ -1,0 +1,53 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What customer issues create the most support burden?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "severity_score",
+    "issue_category",
+    "customer_impact_level"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.8733,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.7616,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "severity_score",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "rationale": "An ordinal severity axis is a reasonable lens for support burden, and its values track the impact level and source text sensibly (0 for a feature request, 3 for a tenant-wide outage). However, it is near-perfectly redundant with customer_impact_level (identical distribution 76/74/50/50 and a 1:1 mapping), which limits its independent analytical leverage. Groundedness is good: severity readings align with text urgency."
+      },
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "rationale": "This is the highest-value column for the query: categorising issues directly enables grouping to identify which issue types drive the most tickets/burden. The taxonomy is granular and the samples are well-grounded (billing invoice->billing_and_pricing, session drop/SSO->authentication, 502 outage->infrastructure, nav enhancement->feature_request, CSV/Snowflake->data_integration). Minor concern: overlapping/near-duplicate categories (data_integration vs integrations vs data_integrity) suggest some inconsistency, but each individual value is a sound reading of the text."
+      },
+      {
+        "name": "customer_impact_level",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "rationale": "Impact level is a plausible axis for prioritising burden, but it is a mere restatement of severity_score (identical 76/74/50/50 distribution and a strict monotonic mapping low/medium/high/critical), so it adds little beyond a relabeling. Values are reasonable readings of the text (outage->critical, feature_request->low), though the CS-0001 finance-deadline invoice rated 'high' vs severity 2 shows the mapping is not perfectly consistent."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.88,
+    "rationale": "issue_category is the core enabler for 'what issues create the most support burden' and is strong. severity_score and customer_impact_level provide a useful prioritisation axis but are essentially duplicates of each other, so together they contribute one axis rather than two. All observed values are sound, warranted readings of the source text with no fabricated specifics; groundedness is high across columns."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

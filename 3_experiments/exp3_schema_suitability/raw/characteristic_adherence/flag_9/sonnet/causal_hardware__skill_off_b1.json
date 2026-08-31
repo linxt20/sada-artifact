@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "weekly_hardware_count",
+    "weekly_hardware_pct",
+    "hw_rolling_avg_prior4w",
+    "hw_spike_ratio",
+    "in_anomaly_window"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.86,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.81,
+    "source_groundedness__table_level": 0.81,
+    "b1_overall": 0.835,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "weekly_hardware_count",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A per-week count of hardware incidents is directly relevant to diagnosing a spike; it gives a temporal axis to compare volumes. Values are derivable by aggregating rows over time and category; the sampled software rows correctly show 0, consistent with the source."
+      },
+      {
+        "name": "weekly_hardware_pct",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Hardware share of weekly volume distinguishes whether the spike is absolute or a compositional shift, adding a genuine analytical angle beyond raw count. Derivable from counts present in the table; sampled software rows correctly show 0."
+      },
+      {
+        "name": "hw_rolling_avg_prior4w",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A prior-4-week rolling baseline is exactly what is needed to detect deviation and define a spike. Computed from the same timestamped counts; sampled early-January rows plausibly show 0 baseline."
+      },
+      {
+        "name": "hw_spike_ratio",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Ratio of current count to prior baseline is the core spike-detection metric and directly answers the magnitude/timing of the spike. Null where baseline is 0 is correct behaviour, not a hallucination; derived from in-table temporal counts."
+      },
+      {
+        "name": "in_anomaly_window",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A binary flag partitioning rows into the anomaly window vs outside is essential to the query's framing and enables direct in/out comparison. It rests on a defined window; the sampled early-January rows are flagged No consistently, but the window boundary is an analyst-defined inference rather than explicit text."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.81,
+    "rationale": "The added columns form a coherent, purpose-built toolkit for the spike diagnosis: raw weekly counts, hardware share, a rolling baseline, a spike ratio, and an anomaly-window flag. Each offers a distinct axis (volume, composition, baseline deviation, window membership) rather than trivial restatements. All values are derivable from the table's timestamps and category via aggregation; the sampled software rows correctly yield zeros/nulls, and the null spike ratio on a zero baseline is sound, not invented. The anomaly-window flag relies on an analyst-defined boundary, a warranted inference, slightly lowering groundedness but not indicating hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

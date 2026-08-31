@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "primary_complaint_category",
+    "seat_comfort_physical_limitation",
+    "staff_service_attentiveness_gap",
+    "food_beverage_quality",
+    "operational_reliability_issue",
+    "service_recovery_failure",
+    "cabin_class_experience_gap",
+    "route_length_discomfort_interaction",
+    "traveller_expectation_segment"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0444,
+    "predictor_fraction": 0.2222,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "predictive_utility": 0.2,
+    "leakage_rate": 0.7778
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "primary_complaint_category",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This is extracted from the same review narrative that also produces the Overall Rating. The presence/absence of a complaint (NULL≈no complaint) is essentially the reviewer's dissatisfaction encoded, co-determined with the outcome and only knowable from the post-hoc review, not before the flight. It restates the review's overall sentiment rather than supplying an external signal."
+      },
+      {
+        "name": "seat_comfort_physical_limitation",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A boolean mined from review complaints about seating. It duplicates the existing Seat Comfort rating and encodes the reviewer's contemporaneous evaluation, which is co-generated with the overall rating. Not an independently-knowable, pre-outcome attribute."
+      },
+      {
+        "name": "staff_service_attentiveness_gap",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Boolean sentiment about staff attentiveness inferred from the review; a near-restatement of the existing Staff Service dimension and of the reviewer's overall sentiment. It moves in lockstep with dissatisfaction and is only observable from the same review that yields the rating."
+      },
+      {
+        "name": "food_beverage_quality",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Ordinal quality label (excellent…underseasoned_overcooked) extracted from the review. It restates the existing Food & Beverages rating and the reviewer's evaluative sentiment, co-determined with the overall rating, so it leaks rather than predicts."
+      },
+      {
+        "name": "operational_reliability_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures objective operational events (delays/cancellations, luggage mishandling, mechanical problems) that correspond to real, verifiable facts knowable from operations data independently of the review. These are external to the rating, plausibly influence satisfaction, and are actionable for route/service optimisation — a legitimate predictor."
+      },
+      {
+        "name": "service_recovery_failure",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the airline 'failed to recover' is inferred from the review's negative narrative and is strongly co-determined with dissatisfaction. It is only observable after the outcome from the same review, so it leaks the target rather than providing an independent feature."
+      },
+      {
+        "name": "cabin_class_experience_gap",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "The class itself is already known (Class column), but the labels bake the negative experience verdict (economy_poor, premium_poor, no_differentiation) into the feature. That 'poor/gap' judgment is the reviewer's outcome sentiment mined from the review, so the informative part leaks the target."
+      },
+      {
+        "name": "route_length_discomfort_interaction",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Route length is objective and pre-known (from Route), but the descriptors 'critical/problematic/acceptable' and the 'discomfort' framing embed the observed subjective discomfort/outcome. The predictive content of the label is the leaked satisfaction signal, not the route length alone."
+      },
+      {
+        "name": "traveller_expectation_segment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Traveller type (leisure/business/family/frequent-flyer) is knowable before the flight and mirrors the existing Type of Traveller; the attached expectation level plausibly predicts whether the flyer rates >7. It lies outside the outcome and carries genuine (if largely redundant with Type of Traveller) predictive signal."
+      }
+    ],
+    "n_predictors": 2,
+    "predictive_utility": 0.2,
+    "rationale": "The set is dominated by columns mined from the review text — the very artifact that also produces the Overall Rating — so most of them (complaint category, seat/staff/food quality, service-recovery failure, cabin-class 'poor' gap, and the discomfort-laden route interaction) restate the reviewer's contemporaneous sentiment and leak the target rather than predict it; several also just refine existing component-rating columns. Only two columns supply legitimate external, pre-outcome signal: operational_reliability_issue (objective ops events, actionable and non-leaky) and traveller_expectation_segment (traveller type/expectation known ahead of time). Even these add limited NEW leverage beyond the original columns — traveller segment largely duplicates Type of Traveller, and the original component ratings/Recommended already carry most of the honest predictive information — so net genuine predictive leverage from the additions is low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

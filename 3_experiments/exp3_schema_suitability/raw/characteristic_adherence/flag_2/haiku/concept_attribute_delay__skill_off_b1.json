@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some incidents take longer to resolve?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "priority_level",
+    "category_criticality",
+    "is_weekend_opened"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.67,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7875,
+    "source_groundedness__table_level": 0.79,
+    "b1_overall": 0.7288,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "This is the target variable for the query -- it directly quantifies how long incidents take, enabling all grouping/modelling. Derivable from opened_at and closed_at, both present. The -1 sentinel (128 rows) is a reasonable 'unresolved/unknown' marker. Values appear consistent with the timestamps, so groundedness is high."
+      },
+      {
+        "name": "priority_level",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "An original 'priority' column already exists; this appears to be a trivial numeric restatement, adding little new analytical leverage. Values are grounded (a direct read of priority)."
+      },
+      {
+        "name": "category_criticality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Mapping category to a criticality tier gives a genuine new axis to compare resolution time against. However the criticality assignment is an inferred judgement not explicitly present; the evidence samples do not even show the source category, so the specific 1/2/3 assignment is only weakly warranted from the text and risks imposed rankings."
+      },
+      {
+        "name": "is_weekend_opened",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Weekend-vs-weekday opening is a plausible driver of longer resolution, offering a clean new grouping axis. Derivable from opened_at. One sample flagged 2023-01-02 (a Monday) as weekend=1, which is questionable, suggesting some derivation inaccuracy, but the concept is well grounded."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.79,
+    "rationale": "The set provides the core target metric (resolution_time_hours) plus two genuinely useful explanatory axes (weekend timing, category criticality) that support the 'why do some take longer' analysis. priority_level is largely redundant with the existing priority column. Most values are soundly derivable from present timestamp/category fields, though category_criticality involves an unshown inferred ranking and at least one weekend flag looks mis-derived, mildly lowering groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

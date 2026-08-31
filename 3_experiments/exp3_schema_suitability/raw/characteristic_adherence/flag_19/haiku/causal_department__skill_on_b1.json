@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do expense decline rates differ across departments?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "asset_category_type",
+    "procurement_timing_signal",
+    "creation_origin",
+    "asset_specification_completeness",
+    "expense_nature"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.68,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.64,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing expenses into hardware/service/travel/misc gives a genuine axis to compare decline rates across departments. Values are soundly read from short_description and ci text (e.g. 'Provision of Services'->service, 'Dell Laptop'->hardware)."
+      },
+      {
+        "name": "procurement_timing_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Timing/turnaround could plausibly relate to declines, giving useful leverage. However groundedness is weak: rows with processed_date 'nan' are still confidently labeled 'rapid_turnaround', and there is no visible opened_at-to-processed interval in samples to justify the pace distinction. The signal appears partly invented."
+      },
+      {
+        "name": "creation_origin",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Manual vs auto-generated origin is a plausible axis, but the source fields shown (short_description, ci, processed_date) do not clearly indicate provenance. Every sample is labeled 'manual_entry' with no visible textual warrant, suggesting an unsupported/guessed assignment."
+      },
+      {
+        "name": "asset_specification_completeness",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether the ci is a concrete identifier vs generic placeholder is derivable from the ci text (e.g. 'OptiPlex 7050'->complete, 'Random Access Memory Component'->generic, 'ISP Services'->service_descriptor). Modestly useful as a proxy for documentation quality that could correlate with declines, though somewhat correlated with asset_category_type."
+      },
+      {
+        "name": "expense_nature",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Well grounded in the description text, but largely redundant with asset_category_type (hardware->hardware_acquisition, service->service_subscription), so it adds limited new analytical leverage beyond that column."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.65,
+    "rationale": "The category-oriented columns (asset_category_type, asset_specification_completeness, expense_nature) are well grounded in the short_description/ci text and give real axes for comparing decline behavior, though expense_nature is mostly redundant with asset_category_type. The two provenance/timing columns (procurement_timing_signal, creation_origin) are analytically plausible but poorly grounded: samples show confident labels where the source text is silent or 'nan', indicating invented values. Overall the set is moderately useful with mixed groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

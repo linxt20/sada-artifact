@@ -1,0 +1,144 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "n_added_columns": 14,
+  "added_columns": [
+    "crew_service_quality",
+    "seat_comfort_and_space",
+    "food_beverage_quality",
+    "aircraft_condition_recency",
+    "operational_disruption",
+    "service_consistency_trend",
+    "amenity_availability",
+    "price_value_alignment",
+    "ground_operations_quality",
+    "aircraft_age_and_condition",
+    "ground_and_checkin_experience",
+    "operational_disruption_and_reliability",
+    "service_consistency_and_trend",
+    "value_for_money_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 14,
+    "n_judged_columns": 14,
+    "analytical_usefulness": 0.4821,
+    "analytical_usefulness__table_level": 0.45,
+    "source_groundedness": 0.6157,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.5489,
+    "hallucination_rate": 0.7143
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well-differentiated categorical axis for a key review aspect; values track the crew descriptions in the samples well and correctly uses Unknown when silent."
+      },
+      {
+        "name": "seat_comfort_and_space",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful thematic axis but partly redundant with the original 'Seat Comfort' rating column; values are well grounded (cramped, spacious, adequate all match the text)."
+      },
+      {
+        "name": "food_beverage_quality",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Meaningful but overlaps with original 'Food & Beverages' rating; text-grounded, with correct Unknown for silent rows."
+      },
+      {
+        "name": "aircraft_condition_recency",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "New axis not in originals, but tends to assert 'well_maintained_adequate' even when the text is silent (e.g. amazing-flight row had no aircraft-condition statement), and NULL rate is lower than warranted, indicating over-confident inference."
+      },
+      {
+        "name": "operational_disruption",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Delay/cancellation axis is analytically valuable, but 'on_time_reliable' is asserted for rows that never mention timing (the dreadful-seats review, the food review), inferring reliability from silence."
+      },
+      {
+        "name": "service_consistency_trend",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A 'trend over time' claim requires longitudinal signal a single review rarely provides; near-zero NULL rate shows it is fabricated from sentiment (e.g. 'reliably_average' assigned to a purely negative seat review)."
+      },
+      {
+        "name": "amenity_availability",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Potentially useful but has ZERO NULLs, so every row is forced into a service-level bucket even when amenities are never discussed (the dreadful-seats row labeled 'minimal_service_cuts' with no basis)."
+      },
+      {
+        "name": "price_value_alignment",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Overlaps original 'Value For Money'; values are frequently invented where price is unmentioned (labeled 'fair_price_acceptable'/'premium_justified' on reviews with no price content)."
+      },
+      {
+        "name": "ground_operations_quality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Check-in/ground axis is genuinely new, but 'smooth_efficient_helpful' is asserted for reviews discussing only inflight experience, low NULL rate signals inference from silence."
+      },
+      {
+        "name": "aircraft_age_and_condition",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Near-duplicate of 'aircraft_condition_recency' with nearly identical value distribution; adds no new analytical leverage and shares the same over-inference issue."
+      },
+      {
+        "name": "ground_and_checkin_experience",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Restatement of 'ground_operations_quality' with the same value vocabulary; redundant. Higher NULL rate makes it slightly better grounded but still duplicative."
+      },
+      {
+        "name": "operational_disruption_and_reliability",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Near-duplicate of 'operational_disruption'; same inference-from-silence problem, adds no distinct axis."
+      },
+      {
+        "name": "service_consistency_and_trend",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Duplicate of 'service_consistency_trend'; same fabricated longitudinal claim with near-zero NULLs."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Near-duplicate of 'price_value_alignment'; redundant restatement with the same over-assertion of price sentiment."
+      }
+    ],
+    "analytical_usefulness": 0.45,
+    "source_groundedness": 0.58,
+    "rationale": "Several columns provide genuine new aspect axes (crew, ground ops, disruption) suited to the exploratory query, but the set is heavily degraded by near-exact duplicate pairs (aircraft_condition vs aircraft_age, ground_operations vs ground_and_checkin, operational_disruption vs ..._and_reliability, service_consistency_trend vs ..._and_trend, price_value_alignment vs value_for_money_perception), which add no new leverage and drag table-level usefulness down. Groundedness is mixed: aspect columns that use Unknown for silent rows are sound, but multiple columns (operational_disruption, service_consistency_trend, amenity_availability, price/value) infer confident specifics from silence with implausibly low NULL rates, a recurrent hallucination pattern."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 14
+}

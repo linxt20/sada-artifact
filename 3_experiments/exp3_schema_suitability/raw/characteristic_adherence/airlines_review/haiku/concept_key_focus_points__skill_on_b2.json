@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "operational_reliability",
+    "food_beverage_quality",
+    "seat_comfort_configuration",
+    "customer_service_responsiveness",
+    "compensation_claim_resolution",
+    "route_complexity_itinerary"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.5749,
+    "facet_fraction": 0.8571,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.75,
+    "mece": 0.6708,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Quality of cabin crew interaction is a core aspect OF service quality."
+      },
+      {
+        "name": "operational_reliability",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "On-time performance, delays, cancellations, and luggage handling are constitutive aspects of the airline's service delivery quality."
+      },
+      {
+        "name": "food_beverage_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The quality of onboard food and beverage is a distinct aspect OF the overall service experience."
+      },
+      {
+        "name": "seat_comfort_configuration",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Physical comfort of the seat is a constitutive dimension of inflight service quality."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Responsiveness of customer service is an aspect of service quality, though it overlaps heavily with cabin_crew_service_quality (both capture staff helpfulness/attitude)."
+      },
+      {
+        "name": "compensation_claim_resolution",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How the airline handles refunds/compensation is a legitimate service-recovery aspect OF service quality."
+      },
+      {
+        "name": "route_complexity_itinerary",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Number of connections/legs is a property of the itinerary itself, not an aspect of the airline's service quality; it may predict satisfaction but is not constitutive of the concept."
+      }
+    ],
+    "facet_columns": [
+      "cabin_crew_service_quality",
+      "operational_reliability",
+      "food_beverage_quality",
+      "seat_comfort_configuration",
+      "customer_service_responsiveness",
+      "compensation_claim_resolution"
+    ],
+    "non_facet_columns": [
+      "route_complexity_itinerary"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.75,
+    "rationale": "Most columns are genuine constitutive facets of airline service quality (crew, reliability, food, seat comfort, service recovery), so meronymy largely holds. However, mutual exclusivity is weakened because cabin_crew_service_quality and customer_service_responsiveness substantially overlap — both capture staff helpfulness and attitude under different names. route_complexity_itinerary is not a facet at all but a property of the itinerary (external predictor), diluting the set. Exhaustiveness is fairly good: the facets cover crew, comfort, catering, punctuality/reliability, and service recovery, though value-for-money/pricing and inflight entertainment (present in the original table) are notable uncovered constitutive aspects."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

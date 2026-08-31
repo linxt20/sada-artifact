@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest high urgency?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "urgency_signal_count",
+    "has_critical_keywords",
+    "has_acute_presentation",
+    "has_severe_symptoms"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7125,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7438,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "urgency_signal_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A continuous count of urgency signals is directly aligned with the query and offers a genuine axis to rank/model urgency. However groundedness is shaky: the annual physical row (mild fatigue, denies chest pain, BP normal) is scored 2, and the MI follow-up with no active symptoms is scored 1, suggesting the count picks up benign or negated tokens rather than true urgency signals."
+      },
+      {
+        "name": "has_critical_keywords",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A flag for critical keywords is a reasonable, distinct signal for the urgency query. In the samples it is 0 for all benign/non-acute notes, which is a sound reading; no unsupported positives observed."
+      },
+      {
+        "name": "has_acute_presentation",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes acute onset (cough x3 days, twisting injury yesterday flagged 1) from chronic/routine notes (0). Well grounded across samples and adds a meaningful axis for urgency analysis."
+      },
+      {
+        "name": "has_severe_symptoms",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Severity of symptoms is a relevant urgency axis, but the annual-physical row (only mild fatigue, explicitly denies chest pain/dyspnea) is flagged has_severe_symptoms=1, which contradicts the source text and indicates it may be triggered by negated or benign terms."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.68,
+    "rationale": "The four added columns each provide a distinct, non-trivial signal (count, critical keywords, acuity, severity) that genuinely supports the 'what signals suggest high urgency' analysis, so usefulness is solid. Groundedness is mixed: the keyword and acute-presentation flags read the text soundly, but urgency_signal_count and has_severe_symptoms produce positives on a clearly routine note that denies serious symptoms, suggesting the extraction counts negated/benign tokens and overstates urgency in some rows."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 4
+}

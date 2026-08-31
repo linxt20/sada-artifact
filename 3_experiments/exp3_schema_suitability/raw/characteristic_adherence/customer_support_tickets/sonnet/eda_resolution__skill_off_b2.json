@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_theme",
+    "theme_avg_resolution_minutes",
+    "channel_avg_resolution_minutes",
+    "priority_avg_resolution_minutes",
+    "resolution_vs_theme_avg",
+    "priority_numeric"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.0417,
+    "predictor_fraction": 0.1667,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.25,
+    "interpretable_fraction": 0.1667
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Extracted categorical variable with well-separated, interpretable themes (billing, auth, ui, etc.) that can be grouped and compared against resolution time. Genuinely opens a new relationship axis absent from the original table."
+      },
+      {
+        "name": "theme_avg_resolution_minutes",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A precomputed group aggregate of the focus itself keyed by theme. It restates the focus rather than providing an external associational variable; grouping on it is equivalent to grouping on issue_theme, adding no independent relationship."
+      },
+      {
+        "name": "channel_avg_resolution_minutes",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Group mean of the focus by channel, which is already an original column. It is a derivative of the focus, not an external predictor, so it collapses exploration into a lookup of channel."
+      },
+      {
+        "name": "priority_avg_resolution_minutes",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Group mean of the focus by priority (already present). Restates the focus keyed by an existing segmentation; not an independent associational variable."
+      },
+      {
+        "name": "resolution_vs_theme_avg",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A residual of the focus minus its theme mean. This is a transform of the focus variable itself, with fine-grained near-unique values that support no clean segmentation; it is opaque restatement, not an external comparison axis."
+      },
+      {
+        "name": "priority_numeric",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A numeric re-encoding of the existing priority column. Adds no new information beyond priority; it is a restatement of an existing segmentation dimension."
+      }
+    ],
+    "n_predictors": 1,
+    "relationship_informativeness": 0.25,
+    "rationale": "Only issue_theme is a genuine new, interpretable segmentation variable that opens an informative relationship with resolution time. The remaining five columns are either precomputed group aggregates of the focus (theme/channel/priority averages), a residual transform of the focus, or a mere re-encoding of an existing column. These restate the focus or existing dimensions rather than introducing external associational variables, and one (resolution_vs_theme_avg) is too fine-grained to segment on. As a set they weakly support interpretable relationship discovery."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

@@ -1,0 +1,104 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "goal_outcome_domain",
+    "improvement_mechanism",
+    "target_population_scope",
+    "quantified_target_direction_sign",
+    "temporal_scope",
+    "outcome_metric_indicator",
+    "goal_confidence_completeness",
+    "baseline_specificity",
+    "metric_goal_alignment_flag",
+    "enabling_capability_gap",
+    "outcome_materiality"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.6396,
+    "focus_coherence": 0.82,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The strategic nature and business significance of each goal -- characterizing what each goal is trying to achieve (outcome domain, mechanism, materiality) so analysts can judge which goals are worth attention.",
+    "per_column": [
+      {
+        "name": "goal_outcome_domain",
+        "supports_focus": true,
+        "rationale": "Classifies the business outcome the goal targets -- a core facet of what a goal is about."
+      },
+      {
+        "name": "improvement_mechanism",
+        "supports_focus": true,
+        "rationale": "How the goal intends to drive change; a coherent 'lever' facet of the goal's strategic nature."
+      },
+      {
+        "name": "target_population_scope",
+        "supports_focus": true,
+        "rationale": "Who/what the goal affects; a scope facet contributing to importance assessment."
+      },
+      {
+        "name": "quantified_target_direction_sign",
+        "supports_focus": true,
+        "rationale": "Direction of the quantified target; a meaningful attribute of the goal's ambition."
+      },
+      {
+        "name": "temporal_scope",
+        "supports_focus": true,
+        "rationale": "Time horizon of the goal; a relevant facet for prioritization."
+      },
+      {
+        "name": "outcome_metric_indicator",
+        "supports_focus": true,
+        "rationale": "The metric used to measure success; ties directly to the outcome focus."
+      },
+      {
+        "name": "goal_confidence_completeness",
+        "supports_focus": false,
+        "rationale": "Degenerate single-value (all true) flag conveying no discriminating information; noise."
+      },
+      {
+        "name": "baseline_specificity",
+        "supports_focus": true,
+        "rationale": "Whether a baseline is specified; a quality/attention facet of the goal's rigor."
+      },
+      {
+        "name": "metric_goal_alignment_flag",
+        "supports_focus": false,
+        "rationale": "Degenerate single-value (all false) flag; conveys nothing and does not aid focus."
+      },
+      {
+        "name": "enabling_capability_gap",
+        "supports_focus": true,
+        "rationale": "What capability the goal depends on; a substantive facet for feasibility/attention."
+      },
+      {
+        "name": "outcome_materiality",
+        "supports_focus": true,
+        "rationale": "Business materiality/risk of the outcome; central to 'what's worth attention'."
+      }
+    ],
+    "focus_coherence": 0.82,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "rationale": "The added columns collectively centre on characterizing each goal's strategic substance and significance -- outcome domain, mechanism, scope, metric, materiality, and feasibility/quality signals -- which coheres well around an inferable focus of 'what makes a goal worth attention.' This is not a scattered grab-bag; most facets are differentiated and data-inferable, giving a sound multi-facet analytical structure at a useful granularity. Actionability is high: an analyst could genuinely triage/prioritize goals by materiality, capability gap, and baseline rigor. It is not a perfect realization: two columns (goal_confidence_completeness=all true, metric_goal_alignment_flag=all false) are degenerate single-value fields that add no discriminating signal, and there is some overlap between goal_outcome_domain and outcome_materiality, mildly diluting the structure. Overall a strong, coherent focus inference with minor noise."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 11
+}

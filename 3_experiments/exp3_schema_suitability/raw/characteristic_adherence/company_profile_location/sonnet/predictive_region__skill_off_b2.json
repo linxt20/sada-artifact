@@ -1,0 +1,164 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 18,
+  "added_columns": [
+    "desc_word_count",
+    "desc_avg_word_length",
+    "desc_sentence_count",
+    "tech_density",
+    "primary_industry",
+    "industry_tag_count",
+    "is_fintech",
+    "is_healthcare",
+    "is_enterprise_sw",
+    "is_consumer",
+    "is_security",
+    "is_ai_ml",
+    "is_hardware_iot",
+    "is_education",
+    "mentions_b2b",
+    "mentions_b2c",
+    "has_funding_language",
+    "action_verb_score"
+  ],
+  "metrics": {
+    "n_added_columns": 18,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.55,
+    "predictor_fraction": 1.0,
+    "n_predictors": 18,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "desc_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Generic length metric; weak but legitimate signal outside the focus, plausibly varies by regional writing norms."
+      },
+      {
+        "name": "desc_avg_word_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Stylometric measure external to regional_cluster; low but non-zero potential signal."
+      },
+      {
+        "name": "desc_sentence_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Structural text feature, independent of region; weak predictive value."
+      },
+      {
+        "name": "tech_density",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Density of technical terms; different regional tech hubs may vary, a plausible external predictor."
+      },
+      {
+        "name": "primary_industry",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Industry inferred from description; regional clusters are known to specialize by industry, strong external predictor with no leakage of region itself."
+      },
+      {
+        "name": "industry_tag_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of industry tags; a legitimate description-derived feature that may correlate with region."
+      },
+      {
+        "name": "is_fintech",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Industry indicator; certain regions concentrate fintech, meaningful external signal."
+      },
+      {
+        "name": "is_healthcare",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Healthcare concentration varies regionally; valid predictor."
+      },
+      {
+        "name": "is_enterprise_sw",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Enterprise-software focus differs across regional hubs; valid predictor."
+      },
+      {
+        "name": "is_consumer",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Consumer orientation may vary by region; legitimate feature."
+      },
+      {
+        "name": "is_security",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Security specialization clusters regionally; valid predictor."
+      },
+      {
+        "name": "is_ai_ml",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "AI/ML concentration is strongly regional; valid predictor."
+      },
+      {
+        "name": "is_hardware_iot",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Hardware/IoT hubs are geographically concentrated; valid predictor."
+      },
+      {
+        "name": "is_education",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Edtech clustering may correlate with region; valid weak predictor."
+      },
+      {
+        "name": "mentions_b2b",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Business-model signal external to region; plausible mild predictor."
+      },
+      {
+        "name": "mentions_b2c",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Business-model signal; plausible mild predictor."
+      },
+      {
+        "name": "has_funding_language",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Funding rhetoric may differ across startup ecosystems/regions; plausible predictor."
+      },
+      {
+        "name": "action_verb_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Stylometric feature independent of region; weak external signal."
+      }
+    ],
+    "n_predictors": 18,
+    "predictive_utility": 0.55,
+    "rationale": "All columns are derived from the business description and lie outside the regional_cluster focus; none restate or leak the geographic label (latitude/longitude/city define the target but were not duplicated here). The industry indicators (primary_industry and the is_* dummies, ai_ml, security, etc.) carry the strongest genuine signal because tech industries cluster geographically, giving a model real leverage. The stylometric/text-shape features (word count, avg word length, sentence count, action_verb_score) are generic and mostly noise, and the industry dummies are heavily redundant with primary_industry, so incremental value is limited. As a set they provide moderate predictive leverage."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 18
+}

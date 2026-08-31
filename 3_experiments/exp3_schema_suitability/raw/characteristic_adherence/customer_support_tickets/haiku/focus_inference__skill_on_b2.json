@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_category",
+    "issue_severity",
+    "affected_scope",
+    "actionability"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.8096,
+    "focus_coherence": 0.92,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/taxonomy of support tickets — characterizing what each ticket is about along its type, severity, blast radius, and required action.",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "supports_focus": true,
+        "rationale": "Directly classifies the kind of issue (bug, feature request, billing, security, etc.), which is the core of 'what kinds of issues' and the central facet of the inferred focus."
+      },
+      {
+        "name": "issue_severity",
+        "supports_focus": true,
+        "rationale": "Characterizes the impact level of the issue, a coherent facet describing the issue itself rather than a generic surface metric."
+      },
+      {
+        "name": "affected_scope",
+        "supports_focus": true,
+        "rationale": "Describes the breadth of impact (single user, subset, entire tenant), a meaningful attribute of the issue's nature."
+      },
+      {
+        "name": "actionability",
+        "supports_focus": true,
+        "rationale": "Maps the issue to the type of remediation required, a coherent, actionable facet that differentiates issue kinds by their handling path."
+      }
+    ],
+    "focus_coherence": 0.92,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.9,
+    "rationale": "All four columns centre coherently on one focus: characterizing the nature of support tickets. issue_category directly answers the 'what kinds of issues' query, while severity, affected_scope, and actionability provide well-differentiated, non-redundant facets (type / impact magnitude / impact breadth / remediation path) at a useful granularity, forming a sound multi-facet analytical structure rather than a single restatement or generic noise. The implied focus is genuinely actionable — an analyst could cluster tickets, prioritize engineering vs. product vs. self-service workloads, and identify high-severity/wide-scope categories. Minor deductions: 'affected_scope' has a 'not_present' bucket suggesting inconsistent applicability, and there is some overlap between category (e.g., bug_outage) and severity/scope, but the set remains coherent and structurally sound."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

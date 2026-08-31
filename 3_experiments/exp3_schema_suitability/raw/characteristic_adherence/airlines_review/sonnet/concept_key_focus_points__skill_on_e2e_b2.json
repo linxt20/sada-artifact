@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 9,
+  "added_columns": [
+    "complaint_category",
+    "staff_attitude_judgment",
+    "food_quality_judgment",
+    "disruption_handling_quality",
+    "compensation_resolution_outcome",
+    "value_for_money_perception",
+    "service_consistency_concern",
+    "repeat_or_loyalty_signal",
+    "special_needs_handling"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.426,
+    "facet_fraction": 0.7778,
+    "n_facets": 7,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.6,
+    "mece": 0.5477,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "complaint_category",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Rather than isolating one aspect of service quality, this is a catch-all taxonomy of failure types spanning staff, delays, billing, food, seat, baggage, etc. It re-slices the whole concept and overlaps with nearly every other facet column, so it functions as a compressed restatement of the whole rather than a single MECE part."
+      },
+      {
+        "name": "staff_attitude_judgment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Interpersonal/staff service is a genuine constitutive aspect of airline service quality — a clean 'aspect of' the concept."
+      },
+      {
+        "name": "food_quality_judgment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Catering/food quality is a legitimate constitutive facet of the in-flight service experience."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How delays/cancellations are handled is a real service-delivery aspect of quality, distinct from static product facets."
+      },
+      {
+        "name": "compensation_resolution_outcome",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Complaint resolution / remediation is a constitutive facet of service recovery, though it partly overlaps with disruption_handling_quality when disruptions drive the compensation."
+      },
+      {
+        "name": "value_for_money_perception",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Perceived value is a recognized dimension of service quality (and mirrors the original Value For Money rating), so it counts as a facet, albeit an evaluative/summary one that risks overlapping the overall judgment."
+      },
+      {
+        "name": "service_consistency_concern",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Reliability/consistency is a core SERVQUAL-style dimension of service quality — an aspect of the concept."
+      },
+      {
+        "name": "repeat_or_loyalty_signal",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Loyalty/repeat intention is a downstream OUTCOME of service quality, not a part of it. It is predicted by quality rather than constituting it."
+      },
+      {
+        "name": "special_needs_handling",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Handling of special assistance/accessibility is a specific, non-overlapping constitutive aspect of the service experience."
+      }
+    ],
+    "facet_columns": [
+      "staff_attitude_judgment",
+      "food_quality_judgment",
+      "disruption_handling_quality",
+      "compensation_resolution_outcome",
+      "value_for_money_perception",
+      "service_consistency_concern",
+      "special_needs_handling"
+    ],
+    "non_facet_columns": [
+      "complaint_category",
+      "repeat_or_loyalty_signal"
+    ],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.6,
+    "rationale": "Most added columns are genuine facets (staff, food, disruption handling, resolution, value, consistency, special needs). However MECE is weakened on both axes. Mutual exclusivity: complaint_category is a whole-concept re-slice that overlaps almost every other facet, and disruption_handling_quality vs compensation_resolution_outcome overlap around service recovery, while value_for_money is an evaluative summary that partly duplicates the overall judgment. Two columns are not facets at all: complaint_category (restatement) and repeat_or_loyalty_signal (downstream outcome). Exhaustiveness: coverage is decent but omits key constitutive aspects present even in the source table — seat/cabin comfort as a product dimension, inflight entertainment reliability (only appears as a complaint bucket), booking/check-in/ground process, and cleanliness/punctuality, so the facet set does not fully cover the concept's main aspects."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

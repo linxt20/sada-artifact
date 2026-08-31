@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do handling times differ by channel and priority?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "issue_category",
+    "operational_severity",
+    "customer_impact_type",
+    "scope_blast_radius",
+    "root_cause_domain",
+    "requires_engineering_escalation",
+    "technical_complexity",
+    "workaround_available"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.835,
+    "analytical_usefulness__table_level": 0.84,
+    "source_groundedness": 0.845,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.84,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean categorical axis to explain handling-time differences; categories match source text well across samples (billing, bug, outage, feature_request)."
+      },
+      {
+        "name": "operational_severity",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Severity is a strong driver of resolution time and orthogonal to category. Values are well-warranted; total_outage for the 502-all-members row and not_present for a feature request are sound."
+      },
+      {
+        "name": "customer_impact_type",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful business-impact axis. Mostly grounded; labeling the billing invoice ticket 'revenue_at_risk' is a reasonable if slightly aggressive read since it's a paid correction, not clear lost revenue."
+      },
+      {
+        "name": "scope_blast_radius",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Blast radius relates to prioritization and effort. Well grounded (all-Acme-members = single_tenant_all_users), though CS-0005's CSV BOM affecting one customer's pipeline being 'single_tenant_all_users' is a mild inference."
+      },
+      {
+        "name": "root_cause_domain",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "Good axis to group handling time by responsible engineering domain. Mostly sound, but CS-0003 (502 gateway on dashboard) labeled 'infrastructure_networking' is plausible; assigning specific root-cause domains where text only shows symptoms is inferential and occasionally not fully supported."
+      },
+      {
+        "name": "requires_engineering_escalation",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Escalation flag directly plausibly correlates with longer handling times; a meaningful binary. Values are defensible inferences from the described technical nature of each ticket."
+      },
+      {
+        "name": "technical_complexity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "An ordinal complexity score is a strong modeling axis for handling time. However precise 1-5 values are subjective and only loosely warranted by the text; specific numbers assert precision the source does not clearly support."
+      },
+      {
+        "name": "workaround_available",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Workaround availability affects urgency and effort. Grounded where text mentions the manual sed step (customer_found_workaround); 'no_workaround' as default for silent rows is a slightly strong assertion but generally reasonable."
+      }
+    ],
+    "analytical_usefulness": 0.84,
+    "source_groundedness": 0.84,
+    "rationale": "The added columns collectively provide multiple genuinely distinct axes (category, severity, business impact, scope, root-cause domain, escalation, complexity, workaround) that give real analytical leverage for explaining why handling times vary by channel and priority. Values are largely sound readings of the source text. The main groundedness weakness is the precise technical_complexity integer scale and some confident root-cause-domain assignments that infer causes from symptoms; these are reasonable but occasionally assert more specificity than the text supports. No column is near-constant or trivially redundant."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

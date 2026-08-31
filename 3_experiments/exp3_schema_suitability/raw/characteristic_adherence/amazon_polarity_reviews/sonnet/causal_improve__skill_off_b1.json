@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "sentiment",
+    "mentioned_topics",
+    "seller_improvement_signal",
+    "review_length_bucket"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.6125,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.7125,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.6625,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "sentiment",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Sentiment is grounded and correctly read across samples, but it is a bare positive/negative flag that is largely redundant with the existing label_pos column (a perfect 125/125 split mirrors it), limiting genuine new analytical leverage for the improvement query."
+      },
+      {
+        "name": "mentioned_topics",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A topic taxonomy is a strong axis for grouping reviews to identify improvement areas. However groundedness is weak: the doll review is tagged 'ease_of_use' (unsupported), the Eamon music rant is tagged 'sizing_fit' (nonsensical), and the book review tagged 'general_experience' loses the actual content signal. Several sample tags contradict or invent topics not present in the text."
+      },
+      {
+        "name": "seller_improvement_signal",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "This is the most directly query-aligned column, mapping reviews to actionable seller actions. But it inherits errors and over-asserts: it collapses all positives to 'maintain_current_quality' and lumps varied negatives into 'investigate_general_dissatisfaction'. The AMZ-0004 positive explicitly complains about a formulation change yet is tagged 'maintain_current_quality', misreading a stated negative."
+      },
+      {
+        "name": "review_length_bucket",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Derivable and consistent with content length, but it is a generic text-length proxy that offers no analytical leverage for how sellers can improve satisfaction; adds no meaningful axis to group or model on for this query."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.6,
+    "rationale": "The set contains two query-relevant axes (mentioned_topics, seller_improvement_signal) that genuinely support grouping reviews into actionable improvement areas, one redundant sentiment flag, and one low-value length bucket. Groundedness is the main weakness: multiple sample tags are invented or contradict the source (music rant as 'sizing_fit', doll review as 'ease_of_use', a positive with an explicit formulation complaint marked 'maintain_current_quality'), indicating unreliable extraction on off-taxonomy content."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

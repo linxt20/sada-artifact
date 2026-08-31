@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What operational burdens appear in incident descriptions?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_symptom",
+    "affected_resource_scope",
+    "incident_blast_radius",
+    "self_resolved",
+    "recurrent_caller",
+    "off_hours_incident",
+    "recurrence_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7125,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.6687,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.6906,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorising incidents (VPN, database, printer, network) gives a strong grouping axis for identifying operational burdens. Values map cleanly to short_description text across samples."
+      },
+      {
+        "name": "failure_symptom",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Symptom typing (connectivity_failure, access_denied, outage) is a genuine analytical axis for burden analysis. Well-grounded in descriptions; 'Unknown' correctly used for vague 'Printing issues'."
+      },
+      {
+        "name": "affected_resource_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Server/client/network scope is useful for locating burden. Mostly reasonable inference from category, though some assignments (e.g., database -> server_side, printer -> client_side) are heuristic rather than explicit in short text."
+      },
+      {
+        "name": "incident_blast_radius",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "Scope of impact is a valuable burden axis. However short descriptions like 'Cannot connect to office WiFi' rarely state whether one user or the whole system is affected; 'individual_user' vs 'system_wide' is often an unwarranted specific inference."
+      },
+      {
+        "name": "self_resolved",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Could inform burden, but the value is not derivable: incidents show a closed_by person (e.g., 'Fred Luddy'), which contradicts self-resolution, yet self_resolved=True is asserted. Not grounded in available fields."
+      },
+      {
+        "name": "recurrent_caller",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Repeat callers are relevant to burden, but derivation requires caller_id aggregation not shown in samples; a 400/100 skew with True on every sample suggests a possibly unsupported blanket assignment. Weakly grounded."
+      },
+      {
+        "name": "off_hours_incident",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly derivable from opened_at timestamps (e.g., 18:14, 22:35 -> True; 8:50, 7:34 -> False checks out). Useful for staffing/burden analysis."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with recurrent_caller in intent, and recurrence is not evidenced in single-row short descriptions. Poorly grounded and adds limited new leverage."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.63,
+    "rationale": "The category/symptom/off_hours columns are strong: genuine analytical axes for characterising operational burdens and well-grounded in short_description and opened_at. Scope and blast_radius are useful but rest on heuristic inferences the terse text does not fully support. The behavioural flags (self_resolved, recurrent_caller, recurrence_signal) are the weakest: self_resolved contradicts the present closed_by field, and recurrence signals require cross-row aggregation not evidenced, yielding several unsupported confident values. Overall the set offers real analytical leverage but with notable groundedness gaps in the flag columns."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

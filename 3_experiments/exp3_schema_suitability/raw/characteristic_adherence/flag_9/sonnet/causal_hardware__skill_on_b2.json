@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "focus_variable": "hardware_incident_spike",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "software_update_triggered",
+    "incident_action_type",
+    "recurring_caller",
+    "recurrence_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "hardware_incident_spike",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Classifies incidents (software/hardware/etc). This partly defines/identifies the outcome (which incidents are hardware) rather than acting as a treatment or common cause; it is closer to outcome stratification than a confounder."
+      },
+      {
+        "name": "failure_mode",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The specific failure manifestation (connectivity_failure, overheating, not_powering_on) lies on the causal path between an underlying cause and the recorded incident; it describes how the incident occurred rather than a common cause of a treatment and the spike."
+      },
+      {
+        "name": "software_update_triggered",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause (a software update event) whose effect on the hardware-incident spike could be attributed. It is a plausible intervention/exposure surfaced from the data."
+      },
+      {
+        "name": "incident_action_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The remediation action (repair/replacement/install) occurs downstream of the incident; it is a consequence/response, on the post-outcome path, not a common cause."
+      },
+      {
+        "name": "recurring_caller",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Specific callers/users could drive both exposure to updates/configurations (treatment) and the volume of incidents (outcome), acting as a plausible common cause that must be adjusted for. Surfaced from data, not the query."
+      },
+      {
+        "name": "recurrence_signal",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Flags whether an incident is a recurrence; recurrence is a property determined by the incident/outcome itself and by prior causes, so conditioning on it risks collider bias rather than confounding control."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "software_update_triggered"
+    ],
+    "confounders": [
+      {
+        "name": "recurring_caller",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "A candidate treatment (software_update_triggered) is present, so a cause is offered. However genuine confounders -- common causes of BOTH the treatment and the hardware-incident spike -- are essentially absent. failure_mode and incident_action_type are mediators/downstream, incident_category is outcome stratification, and recurrence_signal is a collider. Only recurring_caller weakly qualifies as a common cause, and even that is tenuous. The column set does not credibly set up an unbiased causal estimation: it lacks temporal/load, environment, patch-schedule, or asset-age confounders that jointly drive updates and failures. Weak realisation of the causal-attribution claim."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

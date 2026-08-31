@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "focus_variable": "praise_and_complaint_drivers",
+  "concept": "praise_and_complaint_drivers",
+  "n_added_columns": 5,
+  "added_columns": [
+    "performance_vs_claim",
+    "content_quality_aspect",
+    "value_expectation_outcome",
+    "recommendation_stance",
+    "emotional_intensity"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3447,
+    "facet_fraction": 0.6,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "praise_and_complaint_drivers",
+    "per_column": [
+      {
+        "name": "performance_vs_claim",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the product performs relative to its stated claims is a genuine constitutive aspect of what people praise or complain about -- an 'aspect of' the driver space."
+      },
+      {
+        "name": "content_quality_aspect",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Intrinsic quality dimensions (plot, writing, production, accuracy, pacing) are a core substantive facet of what drives praise/complaints for review content."
+      },
+      {
+        "name": "value_expectation_outcome",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Value-for-money / expectation outcome is a distinct constitutive driver of satisfaction, an aspect of the driver concept."
+      },
+      {
+        "name": "recommendation_stance",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Whether the reviewer recommends or warns is an OUTCOME/expression of the overall praise-vs-complaint judgment, not a constitutive driver of it. It restates the summary valence rather than decomposing its causes."
+      },
+      {
+        "name": "emotional_intensity",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Intensity of emotion is a property of the overall sentiment/reaction, not a driver aspect. It measures strength of the whole reaction rather than a part-of the driver space."
+      }
+    ],
+    "facet_columns": [
+      "performance_vs_claim",
+      "content_quality_aspect",
+      "value_expectation_outcome"
+    ],
+    "non_facet_columns": [
+      "recommendation_stance",
+      "emotional_intensity"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "rationale": "Three columns (performance_vs_claim, content_quality_aspect, value_expectation_outcome) are true meronymic facets that carve driver space into distinct aspects: claim-performance fit, intrinsic quality, and value/expectation. However performance_vs_claim and value_expectation_outcome partially overlap since 'meets/below expectation' and 'meets/below claim' capture closely related fulfillment aspects, lowering mutual exclusivity. recommendation_stance and emotional_intensity are not facets -- they are downstream expressions/properties of the overall verdict (restatements of valence and its strength), not constitutive drivers. Coverage of driver aspects is moderate: quality, claim-fit, and value are captured, but other common drivers (delivery/shipping, packaging, seller/customer service, durability/reliability, usability) are absent, capping exhaustiveness."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "resolution_time_hours",
+    "priority_level",
+    "priority_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.5933,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.8667,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.73,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "This is the direct target metric of the query (resolution time), computed as a duration derivable from opened_at and closed_at timestamps present in the table. It gives the core continuous axis needed to compare across category, priority, and assignment group. Samples show only closed_at/sys_updated_on, but opened_at exists in the table, so the derivation is warranted; values look plausible. NULLs for unresolved rows are correct behaviour."
+      },
+      {
+        "name": "priority_level",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "rationale": "The table already contains an original 'priority' column, and this appears to be a near-restatement of it as a numeric level. It offers little new analytical leverage since priority is a query dimension already available. Values are grounded in the existing priority field. Slightly useful if it normalizes/cleans priority, but largely redundant.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "priority_category",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A textual labeling (Critical/High/Moderate) of the same priority information, redundant with both the original 'priority' column and the added priority_level. It provides marginally more interpretability for grouping but is essentially a restatement. The mapping (2->High, 1->Critical, 3->Moderate) is a sound categorization of priority values, though the label assignment is a convention rather than stated in text."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.87,
+    "rationale": "The augmentation delivers the single most important column for this query, resolution_time_hours, which is both highly useful and soundly grounded in the table's timestamp fields. The remaining two columns (priority_level, priority_category) are largely redundant restatements of the existing 'priority' column and of each other, adding limited analytical leverage. Groundedness is generally strong across all columns with no hallucinations observed; produced values are sound readings of the source timestamps and priority field."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 3
+}

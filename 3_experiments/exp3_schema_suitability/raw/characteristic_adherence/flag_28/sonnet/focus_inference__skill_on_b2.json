@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "improvement_domain",
+    "primary_action_lever",
+    "target_metric_type",
+    "time_horizon",
+    "improvement_magnitude_band",
+    "scope_of_change",
+    "has_baseline_value",
+    "metric_category_alignment"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.697,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature and quality of each improvement goal -- characterizing what each goal aims to improve, how, at what scale, and how well-specified/measurable its target is.",
+    "per_column": [
+      {
+        "name": "improvement_domain",
+        "supports_focus": true,
+        "rationale": "Captures the substantive area a goal targets (satisfaction, revenue, cost), a core facet of characterizing the goal."
+      },
+      {
+        "name": "primary_action_lever",
+        "supports_focus": true,
+        "rationale": "Identifies the mechanism/means used to pursue the goal, a coherent 'how' facet."
+      },
+      {
+        "name": "target_metric_type",
+        "supports_focus": true,
+        "rationale": "Classifies how the target is expressed, directly relevant to goal measurability."
+      },
+      {
+        "name": "time_horizon",
+        "supports_focus": true,
+        "rationale": "Adds a temporal facet to goal characterization, useful for prioritization."
+      },
+      {
+        "name": "improvement_magnitude_band",
+        "supports_focus": true,
+        "rationale": "Bands the ambition/size of the target, a meaningful facet of what's worth attention."
+      },
+      {
+        "name": "scope_of_change",
+        "supports_focus": true,
+        "rationale": "Captures organizational reach, a coherent facet of goal significance."
+      },
+      {
+        "name": "has_baseline_value",
+        "supports_focus": true,
+        "rationale": "Flags whether a goal is grounded/measurable -- a quality/rigor facet, highly actionable."
+      },
+      {
+        "name": "metric_category_alignment",
+        "supports_focus": true,
+        "rationale": "Flags internal consistency between metric and category, a data-quality/attention facet."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.85,
+    "rationale": "The added columns collectively converge on one coherent, data-inferable focus: characterizing improvement goals along interpretable facets (what/how/scope/time/magnitude) plus quality/rigor flags (baseline presence, metric-category alignment). This is not a scattered grab-bag nor a mechanical set (no token counts or bare sentiment); each column extracts a semantically distinct, goal-relevant attribute. The structure is well-differentiated at a useful granularity, mixing categorical facets with quality flags that directly answer 'what's worth attention' (e.g., unbaselined or misaligned goals warrant scrutiny). Minor deductions: the focus is inferred/implicit rather than explicitly proposed, and a couple of facets (time_horizon, magnitude) partly re-encode existing date/target columns, slightly overlapping the original schema. Overall a strong, actionable realization of focus inference."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

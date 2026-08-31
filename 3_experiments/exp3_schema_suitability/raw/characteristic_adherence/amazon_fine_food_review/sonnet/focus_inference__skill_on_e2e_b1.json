@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "n_added_columns": 10,
+  "added_columns": [
+    "product_category",
+    "taste_quality_verdict",
+    "texture_quality",
+    "health_dietary_claim",
+    "product_safety_concern",
+    "use_case_context",
+    "repeat_purchase_intent",
+    "product_consistency_change",
+    "availability_sourcing_note",
+    "product_effectiveness_outcome"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.76,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.854,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.807,
+    "hallucination_rate": 0.1
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides a strong grouping axis for understanding the product mix. Categorizations in samples are well-grounded (dog food->pet_food_treat, peanuts/taffy->snack, gelatin confection->snack). The extract sample mapped to condiment_sauce is a defensible but imperfect read; overall soundly derived from text."
+      },
+      {
+        "name": "taste_quality_verdict",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "A graded taste verdict adds more leverage than a raw Score, giving a comparable quality axis. Sample readings match text ('good quality'->good, 'heaven/flavorful'->excellent, mislabeled peanuts->poor, 'very medicinal'->poor)."
+      },
+      {
+        "name": "texture_quality",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Texture is a genuine axis when stated, but mostly not_applicable/null. Grounding is weak in samples: dog food labeled 'acceptable' texture with no textural evidence, and taffy labeled 'poor_chewy_tough' despite a positive review—an unwarranted negative inference contradicting the source."
+      },
+      {
+        "name": "health_dietary_claim",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Captures organic/gluten-free/etc. claims worth flagging for analysis. Overwhelmingly none_mentioned, and all samples correctly returned none_mentioned where silent—correct behavior."
+      },
+      {
+        "name": "product_safety_concern",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Flags actionable safety issues; rare-but-important true class gives leverage. Samples all False, consistent with texts. Being boolean it is somewhat generic but targets a specific actionable signal."
+      },
+      {
+        "name": "use_case_context",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a distinct usage/segmentation axis (pet_care, baking, gifting, infant). Samples are reasonable (dog food->pet_care, others->everyday_personal), though everyday_personal is a broad default."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Directly actionable loyalty signal not present in originals. Sample readings sound: mislabeled-peanuts->will_not_repurchase, silent rows->not_stated (correct restraint)."
+      },
+      {
+        "name": "product_consistency_change",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Detecting formulation/quality drift is actionable, though very rare (2%) and boolean. Sample values (all False) are consistent with texts."
+      },
+      {
+        "name": "availability_sourcing_note",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Flags price/delivery/availability mentions, useful for operational attention. Boolean and moderately generic; taffy sample mentions price/delivery yet marked False, a mild miss, but generally grounded."
+      },
+      {
+        "name": "product_effectiveness_outcome",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Effectiveness is a meaningful axis for supplements/pet/functional foods, but for generic snacks it largely tracks taste verdict, making it partly redundant. Sample mappings are reasonable (fully/not_effective aligns with sentiment)."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns give multiple genuine, distinct axes—category, graded taste, dietary claims, use case, repurchase intent, and rare-but-actionable safety/consistency flags—that directly serve the query of understanding and triaging reviews. Most values are soundly grounded in the source text, with silent rows correctly defaulted to not_stated/none_mentioned. The main weakness is texture_quality, which shows unwarranted inferences (e.g., positive taffy review tagged poor_chewy_tough), and product_effectiveness_outcome partly restating taste sentiment for non-functional products. Overall a strong, well-grounded set."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 10
+}

@@ -1,0 +1,1290 @@
+[
+  {
+    "var_a": "original",
+    "var_b": "skill_off",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 3,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Printer malfunction | 81 | 44.5%",
+          "why": "counts with percentages and examples"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "\"System fan malfunction in workstation 3\"",
+          "why": "concrete description examples"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Peripherals ... account for a further ~32%",
+          "why": "grouping and impact reasoning"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Printer + Monitor + Keyboard + Mouse ... 142 incidents (78%)",
+          "why": "aggregated numeric grouping"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "no hardware incident ... flagged 1 – Critical",
+          "why": "contradicts A but internally stated"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Storage failures ... carry high data-loss risk",
+          "why": "risk-based reasoning"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": [
+        {
+          "column": "hardware_problem_type",
+          "quote": "columns — hardware_problem_type and hardware_component",
+          "dependent": true
+        },
+        {
+          "column": "hardware_component",
+          "quote": "hardware_component classify each hardware incident",
+          "dependent": true
+        }
+      ]
+    },
+    "reason": "A provides richer concrete examples and priority evidence with no cross-claim contradictions, edging out B.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.75,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "83 of 182 hardware incidents (46%)",
+          "why": "numeric counts and shares"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Peripheral input/output failures ... account for 142 incidents (78%)",
+          "why": "grouped comparison"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "no hardware incident ... is flagged 1 – Critical",
+          "why": "contradicts B's data; claims no critical"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "\"Printer malfunction in the Finance department\"",
+          "why": "concrete description quotes"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "1 - Critical | 16",
+          "why": "priority table with counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "clusters of repeated, similar descriptions, suggesting ... fleet-level issues",
+          "why": "interpretive reasoning"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B grounds every category in real description quotes and consistent priority data, while A relies on inferred columns and makes a contradicted 'no critical' claim.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "**Printer malfunction** | 81 | 44.5%",
+          "why": "exact counts and percentages"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "1 - Critical | 16",
+          "why": "priority distribution tied to numbers"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "collectively account for ~74%",
+          "why": "sums consistent with table"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "requires_hardware_replacement = True for ~50 of ~81 printer incidents",
+          "why": "cross-variable segmentation"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "5 are flagged as intermittent",
+          "why": "concrete subgroup counts"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Hard drives (100%), server hardware (100%)",
+          "why": "replacement rates guide action"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A gives cleaner exact-count evidence and coherence while B's added variables are largely approximate and self-generated.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "Hard drives (100%), server hardware (100%)... require replacement",
+          "why": "cross-cuts problem types by replacement rate"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "~81 ... ~50 of ~81 printer incidents ... ~62% of the time",
+          "why": "counts approximate and sums exceed 183"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Priority Distribution ... 2 - High | 145",
+          "why": "concrete numeric breakdown"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "three categories collectively account for ~74%",
+          "why": "counts sum consistently to 182"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B has cleaner, internally consistent counts and adds priority evidence, while A's approximate figures overcount.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Printer malfunction | 81 | 44.5%",
+          "why": "granular counts with representative examples"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Priority | Count | 1 - Critical | 16",
+          "why": "priority distribution tied to numbers"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "should not drive large-scale remediation planning",
+          "why": "decision-ready guidance"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "4/18 power-failure incidents are 1 - Critical, the highest critical rate",
+          "why": "cross-group severity reasoning"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "shared_peripheral | 109 (60%)",
+          "why": "device scope breakdown"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "malfunction_unspecified | 128 | 70%",
+          "why": "vague catch-all reduces analytical clarity"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": [
+        {
+          "column": "hardware_failure_mode",
+          "quote": "The `hardware_failure_mode` column identifies 6 distinct hardware problem types",
+          "dependent": true
+        },
+        {
+          "column": "affected_device_scope",
+          "quote": "Cross-referencing `affected_device_scope`",
+          "dependent": true
+        },
+        {
+          "column": "hardware_problem_involves_replacement",
+          "quote": "flagged only 3 incidents",
+          "dependent": true
+        }
+      ]
+    },
+    "reason": "A gives finer, cleaner problem-type breakdown while B's dominant 70% unspecified bucket weakens specificity.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.68,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "Power failures are disproportionately critical — 4/18 power-failure incidents are 1 - Critical",
+          "why": "cross-mode severity comparison"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "INC0000000135, 1 - Critical",
+          "why": "cites specific incident ID"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "shared_peripheral | 109 (60%)",
+          "why": "device scope counts"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Printer malfunction | 81 | 44.5%",
+          "why": "concrete counts with examples"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Priority | Count ... 2 - High | 145",
+          "why": "priority distribution table"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "these three categories collectively account for ~74%",
+          "why": "consistent aggregation"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A adds cross-group severity and scope reasoning giving slightly more depth, while B is strong on descriptive breakdown.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.82,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "83 of 182 hardware incidents (46%)",
+          "why": "numeric grounding"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Peripheral input/output failures ... account for 142 incidents (78%)",
+          "why": "grouping/comparison"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "182 are categorized as Hardware (≈30%)",
+          "why": "concrete magnitudes"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "requires_hardware_replacement = True for ~50 of ~81 printer incidents",
+          "why": "column-tied numbers"
+        },
+        {
+          "dimension": "depth",
+          "quote": "5 are flagged as intermittent ... most intermittent behavior after printers",
+          "why": "cross-variable segmentation"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Printer not working properly, Printer malfunctioning",
+          "why": "verbatim description evidence"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Hard drives (100%), server hardware (100%) ... almost always require replacement",
+          "why": "decision-ready replacement rates"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B adds richer per-type evidence, replacement/intermittent patterns, and scope segmentation.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "requires_hardware_replacement = True for ~50 of ~81 printer incidents",
+          "why": "concrete magnitudes tied to rows"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Hard drives (100%), server hardware (100%), boot/power failures (~78%)",
+          "why": "cross-group replacement-rate comparison"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "5 are flagged as intermittent (intermittent_failure = True)",
+          "why": "claim tied to column values"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "Peripheral input/output failures ... account for 142 incidents (78%)",
+          "why": "aggregation across groups"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "83 of 182 hardware incidents (46%) involve printer",
+          "why": "numeric grounding"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "no hardware incident ... flagged 1 – Critical",
+          "why": "decision-relevant severity note"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A provides deeper per-type breakdown with replacement and intermittent-failure evidence across multiple variables.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.8,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 3,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "**Printer** | 83",
+          "why": "granular per-type counts"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "142 incidents (78%)",
+          "why": "grouped numeric aggregation"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "no hardware incident ... flagged 1 – Critical",
+          "why": "contradicts B's critical claims but internally consistent"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "4/18 power-failure incidents are 1 - Critical, the highest critical rate",
+          "why": "cross-dimension severity reasoning"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "`shared_peripheral` | 109 (60%)",
+          "why": "device scope table with numbers"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "sole Critical-priority replacement request (`INC0000000135`)",
+          "why": "row-level decision-ready detail"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B adds priority/scope/replacement cross-analysis and causal reasoning beyond A's flat taxonomy.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.82,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 3,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "malfunction_unspecified | 128 | 70%",
+          "why": "counts with percentages and priority breakdown"
+        },
+        {
+          "dimension": "depth",
+          "quote": "4/18 power-failure incidents are 1 - Critical, the highest critical rate",
+          "why": "cross-tab of failure mode vs priority"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "INC0000000135, 1 - Critical",
+          "why": "cites specific incident row"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Servers are rare but severe",
+          "why": "prioritization guidance tied to data"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Printer | 83 | Printer",
+          "why": "concrete component-level counts"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "142 incidents (78%) of all hardware cases",
+          "why": "aggregated grouping with numbers"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "no hardware incident in this dataset is flagged 1 – Critical",
+          "why": "contradicts richer priority variation, weakens depth"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [
+        {
+          "column": "hardware_failure_mode",
+          "quote": "hardware_failure_mode column identifies 6 distinct hardware problem types",
+          "dependent": true
+        },
+        {
+          "column": "affected_device_scope",
+          "quote": "Cross-referencing affected_device_scope",
+          "dependent": true
+        },
+        {
+          "column": "hardware_problem_involves_replacement",
+          "quote": "flagged only 3 incidents",
+          "dependent": true
+        }
+      ],
+      "B": [
+        {
+          "column": "hardware_problem_type",
+          "quote": "hardware_problem_type and hardware_component classify each hardware incident",
+          "dependent": true
+        },
+        {
+          "column": "hardware_component",
+          "quote": "Key Component(s)",
+          "dependent": true
+        }
+      ]
+    },
+    "reason": "A offers deeper cross-tabulation with priority and scope plus row-level evidence, exceeding B's flatter taxonomy.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.68,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Printer (~81 | ~44%)",
+          "why": "concrete per-type counts and shares"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "All 8 require replacement",
+          "why": "ties claims to counts"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "counts sum roughly to 183",
+          "why": "approximations flagged but consistent"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "malfunction_unspecified 128 70%",
+          "why": "counts with priority breakdown"
+        },
+        {
+          "dimension": "depth",
+          "quote": "4/18 power-failure incidents are 1 - Critical",
+          "why": "cross-tab severity reasoning"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "column has minimal analytical leverage",
+          "why": "honest about weak column, consistent"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "INC0000000135, 1 - Critical",
+          "why": "specific row citation"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B ties claims to concrete counts, priorities, and cross-tabs with more rigor while A relies heavily on approximate figures.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_on",
+    "swap": true,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.8,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 3,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "`malfunction_unspecified` | 128 | 70%",
+          "why": "exact counts and percentages"
+        },
+        {
+          "dimension": "depth",
+          "quote": "4/18 power-failure incidents are 1 - Critical, the highest critical rate",
+          "why": "cross-tab with priority and comparison"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "had near-zero coverage (3/600) and is noted but not centered",
+          "why": "honest handling of weak column"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "server hardware (`INC0000000135`, 1 - Critical)",
+          "why": "row-level identifier"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Printer... ~81 | ~44%",
+          "why": "approximate counts throughout"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "~50 of ~81 printer incidents",
+          "why": "estimated, not exact figures"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Hard drives (100%), server hardware (100%)... require replacement",
+          "why": "replacement-rate comparison by type"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A gives exact, internally consistent counts and honest caveats, while B relies on approximate figures and inconsistent replacement claims.",
+    "validation_warnings": []
+  }
+]

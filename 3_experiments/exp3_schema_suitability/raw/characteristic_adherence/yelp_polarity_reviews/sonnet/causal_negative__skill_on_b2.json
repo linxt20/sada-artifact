@@ -1,0 +1,84 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "service_staff_behavior",
+    "service_attentiveness",
+    "food_quality_issue",
+    "food_flavor_issue",
+    "complaint_severity"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "service_staff_behavior",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of a negative experience (rude/dismissive staff). It is a plausible driver of the outcome and is surfaced from the review text, not named in the generic query about 'factors'."
+      },
+      {
+        "name": "service_attentiveness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause (slow/ignored service). A parallel treatment factor rather than a common cause; it lies on a driver path to the outcome, not upstream of another treatment."
+      },
+      {
+        "name": "food_quality_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of negative experience via food quality problems. Parallel explanatory factor extracted from text."
+      },
+      {
+        "name": "food_flavor_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause via flavor problems. Another parallel explanatory factor."
+      },
+      {
+        "name": "complaint_severity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Severity of the complaint sits on the causal path between the underlying issue and the negative label; it is a downstream expression of dissatisfaction, effectively a mediator/proxy of the outcome rather than an upstream common cause. Adjusting for it would be a mistake."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "service_staff_behavior",
+      "service_attentiveness",
+      "food_quality_issue",
+      "food_flavor_issue"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns enumerate several plausible candidate causes (treatments) of a negative Yelp experience, all surfaced from the review text. However, the decisive test for causal attribution is whether the system supplied genuine CONFOUNDERS -- variables that cause BOTH a treatment and the outcome and must be adjusted for. No such variables were added. There are no restaurant-level, reviewer-level, price, cuisine, visit-context, or expectation variables that could jointly drive both a specific issue and the overall rating. 'complaint_severity' is a mediator/outcome-proxy, not a confounder, and would bias the estimate if adjusted for. The set is essentially a parallel-feature list for correlational explanation, not a causal identification design, so it fails the technical claim under test."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a travel expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "travel_related_expense_mention",
+    "asset_category_type",
+    "department_requestor",
+    "asset_type_specificity",
+    "expense_automation_signal",
+    "processing_delay_indicator",
+    "expense_source_tracking_presence"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.3428,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.4,
+    "leakage_rate": 0.1429
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "travel_related_expense_mention",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the description mentions travel is an antecedent attribute of the expense, knowable at submission time, and plausibly related to approval/decline of travel expenses. Legitimate predictor."
+      },
+      {
+        "name": "asset_category_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The category/type of asset being expensed is an ex-ante attribute that can plausibly influence decline rates (e.g., vehicles vs software). Lies outside the focus."
+      },
+      {
+        "name": "department_requestor",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The requesting department is a pre-outcome attribute with plausible predictive signal on decline likelihood; largely restates the existing department column but is still a valid predictor variable."
+      },
+      {
+        "name": "asset_type_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How specifically the item is described (specific model vs generic category) is derivable from the request text before the decision and could correlate with scrutiny/decline. Legitimate, if weak."
+      },
+      {
+        "name": "expense_automation_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the expense was manually entered vs auto-logged is a submission-time attribute that can plausibly relate to review outcome. Outside the focus, carries potential signal."
+      },
+      {
+        "name": "processing_delay_indicator",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Processing delay is measured across/after the handling of the expense and depends on the processed_date relative to opening; the delay is realized during/after the decision, so it is only knowable at or after the outcome. This leaks the resolution process rather than predicting it ex ante."
+      },
+      {
+        "name": "expense_source_tracking_presence",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of a source/tracking id is an attribute of the record available at submission; plausibly correlated with completeness and thus decline. Weak but legitimate predictor."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.4,
+    "rationale": "Most added columns are ex-ante attributes of the expense (travel mention, asset category, department, description specificity, automation source, source-tracking presence) that lie outside the focus and could plausibly carry signal about decline, so they qualify as legitimate predictors. However, several are largely re-derivations of existing columns (department, asset/source id presence) offering limited incremental leverage, and most are weak or generic categorical flags rather than strongly discriminating features. One column (processing_delay_indicator) reflects the handling timeline realized at/after the decision and risks leakage. As a set the incremental predictive value beyond the original table is modest."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

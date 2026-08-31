@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_type_category",
+    "expense_mechanism",
+    "travel_relevance",
+    "purchase_intent_signal",
+    "department_requestor",
+    "source_system_tracking",
+    "asset_specificity",
+    "hardware_device_class"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.45,
+    "analytical_usefulness__table_level": 0.45,
+    "source_groundedness": 0.6687,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.5594,
+    "hallucination_rate": 0.375
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the asset described in ci/short_description; well-grounded in samples. For a travel-expense decline query it gives a plausible grouping axis (travel vs hardware assets), though the data looks asset-centric rather than genuinely travel-expense, limiting leverage."
+      },
+      {
+        "name": "expense_mechanism",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Derived from phrasing like 'Procurement of', 'Automated creation'. Grounded and readable from source text. Provides a distinct axis (how the expense entry originated) that could correlate with decline outcomes."
+      },
+      {
+        "name": "travel_relevance",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A boolean travel flag is directly relevant to a travel-expense query and offers a clean grouping axis. Groundedness is reasonable but most sampled rows are hardware assets marked False; the mapping from generic asset text to travel relevance is only partially demonstrated."
+      },
+      {
+        "name": "purchase_intent_signal",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Extracts action verb (creation/new_acquisition/generation) from short_description. Grounded, but largely restates/overlaps expense_mechanism (both keyed off the same phrasing), reducing incremental analytical value."
+      },
+      {
+        "name": "department_requestor",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Nearly duplicates the existing original 'department' column, so trivially redundant. Values are not derivable from the sampled source_text (short_description/ci/date contain no department signal), suggesting either a copy of an existing column or invented assignment."
+      },
+      {
+        "name": "source_system_tracking",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A bare boolean whose derivation from source text is unclear; two rows with near-identical automated phrasing yet the cloud-service row differs, and no explicit tracking cue exists in the text. Adds little analytical leverage for the decline query."
+      },
+      {
+        "name": "asset_specificity",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes specific_model vs generic_placeholder/service_name based on the ci string, which is well-grounded (e.g., 'Dell Latitude 3410' = specific_model). Offers a meaningful new axis about description precision that could plausibly relate to approval."
+      },
+      {
+        "name": "hardware_device_class",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Subclassifies hardware from ci with sensible NULLs for non-hardware. But mappings are shaky: 'Dell OptiPlex 7070 Desktop' is labelled laptop despite explicitly saying Desktop, and 'AWS EC2 Instance' is labelled server (infra service, not hardware) contradicting the source."
+      }
+    ],
+    "analytical_usefulness": 0.45,
+    "source_groundedness": 0.65,
+    "rationale": "Several columns (asset_type_category, expense_mechanism, travel_relevance, asset_specificity) are grounded readings of the description/ci text and give genuine grouping axes for a decline-prediction query. However analytical leverage is dulled by the data being asset/procurement-centric rather than clearly travel-expense, and by redundancy (purchase_intent_signal vs expense_mechanism; department_requestor duplicating the original department column). Groundedness is undermined by concrete contradictions: hardware_device_class labels an explicit 'Desktop' as laptop and an 'EC2 Instance' as server, and department_requestor/source_system_tracking values are not supported by the sampled source text."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

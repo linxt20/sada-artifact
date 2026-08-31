@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "theme_food_quality",
+    "theme_service",
+    "theme_ambiance",
+    "theme_price_value",
+    "theme_wait_time",
+    "theme_repeat_visit",
+    "themes_present",
+    "theme_count"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.7,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.8,
+    "interpretable_fraction": 0.875
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "theme_food_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary presence of a food-quality theme; interpretable and segmentable against sentiment, though its near-even split (130/120) suggests weak separation on its own it is still a valid comparison axis."
+      },
+      {
+        "name": "theme_service",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary service theme flag; a clear, human-interpretable review dimension that can be cross-tabulated with positive/negative sentiment."
+      },
+      {
+        "name": "theme_ambiance",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ambiance theme flag with well-separated distribution (205/45), giving meaningful segmentation to compare against sentiment."
+      },
+      {
+        "name": "theme_price_value",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Price/value theme flag; interpretable category with adequate spread (188/62) for relationship exploration."
+      },
+      {
+        "name": "theme_wait_time",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Wait-time theme flag; a distinct, interpretable review topic that can be grouped and compared to sentiment."
+      },
+      {
+        "name": "theme_repeat_visit",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Repeat-visit intent flag; interpretable behavioral theme with reasonable spread for cross-tabulation with sentiment."
+      },
+      {
+        "name": "themes_present",
+        "role": "predictor",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A concatenated multi-theme string with many sparse, high-cardinality combinations; too fine-grained to segment meaningfully and largely redundant with the individual theme flags."
+      },
+      {
+        "name": "theme_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Count of themes present is an interpretable ordinal scale (review richness) that can be compared against sentiment as a distinct dimension from any single theme."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.8,
+    "rationale": "The individual binary theme flags directly realise the EDA intent: each is an external, interpretable review dimension with well-separated categories that can be grouped and compared against sentiment (label_pos), enabling the exact 'which themes differ by sentiment' analysis requested. Several have strong distributional spread (ambiance, price_value) supporting clear contrasts. theme_count adds an interpretable ordinal summary. The main weakness is themes_present, a high-cardinality concatenated string whose sparse combinations resist meaningful segmentation and merely restate the other flags. Overall a strong, well-targeted exploratory set."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

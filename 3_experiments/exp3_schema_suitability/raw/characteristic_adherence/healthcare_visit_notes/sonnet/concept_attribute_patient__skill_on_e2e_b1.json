@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What patient needs appear in visit notes?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "clinical_problem_type",
+    "acuity_complexity",
+    "care_action_required",
+    "specialist_involvement",
+    "diagnostic_workup_need",
+    "medication_need_type",
+    "preventive_or_wellness_need",
+    "specialist_or_ancillary_involvement"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7725,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8087,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7906,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "clinical_problem_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Strong categorical axis directly answering 'what patient needs appear'. Values well-grounded (annual physical=preventive, cough/fever=acute, post-MI follow-up=chronic). Acne classified as chronic_disease_management is defensible."
+      },
+      {
+        "name": "acuity_complexity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Useful severity axis for grouping. Somewhat correlated with existing 'urgency' but adds finer clinical gradation. Grounding mostly sound; the annual-physical row as low_acuity is fine, but acuity labels partly infer beyond explicit text."
+      },
+      {
+        "name": "care_action_required",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Directly captures actionable needs, high analytical leverage. Values track text well (labs ordered, monitoring, medication initiation, MRI). Sound extraction."
+      },
+      {
+        "name": "specialist_involvement",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Useful for grouping, but values essentially mirror the existing 'department' column, making it partly redundant. Grounded via department mapping."
+      },
+      {
+        "name": "diagnostic_workup_need",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.82,
+        "hallucination_observed": true,
+        "rationale": "Genuine new axis on workup needs. Mostly grounded, but the annual-physical row (lipid panel + HbA1c, both labs) labeled 'multi_modal' overstates modality diversity; a minor inconsistency."
+      },
+      {
+        "name": "medication_need_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct, valuable medication axis. NULL/absent handled correctly for silent rows. Values grounded (statin=chronic, doxycycline=new_prescription)."
+      },
+      {
+        "name": "preventive_or_wellness_need",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful preventive axis, mostly correct with 'not_present' for silent rows. But the annual-physical row labeled 'chronic_disease_prevention' is an unwarranted specific; the text describes routine screening, not stated chronic disease prevention."
+      },
+      {
+        "name": "specialist_or_ancillary_involvement",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Exact duplicate of 'specialist_involvement' (identical top values and row values); a mere restatement adding no analytical leverage."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.82,
+    "rationale": "Most columns provide genuine, distinct analytical axes (problem type, acuity, care action, workup, medication, prevention) that directly serve the query about patient needs and are largely well-grounded in the visit notes. Deductions: specialist_or_ancillary_involvement is a verbatim duplicate of specialist_involvement (no leverage), and both specialist columns largely restate the existing department field. Minor grounding issues appear in over-specific labels (e.g., annual physical tagged chronic_disease_prevention and multi_modal workup for two lab tests). Silent-row 'not_present'/NULL values are handled correctly and not penalized."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

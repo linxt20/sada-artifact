@@ -1,0 +1,53 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "n_added_columns": 3,
+  "added_columns": [
+    "topic",
+    "is_high_frequency_topic",
+    "attention_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "topic",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Categorizing free-text short_descriptions into topics gives a strong grouping axis directly serving 'what's worth attention.' Sample values (Network, VPN, Database, Printer) are sound readings of the source text."
+      },
+      {
+        "name": "is_high_frequency_topic",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "rationale": "Largely redundant with 'topic'—it is a derived binary threshold on topic frequency, offering limited new leverage. Values are consistent with topic assignments (rare Printer=No, common VPN/Database=Yes), so grounding is fine."
+      },
+      {
+        "name": "attention_flag",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "rationale": "A prioritization/anomaly signal directly matches the query's intent. However, the basis for High/Medium/Low-Anomaly is not clearly derivable from the sampled source text: e.g. 'Unable to access online database' flagged Medium while similar VPN/WiFi issues are Routine, with no textual justification, suggesting partly invented severity beyond available evidence."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.8,
+    "rationale": "The 'topic' column is a genuinely useful, well-grounded categorization for triaging incidents. 'attention_flag' targets the query's core need but its severity distinctions are only partially supported by the visible source text. 'is_high_frequency_topic' is grounded but adds little beyond 'topic'. Overall the added set provides real analytical leverage with moderate grounding concerns on the flag."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

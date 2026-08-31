@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "focus_variable": "learner_needs_and_pain_points",
+  "concept": "learner_needs_and_pain_points",
+  "n_added_columns": 7,
+  "added_columns": [
+    "primary_challenge_domain",
+    "engagement_and_motivation_signal",
+    "social_interaction_need",
+    "hands_on_material_dependency",
+    "instructional_quality_signal",
+    "modality_alignment_with_learner",
+    "identity_and_confidence_impact"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.5938,
+    "facet_fraction": 0.8571,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.8,
+    "mece": 0.6928,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "learner_needs_and_pain_points",
+    "per_column": [
+      {
+        "name": "primary_challenge_domain",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Identifies the domain in which the learner's challenge/pain point falls (e.g., science_lab, mathematics, participation). This is an aspect OF the needs/pain points -- the 'where' of the difficulty -- and is a legitimate constitutive facet."
+      },
+      {
+        "name": "engagement_and_motivation_signal",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Motivational/engagement state is a genuine aspect of learner needs and pain points (loss of interest, disengagement are pain points). Constitutive facet of the affective-motivational dimension."
+      },
+      {
+        "name": "social_interaction_need",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Directly names a category of learner need (peer collaboration, group discussion). This is a 'need' aspect OF the concept -- clearly meronymic."
+      },
+      {
+        "name": "hands_on_material_dependency",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Captures a material/practical dependency need (manipulatives essential, materials hard at home). A concrete need/pain-point facet."
+      },
+      {
+        "name": "instructional_quality_signal",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "This describes the quality of teaching provision (teacher responsiveness, teacher overwhelmed) -- an external condition/driver acting ON the learner rather than an aspect OF the learner's own needs. It is a cause/context of pain points, not a constitutive part of them."
+      },
+      {
+        "name": "modality_alignment_with_learner",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The fit between delivery modality and the learner (synchronous essential, screen hurts focus) expresses a learner need/pain point regarding format. Borderline but reads as an aspect OF learner needs."
+      },
+      {
+        "name": "identity_and_confidence_impact",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Confidence/anxiety/emotional distress are core affective pain points -- an aspect OF the learner's experience. Constitutive facet."
+      }
+    ],
+    "facet_columns": [
+      "primary_challenge_domain",
+      "engagement_and_motivation_signal",
+      "social_interaction_need",
+      "hands_on_material_dependency",
+      "modality_alignment_with_learner",
+      "identity_and_confidence_impact"
+    ],
+    "non_facet_columns": [
+      "instructional_quality_signal"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.8,
+    "rationale": "Most columns are genuine constitutive facets of learner needs and pain points, spanning cognitive/domain, motivational, social, material, modality, and affective/identity dimensions -- good coverage, hence solid exhaustiveness. However, instructional_quality_signal describes the teaching provision quality (an external driver/cause acting on the learner), not an aspect OF the learner's own needs, so it fails the meronymy test. Mutual exclusivity is moderate: engagement_and_motivation and identity_and_confidence overlap on affective state; social_interaction_need overlaps with participation_discussion under primary_challenge_domain; and modality_alignment overlaps conceptually with hands_on_material_dependency (both concern format/delivery fit). These overlaps lower non-overlap of the facet set."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

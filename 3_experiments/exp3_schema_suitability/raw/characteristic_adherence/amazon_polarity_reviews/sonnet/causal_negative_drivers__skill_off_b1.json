@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "negative_theme_product_defect",
+    "negative_theme_poor_quality",
+    "negative_theme_misleading",
+    "negative_theme_shipping_issues",
+    "negative_theme_customer_service",
+    "negative_theme_disappointment",
+    "negative_theme_pricing",
+    "negative_theme_count",
+    "negative_intensity_score",
+    "review_length_bucket"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.73,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.795,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7625,
+    "hallucination_rate": 0.1
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "negative_theme_product_defect",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A defect theme flag gives a genuine axis to attribute negative reviews to; sample rows correctly show 0 where no defect is mentioned."
+      },
+      {
+        "name": "negative_theme_poor_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Quality theme is directly relevant to explaining negativity; grounded in review text and correctly absent in the samples shown."
+      },
+      {
+        "name": "negative_theme_misleading",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Misleading-description theme is a plausible driver of negative reviews; rare flag (3 hits) but coherent and grounded."
+      },
+      {
+        "name": "negative_theme_shipping_issues",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Relevant theme, but AMZ-0005 (a positive review with no shipping mention) is flagged 1, indicating a spurious extraction not supported by the text."
+      },
+      {
+        "name": "negative_theme_customer_service",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Service theme is a legitimate factor to group on; samples correctly show 0, consistent with text."
+      },
+      {
+        "name": "negative_theme_disappointment",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Somewhat generic near-sentiment theme, but AMZ-0001 flag is a sound reading of explicit 'disappointed'; adds moderate leverage."
+      },
+      {
+        "name": "negative_theme_pricing",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Pricing complaints are a distinct explanatory factor; grounded and correctly absent in samples."
+      },
+      {
+        "name": "negative_theme_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Aggregate count of themes is useful for modeling severity/multi-factor negativity; derivable from the flags, though it inherits the shipping mis-flag (AMZ-0005 count=1 from a false positive)."
+      },
+      {
+        "name": "negative_intensity_score",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "An intensity measure could help rank negativity, but the scale is opaque and unstable (values up to 71), and assignments are hard to verify against text, reducing groundedness."
+      },
+      {
+        "name": "review_length_bucket",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Trivially derived from raw text length; a generic proxy that adds little analytical leverage for explaining WHY reviews are negative, though values are fully grounded."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.78,
+    "rationale": "The themed binary flags plus theme count provide genuine, decomposable axes for attributing negative reviews to specific factors, directly serving the query. Values are mostly sound readings of the review text, but the shipping_issues column shows a clear false positive on a positive, shipping-silent review (AMZ-0005), and the intensity score uses an opaque, hard-to-verify scale. Length bucket is grounded but low-value for this analysis."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 10
+}

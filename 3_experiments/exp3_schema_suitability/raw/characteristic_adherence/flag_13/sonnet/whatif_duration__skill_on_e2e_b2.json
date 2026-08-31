@@ -1,0 +1,111 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "failure_type",
+    "affected_system_scope",
+    "reassignment_indicator",
+    "recurrence_signal",
+    "scope_indicator",
+    "time_of_day_band",
+    "assigned_agent",
+    "caller_segment"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 6,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 6,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Categorizes the operational burden type described in text; the query targets eliminating 'operational burdens', so this is the treatment lever, though category itself is more a descriptor than a settable action."
+      },
+      {
+        "name": "failure_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Represents the kind of failure/burden described; aligns with the 'operational burdens' to be eliminated. Borderline intervenable — it is a diagnosed condition rather than a lever an actor sets."
+      },
+      {
+        "name": "affected_system_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "System scope (server_side, infrastructure) plausibly influences both the type of burden and the resolution time; a common cause not named in the query."
+      },
+      {
+        "name": "reassignment_indicator",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Reassignment typically occurs on the path between the burden/incident and the duration outcome, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "recurrence_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Recurrence could drive both the nature of the burden and duration; near-degenerate (496/4) so weak, but conceptually a common cause not named."
+      },
+      {
+        "name": "scope_indicator",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an issue is individual vs system_wide can affect both burden type and duration; a plausible common cause not named."
+      },
+      {
+        "name": "time_of_day_band",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Time incident occurs (after_hours/overnight) affects staffing/response and correlates with incident type; a pre-treatment common cause not named in query."
+      },
+      {
+        "name": "assigned_agent",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Agent assignment could be argued as mediator, but agent skill/experience is a common cause of both handling and duration; treated as a confounder not named. Assignment is itself intervenable."
+      },
+      {
+        "name": "caller_segment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Caller identity/segment can influence both the kind of issue reported and resolution time; a common cause not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "incident_category",
+      "failure_type"
+    ],
+    "treatment_intervenable": false,
+    "confounder_quality": 0.45,
+    "rationale": "The query asks an interventional what-if: eliminate the most common operational burdens and estimate the drop in resolution duration. The added columns identify the treatment via incident_category/failure_type, but these encode a diagnosed condition (an intrinsic classification of what went wrong) rather than a lever an actor can SET, CHANGE, or DECIDE — you cannot straightforwardly 'set' a connectivity_failure to none as an operational intervention. Thus the intervenability requirement (a) is not clearly satisfied. On confounders (b), the set does include several plausible pre-treatment common causes NOT named in the query — affected_system_scope, scope_indicator, time_of_day_band, caller_segment — which is the capability under test and earns partial credit. However quality is diluted by a mediator misclassified as a covariate (reassignment_indicator), a near-degenerate signal (recurrence_signal, 496/4), and assigned_agent which sits ambiguously between mediator and confounder. Overall: treatment present but weakly intervenable; moderate, mixed-quality confounder coverage."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

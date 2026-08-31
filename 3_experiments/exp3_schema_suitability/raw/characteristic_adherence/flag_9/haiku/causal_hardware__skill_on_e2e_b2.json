@@ -1,0 +1,100 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "focus_variable": "hardware_incident_spike",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "hardware_equipment_class",
+    "failure_mechanism",
+    "recurrence_pattern",
+    "assigned_technician",
+    "caller_identity",
+    "urgency_impact_level"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.3,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.3,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "hardware_incident_spike",
+    "per_column": [
+      {
+        "name": "hardware_equipment_class",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The class of hardware (system/printer/network) is a candidate cause whose distribution could explain why hardware incidents spiked; it is a plausible driver of the outcome surfaced from the data."
+      },
+      {
+        "name": "failure_mechanism",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The failure mechanism (update_failure, connectivity_lost) is a direct candidate cause of the incident spike; e.g. a wave of update_failures could attribute the spike. This is the most direct treatment/cause variable."
+      },
+      {
+        "name": "recurrence_pattern",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Describes whether incidents repeat; this is more a characterization/consequence of the spike than a common cause of both a treatment and the outcome. Closer to a descriptive marker of the outcome than a confounder."
+      },
+      {
+        "name": "assigned_technician",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Technician workload/skill can plausibly influence which failures get logged/resolved and correlate with incident counts, but its status as a genuine common cause of both a treatment and the outcome is weak; often it is downstream of the incident (a collider-ish assignment)."
+      },
+      {
+        "name": "caller_identity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Certain callers/departments may use particular hardware and be more prone to report incidents, plausibly a common cause of both equipment class exposure and reporting of incidents; surfaced from data."
+      },
+      {
+        "name": "urgency_impact_level",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Urgency/impact is a downstream consequence/severity rating assigned to an incident, on the effect side rather than a common cause; adjusting for it would be a mistake."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "failure_mechanism",
+      "hardware_equipment_class"
+    ],
+    "confounders": [
+      {
+        "name": "caller_identity",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "assigned_technician",
+        "named_in_query": false,
+        "plausibility": 0.3
+      }
+    ],
+    "confounder_quality": 0.3,
+    "rationale": "The columns clearly supply candidate TREATMENTS (failure_mechanism, hardware_equipment_class) that could attribute the spike, and none of the confounders were named in the query. However, the set is weak on genuine CONFOUNDERS -- common causes of BOTH treatment and outcome. Notably absent is any temporal/exposure variable (e.g., rollout timing, patch/change events, volume/load) that would confound the anomaly-window attribution. The proposed confounders (caller_identity, assigned_technician) are only weakly plausible as common causes and lean toward downstream assignment/reporting, while urgency_impact_level and recurrence_pattern sit on the outcome/collider side. The operator set up a treatment but did not convincingly surface adjustment-worthy confounders, so causal attribution is only partially realised."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "has_critical_keyword",
+    "issue_type",
+    "issue_frequency_rank",
+    "contains_outage_signal",
+    "attention_score"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.6864,
+    "focus_coherence": 0.88,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Which incidents warrant prioritized attention (severity/urgency signals derived from incident descriptions)",
+    "per_column": [
+      {
+        "name": "has_critical_keyword",
+        "supports_focus": true,
+        "rationale": "Flags descriptions containing critical-severity language, a direct signal of attention-worthiness."
+      },
+      {
+        "name": "issue_type",
+        "supports_focus": true,
+        "rationale": "Categorizes the incident domain, giving a facet to segment where attention is concentrated (Email, Database, VPN, etc.)."
+      },
+      {
+        "name": "issue_frequency_rank",
+        "supports_focus": true,
+        "rationale": "Encodes how common each issue type is, helping identify high-volume clusters worth attention; mildly redundant with issue_type but adds a prioritization dimension."
+      },
+      {
+        "name": "contains_outage_signal",
+        "supports_focus": true,
+        "rationale": "Detects outage-related language, another concrete severity/impact indicator feeding attention."
+      },
+      {
+        "name": "attention_score",
+        "supports_focus": true,
+        "rationale": "An aggregate composite that directly operationalizes the focus, ranking incidents by how much attention they merit."
+      }
+    ],
+    "focus_coherence": 0.88,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "rationale": "The columns cohere tightly around a single inferable focus: identifying attention-worthy incidents from their descriptions. Rather than a generic grab-bag or bare token counts, they form a layered structure -- textual severity signals (has_critical_keyword, contains_outage_signal), a domain segmentation facet (issue_type) with an associated volume dimension (issue_frequency_rank), and a synthesizing composite (attention_score). This is a sound predictor/facet set at a useful granularity that an analyst could act on (triage, prioritize, drill into high-score or outage-flagged incidents). Minor deductions: issue_frequency_rank appears to be a mechanical restatement of issue_type counts (redundant granularity), and attention_score's construction is opaque, so its analytical validity depends on how its inputs are combined -- otherwise it risks circular restatement of the other flags. These weaken structure_quality slightly but do not break the coherent focus."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

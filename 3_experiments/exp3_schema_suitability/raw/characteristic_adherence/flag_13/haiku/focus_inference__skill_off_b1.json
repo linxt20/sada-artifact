@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "n_added_columns": 5,
+  "added_columns": [
+    "has_critical_keyword",
+    "issue_type",
+    "issue_frequency_rank",
+    "contains_outage_signal",
+    "attention_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.72,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.685,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "has_critical_keyword",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A binary criticality flag gives some triage leverage for prioritizing attention. However grounding is shaky: 'Unable to access online database' is flagged critical (1) while 'Cannot connect to office WiFi' and VPN outages are 0, which is an inconsistent reading of the source text and suggests an opaque or arbitrary keyword rule."
+      },
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean categorical axis (Network/VPN/Database/Email/etc.) derived directly from short_description; enables grouping and comparison of incident classes. Sample values match the source text well ('WiFi'->Network, 'VPN'->VPN, 'database'->Database). 'Printing issues'->Other is slightly odd given a Printer category exists, but minor."
+      },
+      {
+        "name": "issue_frequency_rank",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "This is just the count of each issue_type restated per row (VPN=108, Database=128), so it is nearly redundant with issue_type and derivable by aggregation rather than a new analytical axis. Values are internally consistent with issue_type, but it is mislabeled as a 'rank' when it is a raw frequency."
+      },
+      {
+        "name": "contains_outage_signal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "An outage/connectivity flag is relevant to what deserves attention. But grounding is questionable: 'Cannot connect to office WiFi' and 'Unable to connect to VPN' are marked as outage signals (1) even though these read as individual connectivity problems, not necessarily service outages; the signal appears over-triggered on generic 'cannot connect' phrasing."
+      },
+      {
+        "name": "attention_score",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A composite prioritization score directly serves the query about what's 'worth attention' and gives a rankable axis. However it is derived from the partly-unreliable keyword/outage flags and its construction is opaque, so specific values (e.g. score 5 for a database access issue vs 3 for a WiFi outage) are not clearly warranted by the source text."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns collectively provide genuine triage leverage for identifying noteworthy incidents: issue_type is a strong, well-grounded categorical axis, and attention_score plus the two flags offer a prioritization dimension aligned with the query. Weaknesses: issue_frequency_rank is largely a per-row restatement of issue_type counts and adds little new leverage, and the keyword/outage flags (and by extension attention_score) show inconsistent, over-triggered readings of the source text, indicating some ungrounded value assignment. Grounding is generally reasonable but marred by these opaque, arbitrary flag rules."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

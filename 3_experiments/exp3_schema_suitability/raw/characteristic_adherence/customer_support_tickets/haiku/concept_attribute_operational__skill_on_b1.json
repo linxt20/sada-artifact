@@ -1,0 +1,123 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What customer issues create the most support burden?",
+  "n_added_columns": 13,
+  "added_columns": [
+    "is_outage",
+    "customer_impact_scope",
+    "issue_category",
+    "request_type",
+    "system_component",
+    "data_risk",
+    "blocker_type",
+    "technical_root_cause",
+    "is_outage_or_incident",
+    "system_component_affected",
+    "blocker_or_dependency",
+    "data_risk_or_exposure",
+    "technical_root_cause_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 13,
+    "n_judged_columns": 13,
+    "analytical_usefulness": 0.5885,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.8085,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.6985,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_outage",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.92,
+        "rationale": "A binary outage flag is a useful axis for support burden, but it is largely redundant with is_outage_or_incident. Values are well grounded in the source text (CS-0003 outage correctly true)."
+      },
+      {
+        "name": "customer_impact_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Scope of impact (tenant-wide vs single user) is a strong burden-differentiating axis. Values mostly sound, though CS-0001 and CS-0005 labeled single_user is a defensible reading; not_present for a feature request is reasonable."
+      },
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "rationale": "Core grouping dimension directly answering which issue types dominate. Categorizations align well with source text across samples."
+      },
+      {
+        "name": "request_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Useful but substantially overlaps with issue_category (bug vs feature vs outage). Grounded, though CS-0003 categorized bug_platform_defect yet request_type production_outage_urgent shows slight taxonomy inconsistency across the pair."
+      },
+      {
+        "name": "system_component",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "rationale": "Affected component is a valuable axis for locating burden. Mostly grounded; CS-0003 mapped to api_endpoint (502 gateway) is reasonable inference."
+      },
+      {
+        "name": "data_risk",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Data-risk categorization adds a severity axis relevant to burden. Values well supported (billing duplicate, CSV corruption)."
+      },
+      {
+        "name": "blocker_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "rationale": "Blocker/business-impact axis is useful for prioritization. However customer_business_blocked=134 appears over-applied; CS-0002 marked customer_business_blocked while blocker_or_dependency marked not_present shows inconsistency and possible over-assertion."
+      },
+      {
+        "name": "technical_root_cause",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "rationale": "Root-cause pattern is analytically valuable but often inferred beyond what text supports; e.g., CS-0003 'infrastructure_resource_exhaustion' from a 502 error, and CS-0001 'configuration_or_state_inconsistency' for a billing duplicate are speculative confident specifics."
+      },
+      {
+        "name": "is_outage_or_incident",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.9,
+        "rationale": "Nearly duplicates is_outage with slightly different counts; adds little new leverage. Values grounded."
+      },
+      {
+        "name": "system_component_affected",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.8,
+        "rationale": "Near-duplicate of system_component with differing not_present counts; provides little additional analytical axis despite reasonable grounding."
+      },
+      {
+        "name": "blocker_or_dependency",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.78,
+        "rationale": "Restates blocker_type with different distributions, and the two disagree per-row (CS-0002), signaling redundancy plus inconsistency rather than a new axis."
+      },
+      {
+        "name": "data_risk_or_exposure",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.83,
+        "rationale": "Near-duplicate of data_risk with slightly shifted counts; minimal new leverage."
+      },
+      {
+        "name": "technical_root_cause_pattern",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.63,
+        "rationale": "Restates technical_root_cause with different distributions and shares its speculative grounding weakness; redundant."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.8,
+    "rationale": "The distinct columns (issue_category, customer_impact_scope, system_component, data_risk, blocker_type) give genuine, complementary axes for analyzing support burden and are largely well grounded in the ticket text. However nearly half the set consists of near-duplicate pairs (is_outage/is_outage_or_incident, system_component/system_component_affected, blocker_type/blocker_or_dependency, data_risk/data_risk_or_exposure, technical_root_cause/technical_root_cause_pattern) that restate each other with only shifted distributions, adding little leverage and even contradicting their twins on some rows. Grounding is generally sound for extractive/categorical columns; the root-cause columns show the most speculative, unsupported confident specifics."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 13
+}

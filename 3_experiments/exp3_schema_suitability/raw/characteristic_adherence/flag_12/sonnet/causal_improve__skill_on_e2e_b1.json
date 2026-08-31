@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we improve incident resolution efficiency?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "affected_component",
+    "failure_symptom",
+    "resolution_action_type",
+    "involves_escalation_or_reassignment",
+    "is_recurring_issue_type",
+    "software_trigger_indicated"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6143,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.6071,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.6107,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizes free-text short_description into meaningful incident types, giving a strong axis to group resolution efficiency by category. Sample values (printer, network_or_vpn, database) are sound readings of the source text."
+      },
+      {
+        "name": "affected_component",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well-grounded extraction of the affected hardware/software component, but for most rows it closely mirrors incident_category (printer->printer, database->database), reducing independent analytical leverage. Still adds some granularity (keyboard vs mouse, workstation)."
+      },
+      {
+        "name": "failure_symptom",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Symptom taxonomy (not_responding, not_connecting, physical_failure) is a genuinely new axis orthogonal to component, useful for correlating symptom type with resolution time. Samples map reasonably from the text, though 'not_responding' for a generic 'not working' description is a somewhat loose but defensible inference."
+      },
+      {
+        "name": "resolution_action_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Resolution action type is directly relevant to improving resolution efficiency. However the source text (short_description of the problem) rarely states the resolution taken; values like 'repair_needed' or 'connectivity_fix' are inferred from the problem statement, not from any resolution field, so many values are unwarranted confident specifics."
+      },
+      {
+        "name": "involves_escalation_or_reassignment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Escalation/reassignment is highly relevant to efficiency, but the sampled source text (short_description + timestamps) contains no evidence of escalation or reassignment. Two near-identical printer rows get opposite true/false values with no supporting text, indicating fabricated/ungrounded assignment."
+      },
+      {
+        "name": "is_recurring_issue_type",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.1,
+        "hallucination_observed": true,
+        "rationale": "Constant 'true' for all 500 rows — no analytical variance and no discriminating value. Also not derivable from the per-row source text; recurrence cannot be asserted uniformly and is essentially fabricated."
+      },
+      {
+        "name": "software_trigger_indicated",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A software-vs-hardware trigger flag could help slice causes, but it is largely a coarse binary derivable from category and is a confident inference the short text often does not explicitly support. Values in samples (mostly false) are plausible but weakly grounded."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.58,
+    "rationale": "The augmentation adds several genuinely useful axes (incident_category, failure_symptom, resolution_action_type) for analyzing resolution efficiency, and the categorization columns are well grounded in the short_description text. However groundedness is dragged down by columns that assert facts absent from the source: resolution_action_type and involves_escalation_or_reassignment are inferred from problem statements without resolution/escalation evidence (near-identical rows get opposite flags), and is_recurring_issue_type is a constant 'true' that is both analytically inert and fabricated. affected_component is largely redundant with incident_category."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 7
+}

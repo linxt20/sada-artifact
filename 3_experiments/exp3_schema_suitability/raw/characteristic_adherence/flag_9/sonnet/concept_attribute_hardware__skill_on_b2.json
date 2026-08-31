@@ -1,0 +1,50 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "focus_variable": "hardware_hiccups",
+  "concept": "hardware_hiccups",
+  "n_added_columns": 1,
+  "added_columns": [
+    "recurrence_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 1,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.0,
+    "exhaustiveness": 0.0,
+    "mece": 0.0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "hardware_hiccups",
+    "per_column": [
+      {
+        "name": "recurrence_signal",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A boolean flag indicating whether an incident recurs describes a temporal/behavioral property of the incident, not a constitutive aspect (part) of what a hardware issue IS. It does not carve the hardware-hiccup concept into a kind or component of hardware trouble (e.g., disk, memory, power, peripherals, connectivity); instead it signals repetition, which is an attribute correlated with severity/pattern rather than an 'aspect of' the hardware fault itself."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "recurrence_signal"
+    ],
+    "mutual_exclusivity": 0.0,
+    "exhaustiveness": 0.0,
+    "rationale": "The single added column, recurrence_signal, is not a meronymic facet of 'hardware_hiccups.' It captures whether the issue repeats, which is a behavioral/temporal predictor or symptom, not a constitutive part of the hardware-issue concept. No column decomposes the concept into non-overlapping hardware aspects (component type, failure mode, symptom class, etc.), so mutual exclusivity is trivially undefined/zero for a set with no valid facets, and exhaustiveness is zero because none of the concept's main constitutive aspects are covered."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 1
+}

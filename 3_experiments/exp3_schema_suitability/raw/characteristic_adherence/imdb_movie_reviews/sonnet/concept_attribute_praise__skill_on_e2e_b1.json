@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "overall_sentiment_polarity",
+    "praise_dimension",
+    "complaint_dimension",
+    "emotional_engagement",
+    "comparative_reference_type",
+    "audience_recommendation_stance"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8083,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8333,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8208,
+    "hallucination_rate": 0.1667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "overall_sentiment_polarity",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A three-way sentiment (positive/negative/mixed) is somewhat more granular than the existing label_pos, and 'mixed' adds value for identifying reviews with both praise and complaints. But it largely restates the existing polarity label, limiting leverage. Values track the source text well across samples."
+      },
+      {
+        "name": "praise_dimension",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Directly answers the 'what praise appears' half of the query, giving a strong grouping axis. Mostly grounded, but some samples strain: IMDB-0002 is a wholly negative review with no discernible praise yet is tagged story_plot, and IMDB-0003 (negative, wooden performances) tagged acting as praise looks like a forced label rather than a warranted reading."
+      },
+      {
+        "name": "complaint_dimension",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the 'complaints' half of the query and uses 'not_present' appropriately for silent rows. Sample values (writing_script, acting) are sound readings of the source text."
+      },
+      {
+        "name": "emotional_engagement",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Provides an engagement axis distinct from raw polarity, useful for comparing reactions. Partly overlaps with sentiment but adds intensity gradation. Sample values are plausible readings, though 'moderately_engaging' for the terse IMDB-0005 is a mild inference."
+      },
+      {
+        "name": "comparative_reference_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures whether reviews benchmark against other works, a genuine new axis relevant to how praise/criticism is expressed. Correctly uses 'not_present' for the majority. Star Trek references in samples support the favorable/unfavorable comparison tags."
+      },
+      {
+        "name": "audience_recommendation_stance",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A recommendation-stance axis with conditional gradations adds modeling leverage beyond bare polarity. Grounded for clear cases; 'neutral_or_niche_recommend' for the sexploitation review is a reasonable inference from 'a must see for fans'."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns collectively give strong analytical leverage for the query: praise_dimension and complaint_dimension directly decompose the praise/complaint question, while comparative_reference_type, emotional_engagement, and recommendation stance offer complementary grouping axes. overall_sentiment_polarity is the weakest, largely restating the existing label. Groundedness is generally sound with appropriate 'not_present' handling, but praise_dimension shows a couple of forced labels on wholly negative reviews (IMDB-0002, IMDB-0003) where no genuine praise is evident, indicating some over-assertion."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

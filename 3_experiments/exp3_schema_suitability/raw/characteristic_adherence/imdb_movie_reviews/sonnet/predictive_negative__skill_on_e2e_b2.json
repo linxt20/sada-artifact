@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative IMDb audience satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "script_quality_verdict",
+    "acting_quality_verdict",
+    "production_quality_verdict",
+    "plot_coherence",
+    "reviewer_emotional_tone",
+    "comparative_benchmark",
+    "rec_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4286,
+    "predictor_fraction": 0.7143,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.2857
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "script_quality_verdict",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Reviewer's assessment of the script (poor/good/mixed) is a distinct content dimension that plausibly correlates with overall satisfaction without deterministically restating the binary label."
+      },
+      {
+        "name": "acting_quality_verdict",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Judgment about acting is a separable quality facet that carries predictive signal about positive/negative sentiment while remaining outside the focus variable."
+      },
+      {
+        "name": "production_quality_verdict",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Production/technical quality is another independent aspect of the review that can inform, but does not define, overall label."
+      },
+      {
+        "name": "plot_coherence",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Coherence of the plot is a specific content attribute plausibly linked to satisfaction and not a mechanical restatement of the label."
+      },
+      {
+        "name": "reviewer_emotional_tone",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Sentiment polarity (strongly_negative ... strongly_positive) is essentially a near-restatement of label_pos; the positive/negative label is largely a deterministic read-off of the reviewer's overall tone, so it leaks the outcome rather than predicting it."
+      },
+      {
+        "name": "comparative_benchmark",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the review compares the film favorably/unfavorably to others is a distinct rhetorical signal that carries predictive information without fully determining the label."
+      },
+      {
+        "name": "rec_signal",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Explicit recommend/avoid is functionally equivalent to the satisfaction verdict itself; recommending vs. telling readers to avoid maps almost one-to-one onto positive/negative label, so it restates/leaks the focus."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.6,
+    "rationale": "The aspect-level verdicts (script, acting, production, plot coherence) and the comparative benchmark are legitimate, non-trivial predictors that decompose the review into distinct quality dimensions each carrying genuine signal beyond raw text. However, reviewer_emotional_tone and rec_signal are near-restatements/leakage of the binary satisfaction label, since polarity and explicit recommend/avoid are essentially the outcome itself. As a set there is real predictive leverage from the aspect features, but the presence of two leaking columns lowers the clean predictive utility."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

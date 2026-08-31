@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "resolution_hours",
+    "priority_score",
+    "category_avg_resolution_hours",
+    "assignee_avg_resolution_hours",
+    "group_avg_resolution_hours",
+    "opened_hour_of_day",
+    "is_afterhours_open",
+    "is_weekend_open",
+    "description_length",
+    "is_unassigned"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.27,
+    "predictor_fraction": 0.6,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.3
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is resolution_time itself expressed in hours (closed_at - opened_at). It is a direct restatement of the focus variable and only knowable after resolution -- pure leakage/restatement."
+      },
+      {
+        "name": "priority_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Priority is set at or near incident creation and plausibly correlates with resolution time; it is external to the outcome and a legitimate predictor."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A target-encoded aggregate: average of the outcome grouped by category. Computed from the focus variable itself, so it encodes the label. Without proper out-of-fold construction this leaks the target."
+      },
+      {
+        "name": "assignee_avg_resolution_hours",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Mean of the focus variable grouped by assignee -- a target-derived aggregate that leaks resolution_time; also the assignee may only be known after handling."
+      },
+      {
+        "name": "group_avg_resolution_hours",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Average of the outcome grouped by assignment group -- again derived from the focus variable, constituting target leakage."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from opened_at, known at creation, independent of the outcome, and can plausibly carry signal (staffing/coverage effects on resolution time)."
+      },
+      {
+        "name": "is_afterhours_open",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Known at open time; after-hours incidents may resolve slower due to reduced staffing. Legitimate external predictor."
+      },
+      {
+        "name": "is_weekend_open",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Known at open time; weekend openings plausibly affect resolution time. Legitimate external predictor."
+      },
+      {
+        "name": "description_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A generic text-length feature but knowable at creation and weakly plausible (longer descriptions may indicate complexity). Legitimate but low-signal predictor."
+      },
+      {
+        "name": "is_unassigned",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Assignment status is known during the incident lifecycle and unassigned incidents plausibly take longer; external and predictive, though borderline for temporal validity."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.45,
+    "rationale": "Six columns are legitimate external predictors (priority, hour-of-day, after-hours, weekend, description length, is_unassigned), several capturing meaningful timing/staffing signal. However, four columns are compromised: resolution_hours is a direct restatement of the focus, and the three *_avg_resolution_hours aggregates are target-encoded means of the outcome that leak the label. The valid predictors give moderate leverage, but the leaking columns would dominate and produce inflated, invalid performance, so the set's genuine, honest predictive utility is only moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

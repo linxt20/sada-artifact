@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "crew_service_quality_issues",
+    "aircraft_modernization",
+    "price_value_alignment"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "overall_rating_recommendation",
+    "per_column": [
+      {
+        "name": "crew_service_quality_issues",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Extracts crew/staff service failures (rudeness, inattentiveness, inefficiency) from review text as a candidate cause of low ratings and non-recommendation. This is a plausible manipulable treatment whose effect on the outcome is being attributed. Not named in the query."
+      },
+      {
+        "name": "aircraft_modernization",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Aircraft age/condition (dated, modern, worn) plausibly affects both perceived crew/product experience and the overall rating. It is surfaced from text, not in the query. However it could also act as a parallel treatment; treated as a common contextual driver here."
+      },
+      {
+        "name": "price_value_alignment",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Perceived value-for-money is largely a downstream judgment that sits on the causal path between service/product quality and the overall rating/recommendation. Adjusting for it would block part of the very effect being attributed, so it is a mediator rather than a genuine confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "crew_service_quality_issues"
+    ],
+    "confounders": [
+      {
+        "name": "aircraft_modernization",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "A clear treatment (crew service quality issues) is surfaced from the review text, satisfying part (a). For part (b), only aircraft_modernization is a candidate confounder and it is genuinely surfaced from data rather than copied from the query, but its status as a common cause of BOTH the crew-service treatment and the outcome is weak/ambiguous (it may act as a separate treatment). The remaining added column, price_value_alignment, is a mediator on the causal path to the outcome and adjusting for it would bias the attribution. Overall the set gestures at causal estimation but provides no strong, unambiguous common-cause confounder, so confounder quality is low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

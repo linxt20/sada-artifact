@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "resolution_days",
+    "workload_intensity",
+    "critical_infrastructure"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8333,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.5,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.6666,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_days",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A per-ticket duration is a strong axis for judging agent workload. However, the source samples show closed_at equal to sys_updated_on, so a resolution span requires opened_at (present in the table but not shown in samples). The produced values do not reconcile with the identical timestamps in the evidence, and negative values (-0.18, -0.15) are impossible durations, indicating some ungrounded/erroneous computation. Partial groundedness."
+      },
+      {
+        "name": "workload_intensity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Directly targets the query, so useful in principle. But it is an opaque composite score with no transparent derivation from the source text; values like 6.77 or 3.39 cannot be traced to specific evidence in the shown fields, and its heavy clustering on a few values plus apparent correlation with resolution_days suggests a partly invented/black-box construct rather than a grounded reading."
+      },
+      {
+        "name": "critical_infrastructure",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A binary flag for whether the ticket touches critical infrastructure is a legitimate grouping axis for workload analysis. Many labels are defensible readings of short_description (database, VPN, intranet -> Yes; software update -> No). But the flag is asserted 'Yes' for 393/500 rows, including a generic 'Internet connection unstable', which stretches beyond what the terse descriptions clearly support, so groundedness is only moderate."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.5,
+    "rationale": "All three columns give genuine new axes (duration, an intensity score, and a criticality flag) aligned with the workload query, so analytical usefulness is solid. Groundedness is the weak point: resolution_days contains impossible negative values and does not reconcile with the identical timestamps shown; workload_intensity is an opaque composite with no traceable derivation; and critical_infrastructure over-asserts 'Yes'. Values often go beyond what the source text supports."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

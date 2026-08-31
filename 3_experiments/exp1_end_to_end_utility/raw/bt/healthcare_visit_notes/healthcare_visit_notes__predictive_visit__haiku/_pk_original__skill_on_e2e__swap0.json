@@ -1,0 +1,125 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "large",
+  "ok": true,
+  "confidence": 0.9,
+  "scores_a": {
+    "specificity": 3,
+    "evidence": 2,
+    "depth": 3,
+    "actionability": 3,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "evidence": {
+      "score_a": 2,
+      "score_b": 5,
+      "delta_a_minus_b": -3,
+      "winner": "B",
+      "margin": "large"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Cardiology (~30 visits)",
+        "why": "counts are approximate"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Visit reasons serve as strong routing signals",
+        "why": "consistent narrative"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "Medication management (69.0%) and chest pain/cardiac symptoms (26.2%)",
+        "why": "precise percentages"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Cardiology (n=42, 16.8% of visits)",
+        "why": "exact counts and shares"
+      },
+      {
+        "dimension": "depth",
+        "quote": "GeneralPractice is the only truly multi-system department",
+        "why": "cross-group contrast"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "organ_system_focus=musculoskeletal predicts Orthopedics with 100% consistency",
+        "why": "decision-ready classifier"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "organ_system_focus",
+        "quote": "organ_system_focus=cardiovascular field perfectly predicts Cardiology",
+        "dependent": true
+      },
+      {
+        "column": "presenting_symptom_type",
+        "quote": "presenting_symptom_type=skin_rash_lesion field appears in 88.1%",
+        "dependent": true
+      },
+      {
+        "column": "life_threat_status",
+        "quote": "life_threat_status (6 severity levels)",
+        "dependent": true
+      },
+      {
+        "column": "diagnostic_or_procedural_escalation",
+        "quote": "diagnostic_or_procedural_escalation (7 escalation types)",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B provides quantified, column-cited, cross-department evidence while A is descriptive with approximate counts.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

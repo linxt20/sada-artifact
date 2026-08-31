@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "low_satisfaction_flag",
+    "tech_issue_mentions",
+    "engagement_mentions",
+    "clarity_mentions",
+    "workload_mentions",
+    "primary_driver",
+    "satisfaction_band"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7429,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.6965,
+    "hallucination_rate": 0.7143
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "low_satisfaction_flag",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binary low-satisfaction indicator supports grouping the 'certain groups' the query targets, though it is largely derivable from the existing satisfaction_1to5 column and overlaps with satisfaction_band, limiting new leverage. Values align with source sentiment (e.g. crying second grader = 1, love recorded lectures = 0)."
+      },
+      {
+        "name": "tech_issue_mentions",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Counting technology complaints is a genuinely useful driver axis for this query. However groundedness is shaky: ED-0002 mentions no tech issue yet was coded 1, and the counts appear inconsistent with the prose in several rows, indicating over-detection."
+      },
+      {
+        "name": "engagement_mentions",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Engagement is a plausible satisfaction driver worth modeling. But ED-0005 ('cannot get juniors to participate', 'performing to a wall') is clearly about engagement yet coded 0, and ED-0002's explicit 'Engagement dipped' was also coded 0 — the extraction contradicts the text."
+      },
+      {
+        "name": "clarity_mentions",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Clarity/comprehension is a reasonable analytical factor. Coding is uneven: ED-0001 and ED-0003 clarity=1 are defensible, but ED-0004 'make the Civil War feel real' as a clarity mention is a loose reading, suggesting inconsistent criteria."
+      },
+      {
+        "name": "workload_mentions",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Workload is a legitimate driver dimension. Groundedness is weak: ED-0001 workload=1 has no workload content in the text, and ED-0002 workload=1 ('creative labs') is not a workload statement — appears fabricated."
+      },
+      {
+        "name": "primary_driver",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A single categorical driver is highly useful for answering 'which factors drive it'. But assignments look unreliable: ED-0002 (positive, high satisfaction) labeled 'technology' as a driver is odd, and it inherits the errors of the underlying mention counts."
+      },
+      {
+        "name": "satisfaction_band",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A high/medium/low band is a sound, faithful reduction of satisfaction_1to5 and eases grouping, but it is largely redundant with the existing score and with low_satisfaction_flag, offering limited new analytical axis."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.62,
+    "rationale": "The added columns supply relevant driver dimensions (tech, engagement, clarity, workload) plus a primary_driver and satisfaction bands that directly serve the query about why satisfaction is low and what drives it, giving real axes to group and model. However, the driver-flag/count columns show recurring groundedness failures in the evidence samples — engagement and workload mentions contradict or invent content (ED-0002, ED-0005), and several counts do not match the prose — and primary_driver inherits these errors. satisfaction_band and low_satisfaction_flag are well grounded but overlap with the existing score, dampening usefulness."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

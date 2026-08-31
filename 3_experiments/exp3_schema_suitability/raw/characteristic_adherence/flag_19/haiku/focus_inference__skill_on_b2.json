@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_type_category",
+    "vendor_or_manufacturer",
+    "department_assignment",
+    "processing_delay_indicator",
+    "asset_intended_use",
+    "record_generation_method"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.624,
+    "focus_coherence": 0.78,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "IT asset/equipment procurement spend captured in these expense records (what was bought, from whom, for whom, and for what use)",
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "supports_focus": true,
+        "rationale": "Classifies the kind of asset purchased (laptop, server, cloud_service), a core facet of the procurement focus."
+      },
+      {
+        "name": "vendor_or_manufacturer",
+        "supports_focus": true,
+        "rationale": "Identifies who supplied the asset, a key procurement dimension supporting vendor spend analysis."
+      },
+      {
+        "name": "department_assignment",
+        "supports_focus": true,
+        "rationale": "Attributes the asset/expense to a consuming department, enabling cost allocation analysis around the focus."
+      },
+      {
+        "name": "processing_delay_indicator",
+        "supports_focus": true,
+        "rationale": "A process-efficiency facet of the expense record; somewhat peripheral to the asset-procurement focus but still an actionable operational attribute of the same records."
+      },
+      {
+        "name": "asset_intended_use",
+        "supports_focus": true,
+        "rationale": "Explains why the asset was purchased, deepening the procurement focus and enabling need-vs-spend analysis."
+      },
+      {
+        "name": "record_generation_method",
+        "supports_focus": false,
+        "rationale": "Data-provenance metadata (auto vs manual entry); relates to record quality rather than the asset-procurement focus, diluting coherence."
+      }
+    ],
+    "focus_coherence": 0.78,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The columns clearly converge on a single inferable focus: IT asset procurement spend within expense records. asset_type_category, vendor_or_manufacturer, department_assignment, and asset_intended_use form a coherent, well-differentiated predictor/attribute set (what, who from, who for, why) at a useful granularity, allowing analyses like vendor concentration, department cost drivers, and need alignment. This is genuinely actionable. Two columns dilute the focus: processing_delay_indicator (operational efficiency facet) and especially record_generation_method (data provenance/quality metadata), which drift toward record-management rather than the procurement focus. The set is not a grab-bag and is not a mere restatement, but the two off-focus columns prevent top scores on coherence."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

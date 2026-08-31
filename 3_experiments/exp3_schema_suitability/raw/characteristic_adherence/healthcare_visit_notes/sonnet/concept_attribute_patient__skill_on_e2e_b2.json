@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What patient needs appear in visit notes?",
+  "focus_variable": "patient_needs",
+  "concept": "patient_needs",
+  "n_added_columns": 8,
+  "added_columns": [
+    "clinical_problem_type",
+    "acuity_complexity",
+    "care_action_required",
+    "specialist_involvement",
+    "diagnostic_workup_need",
+    "medication_need_type",
+    "preventive_or_wellness_need",
+    "specialist_or_ancillary_involvement"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.4108,
+    "facet_fraction": 0.75,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.75,
+    "mece": 0.5477,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "patient_needs",
+    "per_column": [
+      {
+        "name": "clinical_problem_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The nature of the clinical problem is a constitutive aspect of what the patient needs address (chronic mgmt, acute, preventive)."
+      },
+      {
+        "name": "acuity_complexity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Acuity/urgency of need is a genuine aspect of the patient's need -- how pressing the need is."
+      },
+      {
+        "name": "care_action_required",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The care action needed (medication, procedure, admission) is a direct constitutive part of the patient's needs."
+      },
+      {
+        "name": "specialist_involvement",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Which specialty/department is involved is an organizational/service attribute, not an aspect OF the patient's need itself; it largely mirrors department, an existing column."
+      },
+      {
+        "name": "diagnostic_workup_need",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The need for diagnostic workup (labs, imaging, biopsy) is a legitimate constitutive facet of patient needs."
+      },
+      {
+        "name": "medication_need_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Medication need is a facet of patient needs, but it overlaps with care_action_required (medication_initiation_or_change)."
+      },
+      {
+        "name": "preventive_or_wellness_need",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Preventive/wellness need is an aspect of patient needs, but overlaps with clinical_problem_type's preventive_or_wellness category."
+      },
+      {
+        "name": "specialist_or_ancillary_involvement",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Duplicate of specialist_involvement (identical observed values); an external service attribute, not a facet of the need."
+      }
+    ],
+    "facet_columns": [
+      "clinical_problem_type",
+      "acuity_complexity",
+      "care_action_required",
+      "diagnostic_workup_need",
+      "medication_need_type",
+      "preventive_or_wellness_need"
+    ],
+    "non_facet_columns": [
+      "specialist_involvement",
+      "specialist_or_ancillary_involvement"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.75,
+    "rationale": "Most columns are genuine facets of patient_needs (problem type, acuity, care action, diagnostic need). However mutual exclusivity is weak: specialist_involvement and specialist_or_ancillary_involvement are literal duplicates (identical distributions); medication_need_type overlaps with care_action_required's medication categories; preventive_or_wellness_need overlaps with clinical_problem_type. Two columns (specialist involvement) are not facets at all but external service/organizational attributes that restate the existing department field rather than an aspect of the need. Exhaustiveness is fairly good across problem, acuity, action, diagnostics, meds, and prevention, though the overlaps and non-facets pull the set away from clean MECE decomposition."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

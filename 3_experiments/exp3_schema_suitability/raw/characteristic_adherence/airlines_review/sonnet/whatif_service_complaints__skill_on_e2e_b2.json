@@ -1,0 +1,106 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "cabin_service_complaint_type",
+    "crew_proactivity",
+    "cabin_class_service_gap",
+    "service_consistency_issue",
+    "post_covid_service_decline_flag",
+    "route_type"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.62,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.62,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "cabin_service_complaint_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "This directly encodes the intervenable lever named in the query: eliminating the most common cabin-service complaints. It captures the treatment whose removal is the counterfactual under study."
+      },
+      {
+        "name": "crew_proactivity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Crew proactivity is itself an aspect of cabin service (e.g. crew_attentiveness complaints). It lies on the causal path between service delivery and the rating rather than being a common cause of the complaint and the rating, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "cabin_class_service_gap",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Cabin class (already in the table) is a common cause: it shapes both which service complaints arise (expectations differ by class) and the baseline Overall Rating. This column adjusts for the class-relative service gap, a legitimate confounder not explicitly named in the query."
+      },
+      {
+        "name": "service_consistency_issue",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Consistency of service is a facet of the service quality being intervened on and sits on the pathway to the rating; it describes the treatment's manifestation rather than a distinct common cause, so it is a mediator."
+      },
+      {
+        "name": "post_covid_service_decline_flag",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A post-COVID period effect is a common cause: it plausibly drives both a rise in service complaints and lower overall ratings generally. It is a time-context confounder not named in the query."
+      },
+      {
+        "name": "route_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Route length affects both the likelihood/type of service complaints (long-haul has more service touchpoints) and the Overall Rating. A common cause not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "cabin_service_complaint_type"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "cabin_class_service_gap",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "post_covid_service_decline_flag",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "route_type",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.62,
+    "rationale": "The added set correctly identifies an intervenable treatment (cabin_service_complaint_type), matching the query's counterfactual of eliminating common cabin-service complaints, so treatment_present and treatment_intervenable are satisfied. Beyond that, it supplies three genuine confounders not named in the query (class-relative service gap, post-COVID period, route type), each a plausible common cause of both complaints and rating, demonstrating the capability under test. Two columns (crew_proactivity, service_consistency_issue) are facets/mediators of the treatment rather than confounders and do not count. Overall the intervention framing holds and confounder coverage is moderate: real but partly redundant with the treatment and lacking stronger common causes like traveller type or airline identity."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

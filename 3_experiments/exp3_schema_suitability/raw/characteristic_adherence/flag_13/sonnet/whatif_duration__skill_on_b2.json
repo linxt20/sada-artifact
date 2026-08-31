@@ -1,0 +1,128 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_symptom_type",
+    "server_vs_client_locus",
+    "scope_indicator",
+    "reassigned_resolver",
+    "off_hours_open",
+    "recurring_caller_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 6,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 6,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The nature of the incident (database, email, vpn) is not itself an intervenable operational burden, but it is a common cause of both which burdens arise and how long resolution takes. Acts as a confounder to adjust for, not named in the query."
+      },
+      {
+        "name": "failure_symptom_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Symptom type (cannot_connect, access_denied) is an intrinsic characteristic of the incident affecting both the burdens encountered and duration; not settable, so a confounder rather than treatment. Not named in query."
+      },
+      {
+        "name": "server_vs_client_locus",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Where the fault resides influences the operational burden and the time to resolve; an immutable property of the incident, so a confounder. Not named."
+      },
+      {
+        "name": "scope_indicator",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an issue is individual vs system-wide is a common cause of both handling burden and duration; not intervenable, so a confounder. Not named."
+      },
+      {
+        "name": "reassigned_resolver",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Reassignment/hand-off is an operational burden that a process could actually eliminate or change -- an intervenable lever. This is the closest thing to a settable treatment and is also plausibly a mediator of duration."
+      },
+      {
+        "name": "off_hours_open",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the ticket opened off-hours is a time-of-arrival attribute that is essentially fixed once it happened, but influences staffing burden and duration. Treated as a confounder rather than an intervenable treatment."
+      },
+      {
+        "name": "recurring_caller_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Recurring caller status is a caller trait affecting both burden and duration; not directly settable. Confounder, and heavily imbalanced (497/3) so of low practical value."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "reassigned_resolver"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "failure_symptom_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "server_vs_client_locus",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "scope_indicator",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "off_hours_open",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "recurring_caller_pattern",
+        "named_in_query": false,
+        "plausibility": 0.2
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The query poses a what-if: eliminating common operational burdens and reading off the change in resolution_duration. Only reassigned_resolver is a genuinely intervenable operational lever (an actor could redesign routing to avoid reassignment), so a settable treatment is present. However, the column set is dominated by intrinsic incident attributes (category, symptom, locus, scope) that operationalize 'burden' as fixed characteristics rather than eliminable levers; these function as confounders but are only partially plausible and none are named in the query. off_hours_open and recurring_caller_pattern are weak (fixed/imbalanced). The set thus partially satisfies the interventional claim -- an intervenable treatment plus unnamed confounders -- but the treatment framing is thin and most 'burden' columns are non-intervenable, giving moderate confounder quality."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

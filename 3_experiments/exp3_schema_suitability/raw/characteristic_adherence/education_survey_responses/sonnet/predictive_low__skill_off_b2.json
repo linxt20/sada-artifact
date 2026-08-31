@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "open_neg_tech_signals",
+    "open_neg_engagement_signals",
+    "open_neg_social_signals",
+    "open_neg_comprehension_signals",
+    "open_neg_teacher_signals",
+    "open_neg_emotional_signals",
+    "open_pos_signals",
+    "open_neg_categories_hit",
+    "open_net_neg_per100words",
+    "open_predicts_low_satisfaction"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.63,
+    "predictor_fraction": 0.9,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.1
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "open_neg_tech_signals",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of negative technology-related mentions in the open response; a genuine content feature derived from text, not from the satisfaction score, that plausibly correlates with low satisfaction."
+      },
+      {
+        "name": "open_neg_engagement_signals",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Negative engagement mentions extracted from free text; an independent signal outside the focus that can carry predictive value."
+      },
+      {
+        "name": "open_neg_social_signals",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Negative social-aspect mentions; a legitimate text-derived predictor distinct from the satisfaction rating."
+      },
+      {
+        "name": "open_neg_comprehension_signals",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Negative comprehension mentions; a substantive content feature plausibly linked to satisfaction."
+      },
+      {
+        "name": "open_neg_teacher_signals",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Negative teacher-related mentions; independent thematic signal usable as a predictor."
+      },
+      {
+        "name": "open_neg_emotional_signals",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Negative emotional expressions in text; a plausible predictor of satisfaction that is not a restatement of the score."
+      },
+      {
+        "name": "open_pos_signals",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of positive mentions; carries predictive signal about satisfaction and lies outside the focus variable."
+      },
+      {
+        "name": "open_neg_categories_hit",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Number of distinct negative themes triggered; a breadth-of-negativity feature derived from text, legitimately predictive."
+      },
+      {
+        "name": "open_net_neg_per100words",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Density-normalized net negativity from the open response; a text-derived continuous feature, not a function of the satisfaction score."
+      },
+      {
+        "name": "open_predicts_low_satisfaction",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A binary flag whose very name/purpose is a direct prediction/proxy of the low-satisfaction outcome. It is essentially a restatement of the target label and would leak the focus rather than serve as an independent predictor."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.7,
+    "rationale": "Nearly all added columns are thematically structured negative/positive signal counts and a normalized negativity density extracted from the open_response text. These lie outside the satisfaction rating and plausibly carry real predictive signal, making them legitimate features. The set has good coverage across distinct themes (tech, engagement, social, comprehension, teacher, emotional) plus positive tone and breadth, giving substantive predictive leverage beyond the original columns. The lone failure is open_predicts_low_satisfaction, which is a target-proxy label (leakage/restatement of the outcome) and must not be used as a feature. Excluding that column, the feature set is strong; utility is capped short of maximal because the individual signal columns are sparse (heavily zero) and somewhat redundant with one another."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

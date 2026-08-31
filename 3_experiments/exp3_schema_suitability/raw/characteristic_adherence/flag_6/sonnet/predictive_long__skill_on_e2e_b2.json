@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "incident_category",
+    "incident_symptom_type",
+    "affected_scope",
+    "service_outage_flag",
+    "remote_access_flag",
+    "assigned_agent",
+    "cross_agent_resolution_flag",
+    "ticket_open_status",
+    "opened_hour_of_day",
+    "opened_day_of_week"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.56,
+    "predictor_fraction": 0.8,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.2
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Symptom/topic of the incident (email, vpn, database) is knowable at intake and plausibly correlates with how long resolution takes. Lies outside the focus."
+      },
+      {
+        "name": "incident_symptom_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of symptom (outage_down, access_denied, slow_performance) is available up front and carries signal about difficulty/duration. Not a restatement of resolution_time."
+      },
+      {
+        "name": "affected_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Blast radius (individual vs organization_wide) is known early and plausibly predictive of effort and hence duration."
+      },
+      {
+        "name": "service_outage_flag",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether it is a service outage is derivable at intake and correlates with urgency/complexity, a legitimate predictor of resolution time."
+      },
+      {
+        "name": "remote_access_flag",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Remote-access nature of the ticket is known at open time and can affect resolution difficulty; outside the focus."
+      },
+      {
+        "name": "assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Agent identity is the core dimension of the query ('an agent's tickets'); different agents plausibly differ in speed. Known at assignment, before resolution completes."
+      },
+      {
+        "name": "cross_agent_resolution_flag",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the ticket was resolved across multiple agents (reassignments/handoffs) is only fully known once the resolution process has occurred; it is part of the resolution history and effectively co-determined with a long resolution time. Post-outcome leakage."
+      },
+      {
+        "name": "ticket_open_status",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the ticket is still open is a function of the resolution/closure event itself; unresolved tickets have no completed resolution_time. It restates/leaks the outcome rather than predicting it."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Time-of-day of opening is fully known at intake and plausibly predictive (off-hours may wait for staffing). Outside the focus."
+      },
+      {
+        "name": "opened_day_of_week",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Weekday vs weekend at open time is known up front and can affect how quickly a ticket is handled; legitimate predictor."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.7,
+    "rationale": "Most added columns are genuine, intake-time features (incident type/symptom/scope, outage and remote flags, agent identity, and opening time features) that lie outside resolution_time and plausibly carry predictive signal, directly supporting the 'which agent/what conditions predict slower resolution' query. Two columns (cross_agent_resolution_flag and ticket_open_status) leak or restate the outcome, since they are determined by the resolution/closure process itself. As a set they provide substantial legitimate predictive leverage beyond the original schema, but the presence of leakage columns and some redundancy caps the utility."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

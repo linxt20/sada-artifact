@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "presentation_severity",
+    "symptom_type_primary",
+    "intervention_urgency_level",
+    "medication_route_intensity",
+    "visit_context_type",
+    "acuity_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.7,
+    "predictor_fraction": 1.0,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.7,
+    "interpretable_fraction": 0.8333
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "presentation_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean ordinal scale from asymptomatic/preventive to life-threatening with well-separated, well-populated categories. A human can segment visits by severity and compare duration/urgency directly."
+      },
+      {
+        "name": "symptom_type_primary",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable nominal grouping of clinical system (cardiovascular, musculoskeletal, etc.). Categories are meaningful and reasonably populated, enabling comparison of duration across symptom types and departments."
+      },
+      {
+        "name": "intervention_urgency_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct, interpretable intervention tiers (routine diagnostic to immediate invasive). Segmentable and directly relevant to duration and to the urgency axis of the query, though somewhat overlapping with the existing urgency column."
+      },
+      {
+        "name": "medication_route_intensity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal-ish escalation of treatment intensity (none to IV resuscitation) with well-separated categories; an external correlate of duration that a human can group on meaningfully."
+      },
+      {
+        "name": "visit_context_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear encounter-type categories (acute new, follow-up, preventive, exacerbation, post-procedural) that are balanced and highly interpretable; strong segmentation variable for duration and reason relationships."
+      },
+      {
+        "name": "acuity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Dominated by 'not_present' (198 of ~250) with tiny sparse critical categories (4-19). Near-constant and too imbalanced for meaningful grouped comparison; also largely redundant with presentation_severity."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.7,
+    "rationale": "Most added columns are genuine external, interpretable segmentation variables with well-separated, populated categories (severity, symptom type, intervention level, medication intensity, visit context) that let a human explorer group and compare against visit_duration_min alongside department and age group. They open informative relationships rather than restating the focus. Weaknesses: acuity_signal is near-constant and too sparse to compare, and there is notable conceptual overlap among the severity/urgency/acuity columns and with the existing urgency field, slightly reducing the distinct informativeness of the set."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

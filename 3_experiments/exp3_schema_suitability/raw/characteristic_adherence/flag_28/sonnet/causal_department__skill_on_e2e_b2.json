@@ -1,0 +1,124 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do goal achievement rates differ across departments?",
+  "focus_variable": "department_goal_achievement",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "primary_lever",
+    "goal_mechanism",
+    "goal_specificity",
+    "initiative_complexity",
+    "time_horizon",
+    "measurement_mechanism",
+    "metric_goal_alignment",
+    "scope_breadth"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "department_goal_achievement",
+    "per_column": [
+      {
+        "name": "primary_lever",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The strategic lever a department applies (people programs, automation, cost optimization, etc.) is a candidate cause whose effect on goal achievement can be estimated. It is a plausible treatment variable surfaced from the data."
+      },
+      {
+        "name": "goal_mechanism",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Describes the type of mechanism the goal pursues (satisfaction, revenue, efficiency, cost). Could serve as an alternative treatment/cause of achievement rates. Not a common cause of another treatment, so best classed as an alternative candidate cause."
+      },
+      {
+        "name": "goal_specificity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How specific/quantified a goal is plausibly influences both how a department frames its lever and whether the goal is achieved (easily measured goals get marked achieved). A common cause of treatment and outcome."
+      },
+      {
+        "name": "initiative_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity (multi-action vs single-action) plausibly drives both which lever/approach is chosen and the probability of achievement, so it is a common-cause confounder."
+      },
+      {
+        "name": "time_horizon",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Time horizon affects both the choice of approach and the likelihood a goal is achieved within the reporting window; a plausible common cause not named in the query."
+      },
+      {
+        "name": "measurement_mechanism",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "How achievement is measured (survey vs financial metric) is more a determinant/definition of the outcome measurement than an upstream common cause; conditioning on it risks measurement-induced bias rather than confounding control."
+      },
+      {
+        "name": "metric_goal_alignment",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the tracked metric aligns with the goal lies on the path between the chosen approach and observed achievement; it is a mediator, not a confounder."
+      },
+      {
+        "name": "scope_breadth",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Company-wide vs team-level scope plausibly influences both which lever is used and the difficulty/achievement of the goal; a common-cause confounder surfaced from data."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_lever",
+      "goal_mechanism"
+    ],
+    "confounders": [
+      {
+        "name": "goal_specificity",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "initiative_complexity",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "time_horizon",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "scope_breadth",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The schema sets up a genuine causal estimation: it supplies a plausible treatment (primary_lever, and secondarily goal_mechanism) and several confounders that plausibly cause BOTH the choice of lever and goal achievement (goal_specificity, initiative_complexity, time_horizon, scope_breadth). Crucially, none of these confounders were named or implied in the terse query ('Why do goal achievement rates differ across departments?'), so they demonstrate real surfacing from the data. However, quality is only moderate: metric_goal_alignment is a mediator and measurement_mechanism is a collider/outcome-definition variable, both of which would BIAS the attribution if adjusted for as confounders. Their inclusion mislabelled as controls lowers confounder_quality."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

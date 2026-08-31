@@ -1,0 +1,151 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "skill_on",
+  "swap": true,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.72,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "depth",
+        "quote": "Outage-mode failures are nearly all critical (48/79 = 61% of all critical tickets)",
+        "why": "cross-tab causal severity reasoning"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "VPN | 115 | 23.0% | connection_failure (107) | 80.9%",
+        "why": "numbers tied to resolution rates"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "email outages and database outages as the highest-severity recurring cluster",
+        "why": "prioritization-ready conclusion"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "server_side (229 tickets, 45.8%)",
+        "why": "component-level magnitudes"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "coherence",
+        "quote": "Unknown values appear in 7 failure_symptom rows",
+        "why": "flags data quality honestly"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "cannot_connect | 253 | 50.6%",
+        "why": "numeric symptom table"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "vpn_client | 115 | VPN",
+        "why": "component counts"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Connectivity Failures (VPN + Network) — ~177 tickets (35.4%)",
+        "why": "consolidated clustering"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [
+      {
+        "column": "incident_category",
+        "quote": "Using incident_category (TAPP)",
+        "dependent": true
+      },
+      {
+        "column": "failure_mode",
+        "quote": "failure_mode (TAPP) reveals",
+        "dependent": true
+      },
+      {
+        "column": "affected_component",
+        "quote": "affected_component (TAPP) clarifies",
+        "dependent": true
+      },
+      {
+        "column": "scope_context",
+        "quote": "scope_context (TAPP) shows",
+        "dependent": true
+      },
+      {
+        "column": "recurrence_signal",
+        "quote": "all recurrence_signal = True",
+        "dependent": false
+      },
+      {
+        "column": "resolution_same_day",
+        "quote": "Same-day resolution rate 86%",
+        "dependent": false
+      }
+    ],
+    "B": [
+      {
+        "column": "recurrence_signal",
+        "quote": "all flagged with recurrence_signal = True",
+        "dependent": false
+      }
+    ]
+  },
+  "reason": "A adds cross-tab severity and resolution-rate depth beyond B's descriptive tables.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

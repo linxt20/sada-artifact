@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "sentiment",
+    "product_avg_score",
+    "score_vs_product_avg",
+    "helpfulness_ratio",
+    "review_length",
+    "flag_quality",
+    "flag_taste",
+    "flag_misleading",
+    "flag_shipping",
+    "flag_value"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.715,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.845,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.78,
+    "hallucination_rate": 0.1
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "sentiment",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "rationale": "Sentiment is a reasonable axis but somewhat redundant with Score for driver analysis; a bare positive/negative/neutral flag is generic. Values match source text well (e.g., 'Cough Medicine' medicinal review = negative).",
+        "hallucination_observed": false
+      },
+      {
+        "name": "product_avg_score",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Product-level average score is genuinely useful for identifying which products underperform and warrant action. Derived aggregation from Score column present in table; values are plausible though single-row samples can't fully verify.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "score_vs_product_avg",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Deviation of a review's score from its product average is a strong new axis to spot outliers and improvement targets. Derived arithmetic from grounded columns; sample values (0.25 for score 5 vs 4.75) are consistent.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "helpfulness_ratio",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "rationale": "Directly computed from HelpfulnessNumerator/Denominator; NULL for zero-denominator is correct. Useful for weighting reviews but only indirectly tied to improving product scores.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "review_length",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.9,
+        "rationale": "Bucketed raw text length is the kind of generic feature that adds little analytical leverage for identifying improvement actions. Values grounded in Text length.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "flag_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "rationale": "Thematic flag directly identifies quality complaints/praise — highly actionable for score improvement. Sample flags mostly sound (Vitality 'good quality'=1), though categorisation is somewhat subjective.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "flag_taste",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "rationale": "Taste theme is a key actionable driver. Some sample judgments are debatable (medicinal cough review flagged taste=1 is defensible; taffy review taste=0 is questionable) but broadly warranted.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "flag_misleading",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Flags mislabeled/not-as-advertised complaints, a concrete fixable action. Peanuts 'Not as Advertised' correctly flagged; grounded in text.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "flag_shipping",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "rationale": "Shipping/delivery theme is actionable. However 'Not as Advertised' peanut row flagged shipping=1 with no clear shipping complaint in text — a weak inference reducing groundedness.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "flag_value",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Price/value theme is actionable for improvement. Grounded in text mentions of price; taffy 'great price' arguably should be 1 but omitting is not a hallucination.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.84,
+    "rationale": "The added columns provide strong analytical leverage for the query: product-level averages, per-review deviation from average, and thematic complaint flags (quality, taste, misleading, shipping, value) directly surface actionable drivers of product scores. Sentiment and review_length are weaker/generic. Values are largely well-grounded in the source text, with one observed over-assertion (shipping flag on a row lacking shipping content) slightly lowering groundedness."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 10
+}

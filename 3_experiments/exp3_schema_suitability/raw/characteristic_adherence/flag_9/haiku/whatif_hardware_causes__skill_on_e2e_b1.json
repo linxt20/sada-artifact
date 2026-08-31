@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category_primary",
+    "device_type",
+    "failure_specificity",
+    "hardware_severity_indicator",
+    "resolution_approach_candidate",
+    "affected_resource_scope"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7333,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7416,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category_primary",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Core to the query: isolates hardware incidents and enables rate computation. Sample values (software, database) are sound readings of the short_description text."
+      },
+      {
+        "name": "device_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A genuine axis for grouping hardware failure causes. Nulls for non-hardware/silent rows are appropriate. 'server' inferred from MySQL server is warranted, though many device types must be inferred from thin descriptions, introducing some risk."
+      },
+      {
+        "name": "failure_specificity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Directly targets 'most common failure causes' the query asks about. However, software-installation rows are labeled 'driver_software' and a MySQL connection issue 'connectivity_issue' where the text does not clearly warrant a specific failure mechanism; these look like confident specifics on silent text."
+      },
+      {
+        "name": "hardware_severity_indicator",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Severity is secondary to a cause-frequency query but could help weight impact of addressing causes. Mostly nulls (appropriate for non-hardware/silent rows); sample values are conservative."
+      },
+      {
+        "name": "resolution_approach_candidate",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Relevant to 'if causes were addressed' framing. Dominated by 'unknown_intervention' making it near-constant and weak, but the honest 'unknown' for silent rows is correct behaviour, not hallucination."
+      },
+      {
+        "name": "affected_resource_scope",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Scope could help estimate incident-rate impact. But 'single_device' is asserted for software-installation rows and 'shared_resource' for a MySQL row where the text gives no scope evidence; these are unwarranted confident specifics on silent text."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns give multiple genuine axes (category, device type, failure cause, scope) that directly serve a query about common hardware failure causes and their rate impact, so usefulness is high overall; resolution and severity are weaker but still contribute. Groundedness is moderate: category and device_type are sound readings, and null/unknown handling for silent rows is correct, but failure_specificity, affected_resource_scope, and some inferences assert specific mechanisms/scopes the terse source text does not support, indicating over-confident labeling."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

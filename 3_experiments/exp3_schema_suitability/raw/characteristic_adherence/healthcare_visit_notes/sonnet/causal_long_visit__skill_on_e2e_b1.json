@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Which clinical factors best explain longer visit durations?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "visit_type_category",
+    "condition_acuity",
+    "procedure_performed",
+    "admission_or_urgent_referral",
+    "counseling_complexity",
+    "multimorbidity_signal",
+    "multimorbidity_or_polypharmacy"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7214,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7714,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7464,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "visit_type_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean clinical taxonomy (wellness, acute illness, chronic followup, injury, emergency, procedure) that gives a strong grouping axis for explaining visit duration. Samples map soundly to source text (annual exam->wellness, viral URI->acute illness, MI followup->chronic followup, twist injury->acute injury). Well grounded and non-redundant with department/urgency."
+      },
+      {
+        "name": "condition_acuity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Ordinal acuity scale is a genuine explanatory axis distinct from urgency (which is administrative). Sample values are defensible readings (viral URI low, knee injury moderate). Some overlap with urgency but adds finer clinical severity gradation; groundedness reasonable."
+      },
+      {
+        "name": "procedure_performed",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Whether a procedure occurred is plausibly a strong duration driver, and near-constant 'no_procedure' still separates a meaningful minority. Sample rows correctly show no_procedure where text describes no procedure. Well grounded from text."
+      },
+      {
+        "name": "admission_or_urgent_referral",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Disposition captures visit complexity/escalation, a reasonable duration correlate. Mostly grounded; the knee-injury row labeled 'routine_referral' is a mild inference (MRI ordered implies referral) but warranted. Dominant discharge_only leaves useful variance."
+      },
+      {
+        "name": "counseling_complexity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Counseling load plausibly drives duration and offers a distinct axis. However it is more inferential: 'moderate_counseling' is assigned as a default even to a MI followup that mostly says continue regimen, so some values are weakly supported by explicit text, lowering groundedness somewhat."
+      },
+      {
+        "name": "multimorbidity_signal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Reasonable axis for duration, but grounding is shaky: the annual-exam row (single mild fatigue finding) is labeled 'multiple_active_conditions', which the text does not support. Overlaps heavily with the near-duplicate multimorbidity_or_polypharmacy column."
+      },
+      {
+        "name": "multimorbidity_or_polypharmacy",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Nearly a restatement of multimorbidity_signal with almost identical distribution and same category labels; adds little new analytical leverage. Individual sample values are better grounded here (annual exam -> single_condition), but redundancy strongly caps usefulness."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.78,
+    "rationale": "Most added columns supply genuine clinical axes (visit type, acuity, procedure, disposition, counseling) that are relevant and non-trivial for explaining visit duration, and are largely derivable from the reason_for_visit text. Two weaknesses: the two multimorbidity columns are near-duplicates (one is essentially a restatement of the other), and multimorbidity_signal shows an unsupported 'multiple_active_conditions' label on a simple annual-exam row. Counseling_complexity trends toward a default 'moderate' value, weakening its groundedness. Overall the set is useful and mostly grounded, with localized hallucination and one redundant column."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_long_visit",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

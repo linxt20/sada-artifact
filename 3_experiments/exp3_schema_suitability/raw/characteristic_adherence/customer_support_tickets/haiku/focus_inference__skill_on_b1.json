@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_category",
+    "issue_severity",
+    "affected_scope",
+    "actionability"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.87,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.805,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.8375,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query ('main kinds of issues') with a rich, well-distributed taxonomy that supports grouping and comparison. Sampled values are sound readings: outage, feature_request, and billing_issue all match their source text. The invoice duplicate row arguably could be billing but is labeled billing_issue correctly; the CSV BOM row labeled bug_functional is defensible. Minor imperfection is that categories are somewhat inferred, but readings are warranted."
+      },
+      {
+        "name": "issue_severity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a genuine new axis (impact tiering) useful for prioritizing/segmenting issue types, and is not merely redundant with the original 'priority' column since it is derived from description content. Sampled values are mostly warranted: the outage blocking a board presentation as blocking_p1 and the pin-reports enhancement as low_impact are well grounded. Some calls are subjective (session-drop as medium) but reasonable."
+      },
+      {
+        "name": "affected_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Scope (single user vs tenant-wide vs subset) is a genuine analytical axis and uses an appropriate 'not_present' for silent rows. However some values overreach: the CSV/BOM row is marked entire_tenant though the text only describes the customer's own pipeline and does not state tenant-wide impact; the billing invoice row as single_user is defensible. The outage 'all members of the Acme tenant' -> entire_tenant is well grounded. One unsupported confident specific lowers groundedness."
+      },
+      {
+        "name": "actionability",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A useful action-routing axis (engineering fix vs roadmap vs self-service) that helps operationalize the issue-kind analysis. Several sampled values are grounded (feature_request -> product_roadmap, outage -> requires_engineering_fix). But the billing invoice row is labeled requires_data_recovery, which the text does not support -- it is a corrected-invoice/billing correction, not data recovery. This is an unwarranted specific that lowers groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.8,
+    "rationale": "All four columns give distinct, non-redundant axes (category, severity, scope, actionability) that directly serve the query about kinds of support issues and enable grouping/comparison. issue_category is the strongest and most on-point. The set is generally well grounded, with correct use of 'not_present' for silent rows, but affected_scope and actionability each contain at least one over-confident value not supported by the source text (entire_tenant for a single-customer pipeline issue; requires_data_recovery for a billing correction), producing modest hallucination that caps groundedness."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

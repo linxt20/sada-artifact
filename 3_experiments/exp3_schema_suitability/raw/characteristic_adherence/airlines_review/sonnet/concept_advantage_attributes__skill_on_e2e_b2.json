@@ -1,0 +1,114 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "focus_variable": "airline_competitive_advantage",
+  "concept": "airline_competitive_advantage",
+  "n_added_columns": 9,
+  "added_columns": [
+    "crew_service_quality",
+    "crew_proactive_care",
+    "cultural_service_ethos",
+    "food_beverage_quality",
+    "meal_variety",
+    "seat_comfort_assessment",
+    "seat_product_type",
+    "special_service_recovery",
+    "value_for_money_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.5477,
+    "facet_fraction": 1.0,
+    "n_facets": 9,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.6,
+    "mece": 0.5477,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_competitive_advantage",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Service quality is a genuine constitutive aspect of an airline's competitive advantage."
+      },
+      {
+        "name": "crew_proactive_care",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A dimension of the service experience; a real aspect of the advantage, though it overlaps heavily with crew_service_quality (both capture crew service excellence)."
+      },
+      {
+        "name": "cultural_service_ethos",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The style/character of service is an aspect of the service offering, hence part of competitive advantage, but again overlaps the service cluster."
+      },
+      {
+        "name": "food_beverage_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Catering quality is a constitutive part of the product offering that drives advantage."
+      },
+      {
+        "name": "meal_variety",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A sub-aspect of the catering offering; a real part but overlaps with food_beverage_quality."
+      },
+      {
+        "name": "seat_comfort_assessment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Seat comfort is a constitutive aspect of the physical product/hard-product advantage."
+      },
+      {
+        "name": "seat_product_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The hard-product type is an aspect of the seating offering; overlaps with seat_comfort_assessment as a seating cluster."
+      },
+      {
+        "name": "special_service_recovery",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Service recovery is a legitimate aspect of the service experience, part of the advantage; overlaps the service cluster."
+      },
+      {
+        "name": "value_for_money_perception",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Value-for-money is a constitutive commercial facet of competitive advantage, distinct from product/service quality."
+      }
+    ],
+    "facet_columns": [
+      "crew_service_quality",
+      "crew_proactive_care",
+      "cultural_service_ethos",
+      "food_beverage_quality",
+      "meal_variety",
+      "seat_comfort_assessment",
+      "seat_product_type",
+      "special_service_recovery",
+      "value_for_money_perception"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.6,
+    "rationale": "All nine columns are genuine constitutive facets (part-of aspects) of airline competitive advantage rather than external predictors or causes, so the meronymy requirement is met. However mutual exclusivity is weak: the set clusters into three heavily overlapping groups -- service (crew_service_quality, crew_proactive_care, cultural_service_ethos, special_service_recovery), catering (food_beverage_quality, meal_variety), and seating (seat_comfort_assessment, seat_product_type) -- with several columns capturing the same underlying aspect under different names. Exhaustiveness is moderate: soft product (service, food, seat) and value are well covered, but key advantage aspects such as network/route connectivity, schedule/punctuality/reliability, inflight entertainment/connectivity, baggage/loyalty program, and price competitiveness are absent, leaving the concept only partially decomposed."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

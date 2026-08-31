@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "focus_variable": "hardware_hiccups",
+  "concept": "hardware_hiccups",
+  "n_added_columns": 5,
+  "added_columns": [
+    "hardware_component_type",
+    "hardware_failure_mode",
+    "device_location_scope",
+    "resolution_category",
+    "is_peripheral_device"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3723,
+    "facet_fraction": 0.6,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.7,
+    "mece": 0.6205,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "hardware_hiccups",
+    "per_column": [
+      {
+        "name": "hardware_component_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The affected hardware component (printer, server, monitor, etc.) is a constitutive 'what part' aspect of a hardware issue -- a genuine part-of decomposition of what the hiccup concerns."
+      },
+      {
+        "name": "hardware_failure_mode",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The failure mode (connectivity issue, not working, overheating, physical damage) is the 'how it fails' aspect, an intrinsic dimension of the hardware issue itself."
+      },
+      {
+        "name": "device_location_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The spatial/organizational scope of the affected device (individual workstation vs network-wide vs building infrastructure) is an aspect OF the incident's hardware footprint -- a plausible facet characterizing the hiccup."
+      },
+      {
+        "name": "resolution_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Resolution category describes the remediation/handling of the issue, not a constitutive aspect of the hardware hiccup itself. The fix is downstream of and external to the concept being decomposed."
+      },
+      {
+        "name": "is_peripheral_device",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This boolean is a coarse re-derivation of hardware_component_type (peripheral/keyboard/printer vs server/network). It restates information already captured by the component-type facet rather than adding a distinct aspect."
+      }
+    ],
+    "facet_columns": [
+      "hardware_component_type",
+      "hardware_failure_mode",
+      "device_location_scope"
+    ],
+    "non_facet_columns": [
+      "resolution_category",
+      "is_peripheral_device"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.7,
+    "rationale": "Three columns (component_type, failure_mode, location_scope) are genuine constitutive facets carving the hardware-hiccup concept into what/how/where aspects, giving reasonable exhaustiveness of its main constitutive dimensions. However, mutual exclusivity is weakened: is_peripheral_device overlaps heavily with hardware_component_type, and resolution_category is an external remediation attribute rather than a facet of the concept. Removing the two non-facet columns would yield a cleaner MECE decomposition."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

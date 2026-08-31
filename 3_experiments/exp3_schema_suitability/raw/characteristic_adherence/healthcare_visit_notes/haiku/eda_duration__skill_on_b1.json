@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "presentation_severity",
+    "symptom_type_primary",
+    "intervention_urgency_level",
+    "medication_route_intensity",
+    "visit_context_type",
+    "acuity_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8283,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8783,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.8533,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "presentation_severity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A clinical severity axis directly relevant to relating reasons-for-visit to urgency and duration; distinct from the coarse original urgency field. Values track the source text well (MI follow-up with no angina = asymptomatic, acne moderate = moderate). Minor softness: the annual physical with only mild fatigue labeled mild_symptomatic is defensible but slightly arguable versus preventive, indicating some subjective boundary calls."
+      },
+      {
+        "name": "symptom_type_primary",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "A clinical category axis that gives a genuine new grouping dimension for the query (reason type vs urgency/duration), not redundant with department. Values are well-grounded extractions (cough=respiratory, knee=musculoskeletal, acne=dermatological). The annual-physical-to-metabolic_endocrine mapping (from HbA1c/lipid labs) is a warranted inference."
+      },
+      {
+        "name": "intervention_urgency_level",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Provides a finer-grained urgency signal derived from the text (imaging ordered, procedures) that adds leverage beyond the original urgency column for correlating with duration. Somewhat overlaps conceptually with urgency but the granularity is new. The acne case labeled same_day_intervention is a reasonable reading (topical+oral started that visit), though the boundary logic is a bit opaque."
+      },
+      {
+        "name": "medication_route_intensity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Medication route/intensity is a plausible correlate of urgency and duration and gives a new axis. Values are grounded: oral doxycycline=oral_new_or_escalated, no-regimen-change MI follow-up=no_medication_change, cough with no meds=not_present. Clearly derivable from text, correct 'not_present' handling for silent rows."
+      },
+      {
+        "name": "visit_context_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes acute/new vs follow-up vs preventive vs post-procedural, a strong grouping axis for the query since context plausibly drives both urgency and duration. Well grounded (MI follow-up=follow_up, knee injury=acute_new, physical=preventive)."
+      },
+      {
+        "name": "acuity_signal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A keyword-based high-acuity flag. Well grounded and correctly 'not_present' for the benign samples. However it is heavily skewed (198 not_present) and partially redundant with presentation_severity/urgency, so it offers less independent analytical leverage for this query beyond flagging rare life-threatening cases."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns provide multiple genuinely distinct clinical axes (severity, symptom category, intervention urgency, medication intensity, visit context) that meaningfully support relating reasons-for-visit to urgency and duration across department and age group. Values in the evidence samples are sound readings of the source text with appropriate 'not_present' handling for silent fields, and no hallucinations were observed. Minor deductions: intervention_urgency_level partly overlaps the original urgency field and acuity_signal is skewed and somewhat redundant with severity."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

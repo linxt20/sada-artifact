@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit reasons point to different departments?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "visit_type",
+    "primary_body_system",
+    "chief_complaint_category",
+    "symptom_onset_pattern",
+    "clinical_severity",
+    "imaging_or_lab_ordered",
+    "medication_class_initiated"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7457,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8443,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.795,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "visit_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Categorizing visits (preventive, acute illness, chronic management) gives a useful axis to correlate with departments. Values are sound readings of the source text, though the Dermatology acne case labeled chronic_disease_management is a defensible but slightly loose read."
+      },
+      {
+        "name": "primary_body_system",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.93,
+        "hallucination_observed": false,
+        "rationale": "Body system is a strong, direct axis for mapping visit reasons to departments (cardio->Cardiology, MSK->Orthopedics). Values are well grounded in the reason text."
+      },
+      {
+        "name": "chief_complaint_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A cleaner categorization of the complaint, useful for grouping toward departments. Partially overlaps with primary_body_system and visit_type but offers a distinct complaint-level grouping. Values match sources well."
+      },
+      {
+        "name": "symptom_onset_pattern",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Onset pattern (acute vs chronic) adds an axis, but it largely tracks urgency and visit_type, reducing its marginal leverage for the department query. Values are reasonably inferred from text."
+      },
+      {
+        "name": "clinical_severity",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A 1-5 severity scale is only loosely tied to the department query and overlaps with existing urgency. The specific numeric level is an inferred judgment not explicitly stated in text, making groundedness moderate, though values are plausible."
+      },
+      {
+        "name": "imaging_or_lab_ordered",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Diagnostic workup type (ECG/echo, MRI, labs) meaningfully differentiates departments and is directly extractable from the text (labs ordered, MRI ordered, echo). Well grounded."
+      },
+      {
+        "name": "medication_class_initiated",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Medication class started is a genuine axis correlating with departments. Values are grounded (doxycycline->antibiotic, topical adapalene present but only antibiotic captured is a minor read). Dominant none_initiated is common but derivable."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.86,
+    "rationale": "Most added columns provide genuinely useful, distinct axes (body system, chief complaint, workup type, medication class) that directly help map visit reasons to departments, and are well grounded in the reason_for_visit text. Some overlap exists among visit_type, symptom_onset_pattern, and clinical_severity, and clinical_severity in particular is a weaker, partly redundant and less directly grounded inference. No clear hallucinations observed; silent-row handling (not_present/none_ordered/none_initiated) is appropriate."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

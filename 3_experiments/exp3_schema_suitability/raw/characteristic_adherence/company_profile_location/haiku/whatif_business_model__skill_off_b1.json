@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "Business_Model_Orientation",
+    "Localization_Potential_Score",
+    "Regional_Fit_Improvement_With_Service_Model"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7667,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.4833,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.625,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Business_Model_Orientation",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Directly central to the query, which hinges on product vs service orientation; provides a genuine grouping axis. Values are mostly defensible readings (280 Group as Service via training/consulting; Addepar as Product platform), though '23andMe' and two VC firms defaulting to 'Mixed' looks like a fallback rather than a warranted read, slightly weakening groundedness."
+      },
+      {
+        "name": "Localization_Potential_Score",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A localization axis is relevant to the 'localized model' half of the query and offers modelling leverage. However the precise 1-10 integer is a confident quantification the source text barely supports; the heavy default clustering at '5' (125 rows) suggests an invented constant for silent rows rather than a grounded reading, so specific scores are weakly warranted."
+      },
+      {
+        "name": "Regional_Fit_Improvement_With_Service_Model",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "This is essentially the counterfactual the query asks about, so it targets the analysis directly. But the values are fabricated-precise deltas (e.g. 1.8, 4.2) with no basis in the source text and appear derived deterministically from the other two added columns rather than from evidence, making the specific numbers unsupported and largely a restatement of orientation/localization."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.45,
+    "rationale": "All three columns are on-topic and give real axes (orientation, localization, counterfactual fit) that the query needs, so analytical usefulness is solid. Groundedness is the weakness: the two numeric columns assert precise scores and improvement deltas the text does not support, with tell-tale default clustering (Score=5, delta=1.8) implying invented constants and a derived-from-other-columns computation rather than evidence-based reading. Business_Model_Orientation is the most defensible; the two quantitative columns overstate precision the source cannot justify."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

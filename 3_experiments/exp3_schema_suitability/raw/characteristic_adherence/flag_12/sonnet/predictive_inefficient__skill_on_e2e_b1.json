@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "reassignment_signal",
+    "hardware_failure_severity",
+    "affected_asset_type",
+    "shared_vs_personal_asset",
+    "repeat_incident_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6667,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.5,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.5834,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A clean categorization derived from short_description gives a genuine grouping axis to compare resolution efficiency across incident types. Values (network, printer, database) are sound readings of the source text."
+      },
+      {
+        "name": "reassignment_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is a strong, directly relevant signal of inefficient resolution. However, the source text (short_description + timestamps) contains no information about reassignment; assignment_group history is not shown. True/False values appear invented and are not derivable from the provided text, e.g. two near-identical 'Printer not working' rows get opposite values."
+      },
+      {
+        "name": "hardware_failure_severity",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Severity could be relevant, but the column is near-constant (358/500 'functional_degradation') and is applied even to non-hardware rows (database -> functional_degradation, network -> functional_degradation), which the source text does not support. The specific severity is not warranted by brief descriptions like 'Printer not working properly'."
+      },
+      {
+        "name": "affected_asset_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Reasonable extraction from short_description, though largely redundant with incident_category. Values are sound readings (printer->printer, network->network_device, database->software is a defensible inference). Adds modest leverage as an asset-level grouping."
+      },
+      {
+        "name": "shared_vs_personal_asset",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Shared vs personal ownership is a plausible efficiency signal (coordination overhead). But the assignment is often an unwarranted inference: 'office printer' -> shared is reasonable, yet many rows lack any ownership cue in the text, so confident shared/personal labels are partly speculative. Unknown/<NULL> for silent rows is correct behaviour."
+      },
+      {
+        "name": "repeat_incident_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Repeat incidents are a strong inefficiency signal, but repeat status cannot be derived from a single row's short_description and timestamps. Values look invented: identical 'Printer is not working properly' descriptions receive True while a database issue gets False with no supporting evidence."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.45,
+    "rationale": "Most columns target genuinely relevant axes for diagnosing inefficient resolution (category, reassignment, repeat, ownership), giving real grouping/modeling leverage; hardware_failure_severity is weak (near-constant, misapplied) and affected_asset_type overlaps incident_category. Groundedness is the main concern: the highest-value signals (reassignment_signal, repeat_incident_signal) and part of shared_vs_personal_asset and hardware_failure_severity assert facts not derivable from the shown source text, with contradictory values across near-identical rows. Well-grounded extraction columns (incident_category, affected_asset_type) offset this only partially."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

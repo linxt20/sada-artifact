@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined expense submissions?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_category_type",
+    "submission_context_pattern",
+    "department_group",
+    "submission_completeness_signal",
+    "travel_expense_indicator",
+    "description_specificity_level"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.625,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Categorizing expenses by asset type gives a genuine grouping axis to compare decline rates across purchase types. Values are mostly sound readings of short_description/ci, though 'Provision of Services for iPod touch' -> software_service is a debatable but defensible read."
+      },
+      {
+        "name": "submission_context_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "How a submission originated (auto-generated vs manual vs acquisition) is highly relevant to declines. However the source text shows no clear signal distinguishing 'manually_submitted' from 'acquisition_purchase'; e.g. 'Asset assignment for new Dell Laptop' -> acquisition vs 'Provision of Services' -> manual appears inferred beyond what the text supports."
+      },
+      {
+        "name": "department_group",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "A department axis would help, but an original 'department' column already exists making this largely redundant. More critically, the source samples provided contain no department evidence, yet specific departments (sales, product_management, customer_support) are confidently assigned to asset-description text, suggesting invented or unwarranted values."
+      },
+      {
+        "name": "submission_completeness_signal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Completeness of a submission is plausibly linked to declines, giving analytical leverage. But it is a near-binary flag whose basis is unclear from the source text; rows with 'nan' processed_date and terse descriptions are still marked True, so the value is not clearly derivable."
+      },
+      {
+        "name": "travel_expense_indicator",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Isolating travel expenses is a reasonable comparison axis for declines, though it is a bare binary flag with limited leverage. The samples shown are all non-travel and correctly marked False, so groundedness appears sound on available evidence."
+      },
+      {
+        "name": "description_specificity_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Vague/templated descriptions plausibly correlate with declines, offering a useful axis. Values track the text well: 'Dell OptiPlex 7050' -> specific_model_or_brand, 'Miscellaneous hardware component' -> generic_category are sound readings."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.6,
+    "rationale": "Most columns offer genuine grouping/modeling axes relevant to reducing declines (asset type, submission context, description specificity, travel flag). Groundedness is the weaker dimension: department_group duplicates an existing column and, along with submission_context_pattern and submission_completeness_signal, assigns confident specifics not clearly supported by the sampled source text. Columns grounded in the description/ci text (asset_category_type, description_specificity_level, travel_expense_indicator) are the strongest."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

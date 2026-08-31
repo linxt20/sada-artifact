@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "focus_variable": "high_goal_achievement",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "goal_outcome_type",
+    "metric_alignment_clarity",
+    "implementation_mechanism_type",
+    "goal_scope_span",
+    "timeline_horizon",
+    "financial_quantification_present"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.72,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "high_goal_achievement",
+    "per_column": [
+      {
+        "name": "goal_outcome_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The domain/category of the goal (satisfaction, revenue, cost, etc.) lies outside the achievement outcome and plausibly correlates with how achievable goals are; a legitimate exogenous predictor."
+      },
+      {
+        "name": "metric_alignment_clarity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the tracking metric is a direct match, proxy, or misaligned is a property of goal design knowable in advance and plausibly influences measured achievement without restating it."
+      },
+      {
+        "name": "implementation_mechanism_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The mechanism used to pursue the goal (automation, training, etc.) is an antecedent design choice outside the outcome and can carry predictive signal about success likelihood."
+      },
+      {
+        "name": "goal_scope_span",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Breadth of the goal (single initiative vs enterprise-wide) is a structural attribute set before outcome and plausibly relates to difficulty/achievement; a valid predictor."
+      },
+      {
+        "name": "timeline_horizon",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The planning horizon is derivable from start/end dates but frames goal difficulty; it is an antecedent, not a restatement of achievement, so it is a legitimate predictor (mild overlap with existing date columns slightly limits novelty)."
+      },
+      {
+        "name": "financial_quantification_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the goal has a concrete financial quantification is a specification-quality attribute known upfront and plausibly predicts achievement; outside the focus variable."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.72,
+    "rationale": "All six columns are antecedent, exogenous attributes of goal design and context that are knowable before the achievement outcome, so none leak or restate the focus. They capture distinct facets—goal type, metric quality, mechanism, scope, horizon, and financial specificity—several of which (metric alignment, mechanism, scope, financial quantification) add signal beyond the original columns. timeline_horizon partly duplicates existing start/end dates, slightly reducing incremental leverage, but as a set they provide substantial genuine predictive value without leakage."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

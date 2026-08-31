@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "content_or_media_quality",
+    "product_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.875,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.8625,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "content_or_media_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Categorizing WHY media content is weak or strong gives sellers/analysts an actionable axis for improving satisfaction on media products, and 'not_applicable' correctly handles physical-product rows. Values are largely sound readings: AMZ-0003 'appallingly shallow' -> content_shallow_or_thin, AMZ-0005 praise -> high_quality_content. The AMZ-0002 'pacing_poor' label is a slightly loose fit (the complaint is about too much political commentary, not pacing per se), a minor grounding stretch but not an invention."
+      },
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Product category is a strong grouping axis for the query: sellers can compare satisfaction drivers across books, music, DVDs, physical goods, etc. Values are well grounded in the text: baby doll -> physical_product_non_consumable, book review -> book_or_printed_media, music/artist -> music_cd_or_vinyl, Criterion film/DVD -> dvd_or_video. NULL used where category is unclear, which is appropriate. Well-warranted inferences throughout."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.87,
+    "rationale": "Both added columns provide genuine, distinct analytical axes (product type and content-quality failure mode) directly relevant to how sellers can improve satisfaction, neither being near-constant nor a trivial restatement of the original title/content fields. Values are generally sound readings of the source text with reasonable use of not_applicable/NULL for silent rows; the only weak spot is a somewhat loose 'pacing_poor' label on AMZ-0002, which is a minor grounding imperfection rather than a fabricated fact."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 2
+}

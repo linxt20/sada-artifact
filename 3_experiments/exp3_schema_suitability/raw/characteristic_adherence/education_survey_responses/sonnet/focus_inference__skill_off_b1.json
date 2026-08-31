@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different themes do students raise in these open responses?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "themes",
+    "primary_theme",
+    "sentiment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7833,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8833,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.8333,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "themes",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Multi-label thematic tagging is directly the analytical axis the query asks for ('what different themes do students raise'), giving strong ability to group and compare. Samples are sound readings: ED-0001 tech_issues, ED-0004 self_paced_learning, ED-0005 engagement_loss all well grounded. Minor issue: ED-0002 tagged 'teacher_quality' is a slightly loose reading (the text is about the teacher's own experience, not quality per se), and ED-0003 'equity_access' is a mild stretch, but overall values are defensible extractions."
+      },
+      {
+        "name": "primary_theme",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A single dominant theme is a useful, non-trivial reduction for ranking/prioritizing the most salient issue per response, enabling clean grouping. It partly overlaps with 'themes' but adds the analytical leverage of a chosen primary, which is a legitimate distinct axis. Selected primaries in samples (tech_issues, unexpected_success, self_paced_learning, engagement_loss) are well justified by the source text."
+      },
+      {
+        "name": "sentiment",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Sentiment is a somewhat generic axis and only tangential to a 'what themes' query, but a three-way positive/mixed/negative split is more informative than a bare binary flag and can help cross-tabulate themes with tone, so it retains modest usefulness. Values are well grounded: ED-0001/0003/0005 negative, ED-0002/0004 positive all match the text."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.88,
+    "rationale": "The theme and primary_theme columns squarely serve the thematic-analysis query and provide strong grouping/comparison leverage; sentiment is more generic but still adds a usable cross-cut. Row evidence shows values are sound readings of the source text with only minor interpretive stretches (e.g. teacher_quality/equity_access tags) and no invented facts, so groundedness is high."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

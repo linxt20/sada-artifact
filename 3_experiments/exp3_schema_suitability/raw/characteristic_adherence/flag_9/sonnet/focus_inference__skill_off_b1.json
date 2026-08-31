@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "hardware_problem_type",
+    "hardware_component"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.9,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.825,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_problem_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This column directly answers the query by categorizing hardware incidents into meaningful types (Printer, Monitor, Power/Boot Failure, etc.), giving a clean axis to group and compare failure modes. NULL for non-hardware rows (e.g., software installation, MySQL connection) is correct silent behaviour and not penalised. Values shown are sound readings of the source text."
+      },
+      {
+        "name": "hardware_component",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Grounded and reasonable (NULLs correctly for non-hardware rows), but it is largely redundant with hardware_problem_type -- the value distributions are near-identical (Printer 83, Monitor 28, Keyboard 24, Mouse 7, etc.), essentially restating the same categorization at the component level. It adds only marginal new leverage (e.g., Cooling Fan vs Overheating), so usefulness is reduced for near-duplication."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.9,
+    "rationale": "hardware_problem_type is a strong, well-grounded categorization that directly serves the query about kinds of hardware problems. hardware_component is grounded but substantially overlaps with the first column, restating the same taxonomy, which weakens its independent analytical value. Values appear to be sound extractions from short_description, with appropriate NULLs for non-hardware incidents; no hallucination observed in the samples."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 2
+}

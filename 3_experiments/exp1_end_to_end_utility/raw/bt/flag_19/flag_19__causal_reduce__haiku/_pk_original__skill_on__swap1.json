@@ -1,0 +1,114 @@
+{
+  "var_a": "skill_on",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.85,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 3,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "IT Department: 44.2% decline rate (19 of 43 submissions declined)",
+        "why": "concrete rates with counts"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Declined submissions represent 9.2% of the total (46 out of 500 records)",
+        "why": "numeric base rate"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Compliance Gaps: Travel expense submissions often lack required justifications",
+        "why": "speculative claim not tied to data weakens consistency"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "IT is 44.2% ... contributes 41.3% of all declines ... Assets are 56.5% declined",
+        "why": "layered cross-segmentation"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Declined ... lower mean amount (3706) than Processed (4436)",
+        "why": "quantified lever comparison"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "processed_date ... reflects outcome status rather than a factor available before review",
+        "why": "correctly flags leakage"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "opened_at year 2024: 25/184 declined (13.6%) vs 2023: 21/316 (6.6%)",
+        "why": "time-window comparison"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Add a pre-submit validation step for IT and travel-related requests",
+        "why": "decision-ready, targeted"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B provides deeper concentrated segmentation, guards against leakage, and rejects weak levers with numeric evidence.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

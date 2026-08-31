@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "seat_comfort_quality",
+    "cabin_crew_service_quality",
+    "food_beverage_quality",
+    "customer_service_responsiveness",
+    "value_for_money",
+    "aircraft_type_condition"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.612,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Perceived airline service quality across specific experience dimensions (seat, crew, food, customer service, value, aircraft), extracted from free-text reviews",
+    "per_column": [
+      {
+        "name": "seat_comfort_quality",
+        "supports_focus": true,
+        "rationale": "An ordinal quality facet of the airline experience, extracted from review text and centred on service/experience quality."
+      },
+      {
+        "name": "cabin_crew_service_quality",
+        "supports_focus": true,
+        "rationale": "A coherent service-quality facet on a consistent ordinal scale."
+      },
+      {
+        "name": "food_beverage_quality",
+        "supports_focus": true,
+        "rationale": "Another experience facet aligned to the same quality-assessment framing."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "supports_focus": true,
+        "rationale": "Service-responsiveness facet, coherent with the overall service-quality focus."
+      },
+      {
+        "name": "value_for_money",
+        "supports_focus": true,
+        "rationale": "Value perception facet; a recognised dimension of overall satisfaction, on an ordinal scale."
+      },
+      {
+        "name": "aircraft_type_condition",
+        "supports_focus": true,
+        "rationale": "Hardware/condition facet of the flight experience, consistent with the quality-facet structure."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.8,
+    "rationale": "The added columns collectively centre on ONE coherent, data-inferable focus: perceived service/experience quality decomposed into distinct experience facets, all rendered on consistent ordinal quality scales inferred from review text. This is not a scattered grab-bag nor a set of mechanical text metrics, satisfying focus_coherence well. The structure is sound: multiple differentiated facets at a useful granularity that an analyst could compare against Overall Rating / Recommended to find the most influential aspect — directly serving the 'which aspect is most worth analyzing' intent, giving good actionability. The main weakness lowering structure_quality is redundancy with existing structured rating columns (Seat Comfort, Staff Service, Food & Beverages, Value For Money already exist), so several added facets largely restate columns already present rather than adding genuinely new decomposition; the more novel contributions are customer_service_responsiveness and aircraft_type_condition. The set still forms a usable predictor/attribute structure around a clear focus, but the overlap and lack of any explicit target/salience column keeps it short of an ideal analytical scaffold."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

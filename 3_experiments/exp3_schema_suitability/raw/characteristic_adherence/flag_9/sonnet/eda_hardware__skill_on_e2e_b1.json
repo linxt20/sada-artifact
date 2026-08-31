@@ -1,0 +1,74 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_hardware_incident",
+    "incident_domain",
+    "hardware_failure_mode",
+    "software_component_involved",
+    "recurrence_signal",
+    "scope_context"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7783,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7583,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7683,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_hardware_incident",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Directly targets the query's hardware-vs-not distinction; a clean binary axis. Values align well with source text (software installs → false). Somewhat redundant with incident_domain='hardware' but still a useful direct label."
+      },
+      {
+        "name": "incident_domain",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Rich categorical axis letting the analyst compare what descriptions map to hardware vs other domains. Categorisations are sound readings of short_description (MySQL→database, install→software). Strong analytical leverage for the query."
+      },
+      {
+        "name": "hardware_failure_mode",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.78,
+        "rationale": "Highly relevant: captures the specific failure signals (not_powering_on, overheating, connection_failure) that would signal a hardware problem. NULL for non-hardware rows is correct. Minor concern: assigning 'connection_failure' to a software-domain MySQL row is a slightly loose reading, but generally warranted from text."
+      },
+      {
+        "name": "software_component_involved",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.82,
+        "rationale": "Complements the hardware axis by characterising non-hardware rows, useful for contrast. Categories are reasonable extractions (MySQL→database_client, update→os_update). 'other_app' is a somewhat generic catch-all reducing leverage, but grounded."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "rationale": "Recurrence could be a genuine signal correlated with hardware failure, giving a new axis. However groundedness is uncertain: short_description samples show no explicit recurrence cues, so 'true' values may be weakly supported. Sample rows correctly marked false."
+      },
+      {
+        "name": "scope_context",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "rationale": "Scope (workstation, server_room, individual_device) is a plausible discriminator for hardware issues, offering a new grouping axis. But groundedness is weak: a bare 'software installation' description does not clearly support 'user_workstation', suggesting some inferred specifics beyond the text."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns are well-aligned with the query about hardware-signalling description content: incident_domain and hardware_failure_mode provide strong, directly relevant grouping axes, and is_hardware_incident gives the core label. Groundedness is generally sound with correct NULL/Unknown behaviour on silent rows, though scope_context and recurrence_signal appear to assert specifics (e.g., user_workstation for a generic install request) not clearly warranted by the short_description, and one connection_failure assignment is a loose reading. Overall a useful, mostly grounded augmentation set."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

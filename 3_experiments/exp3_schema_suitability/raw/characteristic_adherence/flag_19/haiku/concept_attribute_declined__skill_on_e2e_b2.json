@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "focus_variable": "declined_expense_reasons",
+  "concept": "declined_expense_reasons",
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_type_category",
+    "provisioning_mechanism",
+    "resource_purpose_intent",
+    "departmental_context",
+    "documentation_completeness",
+    "travel_asset_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0354,
+    "facet_fraction": 0.1667,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.15,
+    "mece": 0.2121,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "declined_expense_reasons",
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes what kind of asset/item the expense concerns, not a reason for or compliance risk in the decline. Asset type is an attribute of the expense, potentially correlated with declines, but not a constitutive aspect of 'why it was declined'."
+      },
+      {
+        "name": "provisioning_mechanism",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "How the asset/record was provisioned (auto_generated, manual, etc.) is a process origin attribute. It may predict decline likelihood but is not itself a decline reason or compliance-risk facet."
+      },
+      {
+        "name": "resource_purpose_intent",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The business purpose of the resource characterizes the expense, not the reason it was declined. Purpose is an aspect of the expense, not of the decline-reason concept."
+      },
+      {
+        "name": "departmental_context",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Department is a grouping/context dimension that duplicates an existing original column and is an external segmentation, not an aspect of the reason a given expense was declined."
+      },
+      {
+        "name": "documentation_completeness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Missing or incomplete documentation is a genuine compliance-risk / decline-reason aspect. This is arguably an 'aspect of' why an expense is declined, so it partially realises the concept."
+      },
+      {
+        "name": "travel_asset_flag",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A boolean derived from asset/purpose type; it re-encodes information already in asset_type_category/resource_purpose_intent and characterizes the expense, not the decline reason. Overlaps with those columns."
+      }
+    ],
+    "facet_columns": [
+      "documentation_completeness"
+    ],
+    "non_facet_columns": [
+      "asset_type_category",
+      "provisioning_mechanism",
+      "resource_purpose_intent",
+      "departmental_context",
+      "travel_asset_flag"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.15,
+    "rationale": "The concept to decompose is 'declined_expense_reasons' -- the constitutive facets should be the categories of WHY expenses are declined or the compliance-risk dimensions (e.g., policy violation, missing/incomplete documentation, amount/threshold breach, duplicate submission, unauthorized category, approval-chain failure, out-of-policy vendor/timing). Only documentation_completeness maps onto such a facet. The remaining columns describe attributes of the expense itself (asset type, provisioning mechanism, purpose, department, travel flag) -- these are external predictors or restatements of the expense, not parts of the decline-reason concept. Mutual exclusivity is low because asset_type_category, resource_purpose_intent, and travel_asset_flag overlap in encoding asset/purpose information, and departmental_context duplicates an original column. Exhaustiveness against the actual decline-reason concept is very poor since nearly all principal reason/risk facets (policy breach, threshold, duplication, authorization) are absent."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

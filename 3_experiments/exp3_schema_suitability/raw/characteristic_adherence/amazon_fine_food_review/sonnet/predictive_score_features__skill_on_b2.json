@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "focus_variable": "review_score",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "overall_sentiment",
+    "expectation_match",
+    "taste_texture_quality",
+    "product_effectiveness",
+    "description_accuracy",
+    "product_category",
+    "health_dietary_mention",
+    "use_case_context",
+    "review_specificity",
+    "comparison_to_alternative"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.175,
+    "predictor_fraction": 0.5,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.35,
+    "leakage_rate": 0.5
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "review_score",
+    "per_column": [
+      {
+        "name": "overall_sentiment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Overall sentiment of the review text is essentially a paraphrase of the star rating; it is a near-deterministic proxy for the score derived from the same text, not an independent predictor. High risk of leakage/restatement."
+      },
+      {
+        "name": "expectation_match",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the product met/exceeded/fell below expectations is an evaluative judgment that maps almost directly onto the score (exceeded=high, below=low). It restates the outcome rather than predicting it."
+      },
+      {
+        "name": "taste_texture_quality",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A positive/negative quality assessment extracted from the review is another sentiment restatement strongly co-determined with the score; effectively leakage."
+      },
+      {
+        "name": "product_effectiveness",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "'works_as_claimed' vs 'does_not_work' is a valenced satisfaction judgment tightly coupled to the rating; it restates the outcome rather than offering exogenous signal."
+      },
+      {
+        "name": "description_accuracy",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Accurate/inaccurate is an evaluative verdict extracted from the review that co-moves with satisfaction and score; leakage-prone restatement."
+      },
+      {
+        "name": "product_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Product category is an exogenous attribute of the item, not derived from the reviewer's evaluation. Categories can carry mild baseline differences in rating distributions, giving genuine, non-leaking predictive signal."
+      },
+      {
+        "name": "health_dietary_mention",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the review mentions health/dietary topics is a topical/content feature not inherently valenced; it lies outside the outcome and may plausibly correlate weakly with score without restating it."
+      },
+      {
+        "name": "use_case_context",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The usage context (personal, pet, cooking, gifting) is a descriptive, non-evaluative attribute independent of the rating; a legitimate if modest predictor."
+      },
+      {
+        "name": "review_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Specificity/detail of the review is a stylistic property largely orthogonal to valence; it may carry weak predictive signal (e.g., detail vs. rating extremity) without restating the score."
+      },
+      {
+        "name": "comparison_to_alternative",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the reviewer compares to alternatives is a structural/content feature that is not inherently valenced and lies outside the outcome; a legitimate, if weak, predictor."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.35,
+    "rationale": "Half of the added columns (overall_sentiment, expectation_match, taste_texture_quality, product_effectiveness, description_accuracy) are evaluative judgments extracted from the same review text and are near-deterministic restatements of the score, constituting leakage rather than genuine predictors. The remaining five (product_category, health_dietary_mention, use_case_context, review_specificity, comparison_to_alternative) are descriptive/topical/structural attributes that lie outside the outcome and offer legitimate but generally weak predictive signal. As a set, the leakage-free predictors provide modest incremental leverage over the original columns, so overall genuine predictive utility is limited."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 10
+}

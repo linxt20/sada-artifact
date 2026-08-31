@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "neg_word_count",
+    "pos_word_count",
+    "neg_phrase_count",
+    "negated_pos_count",
+    "intensified_neg_count",
+    "sentiment_ratio",
+    "exclamation_count",
+    "caps_word_count",
+    "question_count",
+    "short_title_flag",
+    "composite_neg_score"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.75,
+    "predictor_fraction": 1.0,
+    "n_predictors": 11,
+    "redundancy": 0.0,
+    "predictive_utility": 0.75,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "neg_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of negative lexicon words in the review text; derived from content, not from the label, and plausibly correlated with negative satisfaction. Legitimate predictor."
+      },
+      {
+        "name": "pos_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of positive lexicon words; independent of the label and carries signal about polarity. Valid predictor."
+      },
+      {
+        "name": "neg_phrase_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of negative multi-word phrases; a text-derived feature that plausibly signals dissatisfaction without restating the label."
+      },
+      {
+        "name": "negated_pos_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Counts negated positive expressions (e.g., 'not good'), a nuanced text feature that captures polarity flips; legitimate and non-trivial predictor."
+      },
+      {
+        "name": "intensified_neg_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Counts intensified negatives (e.g., 'very bad'); text-derived, plausibly predictive of stronger dissatisfaction, not a restatement of label."
+      },
+      {
+        "name": "sentiment_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Continuous net-sentiment score computed from text lexicon; an external feature that correlates with, but does not deterministically define, the label. Valid predictor (mild proxy risk but still a computed feature, not the label)."
+      },
+      {
+        "name": "exclamation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Stylistic feature (exclamation marks) that can carry emotional-intensity signal; independent of label. Weak but legitimate predictor."
+      },
+      {
+        "name": "caps_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "All-caps word count captures emphasis/emotion; a style feature outside the label that may carry signal. Legitimate."
+      },
+      {
+        "name": "question_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of questions may reflect confusion/complaint; a text-style feature independent of the label. Weak but legitimate predictor."
+      },
+      {
+        "name": "short_title_flag",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Title-length flag; a structural feature outside the label with possible weak signal. Legitimate though weak."
+      },
+      {
+        "name": "composite_neg_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Aggregate of the other negativity signals; a computed feature from text, not the label. It is somewhat redundant with its components but still a valid predictor, not leakage."
+      }
+    ],
+    "n_predictors": 11,
+    "predictive_utility": 0.75,
+    "rationale": "All added columns are computed from the review text/title (content, title), not from label_pos, so none leak or restate the focus. The set goes well beyond mechanical length/token counts: it includes polarity lexicons, negation handling, intensification, and net-sentiment ratio, which are genuinely predictive of satisfaction. There is notable internal redundancy (composite_neg_score aggregates several others; neg/pos counts overlap with sentiment_ratio), and some style features (exclamation, caps, questions, short-title) are weak, so incremental leverage is high but not maximal. sentiment_ratio approaches a proxy for the label but remains a computed feature rather than a component of it. Strong, coherent predictive feature set."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 11
+}

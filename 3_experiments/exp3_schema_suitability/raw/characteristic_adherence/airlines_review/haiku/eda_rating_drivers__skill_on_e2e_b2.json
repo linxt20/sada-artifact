@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_attentiveness",
+    "food_quality",
+    "seat_comfort",
+    "aircraft_condition",
+    "customer_service",
+    "value_for_money",
+    "class_premium_decline"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.6685,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.78,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "crew_attentiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Extracts a review theme (crew/staff service) into well-separated, interpretable categories (exceptional_proactive vs indifferent_rude) that can be segmented and compared against Overall Rating. Directly serves the theme-vs-rating query."
+      },
+      {
+        "name": "food_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordered, interpretable categories (excellent_memorable to cost_cutting_apparent) capturing a distinct review theme; groupable and comparable to the focus across traveller/class segments."
+      },
+      {
+        "name": "seat_comfort",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear categorical scale (spacious_comfortable to broken_defective) representing a comfort theme distinct from the numeric focus; supports meaningful segmentation despite some nulls."
+      },
+      {
+        "name": "aircraft_condition",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories about aircraft/cabin condition, a review theme not present as a rating column; useful associational variable, though high null count (324) weakens comparisons somewhat."
+      },
+      {
+        "name": "customer_service",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated categories (excellent/responsive/slow/unresponsive) for a service theme. Partially overlaps crew_attentiveness but remains an interpretable segmentation against the focus."
+      },
+      {
+        "name": "value_for_money",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Duplicates the existing 'Value For Money' original column; it restates an already-available dimension rather than opening a new relationship. Categories are interpretable but redundant."
+      },
+      {
+        "name": "class_premium_decline",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A binary theme flag (premium experience declining) with balanced classes (515/385), interpretable and groupable against Overall Rating; adds a distinct narrative dimension."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.78,
+    "rationale": "As a set, these columns decompose free-text reviews into distinct, interpretable review themes with well-separated categories that can be segmented across Type of Traveller and Class and compared against Overall Rating, directly realising the exploratory intent. Most columns are strong associational variables with balanced, non-opaque categories. Two weaknesses lower the score: value_for_money essentially restates an existing original column (redundant, not a new relationship), and crew_attentiveness vs customer_service partially overlap. Several columns also carry substantial NULL shares (aircraft_condition, seat_comfort), which somewhat limits comparison coverage but does not render them uninformative."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

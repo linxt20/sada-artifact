@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "poor_writing",
+    "weak_acting",
+    "bad_pacing",
+    "poor_direction",
+    "shallow_characters",
+    "sentiment_boost_if_complaints_fixed"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "poor_writing",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A specific complaint type that films could address/fix; an intervenable lever on the outcome. Implied by 'most common audience complaints' but the specific complaint is not explicitly named."
+      },
+      {
+        "name": "weak_acting",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another intervenable complaint dimension that could be fixed to change sentiment."
+      },
+      {
+        "name": "bad_pacing",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Intervenable production/editing lever that could be changed; a candidate complaint to address."
+      },
+      {
+        "name": "poor_direction",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Intervenable complaint about directing that could be addressed."
+      },
+      {
+        "name": "shallow_characters",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Intervenable complaint about characterization that could be fixed."
+      },
+      {
+        "name": "sentiment_boost_if_complaints_fixed",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is a precomputed counterfactual effect on the outcome (label_pos), i.e. the answer/estimand itself, not a confounder or an adjustment variable."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "poor_writing",
+      "weak_acting",
+      "bad_pacing",
+      "poor_direction",
+      "shallow_characters"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns identify multiple intervenable treatments -- specific, fixable audience complaints (writing, acting, pacing, direction, characters) that a film could actually change, satisfying part (a) of the what-if claim. However, the set contains NO confounders: there are no common causes of both a complaint and overall sentiment (e.g., genre, budget, studio quality, reviewer harshness, film era, marketing) that would need to be adjusted for before reading off the counterfactual effect. The final column is a directly precomputed 'boost if fixed' estimate, which bakes in the answer rather than providing an adjustment variable; it is the estimand, not a confounder. Because the decisive test concerns whether confounders (especially ones NOT named in the query) were added, and none were, the columns fail the interventional identification requirement of part (b). The design treats the effect as if complaints were randomly assigned, ignoring confounding."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

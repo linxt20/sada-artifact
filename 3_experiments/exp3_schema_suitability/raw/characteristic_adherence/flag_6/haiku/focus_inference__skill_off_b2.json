@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "is_critical",
+    "domain_type",
+    "recurrence_indicator"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.5616,
+    "focus_coherence": 0.78,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Incident resolution performance / efficiency (how long and how effectively incidents get resolved)",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "supports_focus": true,
+        "rationale": "Directly measures the core outcome of resolution performance -- the central quantity of the implied focus."
+      },
+      {
+        "name": "is_critical",
+        "supports_focus": true,
+        "rationale": "A severity attribute that plausibly predicts/segments resolution time, forming a coherent facet around the focus."
+      },
+      {
+        "name": "domain_type",
+        "supports_focus": true,
+        "rationale": "Categorizes the technical area of the incident, a natural segmentation dimension for analyzing resolution differences."
+      },
+      {
+        "name": "recurrence_indicator",
+        "supports_focus": true,
+        "rationale": "Captures repeat incidence, an attribute relevant to problem persistence and resolution effort; fits the analytical frame."
+      }
+    ],
+    "focus_coherence": 0.78,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.8,
+    "rationale": "The columns collectively centre on a coherent, data-inferable focus: incident resolution performance and its drivers. resolution_time_hours is the clear central measure, while is_critical, domain_type, and recurrence_indicator act as differentiated predictor/segmentation attributes (severity, technical domain, recurrence) around it -- a sound predictor/outcome structure rather than a single restatement or noise. The focus is genuinely actionable: an analyst can investigate which domains, severities, or recurring incidents drive long resolution times. Minor weakness: recurrence_indicator's semantics are ambiguous (0/1/2/3 with no description) and it leans slightly toward a separate 'recurrence' theme, and the high NULL rate in resolution_time_hours signals derivation issues -- so the set is coherent but not maximally tight, and the exact focus framing (efficiency vs. recurrence) is somewhat mixed."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

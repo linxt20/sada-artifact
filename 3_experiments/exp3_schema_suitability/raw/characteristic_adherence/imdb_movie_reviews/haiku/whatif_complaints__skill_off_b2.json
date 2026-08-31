@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "complaint_categories",
+    "num_complaints",
+    "sentiment_boost_if_addressed"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "complaint_categories",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The categories of audience complaints (plot, pacing, acting, etc.) constitute the intervenable lever: filmmakers could actually address these specific issues. This is the treatment the query asks about ('if films addressed the most common audience complaints'), so it is named/implied in the query."
+      },
+      {
+        "name": "num_complaints",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Count of complaints derived directly from complaint_categories; it is another representation of the same intervenable treatment (how many complaints exist to address). It is a treatment-side quantity, not a common cause of both treatment and outcome."
+      },
+      {
+        "name": "sentiment_boost_if_addressed",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the estimated counterfactual change in positive sentiment if complaints were addressed -- i.e., the effect estimate itself. It encodes the answer directly rather than being a confounder to adjust for; it is outcome-side and explicitly what the query asks to quantify."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "complaint_categories",
+      "num_complaints"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns identify an intervenable treatment (addressable complaint categories, which filmmakers could actually change) and pre-bake an effect estimate (sentiment_boost_if_addressed). However, the schema contains NO confounders whatsoever -- no common causes of both complaint prevalence and positive sentiment (e.g., genre, budget, star power, release era, reviewer demographics, baseline film quality) are added. Under the decisive test, the capability under test is the surfacing of confounders NOT named in the query, and none appear. The 'sentiment_boost_if_addressed' column simply asserts a counterfactual effect without any adjustment machinery, so the counterfactual cannot be legitimately identified. The treatment/intervention framing is satisfied, but the interventional CLAIM fails because confounding is entirely unaddressed."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "hands_on_exploration_need",
+    "instructional_delivery_quality",
+    "attention_focus_sustainability",
+    "household_equity_barrier",
+    "peer_interaction_loss",
+    "subject_specific_challenge"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.86,
+    "analytical_usefulness__table_level": 0.86,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.755,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hands_on_exploration_need",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A genuine axis for learner needs (physical/lab/manipulatives). But produced values are frequently unsupported: ED-0001 algebra 'camera freezes' yields 'manipulatives_absent' with no source basis; ED-0003 reading tears yields 'physical_materials_needed' though the text mentions only worksheets and logouts. Overfits hands-on labels onto non-hands-on complaints."
+      },
+      {
+        "name": "instructional_delivery_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Strong analytical leverage with well-differentiated delivery modes. Values track the text well: 'low_interactivity' for frozen whiteboard, 'no_live_discussion' for cameras-off silence, 'asynchronous_only' for recorded lectures. Sound readings."
+      },
+      {
+        "name": "attention_focus_sustainability",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Useful engagement axis. However several values assert specifics the text does not support: ED-0003 'screen_fatigue_eye_strain' is unwarranted (child cries, no eye-strain cue); ED-0005 'attention_span_exceeded_20_min' invents a specific 20-min threshold not in the text. Contradicts groundedness."
+      },
+      {
+        "name": "household_equity_barrier",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Equity is a strong, distinct analytical dimension. Grounded where evidenced (logouts as access issue), but ED-0001 'tech_access_unequal' overreads a single frozen camera as an equity gap, an unwarranted inference."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Clear, distinct axis. Values are well grounded: 'no_peer_discussion' for silent chat, 'social_isolation' for 'zero peer interaction', 'not_present' for silent rows. Sound overall."
+      },
+      {
+        "name": "subject_specific_challenge",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Meaningful axis linking subject to modality challenge. But mislabels: ED-0005 discussion problem tagged 'literacy_group_needed' though it is essay participation, not literacy grouping; assignment somewhat conflates the subject column. Partial grounding failures."
+      }
+    ],
+    "analytical_usefulness": 0.86,
+    "source_groundedness": 0.65,
+    "rationale": "The six columns collectively give genuinely distinct analytical axes (hands-on need, delivery, attention, equity, peer loss, subject challenge) that all directly serve the query about learner needs and pain points, so usefulness is high with little redundancy. Groundedness is mixed: delivery and peer-interaction columns read the source text soundly, but several columns confidently assign specific labels the text does not support -- inventing manipulatives/physical-material needs, a 20-minute attention threshold, screen-fatigue, and equity gaps from thin cues, and mislabeling essay discussion as literacy grouping. These are the kind of confident specifics on silent or contrary text that lower groundedness."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

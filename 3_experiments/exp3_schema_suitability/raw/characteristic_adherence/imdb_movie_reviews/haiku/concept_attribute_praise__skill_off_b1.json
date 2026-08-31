@@ -1,0 +1,74 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "praise_terms",
+    "complaint_terms",
+    "sentiment_polarity",
+    "praise_terms.1",
+    "complaint_terms.1",
+    "sentiment_polarity.1"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.4,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.9333,
+    "source_groundedness__table_level": 0.93,
+    "b1_overall": 0.6666,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "praise_terms",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "rationale": "Directly extracts praise terms from reviews, giving a groupable axis for the query on praise. Row samples show extracted terms grounded in source text (wonderful, masterpiece present); NULL for silent rows is correct."
+      },
+      {
+        "name": "complaint_terms",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "rationale": "Extracts complaint terms directly serving the query. Samples (worst, bad, terrible, predictable) are faithful readings of the source text."
+      },
+      {
+        "name": "sentiment_polarity",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "rationale": "Three-way polarity adds a modest grouping axis and the 'mixed' category is more useful than a bare pos/neg flag, but it partly overlaps with existing label_pos. Values well grounded, including 'mixed' for the frustrating-but-hopeful sample."
+      },
+      {
+        "name": "praise_terms.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.95,
+        "rationale": "Exact duplicate of praise_terms; a mere restatement adding no analytical leverage. Values themselves are grounded."
+      },
+      {
+        "name": "complaint_terms.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.95,
+        "rationale": "Exact duplicate of complaint_terms; trivially redundant, no new axis. Values grounded."
+      },
+      {
+        "name": "sentiment_polarity.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.9,
+        "rationale": "Exact duplicate of sentiment_polarity; redundant restatement. Values grounded."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.93,
+    "rationale": "The praise_terms, complaint_terms, and sentiment_polarity columns are genuinely useful for the praise/complaint query and their values are well grounded in the source text, with correct NULLs on silent rows. However, three of the six columns are exact duplicates of the others, contributing zero analytical leverage, which drags the table-level usefulness down. Groundedness remains high across all columns since no invented facts were observed."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

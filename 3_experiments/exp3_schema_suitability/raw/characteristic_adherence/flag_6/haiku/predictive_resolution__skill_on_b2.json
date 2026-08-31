@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary by agent and issue type?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_category",
+    "assigned_agent",
+    "severity_signal",
+    "technical_system_type",
+    "closing_agent_match"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly realizes the 'issue type' axis of the query with well-separated, interpretable categories (email_server, network_connectivity, vpn, database_access, etc.) that resolution_time can be grouped and compared across."
+      },
+      {
+        "name": "assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly realizes the 'agent' axis. Named agents form a clean, low-cardinality segmentation for comparing resolution_time across handlers."
+      },
+      {
+        "name": "severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "An external associational dimension (outage, degradation, login_failure, server_crash) with interpretable, well-separated categories that plausibly influences resolution_time and enables meaningful segmentation beyond the query's stated axes."
+      },
+      {
+        "name": "technical_system_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A coarser system grouping (network_vpn, email, database_sql, infrastructure) that offers an alternate, interpretable segmentation for resolution_time. Partially overlaps with issue_category but at a different granularity, still useful for exploration."
+      },
+      {
+        "name": "closing_agent_match",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean binary (true/false) indicating whether the assigning agent also closed the ticket; a well-separated, interpretable flag that can be segmented against resolution_time (e.g., hand-offs vs. same-agent resolution)."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.85,
+    "rationale": "The set squarely serves the query: issue_category and assigned_agent instantiate the two explicit axes with clean, low-cardinality interpretable categories, while severity_signal, technical_system_type, and closing_agent_match add external associational dimensions each with well-separated, human-readable values that can be grouped against resolution_time. No column merely restates the focus, none is near-constant or opaquely scored. Minor redundancy exists between issue_category and technical_system_type (overlapping semantics at different granularity), which slightly lowers the informativeness of the set as independent relationships, but overall this strongly supports interpretable relationship discovery."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

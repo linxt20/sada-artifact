@@ -1,0 +1,63 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "focus_variable": "hardware_incident_rate",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "hardware_failure_cause",
+    "is_top_hardware_cause"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "hardware_incident_rate",
+    "per_column": [
+      {
+        "name": "hardware_failure_cause",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Categorizes the hardware failure cause; the query explicitly targets 'hardware failure causes' as the thing to be addressed. This is the diagnostic label whose 'addressing' constitutes the intervention, but it is a descriptive classification of what already failed rather than a settable lever in itself."
+      },
+      {
+        "name": "is_top_hardware_cause",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Flags whether a record belongs to the most common failure causes. This directly encodes the 'most common causes' from the query and marks the target set for intervention, but it too is a derived indicator of the existing cause, not an actor-settable policy or action."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "hardware_failure_cause",
+      "is_top_hardware_cause"
+    ],
+    "treatment_intervenable": false,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns operationalize the query's own language ('most common hardware failure causes') by identifying and flagging the top causes. However, they fail the what-if technical test on both prongs. (a) Intervenability: the treatment as encoded is a diagnostic classification of a failure that already occurred, not an intervenable lever (e.g., a preventive maintenance policy, a hardware refresh assignment, a firmware update, a supplier change). 'Addressing a cause' is an abstract label, not a settable configuration/action captured in these columns. (b) Confounders: no common causes of both the treatment and the incident rate were added (e.g., device age, deployment environment, usage intensity, vendor/model, warranty status). All added content is named in or trivially implied by the query, so none demonstrate the capability of surfacing unnamed confounders needed to identify the counterfactual effect. Without any adjustment variables, the counterfactual drop cannot be read off, so the interventional claim is not realized."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

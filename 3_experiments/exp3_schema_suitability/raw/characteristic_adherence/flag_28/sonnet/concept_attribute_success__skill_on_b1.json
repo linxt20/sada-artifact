@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What goal-management practices support high achievement?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "primary_intervention_type",
+    "automation_lever",
+    "feedback_loop_included",
+    "action_specificity",
+    "benchmark_reference",
+    "multi_lever_goal",
+    "measurement_mechanism",
+    "time_horizon",
+    "scope_breadth"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7444,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7556,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.75,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_intervention_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Strong grouping axis directly tied to 'practices' in the query. Mostly well-grounded (resource_optimization, process_redesign, marketing_sales, feedback_survey all match). But the customer-satisfaction row labeled 'training_development' is unsupported by the text which describes after-sales support and personalized interactions, indicating occasional misreading."
+      },
+      {
+        "name": "automation_lever",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binary automation flag offers a modest but real axis to compare achievement. Values in samples are all False and plausibly grounded, though the flag is somewhat redundant with the automation category of primary_intervention_type."
+      },
+      {
+        "name": "feedback_loop_included",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether a goal embeds a feedback loop is a genuine goal-management practice relevant to the query. Grounding is reasonable, though the engagement-program/survey rows plausibly involve feedback yet were marked False, suggesting some inconsistency; still no fabrication."
+      },
+      {
+        "name": "action_specificity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Specificity of the action plan is a classic driver of goal achievement and a good modeling axis. Only two levels but non-trivial. Ratings track the text plausibly (detailed multi-part goals rated high_specific)."
+      },
+      {
+        "name": "benchmark_reference",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Type of benchmark (last year, previous quarter, absolute, none) is a meaningful practice axis and is directly extractable from phrases like 'compared to last quarter' or 'from 78% to 90%'. Sample values are accurate."
+      },
+      {
+        "name": "multi_lever_goal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether a goal uses multiple levers is a reasonable practice distinction. Grounding is mostly sound; the customer-satisfaction row (two methods) is correctly True, though some borderline judgments possible. No clear fabrication."
+      },
+      {
+        "name": "measurement_mechanism",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Measurement mechanism is a useful axis, but the values appear to conflate with the existing 'metric' column and sometimes contradict the text. E.g., a premium-subscription revenue goal is labeled 'survey_score' (echoing the mismatched metric field) rather than a sales/financial measure; the customer-satisfaction ratings goal labeled 'financial_metric' is also off. Groundedness suffers."
+      },
+      {
+        "name": "time_horizon",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Time horizon is a core goal-management practice and clearly extractable ('next fiscal year', 'by end of Q4', 'compared to last quarter'). NULLs for silent rows are acceptable. Sample values match text well."
+      },
+      {
+        "name": "scope_breadth",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Scope breadth is a useful grouping axis, but values are often inferred beyond textual support. 'company_wide' is asserted heavily where text is silent, and the premium-subscription goal is labeled 'product_line' without clear warrant. Overconfident specifics reduce grounding."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns collectively provide multiple genuine, non-redundant axes (intervention type, benchmark, specificity, time horizon, scope, feedback loop) that are well aligned with the query about goal-management practices supporting achievement, giving real leverage to group and model. Groundedness is generally solid for extractive columns (benchmark_reference, time_horizon), but a few columns exhibit overconfident inference or misreading: measurement_mechanism sometimes mirrors the noisy 'metric' field and contradicts the described goal, scope_breadth asserts breadth the text does not state, and primary_intervention_type occasionally misclassifies (training_development for a support/personalization goal). These are localized hallucinations rather than pervasive fabrication, so overall groundedness remains moderate-to-good."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 9
+}

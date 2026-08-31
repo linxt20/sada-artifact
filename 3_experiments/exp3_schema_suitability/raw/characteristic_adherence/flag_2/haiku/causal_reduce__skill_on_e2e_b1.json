@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce incident resolution time?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "assigned_technician",
+    "resolution_scope",
+    "incident_severity",
+    "technician_reassignment",
+    "incident_closure_status",
+    "caller_context",
+    "infrastructure_layer_affected"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.6188,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.6094,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Grouping incidents by type is a strong axis for finding which categories drive long resolution times. Values are well-grounded in short_description (VPN, database, email, WiFi->network_access all correct)."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Technician performance is relevant to resolution time, but this appears largely redundant with the existing assigned_to/closed_by columns. Values like 'Beth Anglin' cannot be derived from the shown source text (only timestamps and description), suggesting they are copied from another column or invented; not warranted by the evidence samples."
+      },
+      {
+        "name": "resolution_scope",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Scope (single_user vs department_wide) is a useful axis correlated with effort. Department-wide is reasonably inferred where text names a department, but 'single_user' for 'VPN connection issue' and 'infrastructure_wide' being the dominant value are often not supported by silent text, indicating over-confident inference."
+      },
+      {
+        "name": "incident_severity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Severity is highly relevant to resolution time. However the values are speculative: labeling 'Cannot connect to database' as 'access_denial' vs an email issue as 'service_outage' reflects heuristic guessing rather than stated severity; the original priority column already carries grounded severity information."
+      },
+      {
+        "name": "technician_reassignment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is a plausible driver of delay, but the source text provides no basis for a true/false reassignment flag; every sample is 'True' with no supporting evidence, indicating fabrication."
+      },
+      {
+        "name": "incident_closure_status",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Derivable from state/closed_at, so grounded, but it is trivially redundant with the existing 'state' and 'closed_at' columns and adds little new analytical leverage."
+      },
+      {
+        "name": "caller_context",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Named vs system user is a mild segmentation axis but largely restates caller_id/sys_updated_by info; groundedness is moderate as classification from IDs is plausible but not shown in the evidence text."
+      },
+      {
+        "name": "infrastructure_layer_affected",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Layer (network/application/database) is a reasonable analytical grouping and is well-mapped from short_description, though it partly overlaps with incident_category."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.58,
+    "rationale": "The set offers several genuinely useful grouping axes for resolution-time analysis (incident_category, infrastructure_layer, severity, scope). However groundedness is mixed: category and layer are soundly extracted from short_description, but assigned_technician, technician_reassignment, and severity/scope frequently assert specifics the shown source text does not support, indicating fabricated or over-confident inferred values. A few columns (closure_status, caller_context) are grounded but largely redundant with existing original columns."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 8
+}

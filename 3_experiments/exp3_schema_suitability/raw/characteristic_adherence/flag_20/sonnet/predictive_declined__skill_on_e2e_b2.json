@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a travel expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "expense_category",
+    "ci_asset_type",
+    "is_miscellaneous_ci",
+    "entry_origin",
+    "has_source_id",
+    "has_processed_date",
+    "expense_action_type",
+    "department_group"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.35,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.4,
+    "leakage_rate": 0.125
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "expense_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Category of expense (travel vs hardware etc.) is knowable at submission and plausibly correlates with decline likelihood; a legitimate external predictor."
+      },
+      {
+        "name": "ci_asset_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of configuration item/asset is an antecedent attribute independent of the outcome and could carry signal about approval/decline patterns."
+      },
+      {
+        "name": "is_miscellaneous_ci",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Flag for miscellaneous/unclassified CI is knowable up front; ambiguous or miscategorized items may be more likely to be declined. Weak but legitimate predictor."
+      },
+      {
+        "name": "entry_origin",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How the entry originated (manual vs automated vs travel report) is a pre-outcome process attribute that can plausibly relate to decline rates."
+      },
+      {
+        "name": "has_source_id",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of a source_id reflects provenance/completeness at intake; can carry weak predictive signal and is not derived from the outcome."
+      },
+      {
+        "name": "has_processed_date",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether a processed_date exists is populated when the expense is processed/resolved. Its presence is a consequence of the state transition, so it leaks the outcome rather than predicting it."
+      },
+      {
+        "name": "expense_action_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Action/workflow type (registration, procurement, etc.) is an antecedent categorical attribute that may correlate with decline; legitimate predictor."
+      },
+      {
+        "name": "department_group",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Grouped department is a stable submitter attribute knowable before the decision and plausibly linked to decline rates; a reasonable external predictor."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.4,
+    "rationale": "Most added columns are legitimate antecedent features (expense/CI/action categories, entry origin, department group) that are external to state_declined and could carry weak-to-moderate signal. However several are largely re-derivations of existing original columns (category, ci, department, source_id) rather than genuinely new information, limiting marginal predictive leverage. has_processed_date is a leakage feature because processed_date is set as part of resolving the item, correlating with the outcome mechanically. As a set the utility is modest: real but low-to-moderate, and diminished by redundancy with existing columns and one leaking flag."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

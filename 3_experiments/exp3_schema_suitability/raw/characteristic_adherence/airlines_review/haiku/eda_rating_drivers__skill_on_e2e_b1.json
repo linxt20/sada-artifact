@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_attentiveness",
+    "food_quality",
+    "seat_comfort",
+    "aircraft_condition",
+    "customer_service",
+    "value_for_money",
+    "class_premium_decline"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.69,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7643,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7271,
+    "hallucination_rate": 0.7143
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_attentiveness",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A well-distributed thematic axis that lets the analyst relate crew experience to Overall Rating across traveller type/class. Values track the source text well in the samples (welcoming crew -> exceptional_proactive). Slight risk of inference when text is silent, but samples are sound."
+      },
+      {
+        "name": "food_quality",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Genuine theme axis with good distribution and reasonable NULL rate for silent rows. However, sample 2 mentions nothing about food yet was labelled poor_disappointing, an unwarranted negative inference where 'unknown' was appropriate; this drags groundedness."
+      },
+      {
+        "name": "seat_comfort",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Largely redundant with the existing original 'Seat Comfort' rating column, reducing new analytical leverage, though the categorical framing adds mild qualitative texture. Values match source text (narrow/poor padding -> cramped_uncomfortable)."
+      },
+      {
+        "name": "aircraft_condition",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A new theme axis not present in originals, useful for grouping. High NULL rate correctly handles silent rows. But sample 2 says nothing about aircraft age/condition yet was labelled comfortable_aging, an invented specific; minor groundedness hit."
+      },
+      {
+        "name": "customer_service",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "Heavily overlaps with crew_attentiveness and the original 'Staff Service' rating, largely restating the same signal. Sample 2 labelled 'slow' with no service comment in the text is unsupported."
+      },
+      {
+        "name": "value_for_money",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Directly redundant with the existing original 'Value For Money' rating column, adding little new axis. Sample 2 labelled fair_reasonable despite no value/price mention is a weakly grounded inference."
+      },
+      {
+        "name": "class_premium_decline",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A relevant flag for the Class dimension of the query, offering a distinct grouping axis. But the true/false judgement (premium experience declining) is often not derivable from short review text and risks confident assertions where the text is silent; groundedness is uncertain."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.75,
+    "rationale": "Several added columns (crew_attentiveness, food_quality, aircraft_condition, class_premium_decline) provide genuine thematic axes well suited to relating themes to Overall Rating across traveller type and class. However, seat_comfort, customer_service, and value_for_money substantially restate existing original rating columns or each other, limiting new leverage. Groundedness is generally good with appropriate NULLs for silent rows, but multiple columns over-assert negative/specific labels on rows where the source text is silent (notably the seat-only review in sample 2), indicating a tendency to hallucinate confident values rather than abstain."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 7
+}

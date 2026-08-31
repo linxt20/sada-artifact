@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do handling times differ by channel and priority?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_category",
+    "system_scope",
+    "resolution_path",
+    "issue_complexity",
+    "blocking_factor"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.82,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.81,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.815,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A well-distributed categorical axis that lets the analyst group handling times by issue type, a plausible driver of resolution_minutes alongside channel/priority. Sample values are sound readings: billing invoice->billing_or_financial, 502 outage->technical_outage, pin-reports->feature_request. CS-0002 as technical_bug vs auth is defensible given the session-drop symptom."
+      },
+      {
+        "name": "system_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Blast radius (single user vs tenant vs platform-wide) is a genuine new axis that could explain handling-time variation. Values are largely warranted: session drop for one user->single_user, all Acme members->single_workspace_tenant. Feature request labelled single_workspace_tenant is a mild default where text is not explicit, but not contradictory."
+      },
+      {
+        "name": "resolution_path",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "How an issue is resolved (code fix vs escalation vs docs) is highly relevant to handling time. Most values are sound (billing->billing_adjustment, outage->infrastructure_escalation). However CS-0004, a pure feature/enhancement request, is labelled code_fix_or_rollback, which is an unwarranted specific; rollback implies a regression the text does not support. Minor grounding weakness."
+      },
+      {
+        "name": "issue_complexity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Complexity is a plausible mediator of handling time and gives modelling leverage. Values are reasonable inferences (outage->complex, config duplicate line->straightforward), and 'not_present' for a bare feature request is acceptable silent-row behaviour. Somewhat subjective but not contradicted by text."
+      },
+      {
+        "name": "blocking_factor",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Blocking dependencies directly plausibly explain longer handling times, a strong axis. Overlapping 'not_present' and 'none_present' categories add noise but not fatally. Grounding concern: CS-0001 explicitly awaits a corrected invoice from support, yet is labelled awaiting_customer_action (customer already paid), which mildly contradicts the text; CS-0002 SSO-suspected labelled none_present is defensible."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.82,
+    "rationale": "All five added columns provide genuine, non-redundant axes (issue type, blast radius, resolution path, complexity, blocking dependency) that plausibly explain handling-time variation beyond the raw channel/priority fields, so analytical usefulness is high. Values are generally sound readings of the source text with correct use of 'not_present' for silent rows. Groundedness is dinged modestly by a few unwarranted specifics (feature request tagged code_fix_or_rollback; CS-0001 blocking_factor as awaiting_customer_action despite the customer awaiting support) and by redundant not_present/none_present labels in blocking_factor. No systemic fabrication."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

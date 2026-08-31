@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals are linked to longer resolution duration values?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "duration_category",
+    "is_critical",
+    "duration_minutes",
+    "has_db_issue"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.6875,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.7188,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "duration_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binned version of duration_minutes; useful as a grouping axis for the query about longer resolutions, but partly redundant with the raw minutes column. Values align with the derived durations (e.g. 47.94 -> long)."
+      },
+      {
+        "name": "is_critical",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A criticality flag is a genuine new axis to correlate with duration. However groundedness is weak: the sample with 'Unable to access online database' is marked critical while WiFi/VPN/printing are not, with no clear priority signal shown in the evidence; the basis for critical appears inferred rather than clearly warranted."
+      },
+      {
+        "name": "duration_minutes",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "The core numeric target for the query and highly useful. But the source columns shown (opened_at, closed_by) do not include closed_at in the evidence, and precise values like 47.94/24.58 cannot be verified from the provided text; specificity likely exceeds what the shown source supports."
+      },
+      {
+        "name": "has_db_issue",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A topical flag that gives a real categorical axis to compare against duration. Values are well grounded in short_description: 'online database' -> 1, WiFi/VPN/printing -> 0."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.65,
+    "rationale": "The added columns provide meaningful axes (numeric duration, its bins, and topical/criticality flags) directly relevant to identifying signals linked to longer resolution durations. duration_category is somewhat redundant with duration_minutes. Groundedness is the main concern: duration_minutes uses precise values not verifiable from the shown source (closed_at absent in evidence), and is_critical's assignment basis is unclear, while has_db_issue and duration_category read soundly from the text."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 4
+}

@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "crew_service_quality",
+    "service_consistency",
+    "food_quality",
+    "special_meal_fulfillment",
+    "seat_comfort_condition",
+    "cabin_class_expectation_gap",
+    "service_amenity_cuts",
+    "service_decline_perception",
+    "value_for_money_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.6667,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.8111,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.7389,
+    "hallucination_rate": 0.4444
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorical theme on crew service gives a strong axis to relate to Overall Rating across traveller/class. Samples are well grounded (warm crew -> attentive_warm; dreadful seats review with no crew mention got inattentive_robotic, a mild unwarranted inference, but generally sound)."
+      },
+      {
+        "name": "service_consistency",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Useful new axis, but partly redundant with crew_service_quality and near-null count suggests it labels almost every row even when text is silent about consistency. The dreadful-seats review (no service comment) labeled 'consistently_poor' is an over-assertion."
+      },
+      {
+        "name": "food_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "Good distinct theme with sensible NULLs for silent rows. Mostly grounded, but the seats-only review with no food mention labeled 'poor_bland' is an invented specific."
+      },
+      {
+        "name": "special_meal_fulfillment",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Highly imbalanced boolean (17 true) offering limited analytical leverage across most rows; grounded where applicable and correctly False when no special meal mentioned."
+      },
+      {
+        "name": "seat_comfort_condition",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Partly overlaps existing 'Seat Comfort' rating but adds a qualitative condition dimension (worn/dated) not in the numeric score. NULLs used appropriately; sample readings are sound."
+      },
+      {
+        "name": "cabin_class_expectation_gap",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Directly relevant to comparing satisfaction across Class; strong grouping axis. But near-absence of NULL implies it infers an expectation gap even where text does not discuss expectations, risking unsupported labels."
+      },
+      {
+        "name": "service_amenity_cuts",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Boolean flag for perceived cost-cutting; some analytical value but rare (79 true) and somewhat generic. Grounded and correctly False for silent rows."
+      },
+      {
+        "name": "service_decline_perception",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Overlaps conceptually with service_amenity_cuts and service_consistency; adds limited independent leverage. Grounded with appropriate False defaults."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with the existing 'Value For Money' numeric column, reducing new leverage. Near-zero NULL and the seats-only review labeled 'poor_value' suggest inference from overall tone rather than explicit value statements."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.8,
+    "rationale": "The set provides several genuinely useful qualitative theme axes (crew service, food, seat condition, class expectation gap) that let the analyst group and compare Overall Rating across Type of Traveller and Class beyond the existing numeric ratings. A few columns are redundant with each other or with original columns (value_for_money_perception, service_decline_perception), lowering holistic usefulness. Groundedness is generally solid with sensible NULLs, but several columns almost never emit NULL and appear to project a single review's overall tone onto specific unmentioned themes (e.g., a seat-focused review getting poor food and poor service/consistency labels), indicating some unsupported specifics."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

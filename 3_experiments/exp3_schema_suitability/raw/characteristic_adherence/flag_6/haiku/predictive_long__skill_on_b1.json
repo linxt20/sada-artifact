@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_domain",
+    "infrastructure_scope",
+    "technical_severity_signal",
+    "assigned_agent",
+    "resolution_complexity_indicator",
+    "agent_handoff_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.875,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.825,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_domain",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the ticket by technical domain from short_description; a genuine axis to compare resolution time across issue types. Values are sound readings of the source text (e.g. 'Unable to access the database' -> database_access)."
+      },
+      {
+        "name": "infrastructure_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Whether the issue affects shared vs single-user infrastructure is a plausible driver of resolution time. However the short descriptions rarely state scope explicitly; labeling 'Unable to access the database' as shared_service or a VPN issue as shared_service is an inference that is reasonable but sometimes goes beyond what the text supports."
+      },
+      {
+        "name": "technical_severity_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing access_failure vs degraded_performance vs outage is a useful severity axis for resolution time. Mostly a warranted reading (e.g. 'frequent disconnection' -> degraded_performance, 'Unable to access' -> access_failure), though borderline for terse descriptions."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant since the query asks about per-agent resolution time; provides the grouping key. Appears to be a normalized copy of the original assigned_to field, so well grounded. Slightly redundant with an existing column but still central to the query."
+      },
+      {
+        "name": "resolution_complexity_indicator",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Complexity (single_action_fix vs multi_step_troubleshooting vs vendor_escalation) is highly relevant to how long tickets take. But these labels are inferred confidently from very terse descriptions that do not state remediation effort; the specific complexity assignment is often not supported by the source text."
+      },
+      {
+        "name": "agent_handoff_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Whether a ticket was closed by a different person than assigned, or was unassigned, is a strong signal for longer resolution. Derivable from original assigned_to/closed_by fields, so well grounded."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.75,
+    "rationale": "All six columns give genuine, non-trivial axes for analyzing what drives longer resolution times (domain, severity, complexity, scope, agent identity, and handoff behavior); none are near-constant or bare-sentiment restatements. Groundedness is mixed: agent, handoff, and issue_domain are well supported by source fields/text, while infrastructure_scope and resolution_complexity_indicator assert fairly specific characterizations that the terse short_descriptions do not clearly warrant, introducing some inference risk."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

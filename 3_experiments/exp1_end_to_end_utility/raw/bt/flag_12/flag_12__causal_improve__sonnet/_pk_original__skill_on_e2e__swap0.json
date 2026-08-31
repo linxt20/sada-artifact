@@ -1,0 +1,140 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.82,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 3,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "Median resolution time: 173.2 hours",
+        "why": "numeric baseline"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Hardware is 406/500 incidents (81.2%)",
+        "why": "concrete magnitude"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "routing is already very clean",
+        "why": "consistent limits section"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "printer (182 h, n=203, 41%) ... software_crash (259 h, 80% escalation)",
+        "why": "sub-segmentation"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "repair_needed accounts for 75% ... worst median",
+        "why": "quantified bottleneck"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "route software-triggered incidents away from repair queues",
+        "why": "specific decision-ready lever"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "software_crash ... n = 5 (small but extreme)",
+        "why": "notes n=5 but earlier lists n=220, inconsistency"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "incident_category",
+        "quote": "incident_category (TAPP) reveals critical sub-segments",
+        "dependent": true
+      },
+      {
+        "column": "resolution_action_type",
+        "quote": "resolution_action_type (TAPP) reveals",
+        "dependent": true
+      },
+      {
+        "column": "software_trigger_indicated",
+        "quote": "software_trigger_indicated (TAPP) flags 54 incidents",
+        "dependent": true
+      },
+      {
+        "column": "involves_escalation_or_reassignment",
+        "quote": "76.8% of incidents involve escalation",
+        "dependent": true
+      },
+      {
+        "column": "failure_symptom",
+        "quote": "failure_symptom (TAPP) shows not_responding",
+        "dependent": true
+      },
+      {
+        "column": "is_recurring_issue_type",
+        "quote": "constant (True for all 500 rows)",
+        "dependent": false
+      }
+    ]
+  },
+  "reason": "B provides deeper sub-segmentation and stronger evidence-backed, actionable levers despite a minor n-count inconsistency.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

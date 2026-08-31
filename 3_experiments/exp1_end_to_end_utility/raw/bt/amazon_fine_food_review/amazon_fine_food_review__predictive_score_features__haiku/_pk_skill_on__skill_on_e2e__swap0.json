@@ -1,0 +1,115 @@
+{
+  "var_a": "skill_on",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.65,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "Positive sentiment: avg. score 4.83 (7,001 reviews)",
+        "why": "numeric per-level means"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "if sentiment=positive, predict 4–5... >75% accuracy",
+        "why": "decision-ready baseline"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Taste/flavor is 8.3% missing; impute with mode",
+        "why": "concrete coverage handling"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "excellent products rarely receive 1-star ratings (0.1%)",
+        "why": "cross-tab causal check"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Score 5: 377 chars",
+        "why": "text-length feature by score"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Works as claimed (71.7%): Mean score 4.79; 93% rate ≥4 stars",
+        "why": "distribution within level"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "sentiment_polarity",
+        "quote": "`sentiment_polarity` — Overall emotional valence",
+        "dependent": true
+      },
+      {
+        "column": "product_effectiveness_or_functionality",
+        "quote": "`product_effectiveness_or_functionality` — Meets intended purpose",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B adds within-level distributions, effectiveness feature, and text-length signal for slightly deeper analysis, though A is marginally more coherent.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

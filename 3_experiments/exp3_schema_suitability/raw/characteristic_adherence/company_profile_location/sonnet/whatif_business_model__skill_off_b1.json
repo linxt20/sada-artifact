@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "Current_Business_Model_Type",
+    "Service_Orientation_Score",
+    "Localization_Potential_Score",
+    "Regional_Fit_Impact_If_Service_Localized",
+    "Recommended_Region_Type_After_Shift"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.74,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.51,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.625,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Current_Business_Model_Type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A business-model categorization is a genuinely useful grouping axis for the query about shifting toward service/local models. However the dominant 'General' bucket (106 rows) is near-vacuous and undermines leverage, and it is often not well-grounded: Accel ('partner with founders') and Addepar ('performance reporting platform') are both labeled 'General' despite descriptions clearly supporting VC and Product/Platform respectively. Correct calls (280 Group=Service, 5AM=Investment/VC) show the extraction works when applied."
+      },
+      {
+        "name": "Service_Orientation_Score",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A continuous service-orientation axis directly supports the query. But values cluster heavily on 3.0/2.6 (near-constant defaults), reducing discriminative power, and several scores look like unjustified defaults rather than readings of text (23andme's product/report business scored 3.0 same as many others). 280 Group correctly high (4.5). Precision to one decimal implies more certainty than the terse text supports."
+      },
+      {
+        "name": "Localization_Potential_Score",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Localization potential is a relevant axis for regional-fit analysis. Heavy clustering on 3.0 suggests default filling. The 4.5 assigned to 23andme (a globally-shipped genetics product) is poorly grounded, as such a product has weak localization dependence. Some calls are defensible (5AM VC=1.2), but the numeric precision overstates confidence."
+      },
+      {
+        "name": "Regional_Fit_Impact_If_Service_Localized",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "This is essentially the target variable the query asks about, so it is highly useful for grouping outcomes. However it is largely a deterministic function of the two score columns rather than an independent reading, and specific verdicts (23andme='Significant Increase') rest on the weakly-grounded scores above. Categories are otherwise reasonable and defensible."
+      },
+      {
+        "name": "Recommended_Region_Type_After_Shift",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "An actionable region recommendation is the most directly query-relevant column and gives a strong grouping axis. But it frequently asserts specific geographies the source text does not support: naming 'Healthcare hubs (Boston, Houston)' for 23andme or 'Financial centers (NYC, Chicago)' for Addepar are confident specifics inferred from sector alone, not from anything in the terse profiles. Sector-to-region mappings are plausible but speculative, so groundedness is weak."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.5,
+    "rationale": "The added columns form a coherent, query-aligned pipeline: model type -> service/localization scores -> fit impact -> recommended region, giving analysts real axes to group and compare on. Usefulness is solid, though several columns are heavily default-clustered (large 'General' and 3.0/2.6 modes) which dilutes leverage, and the later columns are partly derived from the earlier ones. Groundedness is the weaker dimension: the terse descriptions rarely justify one-decimal scores or specific named metro/sector recommendations, and observed samples show mislabeled model types (Accel, Addepar) and confident geographic specifics unsupported by the text. Extraction is sound where the text is explicit (280 Group, 5AM Ventures) but frequently over-asserts where the source is silent."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "scope_indicator",
+    "assignment_lag",
+    "assigned_equals_closed_by",
+    "caller_type",
+    "assigned_agent"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4286,
+    "predictor_fraction": 0.7143,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.2857
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The type of incident (email, database, vpn, etc.) is knowable at intake and plausibly correlates with how long resolution takes; it lies outside the focus and carries genuine signal."
+      },
+      {
+        "name": "failure_mode",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The nature of the failure (connection failure vs service outage vs crash) is a diagnostic attribute available early and different modes tend to have different resolution durations. Legitimate predictor."
+      },
+      {
+        "name": "scope_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Breadth of impact (individual user vs department-wide vs server-side) plausibly drives effort and time to resolve; it is an independent characteristic, not a restatement of resolution_time."
+      },
+      {
+        "name": "assignment_lag",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A boolean about whether assignment was delayed is derived from timestamps within the incident lifecycle and is a temporal component overlapping the resolution interval; delay-in-assignment is effectively part of the elapsed time, so it leaks/restates the outcome duration."
+      },
+      {
+        "name": "assigned_equals_closed_by",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the assignee equals the closer is only knowable once the incident is closed (closed_by is populated at closure), i.e., after the outcome. Post-hoc information constitutes leakage."
+      },
+      {
+        "name": "caller_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the caller is a named end-user vs an ITIL/technical user is known at intake and may correlate with issue complexity and handling speed. Legitimate outside predictor."
+      },
+      {
+        "name": "assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Identity of the assigned agent is available once assigned (prior to resolution) and different agents/workloads plausibly carry predictive signal about resolution speed. It is not a function of resolution_time itself."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.6,
+    "rationale": "Five of the seven added columns are legitimate, pre-outcome predictors: semantic characterizations of the incident (incident_category, failure_mode, scope_indicator) derived from short_description add real signal beyond the raw priority/category fields, and caller_type and assigned_agent contribute additional outside variance. Two columns leak: assignment_lag is a temporal component of the resolution interval, and assigned_equals_closed_by depends on closure information available only after the outcome. As a set the predictors give moderate-to-good genuine leverage for modeling resolution_time, discounted by the two leaking columns."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

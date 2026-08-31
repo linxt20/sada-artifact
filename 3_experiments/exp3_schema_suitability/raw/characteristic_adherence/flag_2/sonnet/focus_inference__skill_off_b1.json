@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "problem_type",
+    "is_connectivity_issue",
+    "resolution_days"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.4833,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.5666,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorizing recurring incident types, giving a strong axis to group and count problems. Values are well-grounded in short_description (VPN, WiFi, Database, Internet all match). One minor concern: 'Email system not working' mapped to 'Email Client' is a slightly arbitrary specific where the text is ambiguous between client/server, but overall categorization is sound."
+      },
+      {
+        "name": "is_connectivity_issue",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A binary flag that is largely derivable from problem_type, making it partly redundant; it adds a coarse grouping axis but limited independent leverage. Groundedness is undermined by inconsistency: 'Cannot connect to database' (Database Access) is labeled false while VPN/WiFi/Internet are true, so the boundary is not consistently applied to what the text describes as connectivity."
+      },
+      {
+        "name": "resolution_days",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Entirely NULL (500/500), so it provides no analytical leverage and is near-constant. It is also not relevant to the 'types of problems' query. Not hallucinated since it defaults to null rather than inventing values, but the empty column offers nothing."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.72,
+    "rationale": "problem_type is a strong, directly-on-target column that meaningfully answers the recurring-problem-types query with well-grounded values. is_connectivity_issue is largely redundant with problem_type and applies its boundary inconsistently (database 'cannot connect' marked false). resolution_days is fully NULL, useless for this query, though not hallucinated. Overall the set is anchored by one excellent column with two weak additions; grounding is generally sound with minor inconsistency and no fabricated facts."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

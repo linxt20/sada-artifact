@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_aspect",
+    "has_complaint",
+    "comparison_mentions"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_aspect",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Directly answers the query by giving an aspect axis to group reviews on -- highly useful. However, groundedness is shaky: the categories skew toward physical-product aspects (quality/performance/design/comfort/packaging) that don't fit media/book/music reviews. Row AMZ-0001 (availability of a black doll, not product quality) and AMZ-0003 (an artist's emotional depth) are both labelled 'quality' as a catch-all, and AMZ-0002 (book content critique) also collapses to 'quality'. These are loose, not clearly warranted readings of the specific source text."
+      },
+      {
+        "name": "has_complaint",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A complaint flag gives a useful cross-cutting axis for the query, though it edges toward a generic sentiment flag. Groundedness is undermined by clear errors: AMZ-0003 is an entirely hostile put-down of the artist yet is marked 'no', and AMZ-0001 is a frustrated complaint about unavailability marked 'yes' correctly, but the inconsistency shows the values are not reliably read from text."
+      },
+      {
+        "name": "comparison_mentions",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Counting explicit comparisons to other products/works is a genuine new analytical axis relevant to what reviewers discuss. Values look well-grounded in the samples: AMZ-0005 references 'The Departed' and hot contemporary releases (=1), and rows without comparisons get 0. AMZ-0004 mentions 'the only one out there' which arguably implies a comparison but scoring 0 is defensible."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.62,
+    "rationale": "All three columns provide legitimate, non-redundant axes (aspect, complaint presence, comparison count) that genuinely help answer what reviewers are talking about, so analytical usefulness is strong. Groundedness is the weaker dimension: primary_aspect uses a physical-product taxonomy that misfits many media/book reviews and collapses distinct concerns into 'quality', and has_complaint shows at least one contradiction with the source text (AMZ-0003). comparison_mentions is the best-grounded of the three."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

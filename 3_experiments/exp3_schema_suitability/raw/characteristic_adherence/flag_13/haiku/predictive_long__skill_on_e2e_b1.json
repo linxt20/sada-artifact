@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals are linked to longer resolution duration values?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_type",
+    "infrastructure_target",
+    "assigned_technician",
+    "technician_handoff",
+    "caller_type",
+    "issue_scope",
+    "severity_signal",
+    "issue_complexity_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.625,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.5837,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6043,
+    "hallucination_rate": 0.625
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents by type gives a genuine grouping axis to compare resolution durations across issue kinds. Values are soundly derived from short_description in all samples."
+      },
+      {
+        "name": "infrastructure_target",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Well-grounded in the description text, but largely a near-restatement of incident_type (wifi->wifi_network, vpn->vpn, database->database), reducing its independent analytical leverage for this query."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Technician-level grouping could relate to resolution time, but this appears redundant with the existing closed_by/assigned_to columns. More seriously, values contradict the source: rows with closed_by 'Charlie Whitherspoon' and 'Luke Wilson' produced 'beth_anglin' and 'charlie_whitherspoon', indicating unsupported/invented assignments."
+      },
+      {
+        "name": "technician_handoff",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A handoff flag is a plausible signal for longer durations, but the samples give no textual basis (only opened_at, closed_by shown) for asserting True/False, and it depends on the unreliable assigned_technician; values look inferred without support."
+      },
+      {
+        "name": "caller_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Distinguishing named vs itil users is a reasonable grouping axis, but the source samples don't expose caller_id and the two VPN rows get different caller_types without visible justification, suggesting weakly grounded values."
+      },
+      {
+        "name": "issue_scope",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Scope (single_user vs building_wide) is a strong candidate driver of duration. However 'Printing issues in office' -> 'floor_specific' and VPN -> 'infrastructure_component' are confident specifics the text does not clearly warrant, indicating partial invention."
+      },
+      {
+        "name": "severity_signal",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean severity flag adds limited leverage and partly overlaps with the existing priority column. Values are plausible but the text basis is thin; no clear contradiction observed in samples."
+      },
+      {
+        "name": "issue_complexity_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Complexity is directly relevant to resolution duration and offers a good modeling axis. But low/medium/high assignments (e.g. VPN->medium, database->low) are confident gradations not clearly derivable from the short descriptions, so groundedness is moderate."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.55,
+    "rationale": "Several columns (incident_type, issue_scope, issue_complexity_signal) provide genuine new axes relevant to explaining resolution duration. However groundedness is uneven: assigned_technician directly contradicts the visible closed_by values, and technician_handoff, caller_type, issue_scope, and complexity include confident specifics the sampled source text does not support. A few columns (infrastructure_target, severity_signal) also add limited independent leverage due to redundancy with incident_type and priority."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

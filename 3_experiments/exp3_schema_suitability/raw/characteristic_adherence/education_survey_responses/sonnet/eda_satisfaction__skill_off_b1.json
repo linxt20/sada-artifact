@@ -1,0 +1,128 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "n_added_columns": 12,
+  "added_columns": [
+    "theme_tech_issues",
+    "theme_engagement",
+    "theme_disengagement",
+    "theme_hands_on_need",
+    "theme_teacher_quality",
+    "theme_equity_concern",
+    "theme_flexible_learning",
+    "theme_social_connection",
+    "theme_new_opportunity",
+    "theme_outcomes_positive",
+    "theme_outcomes_negative",
+    "open_response_sentiment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 12,
+    "n_judged_columns": 12,
+    "analytical_usefulness": 0.7417,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.6917,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7167,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "theme_tech_issues",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A genuine thematic axis for the query. But ED-0001 (camera freezes, whiteboard won't load) is a clear tech-issue that was coded 0, revealing miss-classification, though other rows (ED-0003) are correctly grounded."
+      },
+      {
+        "name": "theme_engagement",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Strong analytical axis. Codings in ED-0002/0004 are well-supported by the source text; consistent and warranted."
+      },
+      {
+        "name": "theme_disengagement",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful contrast axis to engagement. ED-0005 (cameras off, silent chat) correctly coded 1; sound reading."
+      },
+      {
+        "name": "theme_hands_on_need",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Potentially useful theme, but grounding is weak: ED-0001 coded 1 with no hands-on content in the text (invented), while ED-0002's kitchen-chemistry hands-on content was coded 0. Inconsistent and partly unsupported."
+      },
+      {
+        "name": "theme_teacher_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Reasonable axis for the query, but ED-0002 coded 1 from a teacher's self-description of creativity is a shaky inference of 'teacher quality'; borderline over-reading."
+      },
+      {
+        "name": "theme_equity_concern",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A relevant distinct theme; rare (11/250) but not near-constant to the point of uselessness. No sampled contradictions, though no positive sample to fully verify."
+      },
+      {
+        "name": "theme_flexible_learning",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Meaningful axis. ED-0004 (pause/take notes at own pace) correctly coded 1; well grounded."
+      },
+      {
+        "name": "theme_social_connection",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Strong axis for satisfaction analysis. ED-0001 ('miss raising hand') and ED-0003 ('zero peer interaction') coded 1 are defensible readings."
+      },
+      {
+        "name": "theme_new_opportunity",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A plausible distinct theme; rare but adds an axis. No sampled evidence contradicts it, though verification is limited."
+      },
+      {
+        "name": "theme_outcomes_positive",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to linking themes with satisfaction. No contradictions in samples."
+      },
+      {
+        "name": "theme_outcomes_negative",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Relevant outcome axis. ED-0003 (child cries, parents redo worksheets) coded 1 is well supported."
+      },
+      {
+        "name": "open_response_sentiment",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Near-constant (227/250 neutral) and largely redundant with satisfaction_1to5. Grounding is poor: ED-0001 (clearly negative) and ED-0004 ('I actually love') both mislabeled 'neutral', contradicting the text."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.68,
+    "rationale": "The theme flags collectively give strong, distinct analytical axes for relating open-response content to satisfaction across role/grade/subject, which is exactly what the query needs. Groundedness is generally sound (ED-0003, ED-0004, ED-0005 well coded) but uneven: theme_hands_on_need shows an invented positive and a missed positive, theme_tech_issues misses an obvious tech complaint, and theme_teacher_quality over-reads. The sentiment column is the weakest, being near-constant, redundant with the existing satisfaction score, and demonstrably mislabeling clearly positive/negative rows as neutral. Overall the added set is useful with moderate, mixed grounding."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 12
+}

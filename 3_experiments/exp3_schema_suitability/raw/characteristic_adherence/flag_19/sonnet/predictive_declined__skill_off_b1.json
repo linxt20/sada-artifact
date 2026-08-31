@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an expense will be declined?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "missing_source_id",
+    "missing_processed_date",
+    "high_risk_dept_category",
+    "high_risk_user",
+    "decline_risk_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.58,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.67,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.625,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A missingness flag on source_id is a plausible data-quality signal for decline risk and gives a groupable axis. Values are directly derivable from presence/absence of source_id, so groundedness is high. Usefulness is moderate: it is a generic missingness flag whose link to declines is speculative rather than established."
+      },
+      {
+        "name": "missing_processed_date",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Flag matches the 'nan' processed_date rows exactly in the samples, so values are fully grounded. An unprocessed/missing date is a reasonable correlate of an expense not yet approved or declined, giving genuine analytical leverage."
+      },
+      {
+        "name": "high_risk_dept_category",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Grouping by risky dept/category combinations is a legitimate analytical axis. However the labelling rule is opaque and the sample assignment looks unwarranted: a 'Miscellaneous hardware component' row is flagged 1 while clearer rows are 0, with no visible department/category evidence in the sample text supporting the specific risk designation. The 'high risk' judgement asserts more than the source clearly supports."
+      },
+      {
+        "name": "high_risk_user",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Flagging historically risky users would be useful, but the flag requires user-level history/evidence not present in the per-row source text, and the one flagged sample ('Miscellaneous hardware component') offers no visible justification. The specific risk designation appears asserted rather than grounded."
+      },
+      {
+        "name": "decline_risk_score",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A composite ordinal score is directly on-point for ranking and modelling decline likelihood, a strong new axis for the query. Groundedness is mixed: it appears to be a sum of the component flags (consistent with samples), so it inherits the questionable groundedness of the high_risk_* components but does not add new invented facts on its own."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.62,
+    "rationale": "The added columns provide relevant new axes for the decline-risk query: missingness flags and a composite risk score are genuinely useful for grouping and modelling. The two missingness flags are well grounded in the source text. The high_risk_dept_category and high_risk_user columns are weaker on groundedness, applying opaque 'high risk' labels that the per-row evidence does not clearly justify (a nondescript 'Miscellaneous hardware component' row is flagged high risk on both). The composite score inherits this but adds no independent hallucination. Overall the set is moderately useful and moderately grounded."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

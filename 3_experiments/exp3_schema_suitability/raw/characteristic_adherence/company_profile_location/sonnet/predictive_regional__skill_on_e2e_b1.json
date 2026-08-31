@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What company traits explain regional clustering?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "industry_sector",
+    "company_type",
+    "primary_tech_domain",
+    "deployment_model",
+    "customer_segment",
+    "product_vs_service_orientation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8083,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.7917,
+    "source_groundedness__table_level": 0.79,
+    "b1_overall": 0.8,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Sector gives a strong axis to correlate with geographic clustering. Samples map well (life-science VC, fintech, healthtech). One minor stretch: 280 Group (a product-management training firm) as enterprise_software, but defensible."
+      },
+      {
+        "name": "company_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Stage/type is a genuinely useful clustering trait. However groundedness suffers: descriptions rarely state funding stage or public status, yet 23andMe is confidently 'large_enterprise_public' and 280 Group 'growth_stage_company' with no textual support—these are asserted specifics on largely silent text."
+      },
+      {
+        "name": "primary_tech_domain",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a technology axis distinct from sector. Values track the text reasonably and VC firms correctly get Unknown. Some overlap with industry_sector but still additive."
+      },
+      {
+        "name": "deployment_model",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Potentially useful but heavily dominated by cloud_saas (128), reducing discriminative power. Values like Addepar/23andMe as cloud_saas are inferred but rarely explicit in the text; groundedness is partial."
+      },
+      {
+        "name": "customer_segment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "B2B/B2C/investor segmentation is a solid clustering trait and maps cleanly to the samples (VC->investor_lp, 23andMe->consumer_b2c, Addepar->enterprise_b2b)."
+      },
+      {
+        "name": "product_vs_service_orientation",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes product/hardware/services/platform—a useful axis. Mostly well grounded (280 Group->consulting, VC->Unknown), though 23andMe as platform_marketplace over product is a mild misread."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.79,
+    "rationale": "The added columns provide several genuinely distinct axes (sector, company type, tech domain, customer segment, orientation) that an analyst could group regional clusters on—strong usefulness with only modest redundancy (sector vs tech_domain, deployment skewed to cloud_saas). Groundedness is generally sound with appropriate Unknown/not_present for silent rows, but company_type asserts unsupported specifics (public/stage) and deployment_model infers cloud beyond what text states, introducing some hallucination."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_regional",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

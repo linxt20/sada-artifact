@@ -1,0 +1,75 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "writing_script_complaint",
+    "complaint_severity",
+    "genre_expectation_mismatch"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.3,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.3,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "writing_script_complaint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Captures a category of audience complaint (weak screenplay, bad dialogue, etc.). The query explicitly targets addressing 'the most common audience complaints', so this is the intervenable lever -- a filmmaker could revise the script. It is the treatment implied by the query."
+      },
+      {
+        "name": "complaint_severity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Severity is a downstream intensity of the complaint itself, on the pathway from complaint to sentiment, not a common cause of both treatment and outcome. It functions as a mediator/dose measure rather than a confounder."
+      },
+      {
+        "name": "genre_expectation_mismatch",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Genre expectation mismatch can drive both whether audiences complain (about writing) and their sentiment, making it a plausible common cause. It was not named in the query, so it demonstrates the capability under test -- though genre is arguably closer to an outcome-affecting attribute than a clean confounder of the writing lever."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "writing_script_complaint"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "genre_expectation_mismatch",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.3,
+    "rationale": "The added columns identify an intervenable treatment: the presence/type of writing-script complaint is something a filmmaker could actually change by revising the script, and the query's 'address the most common complaints' frames exactly this intervention. However, the confounder structure is weak. complaint_severity is a mediator/dose of the complaint, not a common cause of both treatment and outcome, so it does not adjust for confounding. genre_expectation_mismatch is the only column plausibly acting as a common cause of both complaining and sentiment, and it was not named in the query -- but its status is ambiguous (it may itself be an alternative treatment/complaint dimension rather than a clean confounder). No clearly unnamed confounders such as production budget, reviewer disposition, or film reputation are captured. Thus the treatment is intervenable and present, but the interventional identification is under-supported by the confounder set."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

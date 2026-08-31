@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_travel_related",
+    "expense_purpose",
+    "asset_category",
+    "deployment_scope",
+    "asset_cost_tier",
+    "processing_delay"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.675,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.5083,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.5917,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_travel_related",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.3,
+        "rationale": "For a travel-expense query, a travel flag is a natural axis. But the sampled rows are all hardware/cloud asset entries labeled False, and none of the source texts mention travel at all. The underlying records appear to be IT asset provisioning, not travel expenses, so the flag's True labels (147) are of dubious grounding. The concept is useful but grounding is weak.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "expense_purpose",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "A purpose categorization gives a real grouping axis. Values map soundly to source text: 'Procurement of new hardware asset' + Dell Latitude -> hardware_acquisition; 'Newly implemented cloud service' + AWS EC2 -> cloud_infrastructure. Well grounded in short_description and ci.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "rationale": "Useful finer categorization. However grounding shows errors: 'Dell OptiPlex 7070 Desktop' is labeled hardware_laptop rather than hardware_desktop, a clear misread of the ci text. Latitude->laptop is correct. Mixed reliability.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "deployment_scope",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.4,
+        "rationale": "Plausible analytical axis, but values like 'department_specific' for individual laptop entries are asserted without clear textual support; the source text does not indicate deployment scope. Cloud->external_service is reasonable. Largely inferred beyond evidence.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "asset_cost_tier",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "rationale": "Cost tiering is analytically valuable, especially since an amount column exists. But the 'likely_' values appear inferred from model type rather than the available amount field, and specific tiers (mid_value for laptops) are speculative confident assertions not clearly warranted by the text.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "processing_delay",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "rationale": "Delay between opened_at and processed_date is a genuinely useful operational axis. NULL/Unknown for a nan processed_date is correct behaviour. However with only processed_date shown, week_delay/next_day categorizations cannot be verified against opened_at, and one sample gives a specific delay that is unverifiable here.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.5,
+    "rationale": "The added columns offer several genuine analytical axes (purpose, category, cost tier, processing delay) beyond the originals, so usefulness is moderately high. Groundedness is undermined by a mismatch between the stated travel-expense framing and the actual IT-asset content, plus specific hallucinations: an OptiPlex Desktop labeled hardware_laptop, and confident deployment_scope/cost_tier assertions not supported by source text. Silent-row handling (Unknown for nan dates) is correct and not penalized."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

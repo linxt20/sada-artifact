@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What company traits explain regional clustering?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_market_sector",
+    "core_technology_infrastructure",
+    "operational_delivery_model",
+    "company_maturity_and_scale",
+    "primary_customer_segment"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.78,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.78,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "primary_market_sector",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated industry categories (enterprise_software, cybersecurity, healthcare, etc.) that can be segmented and cross-tabulated against regional clusters to reveal sector-driven geographic concentration."
+      },
+      {
+        "name": "core_technology_infrastructure",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Technology-domain categories are external and associational to region; useful for exploring whether tech specializations (cloud, fintech, semiconductors) cluster geographically. The large 'other_tech' bucket (67) somewhat weakens separation but categories remain interpretable."
+      },
+      {
+        "name": "operational_delivery_model",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct business-model categories (SaaS, hardware_manufacturing, venture_investing) support grouping against region, though SaaS dominance (136) makes it somewhat skewed and near-constant for the majority class."
+      },
+      {
+        "name": "company_maturity_and_scale",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal-like, interpretable maturity tiers (early_stage, late_stage, publicly_traded) are a classic external trait to segment by and compare against regional clustering (e.g., startups vs. established firms by region)."
+      },
+      {
+        "name": "primary_customer_segment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear B2B/B2C/institutional segmentation offers an interpretable associational axis to compare against region, though the enterprise_b2b class (132) heavily dominates, limiting variation."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.78,
+    "rationale": "All five added columns are genuine external 'company traits' with interpretable, human-readable categories that can each be grouped and cross-tabulated against the regional_cluster focus, directly serving the query about which traits explain regional clustering. None merely restate the focus, and none are opaque scores. The main weakness is class imbalance: several columns are dominated by a single value (saas_cloud_platform 136, enterprise_b2b 132, late_stage_venture 101) and one relies on a large 'other_tech' catch-all, which reduces the discriminating power of the minority categories for cross-regional comparison. Still, the set as a whole provides multiple well-separated, interpretable axes for exploratory relationship discovery."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_regional",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

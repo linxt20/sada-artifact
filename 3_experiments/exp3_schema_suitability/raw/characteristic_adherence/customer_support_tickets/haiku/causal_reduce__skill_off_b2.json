@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can support teams reduce ticket resolution time?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "issue_category",
+    "technical_complexity",
+    "resolution_efficiency_index"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of issue (Technical, Billing, Feature Request) is an intrinsic property of the ticket, not something a support team can set or decide. It plausibly influences both which handling approach/agent is applied and the resolution time, so it functions as a confounder rather than a treatment. It is not named in the query."
+      },
+      {
+        "name": "technical_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity is a fixed characteristic of the underlying problem, not an intervenable lever a team can set. It affects both staffing/routing choices and resolution time, making it a common cause (confounder). Not named in the query."
+      },
+      {
+        "name": "resolution_efficiency_index",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "This is a derived ratio computed from resolution time itself (efficiency = expected/actual or similar). It is a function of the outcome, not an independent treatment or a pre-treatment common cause. It cannot be intervened upon and effectively re-encodes the outcome, so it serves neither as a valid treatment nor a legitimate confounder."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "treatment_intervenable": false,
+    "confounders": [
+      {
+        "name": "issue_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "technical_complexity",
+        "named_in_query": false,
+        "plausibility": 0.75
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The query poses an explicit interventional / what-if question: how can support teams ACT to reduce resolution time. This demands at least one intervenable treatment lever (e.g. staffing level, routing policy, escalation rules, automation, SLA assignment, training). None of the added columns provide such a settable lever. issue_category and technical_complexity are immutable characteristics of the ticket, not decisions a team can make; they are plausible (unnamed) confounders but cannot answer the what-if. resolution_efficiency_index is derived from the outcome itself and is not a valid treatment or confounder. Because there is NO intervenable treatment, the interventional claim under test is not realised despite two reasonable confounders being introduced."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

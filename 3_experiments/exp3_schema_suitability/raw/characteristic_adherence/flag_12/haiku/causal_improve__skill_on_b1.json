@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we improve incident resolution efficiency?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "problem_severity_class",
+    "resolution_mechanism",
+    "assigned_technician",
+    "repeat_incident_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.7,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.675,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Provides a clean grouping axis derived from short_description that supports comparing resolution efficiency across categories. Values (printer, network, database) are sound readings of the source text. Some overlap with the original 'category' column, but the derived taxonomy from free text adds leverage."
+      },
+      {
+        "name": "problem_severity_class",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A useful new axis characterizing the nature of the problem (functional_failure vs connection_issue), enabling grouping for efficiency analysis. Values align reasonably with the descriptions; label 'severity' is a slight misnomer (it's more failure-type than severity), but readings are warranted from text."
+      },
+      {
+        "name": "resolution_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Directly relevant to improving resolution efficiency by grouping on how incidents were fixed. However, the source text (short description of the problem) does not describe the resolution taken; assigning 'hardware_replacement' to 'Printer not working properly' is an inference not supported by the provided text, so groundedness is weaker."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Nearly redundant with the existing 'assigned_to'/'closed_by' original columns, so adds little new analytical leverage. Values look like plausible person names but the sampled source text shows no such field, making derivability unclear; likely copied from an existing column."
+      },
+      {
+        "name": "repeat_incident_pattern",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A repeat-incident flag would be genuinely useful for efficiency analysis. But the boolean is not derivable from a single row's short_description; the near 50/50 split and inconsistent labeling (e.g. same 'printer not working' text yields True while a database connect yields False) suggest the value is not soundly grounded in the presented evidence."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.65,
+    "rationale": "Most added columns give genuine grouping/comparison axes relevant to improving incident resolution efficiency, particularly incident_category, problem_severity_class, and resolution_mechanism. Groundedness is mixed: category and severity are sound readings of the short_description, but resolution_mechanism and especially repeat_incident_pattern assert facts (how it was fixed, whether it recurs) not supported by the single-row source text, and assigned_technician appears redundant with existing columns."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

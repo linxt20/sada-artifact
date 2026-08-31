@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "Low_Value_For_Money",
+    "Mentions_Seat_Issue",
+    "Mentions_Service_Complaint",
+    "Mentions_Price_Complaint",
+    "Mentions_Delay_Or_Disruption",
+    "Avg_Service_Rating",
+    "Overall_Vs_Service_Gap"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6357,
+    "analytical_usefulness__table_level": 0.64,
+    "source_groundedness": 0.6214,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6285,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Low_Value_For_Money",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A binary flag on value-for-money is relevant to explaining non-recommendation, but it is largely redundant with the existing 'Value For Money' original column, reducing its added leverage. Sample groundings are defensible (the $2300 upgrade with a broken seat plausibly flagged 'yes')."
+      },
+      {
+        "name": "Mentions_Seat_Issue",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Conceptually a useful axis for a Business-Class recommendation analysis. However the values are badly miscalibrated: the 'remarkable experience' review ('Seat very good, leg space and incredible service') is marked yes, and the 'can't get it any better' review ('seat comfort outstanding') is also marked yes. These directly contradict the source text, indicating the flag does not reliably read the text."
+      },
+      {
+        "name": "Mentions_Service_Complaint",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "Service complaints are highly relevant to non-recommendation. But the 'remarkable experience' review (all cabin crew kind/professional, no complaint) is marked yes, contradicting the text. The Frankfurt/Melbourne QSuite 'nothing but praises' review is correctly no, so behaviour is inconsistent and often unsupported."
+      },
+      {
+        "name": "Mentions_Price_Complaint",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct from generic value-for-money; captures explicit pricing/fee grievances (the $1500 middle-name fee, $2300 upgrade) which is a genuine analytical axis. Sample values align well with source text."
+      },
+      {
+        "name": "Mentions_Delay_Or_Disruption",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Delays/disruptions are a plausible driver of non-recommendation and a new grouping axis. The Auckland-Doha review (long wait for steps, 10-15 min bus) is correctly flagged yes; the others correctly no. Well grounded on samples."
+      },
+      {
+        "name": "Avg_Service_Rating",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "An aggregate of the numeric rating sub-scores gives a useful continuous axis to correlate with Recommended. Values are derivable from the existing rating columns, though the '1.2' for a review with only a seat problem and the '5.0' outputs suggest the averaging basis is somewhat opaque."
+      },
+      {
+        "name": "Overall_Vs_Service_Gap",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "The gap between overall rating and service rating is a genuine analytical construct that can surface reviews where non-service factors (price, disruption) drove a low overall/non-recommendation. Derivable from numeric columns, though the negative-gap rows (e.g. -0.4 for the lost-bag review) are plausible but the exact derivation is unclear."
+      }
+    ],
+    "analytical_usefulness": 0.64,
+    "source_groundedness": 0.55,
+    "rationale": "The column set provides several genuine analytical axes for the query (price complaints, disruption, service-vs-overall gap, aggregate ratings), largely non-trivial and relevant to why Business-Class flights are not recommended. The main weakness is groundedness: the two 'Mentions' text-flag columns for seat issues and service complaints repeatedly assign 'yes' to clearly positive reviews ('remarkable experience', 'can't get it any better'), contradicting the source text and indicating unreliable extraction. Numeric-derived columns are more soundly grounded, and reasonable 'no' values are correct behaviour, but the observed contradictions pull the table-level groundedness down."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

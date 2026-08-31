@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "decline_reason_flags",
+    "compliance_risk_level",
+    "compliance_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8567,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.7284,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "decline_reason_flags",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Directly targets the query by enumerating specific decline reasons/compliance risks (missing source reference, exceeds threshold, out-of-policy travel, etc.), giving a rich multi-label axis to group and analyze declined expenses. However, groundedness is uncertain: the sampled rows are all non-declined and correctly NULL, so no positive evidence confirms the flags are sound readings of source text. The pervasive 'no_processing_record' flag appears derivable from missing processed_date, but reasons like 'potential_policy_violation_luxury_travel' or 'exceeds_standard_threshold' imply thresholds/policies not clearly present in shown source fields, suggesting some inferred specifics beyond the visible text."
+      },
+      {
+        "name": "compliance_risk_level",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A Low/Medium/High ordinal severity axis is a legitimate new dimension for prioritizing declined expenses and complements the reason flags. It is somewhat derived (a summarization of the flags) but still adds ranking leverage. Silent rows are correctly NULL. Groundedness cannot be strongly confirmed from the provided samples, and the severity mapping relies on inferred thresholds not fully visible in source text, so a moderate score."
+      },
+      {
+        "name": "compliance_category",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Groups declines into thematic buckets (Documentation Gap, Authorization Control, Policy Violation) that map cleanly to the query's 'compliance risks' framing, enabling useful aggregation. It is partly a coarser restatement of decline_reason_flags but still offers a cleaner grouping axis. NULLs on non-declined rows are appropriate; categorization appears a reasonable reading of the flag content, hence moderate-to-good groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.6,
+    "rationale": "All three columns are squarely on-target for a query about reasons and compliance risks in declined expenses, providing complementary axes: granular multi-label reasons, an ordinal risk severity, and a thematic category. They are correlated (severity and category largely summarize the reason flags) but each still offers a distinct grouping/ranking lens rather than trivial redundancy. Groundedness is only moderately supported: silent non-declined rows are correctly left NULL, which is proper behavior, but every provided row_evidence_sample is a NULL case, so there is no positive confirmation that the populated flags/levels/categories are sound readings of source text. Some specific labels (luxury travel policy violation, exceeds standard threshold, out-of-policy department) imply thresholds/policies not clearly present in the visible source fields, indicating possible inferred specifics that lower confidence."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary by agent and issue type?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_hours",
+    "agent_avg_resolution_hours",
+    "category_avg_resolution_hours",
+    "agent_category_avg_resolution_hours"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8875,
+    "analytical_usefulness__table_level": 0.89,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.8438,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "The core metric the query is about; per-incident duration is exactly the right axis for comparing agents and issue types. However, groundedness is shaky: the row samples expose only opened_at implicitly plus identical sys_updated_on/closed_at timestamps, yet produced values like 286.79 or 348.57 hours cannot be derived from the shown source snippets (closed_at equals sys_updated_on). The value must come from opened_at-to-closed_at, which is plausible from the full schema, but the evidence samples do not corroborate the specific figures, and a 22-row NULL rate suggests missing derivations."
+      },
+      {
+        "name": "agent_avg_resolution_hours",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A per-agent average directly serves the 'by agent' half of the query, giving a clean grouping axis. It is a deterministic aggregate of resolution_hours over assigned_to, so it is well grounded given the source columns; only mild redundancy with what a groupby would compute keeps usefulness below top."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Per-category average serves the 'by issue type' half of the query. It is a straightforward aggregate over the existing category column and resolution_hours, so it is sound; slight redundancy with a native groupby limits it."
+      },
+      {
+        "name": "agent_category_avg_resolution_hours",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "The agent-by-category interaction average is the most on-target column for 'how resolution time varies by agent AND issue type,' offering the joint grouping the query explicitly calls for. It is a warranted aggregate of derivable values."
+      }
+    ],
+    "analytical_usefulness": 0.89,
+    "source_groundedness": 0.8,
+    "rationale": "All four columns target exactly the axes the query asks about: a per-incident resolution duration plus agent, category, and agent-by-category rollups. Together they provide genuine analytical leverage for the comparison. Groundedness is generally strong because the aggregates derive deterministically from resolution_hours over existing category/assigned_to columns; the main weakness is resolution_hours itself, whose specific per-row values are not corroborated by the evidence samples (identical closed_at/sys_updated_on timestamps and a high NULL count), indicating some values may not be soundly derivable from the shown source text."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

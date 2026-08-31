@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "performance_vs_advertised_spec",
+    "content_quality_aspect",
+    "expectation_gap_direction",
+    "intended_use_fit",
+    "reviewer_emotional_intensity",
+    "recommendation_stance"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7167,
+    "analytical_usefulness__table_level": 0.74,
+    "source_groundedness": 0.7183,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.7175,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "performance_vs_advertised_spec",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A meaningful axis for complaints (misrepresentation, falling short). But it requires an advertised spec that most reviews lack; 'not_present' dominates (142), and applying 'meets_spec' to reviews like AMZ-0004/0005 that make no reference to any advertised specification is a mild over-reading. Values are otherwise defensible when a spec is discussed."
+      },
+      {
+        "name": "content_quality_aspect",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Genuine grouping axis for media reviews (writing, production, pacing). Values track the text well: AMZ-0002 correctly tagged plot_story_writing. 'not_present' for non-media items (doll, cream) is correct silent behaviour. Reasonable groundedness."
+      },
+      {
+        "name": "expectation_gap_direction",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Directly on-query: whether products met/exceeded/fell short of expectations is a strong driver of praise vs complaint. Values align with text (AMZ-0001 fell_short, AMZ-0004 pleasantly_exceeded). AMZ-0005 'met_expectations' is a slightly conservative but sound reading of a strongly positive review."
+      },
+      {
+        "name": "intended_use_fit",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "Useful fit-for-purpose axis. But some values overreach: AMZ-0002 'partial_fit_conditional' is a strained mapping of a book-quality complaint, and AMZ-0001's doll-availability complaint isn't really 'wrong_for_use_case'. The frame is imposed on reviews that don't discuss a use case, weakening groundedness."
+      },
+      {
+        "name": "reviewer_emotional_intensity",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.62,
+        "hallucination_observed": false,
+        "rationale": "A tone-intensity scale can help model why reviews are emphatic, but it is a fairly generic affect measure and highly subjective. Values are plausible but not verifiable from text; the ranking is a judgment call rather than a clear reading, so leverage and groundedness are moderate."
+      },
+      {
+        "name": "recommendation_stance",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Strong, clearly-grounded axis: explicit recommend / do-not-recommend / conditional / none. Values match text well (AMZ-0002 'not enough to make me recommend it' -> do_not_recommend; AMZ-0004/0005 recommend). Directly relevant to praise vs complaint drivers."
+      }
+    ],
+    "analytical_usefulness": 0.74,
+    "source_groundedness": 0.73,
+    "rationale": "The added columns provide several genuine, non-redundant axes (expectation gap, recommendation stance, content quality aspect, fit-for-purpose) that directly serve the query about drivers of praise and complaints. Groundedness is generally sound, with correct 'not_present' handling for silent rows. The main weaknesses are the spec- and use-case-oriented columns imposing frames on reviews that lack them (occasional over-reading), and the emotional-intensity scale being generic and subjective. No systematic invention of facts, but a few mild over-confident mappings lower groundedness slightly."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

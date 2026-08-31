@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "focus_variable": "product_score_outcome",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "taste_flavor_quality",
+    "palatability_acceptance",
+    "repeat_purchase_intent",
+    "product_category",
+    "use_context"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "product_score_outcome",
+    "per_column": [
+      {
+        "name": "taste_flavor_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "An observed, actionable attribute of the product (flavor quality) whose effect on the review score is being attributed. A plausible candidate cause of the score."
+      },
+      {
+        "name": "palatability_acceptance",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Acceptance/palatability is downstream of taste quality and sits on the path to satisfaction/score; treating it as a cause of the score alongside taste risks over-controlling a mediator rather than a common cause."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Repeat-purchase intent is a consequence of both taste and score (a downstream effect), not a common cause; conditioning on it would induce bias."
+      },
+      {
+        "name": "product_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category (coffee/tea vs pet food vs baby food) plausibly shifts both which flavor profiles occur/are rated highly (treatment) and baseline scoring behavior (outcome), so it is a genuine common cause that must be adjusted for."
+      },
+      {
+        "name": "use_context",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Use context (daily use, gifting, medical/dietary, pet feeding) plausibly affects both the flavor experience/expectation (treatment) and how harshly the product is scored (outcome), acting as a common cause not on the causal path."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "taste_flavor_quality"
+    ],
+    "confounders": [
+      {
+        "name": "product_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "use_context",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The set does set up a causal estimation: taste_flavor_quality is a clear observed treatment (candidate cause of the score), and two variables — product_category and use_context — are genuine surfaced confounders (common causes of both which flavor profiles/quality arise and how products are scored), neither named nor implied in the generic query, satisfying the decisive test. However confounder quality is only moderate because two of the five added columns are misassigned causal roles: palatability_acceptance is a mediator on the taste→score path and repeat_purchase_intent is a downstream collider; adjusting for these would bias rather than de-bias the attribution. The presence of real, non-query-derived confounders demonstrates the capability, but the inclusion of a mediator and a collider lowers overall quality."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

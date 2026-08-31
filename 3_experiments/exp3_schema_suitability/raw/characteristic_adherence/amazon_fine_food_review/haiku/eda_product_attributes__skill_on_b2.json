@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "focus_variable": "satisfaction_score",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "taste_quality",
+    "product_quality_assessment",
+    "freshness_delivery_condition",
+    "ingredient_quality_naturalness",
+    "value_for_money_perception",
+    "product_consistency_reliability",
+    "competitive_product_standing",
+    "repeat_purchase_intent"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.54,
+    "predictor_fraction": 0.75,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_score",
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear ordinal categories (excellent/good/acceptable/poor) describing a specific product attribute; well-separated and segmentable against satisfaction."
+      },
+      {
+        "name": "product_quality_assessment",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "A generic overall quality assessment is essentially a proxy/restatement of satisfaction itself rather than an external product attribute, so it risks trivial correlation."
+      },
+      {
+        "name": "freshness_delivery_condition",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories (fresh/damaged/stale) capturing a distinct delivery/condition attribute; segmentable, though ~39% NULL weakens coverage."
+      },
+      {
+        "name": "ingredient_quality_naturalness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct attribute about naturalness/health concerns with well-separated categories that can be compared against satisfaction."
+      },
+      {
+        "name": "value_for_money_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Price-value dimension with clear ordered categories; a classic, interpretable driver to segment satisfaction on and distinct from the focus."
+      },
+      {
+        "name": "product_consistency_reliability",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Consistency/reliability attribute with graded categories; interpretable and distinct from overall satisfaction."
+      },
+      {
+        "name": "competitive_product_standing",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Relative positioning against competitors with clear categories; an external associational variable segmentable against satisfaction."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Repeat-purchase intent is an outcome/consequence of satisfaction, not a product attribute; correlating it with satisfaction is near-tautological rather than explanatory."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.72,
+    "rationale": "Most added columns are genuine, interpretable product-attribute dimensions (taste, freshness, ingredients, value, consistency, competitive standing) with well-separated categorical scales that a human can segment on and compare against satisfaction, directly serving the query about attributes associated with satisfaction. Two columns weaken the set: product_quality_assessment is an overall quality proxy that largely restates satisfaction, and repeat_purchase_intent is a downstream outcome rather than an attribute, so both invite trivial/tautological correlations. Some columns carry substantial NULL rates (freshness ~39%, value/ingredients/consistency ~10-15%), reducing comparison power but not eliminating it. Overall this is a strong, human-interpretable EDA schema with a couple of restatement-type inclusions."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

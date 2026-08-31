@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "focus_variable": "audience_praise_and_complaints",
+  "concept": "audience_praise_and_complaints",
+  "n_added_columns": 6,
+  "added_columns": [
+    "praise_terms",
+    "complaint_terms",
+    "sentiment_polarity",
+    "praise_terms.1",
+    "complaint_terms.1",
+    "sentiment_polarity.1"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1236,
+    "facet_fraction": 0.3333,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.25,
+    "exhaustiveness": 0.55,
+    "mece": 0.3708,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "audience_praise_and_complaints",
+    "per_column": [
+      {
+        "name": "praise_terms",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Praise is a direct constitutive half of 'praise and complaints'; captures the positive-evaluation aspect of the concept."
+      },
+      {
+        "name": "complaint_terms",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Complaints are the other constitutive half of the concept; captures the negative-evaluation aspect."
+      },
+      {
+        "name": "sentiment_polarity",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Overall polarity (positive/mixed/negative) restates the whole praise-vs-complaint balance rather than isolating a distinct aspect; it is a summary of the two facets, not a separate part."
+      },
+      {
+        "name": "praise_terms.1",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Exact duplicate of praise_terms; adds no distinct facet and overlaps completely with the existing praise facet."
+      },
+      {
+        "name": "complaint_terms.1",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Exact duplicate of complaint_terms; redundant with the existing complaint facet."
+      },
+      {
+        "name": "sentiment_polarity.1",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Duplicate of sentiment_polarity; again a summary restatement, not a distinct facet."
+      }
+    ],
+    "facet_columns": [
+      "praise_terms",
+      "complaint_terms"
+    ],
+    "non_facet_columns": [
+      "sentiment_polarity",
+      "praise_terms.1",
+      "complaint_terms.1",
+      "sentiment_polarity.1"
+    ],
+    "mutual_exclusivity": 0.25,
+    "exhaustiveness": 0.55,
+    "rationale": "Only two genuine facets exist (praise_terms, complaint_terms), which correctly carve the concept into its two constitutive halves. However the set is badly compromised: three columns (praise_terms.1, complaint_terms.1, sentiment_polarity.1) are exact duplicates and sentiment_polarity is a summary restatement of the praise/complaint balance rather than a separate aspect. The heavy duplication and overlap crush mutual exclusivity. On exhaustiveness, praise and complaint terms cover the two poles but omit finer constitutive sub-facets (e.g., which target of praise/complaint: acting, plot, direction, pacing), so coverage of the concept's internal structure is only moderate."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

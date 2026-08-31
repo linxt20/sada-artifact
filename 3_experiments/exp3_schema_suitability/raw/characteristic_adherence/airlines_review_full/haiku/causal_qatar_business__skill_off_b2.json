@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "rating_consistency",
+    "value_perception",
+    "service_gap",
+    "experience_score",
+    "issue_type"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome (Recommended = no)",
+    "per_column": [
+      {
+        "name": "rating_consistency",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A descriptive summary of dispersion across the existing sub-ratings (High/Moderate/Consistent variance). It is neither a distinct candidate cause of non-recommendation nor a common cause of any treatment and the outcome; it is a derived meta-feature of the same ratings that largely determine recommendation. Not a confounder."
+      },
+      {
+        "name": "value_perception",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of the outcome: poor/premium-price-complaint value plausibly drives a non-recommendation. Derived from Value For Money plus review text. This is one of the treatments whose effect is being attributed, not a confounder (it is not shown to cause any other treatment)."
+      },
+      {
+        "name": "service_gap",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Identifies which service dimension was weak (food/seat/IFE/staff/multiple). This is a direct candidate cause of non-recommendation surfaced from the sub-ratings. It functions as a treatment, not a confounder or mediator of another treatment."
+      },
+      {
+        "name": "experience_score",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A numeric composite/average of the sub-ratings, i.e. an aggregate proxy for overall satisfaction sitting on the causal path between the specific experience factors and the recommendation decision. Adjusting for it would block the very effects being attributed; it is a mediator/proxy, not a confounder."
+      },
+      {
+        "name": "issue_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Categorises the primary complaint (operational/ground/compensation/product-quality) extracted from review text. A candidate cause of non-recommendation, hence a treatment. It is not a common cause of another treatment and the outcome, so not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "value_perception",
+      "service_gap",
+      "issue_type"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The operator supplied a rich set of CANDIDATE CAUSES (value_perception, service_gap, issue_type) plus an aggregate mediator (experience_score) and a descriptive dispersion feature (rating_consistency). So the 'treatment' half of a causal setup is present and even over-supplied. However, the decisive requirement for causal ATTRIBUTION is missing: there are NO confounders — no added variable is a common cause of BOTH a treatment and the non-recommendation outcome. Genuine confounders for this question (e.g., type of traveller, route/market, month/season flown, verified status, prior loyalty/expectation level, cabin/aircraft variant) were NOT surfaced as new columns; several such candidates already sit in the original table and none were adjusted-for or elevated. Because the columns are almost entirely treatments and mediators/proxies of the outcome, they cannot support an unbiased effect estimate — attributing non-recommendation to value_perception or service_gap without confounder control would be biased. The capability under test (surfacing confounders from the data/text rather than copying them from the query) is therefore NOT demonstrated, and confounder_quality is 0."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

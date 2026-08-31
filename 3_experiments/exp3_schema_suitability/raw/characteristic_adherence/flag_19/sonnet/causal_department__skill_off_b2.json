@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do expense decline rates differ across departments?",
+  "focus_variable": "departmental_declined_rate_variation",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_declined",
+    "has_source_id",
+    "dept_total_count",
+    "dept_declined_count",
+    "dept_decline_rate",
+    "processing_days"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.2,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.2,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "dept_decline_rate (expense decline rate, varying across departments)",
+    "per_column": [
+      {
+        "name": "is_declined",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Row-level indicator of the decline outcome; it is the raw outcome event, not a treatment or confounder."
+      },
+      {
+        "name": "has_source_id",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause surfaced from the data (whether an expense has a source_id) that could plausibly drive decline likelihood; not named in the query, so it functions as a possible treatment/explanatory factor."
+      },
+      {
+        "name": "dept_total_count",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Department volume can plausibly relate to both processing behavior/treatment prevalence and decline rate; but here it is essentially the denominator used to compute the outcome rate, making it more mechanical than a genuine common cause."
+      },
+      {
+        "name": "dept_declined_count",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "This is the numerator of the decline rate — a direct component of the outcome, not an independent cause or confounder."
+      },
+      {
+        "name": "dept_decline_rate",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the focus outcome itself (departmental decline rate), directly named/implied by the query."
+      },
+      {
+        "name": "processing_days",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Processing time is plausibly on the causal path (a department's practices affect processing time, which affects decline decisions); treating it as a confounder would be a mistake — it is more naturally a mediator."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "has_source_id"
+    ],
+    "confounders": [
+      {
+        "name": "dept_total_count",
+        "named_in_query": false,
+        "plausibility": 0.3
+      }
+    ],
+    "confounder_quality": 0.2,
+    "rationale": "The added columns are overwhelmingly mechanical decompositions of the outcome itself: is_declined, dept_declined_count, dept_decline_rate are the numerator/denominator/rate that define the very quantity the query asks about, and do not set up a causal estimation. A plausible treatment (has_source_id) is surfaced from the data, satisfying part (a) weakly. However, the causal claim requires genuine CONFOUNDERS — common causes of both a treatment and the outcome — surfaced from the data. None qualify: dept_total_count is essentially the rate denominator rather than a true common cause, and processing_days is best read as a mediator on the causal path, not a confounder. There are no variables (e.g., expense category mix, amount, user, requestor seniority) surfaced as adjustment variables that jointly cause a treatment and the decline outcome. Thus the decisive test — surfacing non-query confounders that must be adjusted — is essentially not met."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

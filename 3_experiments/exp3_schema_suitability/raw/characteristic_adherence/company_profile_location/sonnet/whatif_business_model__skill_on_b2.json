@@ -1,0 +1,127 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "focus_variable": "regional_fit",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "business_model_type",
+    "delivery_modality",
+    "geographic_reach",
+    "customer_segment",
+    "service_orientation",
+    "localization_dependency",
+    "industry_vertical",
+    "company_maturity"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "regional_fit",
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query is about shifting the business model; this characterizes the current business model, the lever being intervened upon. It is intervenable (a company can change its model)."
+      },
+      {
+        "name": "delivery_modality",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Delivery modality (cloud vs in-person) is a configurable property capturing the 'service-oriented' / 'localized' shift described; an intervenable lever."
+      },
+      {
+        "name": "geographic_reach",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Geographic reach plausibly affects both a company's business model/localization choices and its fit for a new region; not explicitly named in the query."
+      },
+      {
+        "name": "customer_segment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Customer segment (enterprise vs consumer) is a common cause of both delivery/service orientation and regional fit; not named in the query."
+      },
+      {
+        "name": "service_orientation",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Directly encodes the 'more service-oriented' shift explicitly named in the query; an intervenable configurable property."
+      },
+      {
+        "name": "localization_dependency",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "The 'localized model' shift operates through localization dependency, which then drives regional fit; it lies on the causal path between treatment and outcome, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "industry_vertical",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Industry vertical influences both plausible business-model/service choices and regional fit; not named in the query."
+      },
+      {
+        "name": "company_maturity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Company maturity/stage affects both ability/tendency to shift model and its regional fit; not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "business_model_type",
+      "delivery_modality",
+      "service_orientation"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "geographic_reach",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "customer_segment",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "industry_vertical",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "company_maturity",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The schema strongly realizes the interventional claim. Multiple genuinely intervenable treatment levers are present and directly correspond to the query's proposed intervention (business model, service orientation, delivery modality) -- these are settable/changeable properties, not immutable traits. Beyond the named levers, several plausible confounders NOT stated in the query are supplied (customer_segment, industry_vertical, company_maturity, geographic_reach), each a common cause of both the business-model configuration and regional fit; adjusting for these is needed to read off the counterfactual effect. localization_dependency is correctly excluded from confounders because it lies on the causal path from the 'localized model' intervention to regional fit (a mediator). Overall the set satisfies the what-if test: an intervenable treatment plus non-query-named confounders."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "sentiment_description",
+    "review_character_count",
+    "detected_themes",
+    "positive_sentiment_words",
+    "negative_sentiment_words",
+    "sentiment_word_ratio"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.4083,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.7667,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.5875,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "sentiment_description",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is a direct restatement of the existing original 'label_pos' column (0->negative, 1->positive). Values are correctly derived and consistent, but it adds no new analytical axis for a query that already contrasts positive vs negative sentiment."
+      },
+      {
+        "name": "review_character_count",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Raw character count is a generic length metric offering little leverage for a THEME-based comparison. Additionally the dominant value of '700' for 184 rows reflects truncation of the source text, and sample IMDB-0001/0002/0003 whose text is clearly cut off at 700 chars means the count does not reflect true review length, weakening groundedness."
+      },
+      {
+        "name": "detected_themes",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Directly on-target for the query: a multi-valued theme categorization gives the exact axis needed to compare themes across sentiment. Mostly grounded, but some sample labels are shaky: IMDB-0002 tagged 'directing|character_depth' and IMDB-0003 'plot|acting|visual_quality|character_depth' assert themes not clearly present in the (truncated) text, indicating some over-reading."
+      },
+      {
+        "name": "positive_sentiment_words",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A lexicon count of positive words is somewhat generic and largely redundant with the sentiment label, but as a graded intensity measure it offers modest extra leverage. Sample counts are plausible readings of the text."
+      },
+      {
+        "name": "negative_sentiment_words",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Symmetric to positive_sentiment_words; a generic graded count that partly overlaps the label but provides mild intensity information. Sample values are reasonable extractions."
+      },
+      {
+        "name": "sentiment_word_ratio",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Derived ratio of positive to total sentiment words; largely a restatement of the two count columns and closely tracks the label. Adds limited independent value but is computed soundly (0 when no positive words, e.g. IMDB-0002/0003/0005)."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.75,
+    "rationale": "The set centers on one strongly query-relevant column (detected_themes) that provides the theme axis the analysis requires. The remaining columns are weaker: sentiment_description merely restates label_pos, the sentiment word counts/ratio are generic lexicon features that largely echo the sentiment label, and review_character_count is a generic length metric. Groundedness is generally acceptable, but truncation of source text at 700 characters undermines character_count and inflates some theme assignments that read in content not clearly supported by the visible text."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

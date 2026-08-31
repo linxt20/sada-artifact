@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest high urgency?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "signal_critical_vitals",
+    "signal_acute_symptoms",
+    "signal_acute_onset",
+    "signal_high_risk_dx",
+    "signal_severe_pain",
+    "urgency_signal_count",
+    "urgency_signal_tier"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6786,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.4643,
+    "source_groundedness__table_level": 0.4,
+    "b1_overall": 0.5715,
+    "hallucination_rate": 0.7143
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "signal_critical_vitals",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "A critical-vitals flag is a plausibly useful urgency axis, but the evidence contradicts the values: the annual-physical row with normal BP 128/82 and BMI 27 is flagged 1, which is a clear misreading. Only 8/250 flagged and the one sampled positive is wrong, undermining groundedness."
+      },
+      {
+        "name": "signal_acute_symptoms",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Acute-symptom presence is a genuine urgency signal. However the sampled positive is the routine physical with only 'mild fatigue' (explicitly denying chest pain/dyspnea) flagged 1, while the acute cough+fever and twisting-injury rows are flagged 0 — the extraction appears unreliable/contradictory."
+      },
+      {
+        "name": "signal_acute_onset",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Acute onset is a reasonable urgency axis. But rows with clear acute-onset language ('x3 days', 'twisting injury yesterday') are flagged 0, so the signal misses obvious warranted positives; sampled rows show poor reading of the source."
+      },
+      {
+        "name": "signal_high_risk_dx",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "High-risk diagnosis flag is analytically useful. The one sampled positive (post-MI cardiac follow-up) is a defensible reading of the source, and negatives on acne/knee are correct. Best-grounded of the signal columns."
+      },
+      {
+        "name": "signal_severe_pain",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Constant 0 across all 250 rows — near-constant column with no analytical leverage for grouping or comparison. Sampled negatives are not contradicted, but a column with a single value adds nothing."
+      },
+      {
+        "name": "urgency_signal_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A numeric aggregate of signals is a strong analytical axis (groupable, modelable). But it inherits errors from its components: the routine physical scores 2 while genuinely urgent visits score 0, so the derived values are unsound where sampled."
+      },
+      {
+        "name": "urgency_signal_tier",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Tiering is useful for grouping, though largely a restatement of urgency_signal_count. Groundedness suffers from the same upstream misreadings — the routine physical is labelled 'Moderate' while urgent visits are 'Low'."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.4,
+    "rationale": "The added columns form a coherent, analytically relevant scheme of urgency signals plus an aggregate count and tier, giving genuine axes to group and model on for this query; only signal_severe_pain (constant 0) fails on usefulness. However groundedness is the weak point: the sampled rows show repeated misreadings — a routine physical with normal vitals flagged for critical vitals and acute symptoms, and clearly acute-onset visits scored 0 — which propagate into the count and tier. signal_high_risk_dx is the exception and is well grounded. Not penalising completeness or naming."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_high",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

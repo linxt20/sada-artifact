@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest a longer visit?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "procedural_intervention_present",
+    "diagnostic_workup_scope",
+    "clinical_severity_level",
+    "emergency_critical_status",
+    "specialist_consultation_or_referral",
+    "counseling_education_complexity",
+    "comorbidity_or_multisystem_scope"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.8429,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.8215,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "procedural_intervention_present",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Interventions performed plausibly drive visit length, a strong analytical axis. But values overreach: the annual-physical row (labs only, no med change) and the MI follow-up ('continue current regimen') are both tagged 'medication_change' though no change occurred; the knee-injury row is tagged 'procedure_performed' when only an MRI was ordered. Frequent invented interventions weaken grounding."
+      },
+      {
+        "name": "diagnostic_workup_scope",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Labs/imaging ordered is a clean, useful predictor of visit workup effort. Sample values track the text well: 'both_ordered' for physical with labs (note says only labs though—slight overreach), 'labs_ordered' for repeat lipid panel, 'imaging_ordered' for MRI, 'not_present' for viral URI. Largely sound."
+      },
+      {
+        "name": "clinical_severity_level",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Severity is a reasonable driver of visit duration and gives a gradable axis. Sampled values are well-warranted: mild for stable follow-ups, moderate for acne/knee injury. Grounded readings of the notes."
+      },
+      {
+        "name": "emergency_critical_status",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Emergency escalation would strongly affect duration, but in this outpatient-skewed sample it is 'not_present' for 189 rows, making it near-constant and thus offering limited grouping leverage here. Values shown are correctly 'not_present'; well grounded."
+      },
+      {
+        "name": "specialist_consultation_or_referral",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Referrals/consults plausibly add visit time and give a useful categorical axis. Mostly grounded; the knee row is labeled 'referral_arranged' though the note only mentions ordering an MRI, not an explicit referral—mild overreach but defensible for orthopedic workup."
+      },
+      {
+        "name": "counseling_education_complexity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "Counseling/education time is a genuine driver of longer visits. Some values are inferred beyond the text: the physical exam row is tagged 'lifestyle_behavior_change' though the note only records fatigue and labs with no documented counseling; MI follow-up 'medication_education' is plausible but not explicit. Mixed grounding."
+      },
+      {
+        "name": "comorbidity_or_multisystem_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Multisystem burden is a reasonable duration predictor. But the annual-physical row is labeled 'multiple_active_comorbidities' when the note describes a largely well patient (mild fatigue, single labs)—an unsupported assertion. Other samples (single_system, end_organ for post-MI) are sound. Notable overreach."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns collectively give strong, genuinely useful axes (interventions, workup scope, severity, referrals, counseling, comorbidity burden) directly relevant to predicting visit duration, well beyond generic length/sentiment flags. emergency_critical_status is near-constant in this sample and offers weaker leverage. Groundedness is generally good—silent rows correctly get 'not_present'—but several columns over-assert: 'medication_change' where regimens are continued, 'procedure_performed' for an ordered MRI, and 'multiple_active_comorbidities' for an essentially well patient. These recurring confident-specific inferences pull groundedness down modestly, though most values remain sound readings of the notes."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

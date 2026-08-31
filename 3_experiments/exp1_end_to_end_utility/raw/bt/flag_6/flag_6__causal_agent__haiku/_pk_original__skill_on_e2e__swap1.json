@@ -1,0 +1,125 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.8,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Fred Luddy: Mean 750 hrs, Median 691 hrs (n=76 incidents)",
+        "why": "concrete magnitudes and counts"
+      },
+      {
+        "dimension": "depth",
+        "quote": "closure misalignment ... 2.1x worse",
+        "why": "moderating-factor analysis"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "complexity signal = True resolve 2.45x slower",
+        "why": "relies on unverifiable TAPP facets, weakening consistency"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "Jul 2023: 1015.2h ... Nov 2023: 1536.0h",
+        "why": "temporal trend tied to numbers"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Network: Fred 681.6h vs others 152.6h",
+        "why": "within-category comparison isolates cause"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "50 completed rows have negative closed_at - opened_at",
+        "why": "data-quality caveats increase credibility"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "first place to investigate is assignee-level workload management and aging patterns",
+        "why": "decision-ready and dataset-specific"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [
+      {
+        "column": "incident_complexity_signal",
+        "quote": "TAPP-generated `incident_complexity_signal`",
+        "dependent": true
+      },
+      {
+        "column": "problem_scope",
+        "quote": "TAPP-generated `problem_scope`",
+        "dependent": true
+      },
+      {
+        "column": "agent_closure_alignment",
+        "quote": "TAPP-generated `agent_closure_alignment`",
+        "dependent": true
+      }
+    ],
+    "B": []
+  },
+  "reason": "B grounds its causal claim (queue aging over time) in raw timestamps and within-category comparisons with careful data caveats, while A leans on unverifiable augmented facets.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

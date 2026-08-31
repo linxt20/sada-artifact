@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "hardware_component",
+    "issue_type",
+    "is_critical_hardware"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.7833,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7916,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_component",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorizing the specific hardware involved (Printer, Monitor, Keyboard, etc.), giving a strong grouping axis. Samples are all non-hardware (software/DB) rows correctly left NULL, which is proper behavior; the taxonomy is a sound reading of short_description text."
+      },
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds an orthogonal axis describing the nature of the failure (Device Malfunction, Connection Issue, Overheating, etc.), complementing hardware_component for the 'kinds of issues' query. Some categories like 'Hardware Issue' are generic, but overall it enables useful grouping. Silent rows correctly NULL."
+      },
+      {
+        "name": "is_critical_hardware",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A binary criticality flag offers a coarse triage axis, weaker than the other columns. Criticality (e.g., Server Hardware vs. Mouse) is a reasonable inference from the component, though the Yes/No boundary is somewhat subjective and not always clearly stated in the source text. Not a mere restatement, so it retains moderate value."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns collectively give the analyst two strong new axes (specific component and issue nature) plus a coarse criticality flag, all directly serving the query about kinds of hardware issues. Values shown for non-hardware rows are correctly NULL rather than fabricated, indicating grounded behavior. The criticality flag is the weakest link due to its subjective threshold and partial reliance on inference, but no hallucinations are observed in the evidence."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

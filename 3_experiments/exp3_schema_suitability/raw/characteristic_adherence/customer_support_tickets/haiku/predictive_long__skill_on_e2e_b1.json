@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_type",
+    "blocker_scope",
+    "business_impact",
+    "root_cause_clarity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8875,
+    "analytical_usefulness__table_level": 0.89,
+    "source_groundedness": 0.86,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.8738,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.97,
+        "hallucination_observed": false,
+        "rationale": "A clean categorical axis strongly plausible as a driver of resolution time (e.g. production_outage vs feature_request). All five samples map correctly to their source text (billing, auth, outage, feature, bug)."
+      },
+      {
+        "name": "blocker_scope",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Blast radius (single_user vs all_tenants) is a genuine, useful signal for effort/urgency. Sample mappings are mostly sound (all_tenants for the Acme outage, single_user for the session-drop). However 'team_or_account' appears to be a heavy default that may over-assert scope where text is thin (e.g. CS-0001, CS-0005 are arguably account-scoped but the read is defensible), slightly lowering groundedness."
+      },
+      {
+        "name": "business_impact",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Impact severity is a reasonable new axis for prioritisation/resolution modelling. Sample values are warranted (financial_or_compliance_risk for the invoice with a finance deadline; operational_blockers for the outage). Uses 'not_present' appropriately for silent rows."
+      },
+      {
+        "name": "root_cause_clarity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Diagnostic readiness plausibly predicts resolution time and is a distinct axis. Most mappings are sound (suspected_by_customer_no_proof for the SSO guess; customer_provided_with_evidence for detailed bug reports). CS-0003 labelled customer_provided_with_evidence is borderline—the customer requests an RCA rather than providing one—so a modest groundedness deduction applies."
+      }
+    ],
+    "analytical_usefulness": 0.89,
+    "source_groundedness": 0.86,
+    "rationale": "All four added columns provide distinct, non-redundant categorical axes (issue nature, blast radius, business impact, diagnostic clarity) that each plausibly correlate with resolution time, directly serving the query. Values are largely well-grounded extractions/categorisations of the source text, with appropriate 'not_present' handling for silent rows. Minor concerns: a heavy default level in blocker_scope and one arguably over-confident root_cause_clarity label, but no clear hallucinations of invented facts."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 4
+}

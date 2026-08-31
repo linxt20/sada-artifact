@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_category",
+    "issue_subcategory",
+    "affected_component",
+    "impact_scope",
+    "business_impact_signal",
+    "root_cause_class"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.855,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8525,
+    "hallucination_rate": 0.1667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query about kinds of issues; provides a clean, well-distributed categorical axis. Sample values (billing_issue, bug, outage, feature_request) are all sound readings of the source text."
+      },
+      {
+        "name": "issue_subcategory",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A finer-grained taxonomy that meaningfully refines issue_category rather than restating it, giving extra grouping leverage. Most samples are well-grounded; the CS-0003 outage labeled 'performance_query' is a slightly off but not fabricated reading (502 error is an outage, not a query)."
+      },
+      {
+        "name": "affected_component",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Orthogonal axis (which system part) supports the 'kinds of issues' analysis well. Mostly grounded (billing_payments, auth_identity, data_pipeline_sync). CS-0004's 'admin_console' for a left-nav report-pinning request is a stretch but a plausible inference, not an invented fact."
+      },
+      {
+        "name": "impact_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful secondary dimension for characterizing issues by breadth of impact. Sample values are well-supported (single_user for individual reports, entire_tenant for the Acme 502). CS-0005 'entire_tenant' is a reasonable inference from an account-level pipeline issue."
+      },
+      {
+        "name": "business_impact_signal",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a business-severity axis distinct from priority; helps characterize issue types. Samples are warranted readings (revenue_at_risk for the invoice, service_completely_blocked for the outage, cosmetic for the nav enhancement)."
+      },
+      {
+        "name": "root_cause_class",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Provides an analytically interesting causal axis. However root cause is often not stated in tickets, so some values are confident inferences beyond the text. CS-0001 'data_integrity' for a duplicate line item is defensible, but CS-0002 'misconfiguration' asserts a cause the user only *suspects*; assigning a definite class where the text is uncertain is mild over-assertion."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns give several genuinely distinct, non-redundant axes (category, subcategory, component, impact scope, business impact, root cause) that all directly serve the query about kinds of support issues. Values are overwhelmingly sound readings of the source text with correct categorisation and warranted inference. The main groundedness weakness is root_cause_class, which occasionally asserts definite causes where the source only expresses suspicion or is silent; a couple of subcategory/component labels are slightly loose. No fabricated specifics that contradict the text were observed."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

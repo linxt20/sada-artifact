@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "instruction_quality_signal",
+    "student_engagement_level",
+    "disengagement_pattern",
+    "positive_adaptation_signal",
+    "teacher_support_quality",
+    "subject_format_fit",
+    "peer_interaction_loss_signal",
+    "learner_emotional_distress"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8313,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.8313,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8313,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "instruction_quality_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Categorises the mode/quality of instruction, a genuine axis for predicting satisfaction. Values are reasonable readings; ED-0001's frozen-whiteboard experience as 'adequate_functional' is a defensible mild reading rather than an invention."
+      },
+      {
+        "name": "student_engagement_level",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A 1-5 engagement scale is a useful modelling axis distinct from raw satisfaction. Values track the texts reasonably (ED-0002 dipped-then-recovered -> 4, ED-0003 crying -> 1), though the numeric precision is a somewhat confident inference for terse texts."
+      },
+      {
+        "name": "disengagement_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Typed disengagement patterns give a strong new categorical axis. Values are well grounded (ED-0005 'cameras off, microphones muted' -> cameras_off_silent; not_present for silent rows). ED-0003 as 'attention_span_collapse' is a slightly loose fit but not contradictory."
+      },
+      {
+        "name": "positive_adaptation_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures positive coping/thriving, useful as the inverse predictor of dissatisfaction. Values align well with sources (ED-0002/ED-0004 thriving; ED-0001/ED-0003 absent). Some overlap with subject_format_fit but not a mere restatement."
+      },
+      {
+        "name": "teacher_support_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis on instructor responsiveness relevant to satisfaction. Values are sound readings (ED-0003 teacher 'can't tell when she's lost' -> minimal_overwhelmed). Partial conceptual overlap with instruction_quality_signal but different focus."
+      },
+      {
+        "name": "subject_format_fit",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Whether the subject suits remote format is a meaningful grouping axis. Values are warranted (algebra/reading -> low_fit; recorded lectures/history -> high_fit). Somewhat correlated with positive_adaptation but adds a subject-specific angle."
+      },
+      {
+        "name": "peer_interaction_loss_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Loss of peer/community interaction is a strong, specific predictor axis. Values are well grounded (ED-0003 'zero peer interaction', ED-0005 silent chat -> severe; not_present for silent rows)."
+      },
+      {
+        "name": "learner_emotional_distress",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Graded emotional distress is directly predictive of low satisfaction. Values are strongly grounded (ED-0003 'cries' -> high_distress; ED-0001 frustration -> moderate; not_present appropriately for neutral/positive rows)."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.83,
+    "rationale": "All eight columns provide genuine, largely non-redundant analytical axes (instruction, engagement, disengagement patterns, adaptation, teacher support, format fit, peer loss, emotional distress) that are highly relevant to predicting low learning satisfaction. There is mild conceptual overlap among the positive/quality columns, but none is a pure restatement. Values across the evidence samples are sound, defensible readings of the source text, with sensible 'not_present'/'absent' handling for silent rows and no clear invented facts or contradictions. Numeric engagement scoring carries slight over-precision, marginally lowering groundedness."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

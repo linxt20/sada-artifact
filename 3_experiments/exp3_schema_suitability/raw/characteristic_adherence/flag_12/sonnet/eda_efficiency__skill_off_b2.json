@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_time_hours",
+    "sla_met",
+    "resolution_speed_category",
+    "category_avg_resolution_hours",
+    "assignment_group_avg_resolution_hours",
+    "resolution_vs_category_avg"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.08,
+    "interpretable_fraction": 0.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is essentially the operationalization of resolution efficiency itself, not an external associational variable. It restates the focus and is too fine-grained to segment on for grouped comparison."
+      },
+      {
+        "name": "sla_met",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A binary derived directly from resolution time versus SLA; it is another expression of efficiency/outcome rather than an independent explanatory dimension to compare efficiency against."
+      },
+      {
+        "name": "resolution_speed_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A binned version of the focus. Interpretable categories, but it IS the focus discretized, not an external variable to segment against. Also heavily imbalanced ('Very Slow' 411/500)."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A group-level aggregate of the focus keyed to category (already present). It is a summary of the target, not an external associational variable, and is near-constant (181.43 for 406 rows)."
+      },
+      {
+        "name": "assignment_group_avg_resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Same issue: an aggregate of the focus keyed to an existing segmentation column. Near-constant dominant value; opaque restatement rather than an interpretable external segmentation."
+      },
+      {
+        "name": "resolution_vs_category_avg",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A residual of the focus minus its category mean. Continuous, fine-grained, and derived purely from the target; not an external variable and not a clean segmentation."
+      }
+    ],
+    "n_predictors": 0,
+    "relationship_informativeness": 0.08,
+    "rationale": "The query asks how efficiency varies across category, priority, and assignment group -- segmentation dimensions that already exist in the original table. Every added column is a derivative or restatement of the focus (raw time, SLA flag, speed bins, group averages of the target, residuals). None introduces a NEW external, interpretable associational variable to group on and compare efficiency against. Several are also near-constant or too fine-grained. As a set, they fail the exploratory-analysis claim of opening informative relationships around the focus."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

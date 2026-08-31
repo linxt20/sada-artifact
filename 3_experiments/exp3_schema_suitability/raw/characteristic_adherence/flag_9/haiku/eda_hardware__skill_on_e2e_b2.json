@@ -1,0 +1,46 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "focus_variable": "hardware_incident",
+  "concept": null,
+  "n_added_columns": 1,
+  "added_columns": [
+    "problem_scope"
+  ],
+  "metrics": {
+    "n_added_columns": 1,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.7,
+    "predictor_fraction": 1.0,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.7,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "hardware_incident",
+    "per_column": [
+      {
+        "name": "problem_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Derived from the incident description, problem_scope captures the breadth/locus of the issue (single_device, server_infrastructure, network_wide, multi_device_location). These are external, well-separated, interpretable categories that a human can segment on and compare against whether the incident is hardware-related. A scope like 'single_device' or 'server_infrastructure' plausibly co-varies with hardware problems versus 'network_wide' which may lean toward network/config issues, so it opens an informative relationship rather than merely restating the focus. Distribution is reasonably spread across categories, enabling meaningful comparison."
+      }
+    ],
+    "n_predictors": 1,
+    "relationship_informativeness": 0.7,
+    "rationale": "The single added column is an associational, interpretable categorical variable extracted from the description that can be grouped and compared against the hardware_incident focus, satisfying the EDA claim. It does not restate the focus and its categories are well-separated with a usable distribution. Informativeness is capped below 1.0 because only one dimension of the description is surfaced, limiting the breadth of relationships an explorer could discover."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 1
+}

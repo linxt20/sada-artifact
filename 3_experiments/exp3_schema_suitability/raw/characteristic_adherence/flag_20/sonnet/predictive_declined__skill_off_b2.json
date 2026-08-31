@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a travel expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "missing_source_id",
+    "no_processed_date",
+    "amount_above_travel_median",
+    "amount_below_dept_median",
+    "user_prior_decline_rate",
+    "high_decline_dept",
+    "submitted_off_hours",
+    "decline_risk_score"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.25
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "role": "predictor",
+        "rationale": "A structural/metadata flag on the request that lies outside the outcome; missing source references could plausibly correlate with declines without restating the outcome."
+      },
+      {
+        "name": "no_processed_date",
+        "role": "leakage",
+        "rationale": "processed_date reflects post-decision processing; whether a request was processed is largely determined by/coincident with its final disposition. Declined items may never be processed, making this a proxy for the outcome rather than an antecedent signal."
+      },
+      {
+        "name": "amount_above_travel_median",
+        "role": "predictor",
+        "rationale": "A pre-decision property of the expense amount relative to the travel population; higher amounts plausibly carry predictive signal about declines and are knowable before the outcome."
+      },
+      {
+        "name": "amount_below_dept_median",
+        "role": "predictor",
+        "rationale": "Another pre-decision amount-relative feature (vs department norm); legitimate antecedent signal, though partially redundant with the travel-median flag."
+      },
+      {
+        "name": "user_prior_decline_rate",
+        "role": "predictor",
+        "rationale": "Historical decline rate of the user computed from PRIOR requests is a classic legitimate predictor, provided it excludes the current record. Strong signal, low leakage if computed correctly."
+      },
+      {
+        "name": "high_decline_dept",
+        "role": "predictor",
+        "rationale": "Department-level historical decline propensity is a legitimate group-level predictor knowable before the outcome, assuming it is an aggregate not derived from the current row."
+      },
+      {
+        "name": "submitted_off_hours",
+        "role": "predictor",
+        "rationale": "Submission timing derived from opened_at is a pre-decision behavioral feature that could plausibly carry weak predictive signal."
+      },
+      {
+        "name": "decline_risk_score",
+        "role": "leakage",
+        "rationale": "A composite 'decline risk score' is a constructed estimate of the very outcome being predicted; if built to track state_declined it restates/leaks the target rather than providing an independent feature, and its heavy 0 mass mirrors the class split."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.6,
+    "rationale": "As a set, most columns are legitimate antecedent features: amount-relative flags, user- and department-level historical decline propensities, submission-timing, and a metadata completeness flag give genuine predictive leverage beyond the raw columns, with the user/department history features being the strongest. However, two columns are problematic: no_processed_date effectively proxies whether the item reached processing, which is entangled with the final disposition, and decline_risk_score is a constructed estimate of the target itself (restatement/leakage). The predictor set also carries some internal redundancy (two amount-median flags, user vs dept history). Net: moderate, real predictive utility tempered by leakage in two columns."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

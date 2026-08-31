@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "clinical_category",
+    "visit_purpose",
+    "acuity_level",
+    "chief_complaint_type",
+    "body_system",
+    "condition_chronicity",
+    "primary_care_action"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7714,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8757,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.8236,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "clinical_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by grouping visits into concern types. Values are sound readings of the source text (acne as chronic management is defensible). Strong grouping axis."
+      },
+      {
+        "name": "visit_purpose",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes new problem vs follow-up vs routine exam, a genuine analytical axis for characterizing concern types. Values well supported by the notes."
+      },
+      {
+        "name": "acuity_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Largely overlaps with the existing 'urgency' original column, reducing added leverage, though it offers finer granularity. Values are reasonable inferences from the text."
+      },
+      {
+        "name": "chief_complaint_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the presenting symptom, highly relevant to 'types of concerns.' Values grounded in text; annual-physical mapped to lab/screening finding is a defensible reading."
+      },
+      {
+        "name": "body_system",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Provides an organ-system axis to group concerns, useful and distinct. Values follow the text; appropriate NULL for silent rows is correct behavior."
+      },
+      {
+        "name": "condition_chronicity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Acute vs chronic distinction is a meaningful axis, partially correlated with clinical_category but adds a temporal dimension. Values reasonably inferred."
+      },
+      {
+        "name": "primary_care_action",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures management/action rather than the concern itself, so less directly tied to the query, but still useful for characterizing visit types. Values grounded in text."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns provide multiple genuine axes (concern category, complaint type, body system, chronicity) that directly serve grouping and comparison for the query about types of patient concerns. Values across sampled rows are sound extractions or well-warranted inferences from the note text, with correct NULL handling for silent rows and no fabricated specifics. Minor deductions: acuity_level substantially overlaps the existing urgency column and primary_care_action targets management rather than the concern itself, but neither is trivial or ungrounded."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

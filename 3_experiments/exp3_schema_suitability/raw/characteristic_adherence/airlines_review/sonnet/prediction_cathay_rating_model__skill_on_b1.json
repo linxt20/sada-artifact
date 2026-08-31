@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_warmth",
+    "cabin_service_frequency",
+    "food_quality_signal",
+    "seat_comfort_issue_type",
+    "cabin_class_value_gap",
+    "special_needs_handling",
+    "service_consistency_vs_pre_covid"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7571,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7357,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7464,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_warmth",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A strong service-quality axis for optimizing toward Overall Rating > 7, going beyond the numeric Staff Service score by adding qualitative texture. Groundedness is good for review-rich rows (e.g. 'best' -> warm, 'no staff to help' -> absent), but the first two samples label warmth as 'robotic_or_absent' when the texts describe ground/gate handling rather than cabin crew, an over-confident read where cabin warmth is not actually stated."
+      },
+      {
+        "name": "cabin_service_frequency",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "A distinct operational axis (proactivity of in-flight service) useful for service optimization. However several samples assert a frequency category with no textual basis: the Manchester diversion and the Tokyo delay reviews say nothing about in-flight service cadence yet receive 'infrequent_or_absent_between_meals', an unwarranted specific where the source is silent."
+      },
+      {
+        "name": "food_quality_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful qualitative complement to the Food & Beverages numeric column for driving rating improvement. Well grounded: silent rows correctly return Unknown, and stated cases map sensibly ('food good' -> acceptable/excellent). Minor imprecision (sample 4 'great food options' -> acceptable rather than excellent) but no invention."
+      },
+      {
+        "name": "seat_comfort_issue_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizing the specific comfort failure mode (cramped, legroom, malfunction) gives actionable leverage beyond the raw Seat Comfort score. Grounded: silent rows are Unknown, 'seats are cramped... leg space' -> insufficient_legroom is a sound reading. Some rows defaulted to 'adequate' with thin evidence but not contradictory."
+      },
+      {
+        "name": "cabin_class_value_gap",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Gap-to-class-expectation is a genuinely useful modeling axis and somewhat distinct from Value For Money. But it forces a value on every row with no Unknown option, producing unsupported reads: the Tokyo delay review (no class/value content) gets 'slight_shortfall' and the diversion review gets 'significant_shortfall', confident specifics the text does not warrant."
+      },
+      {
+        "name": "special_needs_handling",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Near-constant boolean (733 false vs 11 true) offering little grouping/modeling leverage for this query. It is well grounded, however: false for rows with no special-needs mention is correct default behaviour, so groundedness stays high while usefulness is limited by the extreme skew."
+      },
+      {
+        "name": "service_consistency_vs_pre_covid",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A trend axis (decline vs maintained) could inform where service regressed, offering real analytical angle. Groundedness is mixed: 'first flight after 10 years' -> maintained_or_improved and 'first time no comparison' cases are reasonable, but the diversion row is labelled 'significant_decline' with no pre-covid comparison in the text, an inferred value the source does not support."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.72,
+    "rationale": "Most columns supply genuinely useful qualitative axes for a service/route optimization model targeting Overall Rating > 7, complementing rather than merely restating the existing numeric ratings; special_needs_handling is the weak link due to its near-constant distribution. Groundedness is generally sound where reviews are rich and silent rows correctly return Unknown/NULL, but several columns (cabin_service_frequency, cabin_class_value_gap, service_consistency_vs_pre_covid) force confident categories onto rows whose text is silent on that dimension, producing observable over-confident inferences that lower overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

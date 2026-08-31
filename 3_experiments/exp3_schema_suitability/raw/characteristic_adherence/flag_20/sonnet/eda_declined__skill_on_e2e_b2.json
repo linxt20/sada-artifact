@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "asset_category",
+    "asset_brand_vendor",
+    "action_type",
+    "creation_method",
+    "description_specificity",
+    "has_source_id",
+    "is_luxury_or_premium",
+    "department_group",
+    "hardware_subtype"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.8889
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean, well-separated categorical variable (hardware/travel/cloud_service/etc.) that can be grouped and compared against decline rates. Interpretable and external to the focus."
+      },
+      {
+        "name": "asset_brand_vendor",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Vendor/brand is an interpretable associational dimension; despite some NULLs the categories are distinct and segmentable for comparing decline behavior."
+      },
+      {
+        "name": "action_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct action categories provide a meaningful axis to segment records and compare against decline rates."
+      },
+      {
+        "name": "creation_method",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary manual/automated with a balanced split (320/180); highly interpretable and a plausible signal for review outcome. Strong EDA segmentation."
+      },
+      {
+        "name": "description_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly relevant to the query about description signals; three well-separated, interpretable levels that can be compared against decline outcomes."
+      },
+      {
+        "name": "has_source_id",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Boolean flag with a usable split (327/173); interpretable and segmentable, offers a data-completeness axis to compare against declines."
+      },
+      {
+        "name": "is_luxury_or_premium",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Conceptually relevant (premium items may be scrutinized) but the split is near-constant (488 false vs 12 true), so meaningful comparison is weak — too rare to draw stable relationships."
+      },
+      {
+        "name": "department_group",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable organizational segmentation with distinct categories; useful for comparing decline rates across groups. Partly redundant with original 'department' but coarser/cleaner."
+      },
+      {
+        "name": "hardware_subtype",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable subtype categories; though heavily NULL for non-hardware rows, it still supports segmentation within the hardware slice."
+      }
+    ],
+    "n_predictors": 9,
+    "relationship_informativeness": 0.72,
+    "rationale": "The set offers mostly clean, interpretable, well-separated categorical variables external to state_declined that a human can group on and compare against decline outcomes (creation_method, description_specificity, asset_category, action_type, has_source_id are especially strong). Several are directly aligned with the query's focus on description/process signals. Weaknesses: is_luxury_or_premium is near-constant and gives little comparative leverage, department_group partially restates an existing column, and hardware_subtype/asset_brand_vendor carry substantial NULLs that fragment segmentation. Overall a genuinely exploratory, understanding-oriented set rather than opaque scores, but with a few low-yield columns."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

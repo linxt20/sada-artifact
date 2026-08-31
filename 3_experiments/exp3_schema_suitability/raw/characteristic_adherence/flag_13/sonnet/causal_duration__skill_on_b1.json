@@ -1,0 +1,95 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do resolution duration values vary across tickets?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "affected_system_type",
+    "affected_scope",
+    "resolver_match",
+    "assigned_agent",
+    "open_hour_of_day",
+    "caller_type",
+    "is_repeat_or_cluster_incident"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.6667,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.6583,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "rationale": "Categorizes tickets by type from short_description; provides a strong grouping axis for explaining duration variance. Sample readings (WiFi, VPN, database) are sound extractions."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "rationale": "Failure characterization is a useful axis for duration modeling. Most readings are warranted (connectivity, access_denied), but scope like 'full_outage'/'no_response'/'sync_failure' asserts operational detail not present in a terse short_description, so some values are weakly grounded inferences."
+      },
+      {
+        "name": "affected_system_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "rationale": "System type is a reasonable grouping axis but heavily correlated with incident_category (VPN->vpn_server, database->database_server), so much of its leverage is redundant. Values are well grounded in the description text."
+      },
+      {
+        "name": "affected_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "rationale": "Scope (individual vs system_wide) is a genuinely useful driver of resolution time. However the source text rarely states scope; e.g. 'Cannot connect to office WiFi' labeled 'individual' and 'Printing issues in office' labeled 'location_specific' are confident inferences the terse text does not clearly support."
+      },
+      {
+        "name": "resolver_match",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "rationale": "Presumably compares assigned_to vs closed_by/assigned_agent, potentially relevant to routing/duration. But grounding is questionable: row 1 shows resolver_match True with assigned_agent=Fred Luddy=closed_by, yet row 2 shows assigned_agent=Beth Anglin while closed_by=Charlie Whitherspoon and resolver_match=False — the derivation basis is inconsistent and partly unverifiable."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.35,
+        "rationale": "Largely redundant with existing assigned_to/closed_by columns, adding little new axis. More seriously, produced values contradict the source: row 2 source closed_by=Charlie Whitherspoon but assigned_agent=Beth Anglin; row 5 closed_by=Luke Wilson but assigned_agent=Charlie Whitherspoon — apparent hallucinated/misattributed assignments."
+      },
+      {
+        "name": "open_hour_of_day",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.95,
+        "rationale": "Time-of-day bucket derived correctly from opened_at (8:50->morning, 18:14->evening) gives a plausible new axis for duration variance (off-hours staffing)."
+      },
+      {
+        "name": "caller_type",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.55,
+        "rationale": "named_user vs itil_user could relate to priority/handling. But basis in source is unclear and possibly derived from caller_id not shown; row 2 'itil_user' vs others 'named_user' cannot be verified from provided text, so grounding is uncertain."
+      },
+      {
+        "name": "is_repeat_or_cluster_incident",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.3,
+        "rationale": "Repeat/cluster status is analytically relevant, but with 461/500 flagged 'true' it is near-constant, reducing leverage. Grounding is weak: a single short_description does not reveal whether an incident is a repeat/cluster; these look like unsupported assertions."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.62,
+    "rationale": "The added columns supply several genuine grouping axes for explaining resolution-duration variance: incident_category, failure_mode, affected_scope, and open_hour_of_day are the strongest and mostly well grounded in short_description/opened_at. affected_system_type is useful but largely redundant with incident_category. Grounding weaknesses cluster in inferred/relational columns: assigned_agent contradicts the source closed_by in two of five samples (apparent hallucination), resolver_match has an inconsistent derivation, affected_scope over-asserts scope from terse text, and is_repeat_or_cluster_incident is both near-constant and unsupported by single-row text. Overall the set clears the usefulness bar comfortably but has notable grounding lapses."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 9
+}

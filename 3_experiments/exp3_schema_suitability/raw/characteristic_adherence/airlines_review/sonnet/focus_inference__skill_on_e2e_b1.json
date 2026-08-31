@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_service_quality",
+    "seat_hardware_condition",
+    "food_quality_assessment",
+    "special_meal_handling",
+    "disruption_handling_quality",
+    "service_decline_signal",
+    "premium_economy_value_gap"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6286,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.6786,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.6536,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A genuine categorical axis for grouping crew experiences, useful for the exploratory query. However groundedness is undermined: row 2 mentions nothing about crew yet was labelled 'rude_dismissive', an invented negative that contradicts the silence of the text; a NULL/not-stated would have been correct. Other samples are well-read."
+      },
+      {
+        "name": "seat_hardware_condition",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Useful new axis on physical cabin condition with a sensible NULL for silent rows. But row 2 describes seats as 'dreadful'/'poor padding' yet was labelled 'adequate_functional', contradicting the text; row 1's 'new_excellent' is a stretch from 'well sanitized'. Mixed grounding."
+      },
+      {
+        "name": "food_quality_assessment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Distinct, groupable food dimension with appropriate NULLs. However row 2 says nothing about food but was labelled 'poor_inedible', an invented value; text-supported rows are read well."
+      },
+      {
+        "name": "special_meal_handling",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Highly skewed boolean (832/68) with limited analytical leverage for a general 'what's worth analyzing' query. The False values in samples are consistent with texts that don't mention special meals, so grounding is reasonable."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A meaningful axis distinguishing how disruptions were handled, with a dominant 'no_disruption' default that correctly reflects silent rows. Sample labels align with texts."
+      },
+      {
+        "name": "service_decline_signal",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean flag that largely restates negative crew/service signal already captured by crew_service_quality; limited independent leverage. Sample values (all False) are consistent with the texts."
+      },
+      {
+        "name": "premium_economy_value_gap",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Very rare True (50/900) boolean of narrow scope; low leverage for a broad exploratory query. It also presumes a premium-economy value judgment often not stated; defaulting to False is defensible but the concept is weakly supported by most texts."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.65,
+    "rationale": "The set offers several genuinely useful categorical axes (crew, seat, food, disruption handling) that let the analyst group and compare aspects, directly serving the 'which aspect is worth analyzing' query; a few booleans (special_meal, service_decline, premium_economy_gap) are skewed or redundant and add little. Groundedness is moderate: silent-row NULLs and defaults are handled well, but the aspect-categorization columns show a recurring failure on row 2, where crew, seat, and food were assigned confident (and even contradicting) values despite the text supporting only the seat complaint — indicating over-eager labelling of unmentioned aspects."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

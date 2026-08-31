@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "amount_tier",
+    "processing_delay_days",
+    "is_pending_or_declined",
+    "high_risk_indicator"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.574,
+    "focus_coherence": 0.82,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Expense processing risk/anomaly worth flagging for review (high-risk or problematic expenses)",
+    "per_column": [
+      {
+        "name": "amount_tier",
+        "supports_focus": true,
+        "rationale": "Bins amount into tiers; large amounts are a classic risk/attention driver, feeding the anomaly/risk focus."
+      },
+      {
+        "name": "processing_delay_days",
+        "supports_focus": true,
+        "rationale": "Delay from opened to processed is a coherent operational/risk facet indicating stuck or abnormal expenses."
+      },
+      {
+        "name": "is_pending_or_declined",
+        "supports_focus": true,
+        "rationale": "Derived state flag capturing unresolved/rejected expenses, a direct actionable facet of problematic records."
+      },
+      {
+        "name": "high_risk_indicator",
+        "supports_focus": true,
+        "rationale": "Explicit risk flag; centres the schema on the risk focus, though as an opaque composite it risks restating the others."
+      }
+    ],
+    "focus_coherence": 0.82,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "rationale": "The four added columns converge on a single coherent, data-inferable focus: which expense records are worth flagging as risky/problematic and actionable. amount_tier, processing_delay_days, and is_pending_or_declined form differentiated facets (magnitude, timeliness, resolution state) at a useful granularity, and high_risk_indicator names the focus directly. The structure is sound but slightly weakened because high_risk_indicator is an opaque composite likely built from the other flags, edging toward restatement rather than adding an independent facet, and no descriptions clarify its derivation. The focus is genuinely actionable -- an analyst can drill into delayed, high-amount, or unresolved expenses -- so this is a real focus proposal, not a mechanical grab-bag."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

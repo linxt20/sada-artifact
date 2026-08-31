@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an incident will take longer to resolve?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "problem_domain",
+    "incident_severity_urgency",
+    "scope_indicator",
+    "resolution_ownership_mismatch",
+    "technical_complexity_signal",
+    "responder_expertise_mismatch",
+    "incident_closure_status"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6429,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7071,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.675,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_domain",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorises incidents into problem areas derived cleanly from short_description; gives a genuine grouping axis to compare resolution times across domains. Evidence rows all map soundly (VPN->vpn_connectivity, database->database_connectivity)."
+      },
+      {
+        "name": "incident_severity_urgency",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Severity/urgency is a plausible strong predictor of resolution time, so it is useful. However groundedness is weaker: mapping 'Email system not working properly' to service_degraded vs 'Cannot connect to database' to user_blocked involves inference beyond the terse text, and priority is already an original column so some values may not be well warranted."
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Blast radius (system-wide vs user-level) is a reasonable driver of resolution time and a useful axis. Department-specific readings ('sales department', 'Marketing Department') are grounded, but many system_wide/user_level assignments (e.g. 'VPN connection issue' -> user_level) are inferences the text does not clearly support."
+      },
+      {
+        "name": "resolution_ownership_mismatch",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A mismatch between assignee and closer could plausibly signal harder incidents, so mildly useful. It is nearly constant (461 false), reducing analytical leverage, and its derivation from assigned_to/closed_by is only partially verifiable; the near-degenerate distribution limits value."
+      },
+      {
+        "name": "technical_complexity_signal",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with problem_domain (network/application/database mirror the same categories) so it adds little new leverage. Values are a reasonable reading of short_description, but 'generic_outage' and the complexity framing over-assert specificity not present in the terse text."
+      },
+      {
+        "name": "responder_expertise_mismatch",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Whether the responder matched the domain (or needed escalation) is a strong candidate signal for longer resolution, hence useful. But groundedness is weak: the table lacks responder skill/domain metadata, so 'domain_expert_assigned' vs 'escalation_required' is largely inferred and cannot be soundly derived from available fields."
+      },
+      {
+        "name": "incident_closure_status",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly readable from state/closed_at, so well grounded, but trivially redundant with existing original columns (state, closed_at) and does not itself indicate resolution duration, giving little new analytical leverage for this query."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.7,
+    "rationale": "Several columns give genuine grouping axes (problem_domain, severity, scope, responder mismatch) directly relevant to predicting slower resolution. Weaknesses: technical_complexity_signal duplicates problem_domain, incident_closure_status restates original fields, and resolution_ownership_mismatch is near-constant. Groundedness is generally acceptable for extraction-style columns but drops where the operator asserts responder expertise or severity/scope specifics the terse source text does not clearly support."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

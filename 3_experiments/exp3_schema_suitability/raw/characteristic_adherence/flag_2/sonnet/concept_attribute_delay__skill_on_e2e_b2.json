@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Why do some incidents take longer to resolve?",
+  "focus_variable": "incident_delay_reasons",
+  "concept": "incident_delay_reasons",
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "failure_pattern",
+    "scope_indicator",
+    "assignment_lag",
+    "assignee_workload_signal",
+    "reassignment_indicator",
+    "remote_context",
+    "caller_repeat_reporter",
+    "incident_is_open_unresolved"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1462,
+    "facet_fraction": 0.3333,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.35,
+    "mece": 0.4387,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_delay_reasons",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The type of incident (email, database, vpn) is a characteristic of the incident, not a constitutive part of the REASON it is delayed. It may correlate with delay but is not an aspect-of the delay cause itself."
+      },
+      {
+        "name": "failure_pattern",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes the nature of the technical failure (connection_failure, service_down). This characterizes the incident, not the delay mechanism; it is a predictor of resolution time, not a facet of the delay reason."
+      },
+      {
+        "name": "scope_indicator",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Blast radius (individual_user vs outage_wide) is an attribute of the incident's impact; it may influence delay but is not a constitutive part of the delay reason."
+      },
+      {
+        "name": "assignment_lag",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Delay incurred at the assignment/triage stage (multi_day, unassigned) is directly a constitutive part of why resolution takes longer -- a genuine facet of delay."
+      },
+      {
+        "name": "assignee_workload_signal",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Resource/capacity contention (high_volume_assignee) is a constitutive aspect of delay causation arising from the handling process, an 'aspect of' why work stalls."
+      },
+      {
+        "name": "reassignment_indicator",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Ping-ponging/rerouting of tickets is a process-level constitutive contributor to delay, a legitimate facet of the delay concept."
+      },
+      {
+        "name": "remote_context",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the incident is remote-related is contextual metadata about the incident, not a constitutive part of the delay reason."
+      },
+      {
+        "name": "caller_repeat_reporter",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A single-valued (all true=500) attribute about the caller; it carries no discriminating information and is not a part-of the delay concept."
+      },
+      {
+        "name": "incident_is_open_unresolved",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Whether the incident is still open/unresolved restates the outcome (long resolution) itself rather than decomposing its causes; it is a restatement of the whole, not a facet."
+      }
+    ],
+    "facet_columns": [
+      "assignment_lag",
+      "assignee_workload_signal",
+      "reassignment_indicator"
+    ],
+    "non_facet_columns": [
+      "incident_category",
+      "failure_pattern",
+      "scope_indicator",
+      "remote_context",
+      "caller_repeat_reporter",
+      "incident_is_open_unresolved"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.35,
+    "rationale": "Only three columns (assignment_lag, assignment/workload, reassignment) are genuine constitutive facets of 'incident_delay_reasons' -- they capture process-level contributors (triage lag, resource contention, rerouting) that are aspects-of the delay. The majority of columns are external predictors describing the incident's type, failure nature, scope, or context, which may correlate with delay but are not part-of the delay concept; one is a restatement of the outcome and one is degenerate/irrelevant. Among the real facets, assignment_lag and assignee_workload_signal partially overlap (both reflect handling-stage capacity/queuing and share an 'unassigned' bucket), lowering mutual exclusivity. Exhaustiveness is weak: major delay facets such as vendor/third-party wait, awaiting-customer/pending time, diagnosis/complexity effort, and SLA/priority-driven queuing are not represented."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

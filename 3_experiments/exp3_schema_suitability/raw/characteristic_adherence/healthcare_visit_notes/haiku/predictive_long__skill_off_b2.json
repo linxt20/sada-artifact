@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit-note signals suggest a longer visit?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "num_conditions",
+    "has_procedure",
+    "has_multiple_meds",
+    "note_length",
+    "is_urgent_note",
+    "has_diagnostics"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 1.0,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "num_conditions",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of documented conditions is a clinical complexity signal derived from the note that plausibly drives longer visits without restating or leaking duration."
+      },
+      {
+        "name": "has_procedure",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a procedure occurred is a legitimate visit characteristic that plausibly increases time; not a function of duration itself."
+      },
+      {
+        "name": "has_multiple_meds",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Polypharmacy flag reflects patient complexity and reconciliation effort, a plausible predictor outside the focus. Very imbalanced (7/250) so weak signal, but still valid."
+      },
+      {
+        "name": "note_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Note length is a borderline generic surface feature, but longer notes plausibly correlate with more involved visits and it is not a deterministic function of duration; treated as a weak predictor."
+      },
+      {
+        "name": "is_urgent_note",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Urgency signal extracted from the note is a plausible driver of visit length and lies outside the focus variable; partially redundant with existing 'urgency' column but still predictive."
+      },
+      {
+        "name": "has_diagnostics",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of diagnostic tests is a visit activity that plausibly extends duration; a legitimate predictor, not a restatement or post-outcome leak."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.6,
+    "rationale": "All six added columns are legitimate note-derived predictors that lie outside visit_duration_min without restating or leaking it. The complexity/activity flags (num_conditions, has_procedure, has_diagnostics) carry the strongest and most balanced signal; is_urgent_note overlaps with the existing urgency column, note_length is a weak generic surface feature, and has_multiple_meds is heavily imbalanced. As a set they give solid but not exceptional incremental leverage."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What operational burdens appear in incident descriptions?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "operational_burden_type",
+    "severity_indicator",
+    "root_infrastructure"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7167,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7584,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "operational_burden_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorizing burdens into a multi-label taxonomy (connectivity, infrastructure, software, outage, performance), giving a strong axis to group and compare. Samples are sound readings: WiFi/VPN -> connectivity, online database -> connectivity|infrastructure. The 'other' for printing is defensible but slightly weak, and some multi-label assignments infer beyond terse text, so groundedness is high but not perfect."
+      },
+      {
+        "name": "severity_indicator",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Severity is a plausibly useful analytical axis, but it partly duplicates the existing 'priority' column, and the values appear largely inferred rather than grounded. Terse descriptions like 'Cannot connect to office WiFi' do not clearly warrant a specific severity level; identical VPN descriptions receive different severities (1 vs 2), indicating unsupported confident specifics."
+      },
+      {
+        "name": "root_infrastructure",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Provides a distinct grouping axis (Network/Database/Software/Hardware) not directly present in original columns and useful for locating operational burden sources. Samples are well grounded: WiFi/VPN -> Network, database -> Database, printing -> Hardware. Some inference required from short text but reasonable and warranted."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.72,
+    "rationale": "operational_burden_type and root_infrastructure give genuine, well-grounded analytical axes directly serving the query about operational burdens. severity_indicator is weaker: it overlaps with the existing priority column and its values appear inferred rather than supported, with inconsistent assignments to near-identical descriptions signaling some hallucination. Overall the added set is useful and mostly grounded."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

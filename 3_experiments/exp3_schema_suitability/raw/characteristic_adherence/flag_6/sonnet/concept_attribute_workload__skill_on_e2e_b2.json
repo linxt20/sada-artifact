@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "focus_variable": "agent_workload_burden",
+  "concept": "agent_workload_burden",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "affected_system_type",
+    "scope_indicator",
+    "recurrence_pattern",
+    "self_resolved",
+    "requires_escalation"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0756,
+    "facet_fraction": 0.2857,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.35,
+    "exhaustiveness": 0.2,
+    "mece": 0.2646,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "agent_workload_burden",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The type of incident (email, vpn, database) is an attribute of the ticket that may predict workload, but it is not itself an aspect OF the burden the agent bears. It describes what the ticket is about, not a part of the effort/load."
+      },
+      {
+        "name": "failure_mode",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "How the system failed (disconnection, crash, no_access) characterizes the technical problem, not a constitutive part of agent workload. It is a driver/predictor of difficulty, not an aspect of the burden itself."
+      },
+      {
+        "name": "affected_system_type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The type of affected system is a property of the incident, largely redundant with incident_category, and external to the concept of workload burden."
+      },
+      {
+        "name": "scope_indicator",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Blast radius (single_user vs department_wide) influences workload but is a characteristic of the incident's impact scope, not a constitutive facet of the agent's own effort/load."
+      },
+      {
+        "name": "recurrence_pattern",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the issue recurs describes the incident history, a predictor of repeated effort, not a decomposed aspect of the burden concept itself."
+      },
+      {
+        "name": "self_resolved",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the ticket resolved without agent effort speaks directly to the amount of agent workload consumed -- it is an aspect of the burden (effort demanded), though somewhat coarse and outcome-shaped."
+      },
+      {
+        "name": "requires_escalation",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Escalation is a constitutive component of the workload/effort involved in handling a ticket (hand-off/coordination load), hence a facet of the burden -- though the observed values are near-degenerate (false/NULL only)."
+      }
+    ],
+    "facet_columns": [
+      "self_resolved",
+      "requires_escalation"
+    ],
+    "non_facet_columns": [
+      "incident_category",
+      "failure_mode",
+      "affected_system_type",
+      "scope_indicator",
+      "recurrence_pattern"
+    ],
+    "mutual_exclusivity": 0.35,
+    "exhaustiveness": 0.2,
+    "rationale": "Most added columns describe properties of the ticket/incident (category, failure mode, system type, scope, recurrence) that are external PREDICTORS of workload rather than constitutive PARTS of the concept 'agent_workload_burden'. A true faceted decomposition would carve the burden itself into aspects such as handling time/effort, number of touches/reassignments, complexity of diagnosis, communication/coordination load, and cognitive/emotional strain. Only self_resolved and requires_escalation touch actual effort facets, and they overlap heavily (both reduce to whether/how much agent action was needed) and cover only a small slice of the concept. Additionally incident_category and affected_system_type largely duplicate each other, lowering mutual exclusivity. Overall the set fails the meronymy test and provides weak MECE coverage of the concept."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

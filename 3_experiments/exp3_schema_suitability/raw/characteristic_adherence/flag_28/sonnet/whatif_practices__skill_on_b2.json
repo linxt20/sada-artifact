@@ -1,0 +1,145 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "focus_variable": "percent_complete",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "primary_lever",
+    "initiative_type",
+    "goal_specificity",
+    "comparison_reference",
+    "timeframe_horizon",
+    "multi_initiative_complexity",
+    "scope_of_change",
+    "measurement_mechanism",
+    "automation_as_mechanism",
+    "technology_enabler",
+    "feedback_loop_present"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "percent_complete",
+    "per_column": [
+      {
+        "name": "primary_lever",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The primary goal-management lever a team adopts is a settable, intervenable choice, directly matching the 'goal-management practices' the query asks teams to adopt."
+      },
+      {
+        "name": "initiative_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The type of initiative launched is an actionable, decidable choice, an intervenable practice component."
+      },
+      {
+        "name": "goal_specificity",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Whether goals are quantified with baseline+target is a settable goal-management practice—exactly the kind of practice top performers describe."
+      },
+      {
+        "name": "comparison_reference",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Choosing a comparison baseline (prior year/quarter) is a configurable goal-management practice; not explicitly named but part of the intervenable practice set."
+      },
+      {
+        "name": "timeframe_horizon",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The horizon set for a goal is a settable planning choice, an intervenable practice."
+      },
+      {
+        "name": "multi_initiative_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity of the goal's initiative set can drive both the practices adopted and how much gets completed; a plausible common cause, not named in the query."
+      },
+      {
+        "name": "scope_of_change",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Company-wide vs department-level scope affects both which practices are feasible and achievability of completion; a common cause not named in the query."
+      },
+      {
+        "name": "measurement_mechanism",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The underlying metric type (turnover, expense, sales, survey) influences both practice choice and baseline completability; a plausible confounder not named."
+      },
+      {
+        "name": "automation_as_mechanism",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Automation as the mechanism sits on the causal path between adopting practices and improved completion; it is a mediator, not a confounder."
+      },
+      {
+        "name": "technology_enabler",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Technology enabling the initiative lies downstream of the practice choice and upstream of the outcome—a mediator."
+      },
+      {
+        "name": "feedback_loop_present",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Presence of a feedback loop is a mechanism component of the adopted practice on the path to the outcome—a mediator rather than a common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_lever",
+      "initiative_type",
+      "goal_specificity",
+      "comparison_reference",
+      "timeframe_horizon"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "multi_initiative_complexity",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "scope_of_change",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "measurement_mechanism",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The added columns clearly establish intervenable treatments: the goal-management practices (primary_lever, initiative_type, goal_specificity, and configurable choices like comparison_reference and timeframe_horizon) are all levers an actor could set or change, satisfying claim (a). For claim (b), a few genuine, non-trivial confounders not named in the query are present—scope_of_change, measurement_mechanism, and multi_initiative_complexity—each a plausible common cause of both practice adoption and completion. However, several columns (automation_as_mechanism, technology_enabler, feedback_loop_present) are mechanisms lying on the causal path and are mediators, which must NOT be adjusted for and do not count as confounders. The confounder set is modest and partially overlaps with the treatment concept, giving reasonable but not strong deconfounding coverage."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 11
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "taste_quality",
+    "flavor_intensity_alignment",
+    "price_value_fit",
+    "product_freshness",
+    "expectation_mismatch",
+    "consumer_segment",
+    "repeat_purchase_intent"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.8614,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.7729,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.8172,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A fine-grained taste categorization gives a strong actionable axis for improving product scores. Values track source text well (good/excellent/medicinal reviews mapped sensibly). The 'metallic_chemical_aftertaste' for the 'very medicinal' flavor is a reasonable read. Slight risk of over-specific negative buckets, but grounded on samples."
+      },
+      {
+        "name": "flavor_intensity_alignment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing too_weak/too_strong/ideal is a genuine actionable lever for reformulation. Silent rows correctly marked Unknown. 'ideal' assigned to rows with no explicit intensity comment (e.g. dog food) is a mild over-assertion, but generally defensible; medicinal->too_strong is warranted."
+      },
+      {
+        "name": "price_value_fit",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Value/price perception is a useful distinct grouping axis for score drivers. Silent rows correctly Unknown. However 'good_value' assigned to the dog food and confection reviews that make no price statement is a mild unsupported inference; taffy 'great price' is well grounded."
+      },
+      {
+        "name": "product_freshness",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "Freshness/degradation is actionable for supply-chain/quality actions. But grounding is weak: nearly every sample defaulted to 'good' or 'excellent' even when the text says nothing about freshness (dog food, confection, peanuts, medicinal soda). This asserts a positive freshness state the text does not support rather than using a null/unknown, indicating fabricated confidence."
+      },
+      {
+        "name": "expectation_mismatch",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Highly actionable for identifying score-hurting gaps between description and product. Values are well grounded: 'Not as Advertised' peanuts -> description_inaccurate, medicinal soda -> flavor_different_than_expected, positive reviews -> meets_expectations."
+      },
+      {
+        "name": "consumer_segment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Segment gives a useful axis to see which audiences drive low scores. pet_owner for dog food is well grounded. Default 'general_consumer' for reviews without clear segment cues is acceptable and not fabricated, though it carries little signal in those rows."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Repurchase intent is a strong outcome-oriented axis for prioritizing actions. Grounded where signaled (finicky-dog approval -> high; medicinal disappointment -> low). Some rows lack explicit intent statements yet get confident 'high_repeat_likelihood', a mild over-inference but generally consistent with review sentiment."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.77,
+    "rationale": "The added columns collectively give the analyst several genuine, distinct, actionable axes (taste, intensity, value, expectation gaps, segment, repurchase) directly relevant to identifying levers that improve product scores; none are trivial constants or mere restatements. Grounding is mostly sound, with correct use of Unknown/NULL on silent rows for several columns. The main weakness is product_freshness, which asserts positive freshness on rows that never mention it instead of marking unknown, plus milder unsupported positive defaults in price_value_fit and repeat_purchase_intent. Overall solid quality with one notably weakly-grounded column."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

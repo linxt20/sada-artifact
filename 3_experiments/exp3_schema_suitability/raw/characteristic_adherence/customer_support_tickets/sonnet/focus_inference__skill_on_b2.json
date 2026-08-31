@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_category",
+    "issue_subtype",
+    "affected_component",
+    "incident_scope",
+    "operational_impact"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.765,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/type of the support issue (what the ticket is about, characterized along category, subtype, affected component, scope, and impact)",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "supports_focus": true,
+        "rationale": "Directly names the kind of issue (bug, outage, feature_request, etc.), which is the core of the query's 'main kinds of issues'."
+      },
+      {
+        "name": "issue_subtype",
+        "supports_focus": true,
+        "rationale": "Refines the category into a finer thematic grouping (auth, billing, UI/UX), adding useful granularity to the same focus."
+      },
+      {
+        "name": "affected_component",
+        "supports_focus": true,
+        "rationale": "Identifies the system area implicated, a coherent facet of what an issue is about."
+      },
+      {
+        "name": "incident_scope",
+        "supports_focus": true,
+        "rationale": "Characterizes breadth of impact (single_user vs tenant); a sensible attribute of an issue though slightly more impact-oriented than kind-oriented."
+      },
+      {
+        "name": "operational_impact",
+        "supports_focus": true,
+        "rationale": "Describes consequence of the issue; supports understanding but leans toward impact rather than 'kind', still coherent with the focus."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "rationale": "The columns collectively centre on one coherent, data-inferable focus: characterizing the nature of support issues. issue_category, issue_subtype, and affected_component form a clean, differentiated hierarchy of what a ticket is about at a useful granularity, directly answering 'main kinds of issues'. incident_scope and operational_impact extend the focus into consequence/breadth facets; they are coherent and analyst-actionable but drift slightly from 'kind of issue' toward impact, which is why coherence and structure are not perfect. Nothing here is a mechanical restatement or generic noise (no token counts or bare sentiment), and the implied focus is clearly investigable (e.g., which categories dominate, which components drive outages)."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

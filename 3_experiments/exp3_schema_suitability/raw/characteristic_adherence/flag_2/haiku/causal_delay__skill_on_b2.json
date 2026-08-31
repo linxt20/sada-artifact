@@ -1,0 +1,124 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "issue_category",
+    "scope_of_impact",
+    "failure_mechanism",
+    "environment_specificity",
+    "problem_specificity",
+    "recurring_pattern",
+    "assignment_stability",
+    "incident_closure_status"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The nature of the issue (connectivity, email, database) is a candidate underlying cause plausibly affecting resolution time. Distinct from the original 'category' field, this is a finer-grained treatment surfaced from the text."
+      },
+      {
+        "name": "scope_of_impact",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (infrastructure_wide vs individual_user) plausibly drives both the type/mechanism of the issue (treatment) and resolution time (outcome), acting as a common cause."
+      },
+      {
+        "name": "failure_mechanism",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The specific failure mode (connection_refused, server_unresponsive) is a candidate cause whose effect on resolution time is being attributed; another treatment-like variable."
+      },
+      {
+        "name": "environment_specificity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Environment (production, remote_vpn) plausibly influences both which failures occur and how long resolution takes, so it is a common cause."
+      },
+      {
+        "name": "problem_specificity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How well-defined the problem is affects both the apparent cause classification and resolution time; well-defined issues resolve faster and correlate with issue type. Plausible common cause."
+      },
+      {
+        "name": "recurring_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an issue recurs plausibly relates to underlying cause type and to resolution time (known solutions vs chronic problems), a common cause."
+      },
+      {
+        "name": "assignment_stability",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the same person opened/closed reflects handoffs that lie on the path between the cause and resolution time; it is downstream of the incident handling, hence a mediator/collider, not a confounder."
+      },
+      {
+        "name": "incident_closure_status",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Closure status is an outcome/consequence of the incident being resolved; conditioning on it would induce bias. Not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "issue_category",
+      "failure_mechanism"
+    ],
+    "confounders": [
+      {
+        "name": "scope_of_impact",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "environment_specificity",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "problem_specificity",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "recurring_pattern",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The system supplies genuine treatments (issue_category, failure_mechanism) representing candidate underlying causes, and several plausible confounders (scope_of_impact, environment_specificity, problem_specificity, recurring_pattern) that were NOT named in the query, which explicitly named only priority and category. This demonstrates real surfacing of common causes beyond the query. However, the confounders are somewhat generic and their status as common causes of both treatment and outcome is arguable (some border on mediators), and two columns (assignment_stability, incident_closure_status) are mediator/collider errors that should not be adjusted for. Overall the causal setup is present but with moderate confounder quality and some role confusion."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

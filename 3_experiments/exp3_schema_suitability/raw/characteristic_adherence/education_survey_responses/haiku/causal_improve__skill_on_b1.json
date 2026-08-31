@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can educators improve learning satisfaction?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "adaptive_content_delivery_strategy",
+    "synchronous_interaction_design",
+    "peer_community_structure",
+    "hands_on_or_kinesthetic_access",
+    "feedback_turnaround_and_personalization",
+    "technical_platform_stability",
+    "student_engagement_and_motivation_baseline",
+    "developmental_stage_fit",
+    "subject_discipline_and_remote_fit"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7978,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8167,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8073,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "adaptive_content_delivery_strategy",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Captures async/video/interactive delivery modes, a genuine axis for improving satisfaction. Values map soundly to text (ED-0004 video_recordings). 'not_present' dominates but is legitimate for silent rows."
+      },
+      {
+        "name": "synchronous_interaction_design",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes live participation quality, directly relevant to the query. ED-0005 silent_or_passive and ED-0001 microphone_barriers are well grounded. ED-0003 'microphone_barriers' is a slightly loose reading (text mentions teacher can't tell student is lost) but defensible."
+      },
+      {
+        "name": "peer_community_structure",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Collaboration/isolation is a strong lever for satisfaction. ED-0003 isolated_individual_work grounded ('zero peer interaction'). Some rows default to isolated where text is silent, a mild over-assertion but reasonable."
+      },
+      {
+        "name": "hands_on_or_kinesthetic_access",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Kinesthetic access is meaningful for remote-learning satisfaction. ED-0002 live_demonstrations_with_home_replication well grounded (kitchen-chemistry). Some 'pure_video' defaults are inferential but warranted."
+      },
+      {
+        "name": "feedback_turnaround_and_personalization",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Feedback quality is a classic satisfaction driver. Heavily 'not_present' (162), but that is honest for silent rows and non-constant across the table."
+      },
+      {
+        "name": "technical_platform_stability",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Reliability strongly affects satisfaction. Values well grounded: ED-0001 lags, ED-0003 frequent_disconnections. Somewhat skewed toward 'reliable' but that is a valid reading."
+      },
+      {
+        "name": "student_engagement_and_motivation_baseline",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Useful axis to segment respondents. Somewhat more interpretive/inferred than extractive; ED-0001 'requires_external_structure' is a stretch from the text, but overall defensible categorisations."
+      },
+      {
+        "name": "developmental_stage_fit",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Largely restates existing grade_level column, limiting new analytical leverage. Values are well grounded (ED-0002 middle_school from 'seventh graders'). Useful mainly if grade_level was missing."
+      },
+      {
+        "name": "subject_discipline_and_remote_fit",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Grouping subjects by remote suitability is a strong analytical axis beyond raw subject. ED-0001 stem_lab_intensive (algebra) is a questionable fit and ED-0003 content_friendly for a struggling reader is loose, but mostly warranted."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns collectively give rich, distinct analytical axes (delivery mode, synchronous design, community, kinesthetic access, feedback, platform stability, engagement, subject fit) directly serving the query on improving satisfaction. Most values are sound readings of the open responses, with occasional over-confident inferences on silent rows and one mildly redundant column (developmental_stage_fit vs grade_level). No clear hallucinations of invented facts observed; 'not_present'/NULL usage for silent rows is appropriate."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 9
+}

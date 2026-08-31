@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined expense submissions?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "missing_source_id",
+    "missing_processed_date",
+    "processed_date_dt",
+    "processing_delay_days",
+    "is_high_amount",
+    "high_risk_department",
+    "high_risk_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.5929,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.7786,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.6857,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A data-completeness flag on source_id; groundable directly from presence/absence. Mild usefulness for decline analysis (missing metadata could correlate with declines) but somewhat generic."
+      },
+      {
+        "name": "missing_processed_date",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Correctly derived from nan processed_date. Unprocessed/missing dates plausibly relate to declined submissions, giving a reasonable grouping axis."
+      },
+      {
+        "name": "processed_date_dt",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "A parsed datetime version of an existing column—largely redundant restatement, though it enables temporal analysis. Values faithfully mirror source; nulls for nan are correct."
+      },
+      {
+        "name": "processing_delay_days",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Genuinely useful new axis (delay could drive declines). However groundedness is questionable: derivation likely needs opened_at and processed_date, yet sample values look inconsistent (rows with different date spans both yield 1.0/2.0), suggesting the delay is not a sound reading of the source."
+      },
+      {
+        "name": "is_high_amount",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Threshold flag on the existing amount column; useful for comparing decline rates by amount tier. Value derivable, though the threshold is an undocumented choice."
+      },
+      {
+        "name": "high_risk_department",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Potentially useful grouping, but 'high risk' is an asserted label not present in the source; the mapping of which departments are risky is an unstated judgement, weakening groundedness."
+      },
+      {
+        "name": "high_risk_category",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Useful axis, but flagging a category (e.g. 'Random Access Memory Component') as high_risk=1 injects a judgement not supported by the source text; risk designation is invented rather than read."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.75,
+    "rationale": "Most columns provide plausible grouping axes for a decline-reduction analysis (delay, amount tier, missing metadata, risky department/category). Groundedness is strong for the completeness flags and the datetime parse, which faithfully mirror the source. It is weaker for the 'high_risk_*' labels, which assert a risk judgement absent from the text, and for processing_delay_days, whose sample values look inconsistent with the underlying dates."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 7
+}

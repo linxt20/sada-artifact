@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "focus_variable": "hardware_incident_spike",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "hardware_component_type",
+    "hardware_failure_mechanism",
+    "incident_recurrence_pattern",
+    "severity_implied",
+    "assigned_technician",
+    "caller_segment",
+    "location_scope"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "hardware_incident_spike",
+    "per_column": [
+      {
+        "name": "hardware_component_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Identifies which class of hardware (printer, network_device, etc.) is driving incidents; a candidate cause whose distribution could explain the spike. Surfaced from data, not query."
+      },
+      {
+        "name": "hardware_failure_mechanism",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The mechanism (connectivity_loss, device_unresponsive) is a candidate cause of the incident spike; an alternative treatment characterizing what type of failure occurred."
+      },
+      {
+        "name": "incident_recurrence_pattern",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Recurrence (recurring_device_class, persistent_malfunction) sits on the path between an underlying fault and the observed count spike -- it is a manifestation/mediator of incidents inflating, not a common cause of both a treatment and the outcome."
+      },
+      {
+        "name": "severity_implied",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Severity characterizes the incidents themselves; it is an attribute/descriptor of the outcome rather than an independent cause or confounder of the spike."
+      },
+      {
+        "name": "assigned_technician",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Technician assignment is a downstream consequence of an incident being opened (and its type/severity), not a common cause of both a treatment and the outcome. Adjusting for it would be a mistake."
+      },
+      {
+        "name": "caller_segment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "User type (regular_user vs itil_user) plausibly affects both the kind of hardware/failure exposure (treatment) and the propensity to report incidents (outcome), so it is a common cause worth adjusting for."
+      },
+      {
+        "name": "location_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Location/scope (workstation, server_infrastructure, network_area) can drive both which hardware/failure mechanism is present (treatment) and the volume of incidents (outcome), acting as a genuine common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "hardware_component_type",
+      "hardware_failure_mechanism"
+    ],
+    "confounders": [
+      {
+        "name": "caller_segment",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "location_scope",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "The added columns clearly supply candidate TREATMENTS (hardware_component_type, hardware_failure_mechanism) whose distributions could attribute the spike, none of which are named in the query. On confounders, two variables (caller_segment, location_scope) are plausible common causes of both the treatment (what hardware/failure is present) and the outcome (incident volume), and both were surfaced from the data rather than named in the query -- these demonstrate the capability under test, though their strength as classic common causes is only moderate. However, several columns are mislabeled risks: incident_recurrence_pattern is a mediator/manifestation of the outcome, assigned_technician is a collider (downstream of the incident), and severity_implied is an outcome descriptor. There is no true temporal/time-window confounder or baseline-load variable, which weakens the causal setup. Overall the treatment side is met and there is genuine (non-query-copied) confounder reasoning, but roughly half the columns are outcome-descriptors, mediators, or colliders rather than confounders, keeping confounder_quality moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

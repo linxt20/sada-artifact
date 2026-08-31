@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does goal achievement vary across department, metric, and the management practices described?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "achievement_status",
+    "completion_gap",
+    "duration_days",
+    "management_practice"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.825,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7875,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "achievement_status",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a clear categorical outcome axis (Achieved/Missed/On Track/At Risk/etc.) that is central to a goal-achievement query, enabling grouping and comparison across department and metric. Values appear derivable from state/percent_complete vs target; samples are plausible readings, though the 'Achieved' for a row with completion_gap 0 and 'Cancelled'/'At Risk' assignments suggest reliance on original state fields, which is a sound inference."
+      },
+      {
+        "name": "completion_gap",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A numeric gap (likely percent_complete minus target_percentage) gives a continuous measure of over/under-performance, valuable for modeling achievement. Mostly derivable from existing numeric columns, but some sampled values are internally inconsistent with achievement_status (e.g. gap 27 labeled 'Achieved' vs gap -63 'At Risk'), and the sign convention is a slight concern, lowering groundedness modestly."
+      },
+      {
+        "name": "duration_days",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Duration derived from start_date/end_date is a reasonable new axis for relating timeframe to achievement. However negative values (e.g. -15) indicate end_date before start_date, which is either an unsupported computation artifact or contradicts a valid timeline, indicating some ungrounded/erroneous values."
+      },
+      {
+        "name": "management_practice",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the 'management practices described' part of the query, giving a genuine categorical axis to compare achievement. Samples (Financial Control for cost reduction, Customer-Focused for satisfaction, People-Centric for engagement) are warranted readings of the description. The large 'Other' bucket is acceptable, but categorisation is somewhat inferential and occasionally generic."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.75,
+    "rationale": "All four columns supply genuine, non-redundant axes (outcome status, numeric gap, timeframe, practice type) directly aligned with the query's dimensions of department, metric, and management practice. Groundedness is generally sound as most values derive from existing date/percentage/description fields, but there are observable issues: negative duration_days imply invalid date computations, and completion_gap sign/values sometimes conflict with achievement_status. These lower but do not undermine overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "eda_achievement",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

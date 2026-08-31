@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What business models and customers do these companies describe?",
+  "focus_variable": "company_business_profile",
+  "concept": "company_business_profile",
+  "n_added_columns": 5,
+  "added_columns": [
+    "business_model_type",
+    "primary_customer_segment",
+    "industry_vertical",
+    "core_product_service_category",
+    "delivery_mode"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6519,
+    "facet_fraction": 1.0,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.85,
+    "mece": 0.6519,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "company_business_profile",
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How a company creates and captures value (SaaS, marketplace, professional services) is a core constitutive aspect OF its business profile."
+      },
+      {
+        "name": "primary_customer_segment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Who the company serves (B2B enterprise, B2C, developers) is an intrinsic aspect OF the business profile and directly targeted by the query."
+      },
+      {
+        "name": "industry_vertical",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The sector/domain the company operates in (fintech, healthtech) is a genuine descriptive facet OF the business profile."
+      },
+      {
+        "name": "core_product_service_category",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "What the company actually sells (software platform, physical device, investment fund) is a constitutive part of the profile, though it overlaps heavily with business_model_type and delivery_mode."
+      },
+      {
+        "name": "delivery_mode",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How the offering reaches customers (cloud, in-person, physical retail) is an aspect OF the business profile, but its value space largely re-encodes product category and business model distinctions."
+      }
+    ],
+    "facet_columns": [
+      "business_model_type",
+      "primary_customer_segment",
+      "industry_vertical",
+      "core_product_service_category",
+      "delivery_mode"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.85,
+    "rationale": "All five columns are legitimate part-of facets of a company business profile rather than external predictors or causes, so the meronymy requirement is satisfied. However mutual exclusivity is only moderate: business_model_type, core_product_service_category, and delivery_mode substantially overlap. Their value spaces re-encode the same underlying distinction repeatedly -- e.g. SaaS (model) / software_platform (product) / cloud_only (delivery) all describe the same cloud-software company, and staffing_services / staffing_consulting / in_person_services likewise collapse into one aspect. This is largely one 'what/how it's sold' facet split three ways, which lowers mutual exclusivity. Exhaustiveness is strong: model, customer, vertical, and product together cover the main constitutive dimensions the query cares about (business models and customers), with only minor gaps (e.g. company stage/scale or geographic scope)."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_business",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

@@ -1,0 +1,60 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "service_staff_behavior",
+    "complaint_severity"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "service_staff_behavior",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "This encodes a candidate cause (rude/dismissive/discriminatory staff behavior) whose effect on the sentiment outcome is being attributed. It is a plausible driver of negative Yelp experiences, functioning as the treatment/candidate cause surfaced from the review text."
+      },
+      {
+        "name": "complaint_severity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Severity of the complaint lies ON the causal path between whatever bad experience occurred and the resulting negative label. It is a consequence of the treatment and a proximate cause of the outcome, not a common cause of both. It does not cause the staff behavior, so it is not a confounder; adjusting for it would block part of the effect being attributed."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "service_staff_behavior"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The augmentation supplies a plausible treatment (service_staff_behavior) as a candidate cause of negative experiences, satisfying part (a). However, it fails part (b): no genuine confounder — a variable that causes BOTH the treatment and the outcome (e.g., restaurant type, price tier, time/wait context, reviewer disposition) — is provided. complaint_severity is a mediator/downstream consequence, not a common cause, so treating it as an adjustment variable would be an error. With no surfaced confounders, the columns do not set up an unbiased causal estimation, and the decisive capability test is not demonstrated."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 2
+}

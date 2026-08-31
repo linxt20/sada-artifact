@@ -1,0 +1,1255 @@
+[
+  {
+    "var_a": "original",
+    "var_b": "skill_off",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 3,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "STEMI (V-0008), stroke (V-0028, V-0211)",
+          "why": "concrete row-level citations"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Older adults (60+) dominate chronic disease and emergency visits",
+          "why": "cross-group segmentation"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "The dataset appears synthetic/structured",
+          "why": "consistent caveats"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Musculoskeletal / Pain | 44 | 17.6%",
+          "why": "quantified counts and percentages"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "top 3 account for ~47%",
+          "why": "decision-ready ranking"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "'General / Other' ... is a catch-all that may mask",
+          "why": "consistent self-critique"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": [
+        {
+          "column": "concern_category",
+          "quote": "The `concern_category` column directly encodes the type of concern",
+          "dependent": true
+        }
+      ]
+    },
+    "reason": "B quantifies concern categories with counts and percentages making it more evidence-grounded and decision-ready, though A cites more concrete rows.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.62,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Musculoskeletal / Pain | 44 | 17.6%",
+          "why": "quantified counts and percentages per category"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "top 3 account for ~47%",
+          "why": "internally consistent aggregation"
+        },
+        {
+          "dimension": "depth",
+          "quote": "likely suppresses the true prevalence of Mental Health",
+          "why": "reasons about dataset composition bias"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "STEMI (V-0008), stroke (V-0028, V-0211)",
+          "why": "cites specific row IDs and diagnoses"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Concern type correlates strongly with department, urgency level, and patient age group",
+          "why": "cross-cutting segmentation by age and department"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Older adults (60+) dominate chronic disease",
+          "why": "qualitative pattern without magnitudes"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B is richer in row-level examples but A provides quantified category distributions giving stronger measurable evidence.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 3,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "STEMI (V-0008), stroke (V-0028, V-0211)",
+          "why": "concrete row-level citations"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Older adults (60+) dominate chronic disease",
+          "why": "claim lacks numeric backing"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Chronic disease management | 88 | 35.2%",
+          "why": "quantified category counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "acute new onset (100) vs. chronic stable (68)",
+          "why": "cross-tab comparison"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "body_system = Unknown category (13 records)",
+          "why": "acknowledges limitations consistently"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B ties every claim to counts and percentages while A relies on row lists without magnitudes.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 3,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Chronic disease management | 88 | 35.2%",
+          "why": "quantified category counts and percentages"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "acute new onset (100) vs. chronic stable (68)",
+          "why": "consistent cross-checks between tables"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "STEMI (V-0008), stroke (V-0028, V-0211)",
+          "why": "concrete row IDs and diagnoses"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Concern type correlates strongly with department, urgency level, and patient age group",
+          "why": "segments across groups"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A gives quantified, internally consistent category counts making it more decision-ready, while B is richer in examples but lacks magnitudes.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.86,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 2,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 2,
+        "score_b": 5,
+        "delta_a_minus_b": -3,
+        "winner": "B",
+        "margin": "large"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "e.g., V-0003, V-0010, V-0023",
+          "why": "cites concrete record IDs and diagnoses"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Older adults (60+) dominate chronic disease",
+          "why": "claims lack counts/percentages"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "five dominant concern types are",
+          "why": "summary consistent with body"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Cardiovascular | 47 | 18.8%",
+          "why": "exact counts and percentages"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "107/250 (43%) ... highest average acuity (3.4/5)",
+          "why": "quantified claims"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Trauma/injury and neurologic ... highest referral/escalation rates (67% and 64%)",
+          "why": "cross-group causal reasoning"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "chronic disease management (82/250) represents a substantial second stream",
+          "why": "decision-ready segmentation"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides quantified distributions, cross-cuts, and acuity/referral metrics whereas A is mostly enumerated description.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.75,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 3,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 3,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Cardiovascular | 47 | 18.8% | 3 | 30.9",
+          "why": "precise counts, percentages, acuity, duration"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Acute complaints (107/250, 43%)",
+          "why": "claims tied to numeric fractions"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Trauma/injury and neurologic categories have the highest referral/escalation rates (67% and 64%)",
+          "why": "cross-group causal comparison"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "STEMI (V-0008), stroke (V-0028, V-0211)",
+          "why": "concrete record-level citations"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "V-0003, V-0010, V-0023, V-0030, V-0100",
+          "why": "row-level references but no aggregate counts"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "The five dominant concern types are...",
+          "why": "consistent summary"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A provides quantified distributions, cross-cuts, and comparative reasoning while B offers rich examples but weaker aggregate quantification.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Musculoskeletal / Pain | 44 | 17.6%",
+          "why": "full 14-category table with counts and percents"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Cardiovascular (13.6%) is driven largely by the Cardiology cohort (42 visits)",
+          "why": "ties category to department counts"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "top 3 account for ~47%",
+          "why": "internally consistent totals"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "Condition chronicity confirms this split: acute new onset (100) vs. chronic stable (68)",
+          "why": "cross-column reasoning across multiple facets"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Chronic disease management | 88 | 35.2%",
+          "why": "counts across several dimensions"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "acute new onset (100) vs. chronic stable (68) vs. preventive/asymptomatic (39)",
+          "why": "39 vs preventive counts (38) mildly inconsistent across sections"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A is more internally consistent and evidentially grounded, though B offers more multi-facet depth.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Chronic disease management | 88 | 35.2%",
+          "why": "counts with percentages"
+        },
+        {
+          "dimension": "depth",
+          "quote": "acute new onset (100) vs. chronic stable (68) vs. preventive/asymptomatic (39)",
+          "why": "cross-tab reasoning across chronicity"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Cardiovascular (48), musculoskeletal (46), and dermatologic (45)",
+          "why": "body-system magnitudes"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Musculoskeletal / Pain | 44 | 17.6%",
+          "why": "ranked counts and percentages"
+        },
+        {
+          "dimension": "depth",
+          "quote": "consistent with the Orthopedics department being one of the larger cohorts",
+          "why": "links category to department"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "most prevalent concern types are musculoskeletal/pain, cardiovascular, and preventive care",
+          "why": "summary omits General/Other despite being rank 2"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": [
+        {
+          "column": "concern_category",
+          "quote": "The `concern_category` column directly encodes the type of concern",
+          "dependent": true
+        }
+      ]
+    },
+    "reason": "A offers richer multi-column segmentation and internally consistent summary, while B's summary contradicts its own ranking.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.85,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Musculoskeletal / Pain | 44 | 17.6%",
+          "why": "counts and percentages per category"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "top 3 account for ~47%",
+          "why": "consistent aggregation"
+        },
+        {
+          "dimension": "depth",
+          "quote": "consistent with the Orthopedics department being one of the larger cohorts",
+          "why": "links category to department"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "Acute complaints (107/250, 43%) ... highest average acuity (3.4/5)",
+          "why": "cross-cut segmentation across purpose and acuity"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Median Acuity ... Avg Duration (min)",
+          "why": "multi-metric table with numbers"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Trauma/injury and neurologic ... highest referral/escalation rates (67% and 64%)",
+          "why": "decision-relevant escalation insight"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "28 of 47 visits fall under visit_purpose = chronic_disease_management",
+          "why": "granular row-level counts"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides deeper multi-dimensional segmentation and richer numeric evidence than A's mostly descriptive counts.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.82,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 3,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Cardiovascular | 47 | 18.8% | 3 | 30.9",
+          "why": "counts, %, acuity, duration per category"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Acute complaints (107/250, 43%) ... highest average acuity (3.4/5)",
+          "why": "cross-cut analysis by visit purpose"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "referral/escalation rates (67% and 64% respectively)",
+          "why": "numeric group comparison"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "38/40 dataset total",
+          "why": "some totals mismatch (40 vs 38)"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Musculoskeletal / Pain | 44 | 17.6%",
+          "why": "per-category counts and %"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "no Psychiatry, Gastroenterology, or Neurology departments",
+          "why": "caveats consistent"
+        },
+        {
+          "dimension": "depth",
+          "quote": "General / Other (15.6%) is a catch-all",
+          "why": "acknowledges limits but limited segmentation"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [
+        {
+          "column": "clinical_category",
+          "quote": "12 `clinical_category` groups",
+          "dependent": true
+        },
+        {
+          "column": "visit_purpose",
+          "quote": "`visit_purpose = acute_complaint`",
+          "dependent": true
+        },
+        {
+          "column": "problem_acuity",
+          "quote": "Median Acuity (`problem_acuity` 1–5)",
+          "dependent": true
+        }
+      ],
+      "B": [
+        {
+          "column": "concern_category",
+          "quote": "The `concern_category` column directly encodes",
+          "dependent": true
+        }
+      ]
+    },
+    "reason": "A provides deeper numeric segmentation and cross-cuts, making it more decision-ready than B.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.85,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Chronic disease management | 88 | 35.2%",
+          "why": "numeric category breakdown"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "body_system = Unknown category (13 records)",
+          "why": "concrete row counts"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "Trauma/injury and neurologic categories have the highest referral/escalation rates (67% and 64%)",
+          "why": "cross-group causal reasoning"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Median Acuity | Avg Duration (min)",
+          "why": "multi-metric numeric table"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "concentrated in Cardiology department (41/47)",
+          "why": "department-level magnitudes"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B offers deeper cross-cut segmentation with richer numeric evidence per concern type.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_on",
+    "swap": true,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.82,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Cardiovascular | 47 | 18.8% | 3 | 30.9",
+          "why": "counts, percent, acuity, duration per category"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Trauma/injury and neurologic categories have the highest referral/escalation rates (67% and 64%)",
+          "why": "cross-group comparison and escalation reasoning"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Acute complaints (107/250, 43%)",
+          "why": "claims tied to numeric denominators"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Chronic disease management | 88 | 35.2%",
+          "why": "category counts and percents"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Mental health visits (n=6) are few enough that conclusions... are weak",
+          "why": "honest caveats maintain consistency"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Cardiovascular (48), musculoskeletal (46), and dermatologic (45)",
+          "why": "system counts referenced"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A provides deeper cross-segment numeric detail and decision-ready patterns while B stays largely descriptive.",
+    "validation_warnings": []
+  }
+]

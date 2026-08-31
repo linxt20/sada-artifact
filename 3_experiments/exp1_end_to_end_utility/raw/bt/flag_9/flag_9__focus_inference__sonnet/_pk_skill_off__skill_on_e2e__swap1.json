@@ -1,0 +1,136 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "skill_off",
+  "swap": true,
+  "winner": "A",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.82,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 3,
+    "actionability": 3,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 3,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "malfunction_unspecified | 128 | 70%",
+        "why": "counts with percentages and priority breakdown"
+      },
+      {
+        "dimension": "depth",
+        "quote": "4/18 power-failure incidents are 1 - Critical, the highest critical rate",
+        "why": "cross-tab of failure mode vs priority"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "INC0000000135, 1 - Critical",
+        "why": "cites specific incident row"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Servers are rare but severe",
+        "why": "prioritization guidance tied to data"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Printer | 83 | Printer",
+        "why": "concrete component-level counts"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "142 incidents (78%) of all hardware cases",
+        "why": "aggregated grouping with numbers"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "no hardware incident in this dataset is flagged 1 – Critical",
+        "why": "contradicts richer priority variation, weakens depth"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [
+      {
+        "column": "hardware_failure_mode",
+        "quote": "hardware_failure_mode column identifies 6 distinct hardware problem types",
+        "dependent": true
+      },
+      {
+        "column": "affected_device_scope",
+        "quote": "Cross-referencing affected_device_scope",
+        "dependent": true
+      },
+      {
+        "column": "hardware_problem_involves_replacement",
+        "quote": "flagged only 3 incidents",
+        "dependent": true
+      }
+    ],
+    "B": [
+      {
+        "column": "hardware_problem_type",
+        "quote": "hardware_problem_type and hardware_component classify each hardware incident",
+        "dependent": true
+      },
+      {
+        "column": "hardware_component",
+        "quote": "Key Component(s)",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "A offers deeper cross-tabulation with priority and scope plus row-level evidence, exceeding B's flatter taxonomy.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

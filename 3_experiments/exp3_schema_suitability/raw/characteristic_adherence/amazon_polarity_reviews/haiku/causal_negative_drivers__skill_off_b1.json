@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "content_word_count",
+    "has_complaint_language",
+    "has_praise_language",
+    "has_negation_language"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.575,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.875,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "content_word_count",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Raw word count is a generic surface feature that offers weak analytical leverage for explaining WHY reviews are negative; review length correlates only loosely with sentiment drivers. Values are trivially and correctly derivable from the content text."
+      },
+      {
+        "name": "has_complaint_language",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A complaint-language flag gives a genuine axis to group and compare negative reviews and identify contributing factors, directly serving the query. Values are mostly sound readings, though AMZ-0004 ('I do have one negative comment') arguably contains complaint language yet is flagged 0, indicating some noise."
+      },
+      {
+        "name": "has_praise_language",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A praise flag complements the complaint flag and helps distinguish purely negative from mixed reviews, useful for isolating drivers of negativity. Groundedness is generally sound but AMZ-0004 ('can't get enough of it', 'keeps my skin clear') clearly contains praise yet is flagged 0, showing extraction errors."
+      },
+      {
+        "name": "has_negation_language",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A bare negation-presence flag is largely skewed (171/250) and generic; negation appears in positive and negative reviews alike, so it adds limited leverage for explaining negativity. Values appear correctly derived from surface cues (n't, not, don't)."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.85,
+    "rationale": "The complaint/praise language flags provide real analytical axes to group and compare reviews and probe factors behind negative sentiment, satisfying the usefulness condition; the word-count and bare negation flags are more generic and weakly linked to the query. Values are broadly grounded in the source text and derivable from it, but the praise/complaint flags show observable misclassifications (notably AMZ-0004), tempering groundedness. No invented facts are asserted."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 4
+}

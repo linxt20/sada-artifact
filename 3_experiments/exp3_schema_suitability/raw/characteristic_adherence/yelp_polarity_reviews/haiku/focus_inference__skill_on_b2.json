@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "food_quality_sentiment",
+    "service_attentiveness",
+    "atmosphere_vibe",
+    "staff_professionalism"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.72,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Dimensions of the restaurant dining experience discussed in Yelp reviews (food, service, atmosphere, staff)",
+    "per_column": [
+      {
+        "name": "food_quality_sentiment",
+        "supports_focus": true,
+        "rationale": "Captures the food facet of the dining experience with a graded quality scale."
+      },
+      {
+        "name": "service_attentiveness",
+        "supports_focus": true,
+        "rationale": "Captures the service facet, a distinct experiential aspect reviewers comment on."
+      },
+      {
+        "name": "atmosphere_vibe",
+        "supports_focus": true,
+        "rationale": "Captures the ambiance facet, another coherent experiential dimension."
+      },
+      {
+        "name": "staff_professionalism",
+        "supports_focus": true,
+        "rationale": "Captures staff conduct; partially overlaps with service_attentiveness but is a reasonable adjacent facet."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The columns collectively centre on one coherent, data-inferable focus: the aspects of the dining experience Yelp reviewers discuss. Food, service, atmosphere, and staff are recognizable, distinct facets directly answering the query 'what aspects of their experience', so focus_coherence is high. The set forms a sound multi-facet decomposition at a useful granularity, each with substantive graded values rather than mechanical text features; the one weakness is that service_attentiveness and staff_professionalism overlap conceptually (both about human interaction/service), slightly reducing structural differentiation, hence structure_quality is strong but not perfect. The implied focus is genuinely actionable -- an analyst can identify which experiential dimensions drive positive vs. negative reviews and act on operational areas (kitchen, service, ambiance, staff training), so actionability is high."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

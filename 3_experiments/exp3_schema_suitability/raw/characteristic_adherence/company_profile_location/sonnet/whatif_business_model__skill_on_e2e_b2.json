@@ -1,0 +1,127 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "focus_variable": "regional_fit",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "business_model_type",
+    "delivery_modality",
+    "geographic_scope",
+    "customer_segment",
+    "localization_dependency",
+    "service_intensity",
+    "industry_vertical",
+    "company_maturity"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.72,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.72,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "regional_fit",
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query explicitly proposes shifting the business model toward a more service-oriented or localized model; this is the intervenable lever a company could decide to change."
+      },
+      {
+        "name": "delivery_modality",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Digital vs in-person/service delivery operationalizes the 'service-oriented' shift; it is a configurable property the actor could set."
+      },
+      {
+        "name": "geographic_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A company's existing geographic scope plausibly drives both its business-model orientation and its fit for a new region; not named in the query."
+      },
+      {
+        "name": "customer_segment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether B2B/B2C influences both the chosen business model and regional fit; a common cause not named in the query."
+      },
+      {
+        "name": "localization_dependency",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "This lies on the causal path from a localized/service model to regional fit; the query's 'localized' framing implies it, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "service_intensity",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Directly measures the 'more service-oriented' dimension the intervention proposes to change."
+      },
+      {
+        "name": "industry_vertical",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Industry constrains typical business models and also independently affects regional fit; a common cause not named in the query."
+      },
+      {
+        "name": "company_maturity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Maturity/stage plausibly affects both ability/likelihood to adopt a service or localized model and regional fit; not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "business_model_type",
+      "delivery_modality",
+      "service_intensity"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "geographic_scope",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "customer_segment",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "industry_vertical",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "company_maturity",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.72,
+    "rationale": "The added columns clearly set up an interventional question: business_model_type, delivery_modality, and service_intensity directly capture the settable treatment (shifting toward a service-oriented/localized model), so a valid intervenable lever is present. localization_dependency sits on the causal path and is a mediator, not a confounder. The set also contributes several genuine, unnamed common causes (industry_vertical, customer_segment, geographic_scope, company_maturity) that plausibly drive both the model choice and regional fit and would need adjustment. These non-query confounders demonstrate the capability under test, giving reasonably good confounder quality, though plausibility as common causes is moderate rather than airtight."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

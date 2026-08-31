@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a travel expense will be declined?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "missing_source_id",
+    "no_processed_date",
+    "amount_above_travel_median",
+    "amount_below_dept_median",
+    "user_prior_decline_rate",
+    "high_decline_dept",
+    "submitted_off_hours",
+    "decline_risk_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6562,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.8438,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.75,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A missing source_id flag is derivable directly from the source_id column and plausibly correlates with data-entry anomalies relevant to declines. Moderately useful as a new axis, well grounded."
+      },
+      {
+        "name": "no_processed_date",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly derived from processed_date (nan handled correctly, as seen in the sample). A missing processed date is a plausible signal for unprocessed/declined items; grounded and reasonably useful."
+      },
+      {
+        "name": "amount_above_travel_median",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Compares amount against the travel-category median, giving a genuine new axis directly relevant to whether a travel expense is atypical/declined. Derivable from amount and category."
+      },
+      {
+        "name": "amount_below_dept_median",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Relative amount within department; a distinct comparative axis from the travel-median flag. Grounded in amount and department."
+      },
+      {
+        "name": "user_prior_decline_rate",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Per-user historical decline rate is a strong, high-variance predictor directly aligned with the query. Derivable from user and state across rows, though it presumes prior-history ordering; values look reasonable."
+      },
+      {
+        "name": "high_decline_dept",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Flags departments with elevated decline rates, a useful grouping axis. Derivable from department and state aggregation; somewhat correlated with user rate but distinct at dept level."
+      },
+      {
+        "name": "submitted_off_hours",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Off-hours flag derived from a timestamp (likely opened_at/processed_date). Plausibly weak signal for declines; grounded but its usefulness for THIS query is moderate and near-even distribution limits leverage."
+      },
+      {
+        "name": "decline_risk_score",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A composite score aggregating the other flags provides a convenient ranking axis, but it is largely a restatement/combination of already-added columns and its weighting is opaque; samples show it can be 0 even when component flags are set, raising derivation questions."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.84,
+    "rationale": "Most added columns provide genuine, distinct analytical axes for predicting travel-expense declines (user/department decline rates, relative-amount comparisons, missingness flags) and are soundly derivable from table fields; the missing/processed-date handling in the samples is correct. Weaknesses: submitted_off_hours is a fairly generic timestamp-derived flag with modest leverage, and decline_risk_score is largely a composite restatement of the other flags with an opaque, sometimes inconsistent derivation. Overall the set is useful and well grounded on the two necessary conditions."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

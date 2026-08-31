@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_demeanor",
+    "food_quality_signal",
+    "ground_service_quality",
+    "complaint_resolution_outcome",
+    "service_failure_severity",
+    "cabin_class_product_mismatch",
+    "service_consistency_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6714,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.6757,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.6735,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_demeanor",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.58,
+        "hallucination_observed": true,
+        "rationale": "Adds a qualitative crew-behavior axis (warm/rude/robotic/professional) that goes beyond the numeric Staff Service column and is directly useful for exploring which service aspects drive reviews. Groundedness is mixed: rows 1, 3, 4, 5 are sound readings, but row 2 mentions nothing about crew (only seats and headphones) yet was labeled 'rude_dismissive' — an invented attribution. The low NULL share (800/8100) suggests the operator over-assigns a demeanor even when the text is silent."
+      },
+      {
+        "name": "food_quality_signal",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Provides useful failure-mode granularity (special_meal_failure, ran_out_of_choice) that the numeric Food & Beverages score lacks, and it correctly uses NULL/Unknown on silent rows (row 5). However row 2 says nothing about food yet was labeled 'poor_taste_or_variety', a fabricated value that contradicts the silent-should-be-unknown behavior seen elsewhere."
+      },
+      {
+        "name": "ground_service_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Distinct axis (airport/check-in service) not captured by the inflight-focused original columns; helpful for the exploratory query. Handles silence well (rows 2-5 = Unknown). Minor overreach on row 1, which describes only onboard experience yet received 'efficient_helpful' with no ground-service evidence."
+      },
+      {
+        "name": "complaint_resolution_outcome",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Introduces a genuinely new complaint-handling dimension not present in the originals, valuable for identifying service-recovery patterns. Dominated by 'no_complaint_raised' (~69%) which slightly limits leverage, but the remaining categories are meaningful. All five samples (no complaint present) are correctly labeled 'no_complaint_raised', indicating well-grounded extraction."
+      },
+      {
+        "name": "service_failure_severity",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A failure-severity scale offers a useful lens for triaging reviews, though it is partly redundant with Overall Rating / Recommended sentiment. Sample labels are consistent with the text (amazing→no_failure, dreadful seats→moderate_dissatisfaction), so values are well grounded."
+      },
+      {
+        "name": "cabin_class_product_mismatch",
+        "analytical_usefulness": 0.48,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Boolean is heavily skewed (94% false / near-constant), giving limited grouping or modeling leverage for the exploratory query. Where evaluable (row 2 economy seat narrowness = expected, not a mismatch → false) the value is defensible, so no clear hallucination, but the analytical payoff is low."
+      },
+      {
+        "name": "service_consistency_signal",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A cross-time consistency axis would be interesting, but it requires the reviewer to actually compare against past experience — which only row 5 ('consistently good') supports. Rows 1, 3, 4 are single-flight positives yet were labeled 'improving_or_consistent', showing the value is largely conflated with positive sentiment rather than grounded consistency evidence, weakening both its groundedness and its independent usefulness."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.63,
+    "rationale": "For an open exploratory query, the added columns collectively open several distinct qualitative aspect axes (crew demeanor, food failure modes, ground service, complaint resolution, failure severity) that go beyond the numeric ratings already present, giving the analyst real ground to compare aspects — solid table-level usefulness, dragged down mildly by the near-constant cabin_class_product_mismatch and the sentiment-redundant severity/consistency signals. Groundedness is the weaker dimension: while silent rows are often correctly marked Unknown/NULL, the samples reveal a recurring pattern of confident labels on silent text (row 2 got both 'rude_dismissive' crew and 'poor_taste_or_variety' food despite mentioning neither; positive single-flight reviews were labeled 'improving_or_consistent'). This over-assertion on silent rows is the main quality risk across the set."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

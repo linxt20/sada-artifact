@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "weakest_dimension",
+    "value_gap",
+    "service_score",
+    "hardware_score",
+    "improvement_priority",
+    "rating_consistency",
+    "experience_segment",
+    "recommendation_risk_score",
+    "class_adjusted_vfm",
+    "top_complaint_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.725,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.53,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.6275,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "weakest_dimension",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Directly points at the dimension to fix, a genuine grouping axis for the improvement query. Derivable from the numeric rating columns present in the table, but the samples show weak alignment: an all-praise 9/10 review (spacious legroom) is tagged 'Seat Comfort' as weakest, and a review whose sole grievance is 'seats dreadful' is tagged 'Value For Money'. Plausible from unseen numeric scores but noisy."
+      },
+      {
+        "name": "value_gap",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "An integer differential (value-for-money vs other/overall scores) that offers a modest new axis on perceived value, relevant to the recommendation question. Computable from the numeric columns; the meaning is opaque and its two sampled values (both '1' for a glowing and a scathing review) don't obviously track sentiment, but nothing is clearly fabricated."
+      },
+      {
+        "name": "service_score",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Composite of the service-side ratings (staff/food). Adds a consolidated axis but overlaps heavily with existing Staff Service / Food & Beverages columns. Mostly consistent with text (glowing reviews -> 5.0), though an 'excellent on all fronts, staff well-trained' review scoring only 3.5 is soft."
+      },
+      {
+        "name": "hardware_score",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Composite of the physical-product ratings (seat/IFE); reasonable axis but redundant with Seat Comfort/Inflight Entertainment. Groundedness is poor: the 'seats dreadful... entertainment dreadful' review is scored 4.5 (high) while a review praising a 'well-maintained aircraft' is scored 1.0 (low) — both contradict the source text."
+      },
+      {
+        "name": "improvement_priority",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Most on-point column for a 'how to improve' query — a clear axis to prioritise fixes. Derivable from the ratings and distinct in distribution from weakest_dimension. Groundedness is mixed: a uniformly positive 9/10 review is still assigned 'Value For Money' as its priority, which reads as a default rather than a warranted reading."
+      },
+      {
+        "name": "rating_consistency",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Dispersion (std) across the sub-ratings. Only weakly connected to 'how to raise ratings/recommendation'; it flags polarised reviews but offers limited actionable leverage here. Values are sensibly derived — uniformly positive reviews correctly get 0.0."
+      },
+      {
+        "name": "experience_segment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A categorical segmentation (satisfied / poor_value / poor_service / poor_hardware / marginal) that is excellent for grouping and comparing recommend vs not-recommend cohorts. Sample assignments are largely defensible (praise -> satisfied; 'seats dreadful' -> poor_value), grounded in the ratings, with only mild interpretive stretch."
+      },
+      {
+        "name": "recommendation_risk_score",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "A continuous propensity-to-not-recommend score is highly relevant to the recommendation-rate query and gives a modelling/ranking axis. But its sampled values are internally inconsistent: two nearly identical glowing reviews receive 1.0 and 0.0, undermining confidence that the score is a sound reading of the underlying signals."
+      },
+      {
+        "name": "class_adjusted_vfm",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Value-for-money normalised by cabin class enables fair cross-class comparison, a useful analytical lever. Derivable from the Value For Money and Class columns; sampled values are plausible (glowing long-haul reviews at the high end), no clear contradiction of source text."
+      },
+      {
+        "name": "top_complaint_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Text-mined complaint category would strongly guide fixes for Recommended=no rows. However it fabricates complaints on reviews that contain none: four of five samples are wholly positive yet are tagged 'seating_comfort' or 'staff_service' (e.g. a 9/10 review praising spacious legroom labelled seating_comfort; an 'excellent, staff well-trained' review labelled staff_service). Only the genuinely negative 'seats dreadful' sample is grounded. For praise-only rows the correct value would be none/not-a-complaint, so these are unsupported assertions."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.5,
+    "rationale": "The set contains several genuinely high-leverage columns for this query — improvement_priority, experience_segment, recommendation_risk_score, weakest_dimension and top_complaint_category all give new axes to group, prioritise, and model the not-recommend cohort, and class_adjusted_vfm adds cross-class comparability. There is notable overlap among weakest_dimension / improvement_priority / top_complaint_category / hardware_score / service_score (multiple restatements of 'which dimension is worst'), and rating_consistency is only marginally relevant, which tempers holistic usefulness. Groundedness is the bigger weakness: columns tied to the numeric rating fields are plausibly derivable, but the evidence shows real problems — top_complaint_category invents complaints on purely positive reviews (4/5 samples), hardware_score directly contradicts the text in two samples (dreadful seats/IFE -> 4.5; well-maintained -> 1.0), and recommendation_risk_score gives inconsistent values for near-identical glowing reviews. These are unsupported assertions rather than reasonable 'unknown' handling, pulling the table-level groundedness to moderate."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 10
+}

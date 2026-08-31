@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "complaint_category",
+    "performance_gap",
+    "disappointment_intensity",
+    "complaint_scope",
+    "return_action_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.82,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.76,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "complaint_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A typed taxonomy of complaint reasons is a strong grouping axis for predicting dissatisfaction. Values track source text well: AMZ-0002 book criticism → content_quality; AMZ-0001 (doll doesn't exist) reasonably not_present since it's an availability gripe, not a product-quality complaint."
+      },
+      {
+        "name": "performance_gap",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Distinguishing meets_spec vs below_spec/misleading is analytically useful for predicting negatives. But AMZ-0001 labeled 'misleading_claim' is unsupported—the review is about product non-existence, no claim is cited. Positive reviews mapped to meets_spec are reasonable readings."
+      },
+      {
+        "name": "disappointment_intensity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "An ordinal intensity scale is a genuine modeling axis and correctly NULL for positive/silent rows. However AMZ-0001 rated 5.0 overstates a review that is more frustrated-than-devastated, and such fine-grained numbers are partly invented where text gives only vague affect."
+      },
+      {
+        "name": "complaint_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Whether a complaint targets the whole product vs a feature is a useful discriminating signal. Mostly grounded, but AMZ-0002 labeled 'specific_use_case' is a weak fit (the complaint is about book content/political commentary, a feature-level issue), and AMZ-0001 'entire_product' is debatable given it's an availability complaint."
+      },
+      {
+        "name": "return_action_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Behavioral intent (returns, warns others, refund) is a high-value predictor of dissatisfaction. Sampled values are conservative and well-grounded, correctly using not_present/no_action_mentioned where text is silent."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.7,
+    "rationale": "All five columns provide distinct, non-trivial axes (reason, severity gap, intensity, scope, behavioral signal) directly relevant to predicting negative satisfaction, with no near-constant or redundant restatement issues. Groundedness is generally sound with correct 'not_present'/NULL handling for silent rows, but several sampled rows (notably AMZ-0001, AMZ-0002) show over-confident category assignments—especially 'misleading_claim' and specific scope/intensity labels—not clearly warranted by the source text, indicating moderate hallucination risk."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

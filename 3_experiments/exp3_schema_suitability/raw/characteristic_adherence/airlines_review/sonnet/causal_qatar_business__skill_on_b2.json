@@ -1,0 +1,90 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "downgrade_notification_failure",
+    "seat_hardware_quality",
+    "onboard_amenity_quality",
+    "cabin_crew_service_quality",
+    "service_consistency_across_sectors"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.3,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.3,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome",
+    "per_column": [
+      {
+        "name": "downgrade_notification_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause (service failure event) whose effect on non-recommendation is being attributed; a plausible treatment surfaced from review text, not named in the query."
+      },
+      {
+        "name": "seat_hardware_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Physical seat condition (functional vs defective/cramped) is a candidate cause of dissatisfaction driving non-recommendation. Overlaps with existing Seat Comfort rating; acts as a driver/treatment rather than a common cause of another treatment."
+      },
+      {
+        "name": "onboard_amenity_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Amenity provisioning quality is another candidate driver of the outcome, not a common cause that also determines other treatments; functions as a parallel treatment/driver, not a confounder."
+      },
+      {
+        "name": "cabin_crew_service_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Service quality is a direct driver of recommendation; overlaps with existing Staff Service. A parallel candidate cause, not a common cause of the other treatments."
+      },
+      {
+        "name": "service_consistency_across_sectors",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Sector/route composition (whether service varies by sector) plausibly drives which service failures occur AND the outcome, making it a route-level common cause that should be adjusted for. Surfaced from data, not named in query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "downgrade_notification_failure",
+      "seat_hardware_quality",
+      "onboard_amenity_quality",
+      "cabin_crew_service_quality"
+    ],
+    "confounders": [
+      {
+        "name": "service_consistency_across_sectors",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.3,
+    "rationale": "The added columns clearly supply candidate TREATMENTS (downgrade failure, seat hardware, amenities, crew service) whose effects on non-recommendation are being attributed, and none of these were named in the query, so (a) is satisfied. However, the set is essentially a bundle of parallel DRIVERS of the outcome rather than genuine CONFOUNDERS -- variables that are common causes of BOTH a treatment and the outcome. Only 'service_consistency_across_sectors' arguably operates as a route/sector-level common cause that could bias attribution if unadjusted, and even that reads more as another outcome-adjacent quality signal. There is no adjustment variable such as route, aircraft type, traveller segment, or seat position that plausibly causes both a specific service failure and the recommendation. Thus the decisive test -- surfacing real confounders that must be adjusted to de-bias the attribution -- is only weakly met, and the causal-estimation setup is incomplete."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

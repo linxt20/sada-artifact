@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "expense_type_label",
+    "travel_item_hardware_mismatch",
+    "personal_vs_business_ambiguity",
+    "ci_name_anomaly",
+    "source_id_present",
+    "processing_lag_risk",
+    "entry_method",
+    "department_travel_alignment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.5938,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.8063,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.7001,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "expense_type_label",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorises each expense from the short_description into meaningful types (travel vs asset vs service). This gives a genuine grouping axis to isolate travel expenses, which is the entry point for the travel-policy-risk query. Sample values are sound readings of the descriptions."
+      },
+      {
+        "name": "travel_item_hardware_mismatch",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Directly targets a travel policy risk: travel-labelled expenses that reference hardware/asset items. Highly relevant to the query. Derivable by comparing short_description and ci fields. Samples are all False and consistent with non-travel rows, though the inference logic is only partially verifiable from provided samples."
+      },
+      {
+        "name": "personal_vs_business_ambiguity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Flags a classic travel policy risk (personal vs business expense ambiguity), squarely on-query. Warranted as an inference from description text. Samples are False and consistent, but the True cases are not shown, so groundedness is moderate."
+      },
+      {
+        "name": "ci_name_anomaly",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Flags anomalies in the ci field. Only loosely tied to travel policy risk; more of a data-quality signal. Derivable from the ci column, samples plausibly False for standard hardware names, but analytical leverage for THIS query is limited."
+      },
+      {
+        "name": "source_id_present",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A trivial presence flag on an existing column; near-mechanical and only weakly connected to travel policy risk. Fully grounded (directly checks whether source_id exists), but adds little analytical leverage for the query."
+      },
+      {
+        "name": "processing_lag_risk",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Bucketises the gap around processed_date. Well grounded from date fields, but processing lag is an operational/timeliness signal, not a travel-policy-in-descriptions risk. Marginal relevance to the specific query."
+      },
+      {
+        "name": "entry_method",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes manual vs auto-generated vs self-input, readable from description wording ('Automated'/'Automatically' => auto). Grounded and a real axis, but only indirectly related to travel policy risk in descriptions."
+      },
+      {
+        "name": "department_travel_alignment",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Compares whether a travel expense aligns with the department that would be expected to travel ('travel_unexpected' is a real policy red flag). On-query and provides a cross-column grouping axis. Derivable from department + expense type, though the expected/unexpected inference is only partly verifiable from samples."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.8,
+    "rationale": "Several columns (travel_item_hardware_mismatch, personal_vs_business_ambiguity, department_travel_alignment, expense_type_label) directly serve the travel-policy-risk query and provide genuine grouping/flagging axes. Others (source_id_present, processing_lag_risk, ci_name_anomaly, entry_method) are grounded and mechanically sound but only tangentially tied to this specific query, dragging usefulness to moderate. Groundedness is generally strong: the shown values are sound readings of description/date/ci fields with no observed hallucinations, though the True-flag logic for the risk columns is not fully demonstrated in the samples."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

@@ -1,0 +1,95 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "aspect_product_quality",
+    "aspect_price_value",
+    "aspect_shipping_delivery",
+    "aspect_customer_service",
+    "aspect_features_functionality",
+    "aspect_ease_of_use",
+    "aspect_aesthetics_design",
+    "aspect_content_narrative",
+    "primary_aspect"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.8222,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8361,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "aspect_product_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "A binary aspect flag directly answering the query about what reviewers discuss. AMZ-0004 (product durability/formulation) and AMZ-0005 (quality package) are sound reads. Well-distributed so gives real grouping leverage."
+      },
+      {
+        "name": "aspect_price_value",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Distinct aspect axis. AMZ-0005 'costs more...but worth it' is a clear correct positive; silent rows correctly 0."
+      },
+      {
+        "name": "aspect_shipping_delivery",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "rationale": "Valid aspect though sparse (11/250). None of the samples mention shipping and all correctly marked 0, showing sound silent-row behaviour."
+      },
+      {
+        "name": "aspect_customer_service",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "rationale": "Legitimate aspect, sparse but not near-constant. Sample rows correctly 0."
+      },
+      {
+        "name": "aspect_features_functionality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "rationale": "Useful aspect with good spread. AMZ-0004 skin-type versatility is a defensible functionality read; AMZ-0005 bonus material also reasonable, though 'features' for a film is a slight stretch."
+      },
+      {
+        "name": "aspect_ease_of_use",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Distinct usability axis. Sample rows correctly 0 where silent."
+      },
+      {
+        "name": "aspect_aesthetics_design",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "rationale": "Valid aspect but AMZ-0001 (about absence of a black doll / representation) tagged aesthetics_design as primary is a questionable read—it's more about product availability/inclusivity than design. AMZ-0005 'sits nicely on shelf' is a fair aesthetic cue."
+      },
+      {
+        "name": "aspect_content_narrative",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Highly relevant for book/music/film reviews. AMZ-0002 and AMZ-0003 correctly capture content/artistic critique."
+      },
+      {
+        "name": "primary_aspect",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "rationale": "Single categorical summary is very useful for grouping the dominant theme. Mostly grounded, but AMZ-0001 'aesthetics_design' is a weak assignment for a representation complaint."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns form a coherent aspect-based decomposition that directly answers the query about what reviewers discuss, giving genuine axes to group and compare on. Distributions are varied (not near-constant), and the primary_aspect summary adds a distinct categorical handle. Groundedness is generally strong: positive tags align with source text and silent rows are correctly marked 0. Minor weaknesses include the debatable aesthetics_design tagging of the doll-representation review and a slightly strained 'features' read for film content, but no systematic hallucination of invented facts."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 9
+}

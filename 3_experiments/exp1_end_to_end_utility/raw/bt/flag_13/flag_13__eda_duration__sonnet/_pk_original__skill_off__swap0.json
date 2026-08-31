@@ -1,0 +1,115 @@
+{
+  "var_a": "original",
+  "var_b": "skill_off",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.7,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Database 134 ... Network 260 ... Software 73",
+        "why": "full counts and min/max ranges"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Software × Critical (37.1 min) and Software × Moderate (39.3 min)",
+        "why": "cross-tab cells tied to n values"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Priority 4 - Low shows the shortest mean (25.0 min), but with only 2 records",
+        "why": "consistent caveats throughout"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Software 33.45 ... Count 73",
+        "why": "medians and means with counts"
+      },
+      {
+        "dimension": "depth",
+        "quote": "The interaction effect between category and priority is more meaningful than either variable alone",
+        "why": "causal framing"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Software × High 24.37 ... Software Median 33.45",
+        "why": "cross-tab cells inconsistent with category median"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "duration_vs_category_median",
+        "quote": "The duration_vs_category_median and duration_vs_priority_median engineered columns",
+        "dependent": false
+      },
+      {
+        "column": "duration_vs_priority_median",
+        "quote": "duration_vs_priority_median engineered columns",
+        "dependent": false
+      }
+    ]
+  },
+  "reason": "A gives consistent cross-tab numbers and caveats, while B mislabels units as hours and has internally inconsistent interaction figures.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

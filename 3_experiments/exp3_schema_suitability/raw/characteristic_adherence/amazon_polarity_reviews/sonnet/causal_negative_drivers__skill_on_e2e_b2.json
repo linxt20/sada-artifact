@@ -1,0 +1,81 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "performance_gap_type",
+    "product_category",
+    "reviewer_expectation_mismatch",
+    "complaint_specificity"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "performance_gap_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Captures the type of product performance failure (below spec, poor ergonomics, insufficient capacity). This is a candidate cause of negative sentiment -- a plausible treatment whose effect on label_pos is being attributed. It is a driver, not a common cause, so it functions as a treatment/candidate cause rather than a confounder."
+      },
+      {
+        "name": "product_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Product category (media/books vs electronics vs appliances) plausibly affects BOTH the kind of performance gap or expectation mismatch that arises (treatment) AND baseline review polarity (outcome), since some categories systematically attract harsher reviews. A genuine common cause not named in the query, so it must be adjusted for."
+      },
+      {
+        "name": "reviewer_expectation_mismatch",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Encodes a distinct candidate cause (genre expectation, sequel comparison, price-value mismatch, brand reputation) that directly drives negative sentiment. This is another candidate cause of the outcome rather than a common cause of a treatment and the outcome, so it reads as an additional treatment dimension."
+      },
+      {
+        "name": "complaint_specificity",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The specificity/count of complaints is downstream of having a complaint (a dissatisfaction cause) and lies on the path toward a negative label; it reflects how the review expresses dissatisfaction rather than a common prior cause. Adjusting for it would be a mediator error, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "performance_gap_type",
+      "reviewer_expectation_mismatch"
+    ],
+    "confounders": [
+      {
+        "name": "product_category",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The added columns do supply candidate causes/treatments (performance_gap_type, reviewer_expectation_mismatch) around the outcome label_pos, satisfying part (a). For part (b), only product_category qualifies as a plausible common cause of both the treatment (which failure/mismatch type occurs) and the outcome (baseline polarity), and it was NOT named in the query, which is the capability under test. However, it is a single, somewhat coarse confounder, and complaint_specificity is a mediator (adjusting for it would bias attribution). No reviewer-level or price-level confounders (e.g., product price, reviewer strictness, star baseline) were surfaced, so confounding control is thin. Confounder quality is moderate-to-low: one genuine, non-query confounder present but limited coverage."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

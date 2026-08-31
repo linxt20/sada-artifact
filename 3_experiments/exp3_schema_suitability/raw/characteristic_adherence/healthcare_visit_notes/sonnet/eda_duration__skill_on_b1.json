@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "visit_type",
+    "primary_complaint_category",
+    "acuity_temporal_pattern",
+    "symptom_severity_level",
+    "clinical_mechanism_type",
+    "diagnostic_workup_intensity",
+    "disposition_action",
+    "preventive_or_screening_focus"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7875,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8313,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8094,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "visit_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the encounter (acute vs follow-up vs well-visit), a genuine axis to relate reasons to urgency/duration. Sample values are well-supported readings of the text."
+      },
+      {
+        "name": "primary_complaint_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly operationalizes 'reasons for visit' into a groupable clinical category, central to the query. Samples map cleanly to source text."
+      },
+      {
+        "name": "acuity_temporal_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a temporal/acuity axis distinct from urgency, useful for relating to duration. Mostly grounded; the MI follow-up labeled post_procedural_followup is a slight stretch (MI is not strictly a procedure) but reasonable."
+      },
+      {
+        "name": "symptom_severity_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "An ordinal severity scale can correlate with urgency/duration, giving analytical leverage. However the numeric level is a subjective inference; many rows collapse to '2', and precise 1-5 values are only loosely warranted by the text."
+      },
+      {
+        "name": "clinical_mechanism_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Provides a pathophysiologic axis orthogonal to complaint category, useful for modeling. Sample values are defensible readings, though somewhat inferential."
+      },
+      {
+        "name": "diagnostic_workup_intensity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Workup intensity plausibly drives visit duration, directly relevant to the query. Samples align with ordered labs/imaging described in the text."
+      },
+      {
+        "name": "disposition_action",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Disposition relates to urgency and duration and offers a useful outcome axis. Sample values are grounded in prescriptions/referrals stated in the text."
+      },
+      {
+        "name": "preventive_or_screening_focus",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Reasonable secondary axis but heavily dominated by 'none_preventive' (197), giving it near-constant character and limited leverage; partly redundant with visit_type/complaint_category. Values that are present are well-grounded."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns provide multiple genuinely distinct axes (complaint category, acuity pattern, workup intensity, disposition) that directly support relating reasons-for-visit to urgency and duration across strata. Most values are sound categorizations or clearly warranted inferences from the reason_for_visit text, with a reasonable 'none/not stated' default for silent rows. Weaknesses are minor: symptom_severity_level is a subjective numeric inference, and preventive_or_screening_focus is near-constant and somewhat redundant. No clear hallucinations observed in the samples."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

@@ -1,0 +1,104 @@
+{
+  "var_a": "skill_off",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.7,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Declined items average $3,706 (range: $258–$8,817)",
+        "why": "concrete magnitudes"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Asset_Approval_Process (39 instances, 85%)",
+        "why": "assumes a decline_reason column contradicting reality of dataset"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "Assets: 27 declined out of 310 total",
+        "why": "rates tied to base counts"
+      },
+      {
+        "dimension": "depth",
+        "quote": "the missingness is not random: all 10 declined Travel rows have blank source_id",
+        "why": "segmentation with reasoning"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "require valid source_id or equivalent reference for travel/miscellaneous",
+        "why": "decision-ready controls"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "The table has no explicit denial-reason field",
+        "why": "honest about data limits"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B grounds claims in base-rate comparisons and honestly notes there is no decline_reason field, while A invents detailed decline_reason percentages, hurting its coherence.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

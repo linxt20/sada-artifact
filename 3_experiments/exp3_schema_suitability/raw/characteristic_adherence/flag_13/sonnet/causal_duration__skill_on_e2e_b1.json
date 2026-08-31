@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do resolution duration values vary across tickets?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "affected_system_scope",
+    "assigned_resolver",
+    "resolver_match",
+    "ticket_open_hour_band",
+    "caller_id_group"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6214,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.7571,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.6892,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean categorisation derived from short_description, giving a strong grouping axis for explaining duration variation. Values match source text well (WiFi->network_connectivity, VPN->vpn_access, database->database)."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Adds a distinct axis (nature of failure) beyond category, useful for modelling duration. Mostly warranted (connect->connectivity_failure), though 'access online database'->access_denied is a plausible but slightly inferential reading."
+      },
+      {
+        "name": "affected_system_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Server/network/client scope is a genuinely useful grouping for duration analysis. Values are reasonable inferences but sometimes soft (database->server_side, printing->client_side are plausible readings of terse text)."
+      },
+      {
+        "name": "assigned_resolver",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Values are a direct copy of the existing closed_by/assigned_to fields; well grounded but largely redundant with original columns, adding little new analytical leverage."
+      },
+      {
+        "name": "resolver_match",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A boolean of whether assignee equals closer could relate to duration, so it has some leverage. Derivable from original assigned_to vs closed_by, but samples only show closed_by, so the match basis is only partially verifiable."
+      },
+      {
+        "name": "ticket_open_hour_band",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Time-of-day band is a plausible driver of resolution duration (staffing shifts) and is cleanly derived from opened_at timestamps. Samples all correct."
+      },
+      {
+        "name": "caller_id_group",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Purports to group callers but the sampled values do not correspond to the source caller and appear unrelated/invented (source rows don't even show caller_id yet specific names are assigned). Redundant with caller_id and poorly grounded."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.72,
+    "rationale": "The semantic categorisation columns (incident_category, failure_mode, affected_system_scope) and ticket_open_hour_band provide genuine, well-grounded axes for explaining why resolution durations vary. assigned_resolver largely duplicates existing fields, resolver_match is partially verifiable, and caller_id_group appears both redundant and ungrounded (values not supported by the source). Overall the set offers real analytical leverage but with one clearly hallucinated column dragging groundedness down."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

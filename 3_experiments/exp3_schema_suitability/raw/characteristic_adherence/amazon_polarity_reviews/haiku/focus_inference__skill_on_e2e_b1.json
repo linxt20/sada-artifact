@@ -1,0 +1,40 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "n_added_columns": 1,
+  "added_columns": [
+    "competitor_or_alternative_comparison"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 1,
+    "n_judged_columns": 1,
+    "analytical_usefulness": 0.55,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "competitor_or_alternative_comparison",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "For the query about which aspects reviewers discuss, a binary flag for whether a review draws a comparison to a competitor/alternative is one plausible aspect axis, though as a single bare boolean it offers limited analytical leverage for a broad 'different aspects' question. Grounding is sound: the five sampled rows all lack explicit product comparisons and are correctly labeled False; the value is a reasonable reading of the text."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.85,
+    "rationale": "The single added column captures a legitimate but narrow aspect (comparison to alternatives) relevant to the query. It provides a modest new grouping axis rather than strong leverage, and the sampled values are correctly derived from the source text with no hallucination observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 1
+}

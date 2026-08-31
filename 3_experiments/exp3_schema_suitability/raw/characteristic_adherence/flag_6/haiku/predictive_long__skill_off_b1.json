@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "resolution_days",
+    "priority_level",
+    "is_network_category",
+    "same_agent",
+    "agent_changed",
+    "is_open",
+    "days_in_system",
+    "is_critical_domain",
+    "self_assigned"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.4944,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.7611,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.6278,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_days",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "The core target for this query -- how long a ticket took to resolve. Directly derivable from opened_at/closed_at, and evidence rows show plausible positive values. However many values are negative fractions (e.g. -0.178), which are impossible for a resolution duration and indicate a normalized/corrupted computation not supported by the timestamps, lowering groundedness."
+      },
+      {
+        "name": "priority_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A useful axis for explaining resolution time, but it is essentially a restatement of the existing original 'priority' column, so it adds little new leverage. Values are well-grounded."
+      },
+      {
+        "name": "is_network_category",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A network-vs-other flag gives a real grouping axis for resolution time. Evidence rows (VPN, intranet, internet flagged 1; database, software flagged 0) are consistent readings of category/description, though it partly overlaps the original category column."
+      },
+      {
+        "name": "same_agent",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether assignee equals closer/opener is a plausible signal for longer resolution and derivable from original agent fields. Values look consistent with source."
+      },
+      {
+        "name": "agent_changed",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Exact logical inverse of same_agent (401/99 vs 99/401), so it is a pure restatement adding no independent analytical leverage. Grounding is fine."
+      },
+      {
+        "name": "is_open",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Open/closed status is relevant since open tickets have undefined resolution time (aligns with the 22 NULL resolution_days). Derivable from state/closed_at."
+      },
+      {
+        "name": "days_in_system",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Values are essentially identical to resolution_days (same numbers including the impossible negatives), making it a redundant restatement. Shares the same corrupted negative values."
+      },
+      {
+        "name": "is_critical_domain",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Intended as a criticality flag, but its basis is unclear: 'database' flagged critical while VPN/intranet not, with no explicit criticality signal in the source. The mapping appears somewhat asserted rather than clearly warranted, and it overlaps priority."
+      },
+      {
+        "name": "self_assigned",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Constant (0 for all 500 rows). A near-constant column provides no analytical leverage. Values are not contradicted but carry no information."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.72,
+    "rationale": "Several columns give genuine grouping axes for the resolution-time query (resolution_days, is_network_category, same_agent, is_open), but the set is diluted by redundancy: days_in_system duplicates resolution_days, agent_changed inverts same_agent, priority_level restates priority, and self_assigned is constant. Groundedness is generally acceptable, but resolution_days and its duplicate contain impossible negative durations indicating a corrupted computation, and is_critical_domain rests on an unclear mapping, pulling the table-level grounding down."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

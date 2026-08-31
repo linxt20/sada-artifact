@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_category",
+    "issue_subcategory",
+    "affected_component",
+    "impact_scope",
+    "business_impact_signal",
+    "root_cause_class"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.874,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.92,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/taxonomy of support ticket issues -- characterizing what each ticket is about across categorization, affected surface, impact, and cause",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "supports_focus": true,
+        "rationale": "Directly answers the query with a top-level taxonomy of issue kinds -- the core facet of the focus."
+      },
+      {
+        "name": "issue_subcategory",
+        "supports_focus": true,
+        "rationale": "Refines the categorization at finer granularity, a coherent second level of the same taxonomy."
+      },
+      {
+        "name": "affected_component",
+        "supports_focus": true,
+        "rationale": "Orthogonal facet locating the issue in the product surface, enriching characterization of what tickets are about."
+      },
+      {
+        "name": "impact_scope",
+        "supports_focus": true,
+        "rationale": "Characterizes breadth of impact, a meaningful facet of issue nature beyond bare type."
+      },
+      {
+        "name": "business_impact_signal",
+        "supports_focus": true,
+        "rationale": "Adds a business-consequence facet, coherently attached to the issue-characterization focus."
+      },
+      {
+        "name": "root_cause_class",
+        "supports_focus": true,
+        "rationale": "Explains why issues occur, a strong analytical predictor/attribute complementing the what."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.92,
+    "focus_actionability": 0.9,
+    "rationale": "All six columns converge tightly on a single, data-inferable focus: characterizing the nature of support-ticket issues. They form a well-differentiated multi-facet structure -- a two-level type taxonomy (category/subcategory), an affected-surface facet, two impact facets (scope and business impact), and a causal facet (root cause) -- rather than a restatement or generic noise. The granularity is useful and the values are semantically rich and non-trivial. An analyst could directly act on this: prioritize by category/impact, target components, and address root causes. Minor deduction to structure because business_impact_signal and impact_scope partially overlap conceptually, but overall this strongly realises the focus-inference claim."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

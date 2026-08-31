@@ -1,0 +1,69 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "operational_burden",
+    "burden_reduction_percent",
+    "estimated_duration_reduction_minutes"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "operational_burden",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Categorizes the operational burden type described in the text. The query explicitly targets 'operational burdens' as the lever to eliminate, so this is the treatment. Whether a burden can be 'eliminated' is intervenable in principle, though it is a categorical type rather than a settable policy knob."
+      },
+      {
+        "name": "burden_reduction_percent",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "This is a per-burden reduction factor that sits on the path between eliminating the burden and the duration change. It is a modeling parameter/mediator of the effect, not a common cause of both treatment and outcome, so it is not a confounder."
+      },
+      {
+        "name": "estimated_duration_reduction_minutes",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "This is essentially the computed counterfactual effect / outcome delta itself (reduction in duration). It is the answer being read off, not a confounder; it lies on the causal path and encodes the outcome change."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "operational_burden"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The columns identify a treatment (operational_burden) matching the query's lever, but the added columns fail the decisive test for the what-if claim: NO confounders are added. A valid counterfactual estimate of how much resolution duration would drop requires adjusting for common causes of both which burdens occur and how long resolution takes (e.g., priority, category, assignment_group, caller/agent workload, staffing). These already exist in the original table but no NEW confounders were introduced, and the effect is instead computed directly via a reduction-percent factor and a duration-reduction column that simply mechanically encode the answer. This is an assumption-laden point estimate, not a properly adjusted interventional design. Because confounder adjustment is entirely absent, confounder_quality is 0.0."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

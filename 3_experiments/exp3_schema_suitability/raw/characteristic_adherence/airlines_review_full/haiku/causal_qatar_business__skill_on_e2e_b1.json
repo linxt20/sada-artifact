@@ -1,0 +1,128 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 12,
+  "added_columns": [
+    "aircraft_product_mismatch",
+    "ground_service_quality",
+    "food_beverage_quality",
+    "crew_service_consistency",
+    "seat_comfort_privacy",
+    "ife_connectivity_issues",
+    "pricing_value_mismatch",
+    "expectation_gap",
+    "expectation_versus_reality_gap",
+    "inflight_entertainment_and_connectivity",
+    "pricing_and_value_mismatch",
+    "seat_comfort_and_privacy"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 12,
+    "n_judged_columns": 12,
+    "analytical_usefulness": 0.5425,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.6417,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.5921,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "aircraft_product_mismatch",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Product downgrade / aircraft-swap / expected-qsuite-vs-older-config is a genuinely strong axis for explaining non-recommendation, and it is not covered by any original rating column. In the samples all values are the safe 'consistent_product' default which is defensible; however the specific categories (aircraft_changed_without_notice, expected_qsuite_received_older_config) demand explicit textual claims and carry latent over-assertion risk, so groundedness is good but not fully verified."
+      },
+      {
+        "name": "ground_service_quality",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.74,
+        "hallucination_observed": false,
+        "rationale": "Ground/check-in/lounge/baggage experience is a real driver not captured by onboard rating columns and adds analytical leverage. Baggage failure (sample 5) and Unknown for silent rows (sample 1) are well handled, but 'inconsistent_ground_staff' in sample 4 is a slight over-reading of a lounge-quality complaint rather than staff inconsistency."
+      },
+      {
+        "name": "food_beverage_quality",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Adds categorical nuance (cold/overcooked, shortages) beyond the existing numeric 'Food & Beverages' rating, giving some leverage, but it partly duplicates that original column. Groundedness is weak: sample 1 asserts 'poor_limited_selection' and sample 2 asserts 'good_standard_quality' although neither review mentions food, i.e. invented facts where the source is silent."
+      },
+      {
+        "name": "crew_service_consistency",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Overlaps somewhat with the original 'Staff Service' rating but the consistency angle (inconsistent/rude/slow) is a distinct and query-relevant axis. Well grounded: sample 2's 'inconsistent_service' is directly supported by 'good on my aisle...extremely slow where my wife was seated', and other rows are reasonable."
+      },
+      {
+        "name": "seat_comfort_privacy",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.58,
+        "hallucination_observed": true,
+        "rationale": "The QSuite-vs-traditional-vs-dated distinction is genuinely useful for this query and goes beyond the numeric 'Seat Comfort' rating. But groundedness suffers: sample 3 labels 'qsuite_exceptional_privacy' though the review never mentions QSuite (invented specific), and sample 1 maps a mechanical malfunction to 'dated_hard_uncomfortable'."
+      },
+      {
+        "name": "ife_connectivity_issues",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Heavily skewed to unknown (~353) so leverage is limited and it overlaps the original 'Inflight Entertainment' rating, though wifi/technical categories add some nuance. Sample 3 marks 'unknown_or_not_mentioned' even though the review explicitly says entertainment was great — an under-reading error (not a fabrication)."
+      },
+      {
+        "name": "pricing_value_mismatch",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.58,
+        "hallucination_observed": true,
+        "rationale": "Value/refund reasons are highly relevant to recommendation and enrich the raw 'Value For Money' rating. Grounding is shaky: sample 1 is tagged 'downgrade_no_refund' though no downgrade occurred (only a broken seat), and it diverges from its twin column on sample 5, indicating instability."
+      },
+      {
+        "name": "expectation_gap",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "An expectation-vs-reality gap is close to the heart of why a flight is recommended or not, giving a strong summarising axis. Values are holistic inferences that align sensibly with review sentiment in the samples, which is warranted synthesis rather than fabrication."
+      },
+      {
+        "name": "expectation_versus_reality_gap",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "This is essentially a restatement of 'expectation_gap' (identical value vocabulary, only marginally different counts) and therefore adds no new analytical leverage. Its per-row values are as defensible as its twin, so groundedness is fine even though usefulness is low due to redundancy."
+      },
+      {
+        "name": "inflight_entertainment_and_connectivity",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "A near-duplicate of 'ife_connectivity_issues' with the same value set, so it contributes no additional axis to group or model on. Grounding is acceptable — it actually captures 'responsive_good_selection' correctly on sample 3 where its twin failed — but redundancy caps usefulness."
+      },
+      {
+        "name": "pricing_and_value_mismatch",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Restates 'pricing_value_mismatch' with the same categories, so it is a mere duplicate offering no new leverage. It diverges from its twin on sample 5 ('no_value_issue' vs 'downgrade_no_refund'), which under-reads the reimbursement complaint and signals inconsistency between the redundant pair."
+      },
+      {
+        "name": "seat_comfort_and_privacy",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A duplicate of 'seat_comfort_privacy' with an identical vocabulary, adding no distinct analytical dimension. It also inherits/aggravates grounding problems, e.g. sample 5 asserts 'qsuite_exceptional_privacy' when the review only says products onboard were fine and never mentions QSuite."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.63,
+    "rationale": "The distinct columns (aircraft/product, ground service, crew consistency, seat/privacy, pricing/value, expectation gap) provide genuine, query-relevant axes for explaining non-recommendation that go beyond the original numeric ratings. However the set is materially weakened by four columns that are mere restatements of others (expectation_versus_reality_gap, inflight_entertainment_and_connectivity, pricing_and_value_mismatch, seat_comfort_and_privacy), which add no new leverage. Groundedness is moderate: many values are sound readings (baggage failure, inconsistent aisle service, QSuite where explicitly stated), but there are recurring over-assertions where the source is silent — food quality invented in silent reviews, QSuite asserted without textual support, and 'downgrade_no_refund' applied where no downgrade occurred — plus at least one under-reading of clearly stated IFE. The divergence between duplicate pairs on the same rows further signals extraction instability. Redundancy and completeness of the set were not penalised beyond the explicit restatement rule."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 12
+}

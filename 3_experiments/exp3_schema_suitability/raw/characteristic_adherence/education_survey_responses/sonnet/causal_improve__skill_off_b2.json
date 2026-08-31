@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can educators improve learning satisfaction?",
+  "focus_variable": "learning_satisfaction",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "tech_issues_flag",
+    "interaction_quality",
+    "teacher_innovation_score",
+    "peer_interaction_gap",
+    "improvement_lever"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "learning_satisfaction",
+    "per_column": [
+      {
+        "name": "tech_issues_flag",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Presence of technical issues is an intervenable condition educators/administrators can address by fixing infrastructure; plausibly affects satisfaction."
+      },
+      {
+        "name": "interaction_quality",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Quality of interaction is an intermediate outcome that likely lies on the causal path between teaching practices and satisfaction, not a common cause; treated as a mediator rather than confounder."
+      },
+      {
+        "name": "teacher_innovation_score",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Teacher innovation/engagement is a lever educators can actively change; a settable treatment affecting satisfaction."
+      },
+      {
+        "name": "peer_interaction_gap",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A gap in peer interaction can be addressed by adding peer collaboration; an intervenable condition affecting satisfaction."
+      },
+      {
+        "name": "improvement_lever",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Explicitly encodes the actionable intervention/decision an educator could take; an intervenable lever, though it reads more as a recommendation label than a measured cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "tech_issues_flag",
+      "teacher_innovation_score",
+      "peer_interaction_gap",
+      "improvement_lever"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query asks how educators can improve satisfaction, an interventional what-if. The added columns supply multiple intervenable levers (tech issues, teacher innovation, peer interaction gap, an explicit improvement_lever), so the treatment side and its settability are satisfied. However, the decisive test concerns CONFOUNDERS -- common causes of both a treatment and satisfaction that must be adjusted for. No added column plays this role: interaction_quality is a mediator on the causal path, and none of the columns capture background common causes (e.g., baseline student engagement, socioeconomic status, subject difficulty, prior achievement, class size) that drive both the chosen intervention and satisfaction. The original table's grade_level/subject were named in the query context at best implicitly, but the augmentation added no unnamed confounders. Because the capability under test is producing confounders not named in the query, and none were added, confounder_quality is 0."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

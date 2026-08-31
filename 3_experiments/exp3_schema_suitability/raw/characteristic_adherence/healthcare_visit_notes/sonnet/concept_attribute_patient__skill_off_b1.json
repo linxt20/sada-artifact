@@ -1,0 +1,128 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What patient needs appear in visit notes?",
+  "n_added_columns": 12,
+  "added_columns": [
+    "identified_patient_needs",
+    "needs_count",
+    "needs_pain_management",
+    "needs_medication_management",
+    "needs_diagnostic_testing",
+    "needs_specialist_referral",
+    "needs_monitoring_followup",
+    "needs_lifestyle_counseling",
+    "needs_mental_health",
+    "needs_preventive_care",
+    "needs_wound_skin_care",
+    "needs_physical_rehabilitation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 12,
+    "n_judged_columns": 12,
+    "analytical_usefulness": 0.7475,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8058,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.7767,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "identified_patient_needs",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Directly answers the query by extracting a multi-label taxonomy of patient needs from the notes -- strong grouping/comparison axis. Most row samples are well grounded (MI follow-up -> med mgmt/diagnostic/monitoring; acne -> med/skin care). However the annual physical exam row is tagged 'pain_management' despite the text explicitly denying pain and describing a routine exam; it also omits preventive_care which the text clearly warrants. This is a confident, contradicted label, so groundedness is only moderate."
+      },
+      {
+        "name": "needs_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A useful aggregate for measuring visit complexity and distributing analysis. It is a direct deterministic function of the extracted needs, so it inherits their groundedness; where the underlying labels err (e.g. spurious pain flag) the count is inflated, but as a derivation it is sound."
+      },
+      {
+        "name": "needs_pain_management",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A binary indicator giving a clean per-need axis to filter/model on. The knee-injury row is correctly flagged, but the annual-physical row is flagged 1 despite the note denying chest pain and describing no pain complaint -- a clear unsupported assertion, lowering groundedness."
+      },
+      {
+        "name": "needs_medication_management",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Clean binary need axis. Samples align well with source (statin/beta-blocker, adapalene/doxycycline -> 1; viral URI supportive care -> 0)."
+      },
+      {
+        "name": "needs_diagnostic_testing",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful filter axis; sample values track ordered labs/MRI/echo correctly and absence where no tests mentioned."
+      },
+      {
+        "name": "needs_specialist_referral",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct binary axis. Sample rows all 0, consistent with no referral language; plausible reading."
+      },
+      {
+        "name": "needs_monitoring_followup",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful axis; 'return if worse', 'repeat lipid panel', follow-up context support the 1s; grounded reads."
+      },
+      {
+        "name": "needs_lifestyle_counseling",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Reasonable independent axis. The viral URI row is flagged 1 for lifestyle_counseling though 'supportive care advised' is not clearly lifestyle counseling -- a somewhat stretched inference, mildly reducing groundedness."
+      },
+      {
+        "name": "needs_mental_health",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Rarer flag (17/250) but still a genuine analytical axis for a needs query; no contradicting samples observed, values look conservative."
+      },
+      {
+        "name": "needs_preventive_care",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Valid axis. The annual physical row plausibly warranted preventive_care=1 but was coded 0; this is a miss rather than a fabrication, so groundedness only mildly affected."
+      },
+      {
+        "name": "needs_wound_skin_care",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis; acne row correctly flagged 1, others 0. Well grounded."
+      },
+      {
+        "name": "needs_physical_rehabilitation",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Genuine axis for rehab needs; sample rows 0 consistent with text. Plausible."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns directly and richly address the query 'What patient needs appear in visit notes?': a multi-label extraction column, a complexity count, and one-hot indicators per need category all give strong axes to group, compare, and model. The one-hot columns are not merely redundant restatements because they enable per-need filtering/aggregation the concatenated string cannot easily support. Groundedness is generally good and conservative, with correct absence handling, but there is a recurring over-labelling issue (a false pain_management flag on the pain-denying annual physical, a stretched lifestyle_counseling flag on a viral URI), which caps groundedness below excellent. Overall a solid, useful, mostly well-grounded augmentation set."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 12
+}

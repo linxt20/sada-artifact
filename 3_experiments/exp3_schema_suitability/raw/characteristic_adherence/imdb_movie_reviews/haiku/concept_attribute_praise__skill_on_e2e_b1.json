@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "praised_aspect",
+    "complaint_aspect"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.9,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.715,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.8075,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "praised_aspect",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "Categorising the specific aspect praised gives a strong grouping axis directly answering the query about what reviews praise. Values are drawn from a sensible aspect taxonomy. Groundedness is generally sound for silent rows (correct 'not_present'), but IMDB-0004 explicitly praises acting ('The acting is pretty good') yet was labelled 'not_present', a false negative that contradicts the source. Otherwise the negative reviews correctly show no praise."
+      },
+      {
+        "name": "complaint_aspect",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Extracting the complained-about aspect is highly useful and directly serves the query. Several samples are well grounded (IMDB-0001/0002/0003 correctly map insipid writing/bad plot to screenplay). However IMDB-0004, a positive review, was assigned complaint_aspect='acting' when the text actually praises the acting — a clear contradiction and hallucinated complaint. This mislabelling on a polarity-flipped row lowers groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.72,
+    "rationale": "Both added columns give genuine, non-trivial analytical leverage: they decompose free-text reviews into praised and complained-about aspects, exactly the axes the query needs to characterise praise and complaints, and they are not redundant with the existing label/text columns. Groundedness is mostly sound for extraction and for silent rows correctly marked 'not_present', but there is a demonstrable contradiction on IMDB-0004 where a review praising the acting was recorded as having no praise and as complaining about acting. This false assignment appears in both columns and indicates the categoriser can flip aspect polarity, warranting a moderate groundedness penalty while usefulness remains high."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 2
+}

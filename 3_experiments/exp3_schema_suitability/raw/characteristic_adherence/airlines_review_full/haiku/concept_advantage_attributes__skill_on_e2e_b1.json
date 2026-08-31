@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "crew_friendliness_warmth",
+    "crew_attentiveness_responsiveness",
+    "seat_comfort_legroom",
+    "food_beverage_quality",
+    "ground_staff_service"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.566,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.683,
+    "hallucination_rate": 0.8
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_friendliness_warmth",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A genuine qualitative axis distinct from the numeric 'Staff Service' rating: friendly_warm vs indifferent_rude vs professional_neutral lets you characterise the human-warmth advantage of top-rated carriers. Grounding is solid where crew is discussed (S1 'welcoming/kind', S5 'friendly Singaporean culture' -> friendly_warm are sound reads). But it almost never abstains (only 3 NULLs), and S2 -- a review that mentions ONLY seats and entertainment -- was assigned 'professional_neutral' despite being silent on crew, which should have been unknown. That silent-row fabrication tendency lowers groundedness."
+      },
+      {
+        "name": "crew_attentiveness_responsiveness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.58,
+        "hallucination_observed": true,
+        "rationale": "Separating attentiveness/responsiveness from warmth is a legitimate second service axis useful for comparing high-rated airlines (e.g. S1 'gave a cake', S4 'crew came round regularly' -> proactive_attentive are well supported). However, with only 71 NULLs it rarely abstains, and S2 (silent on crew entirely) was labelled 'slow_inattentive' -- an invented negative that the text does not support. This unwarranted filling of silent rows caps groundedness."
+      },
+      {
+        "name": "seat_comfort_legroom",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Overlaps partly with the original numeric 'Seat Comfort' column, but the categorical text-derived reading (spacious_comfortable / adequate_acceptable / cramped_uncomfortable) adds qualitative granularity that is a usable grouping axis for advantage analysis. Groundedness is the strongest in the set: every sample matches the text (S1 'legroom spacious', S2 'far too narrow/poor padding' -> cramped) and, crucially, S3 -- silent on seating -- was correctly left 'Unknown'. Its large NULL count (3623) shows appropriate abstention on silent rows."
+      },
+      {
+        "name": "food_beverage_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Some redundancy with the original 'Food & Beverages' rating, but the extracted quality tier (excellent_diverse / good_adequate / poor_bland) still offers a qualitative axis for identifying food as an advantage. Grounding is good when food is described (S1 'delicious', S3 'plentiful and tasty', S4 'two full meals' -> excellent_diverse). It has a sizeable NULL count so it sometimes abstains, but it also fabricates: S2 (no mention of food at all) got 'poor_bland' and S5 (no mention of food) got 'good_adequate'. These are values asserted where the text is silent, materially undermining groundedness."
+      },
+      {
+        "name": "ground_staff_service",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "As a concept, ground/airport service is a distinct and useful advantage axis separate from inflight crew. But the values are systematically ungrounded: all five sampled reviews discuss ONLY the onboard experience and are silent on ground/airport staff, yet every one received a definite label (four 'helpful_professional', one 'neutral_adequate'), and the column has just 19 NULLs across the whole table. The operator appears to be conflating cabin crew with ground staff or projecting overall sentiment, producing confident specifics the source text does not support. This is a pervasive hallucination, so groundedness is low despite the conceptual usefulness."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.55,
+    "rationale": "The added columns collectively provide several genuine, query-relevant axes (crew warmth, crew attentiveness, seat comfort, food quality, ground service) that let an analyst group and compare the advantage attributes of high-rated airlines beyond the coarse numeric originals; even where they partly mirror existing numeric columns (Seat Comfort, Food & Beverages, Staff Service) the categorical text-derived tiers add qualitative leverage, so table-level usefulness is high. Groundedness is mixed: seat_comfort_legroom is exemplary (accurate reads and correct 'Unknown' on silent rows), but the crew, food, and especially ground_staff_service columns tend to fill silent rows with fabricated values rather than abstaining -- ground_staff_service is invented in all five samples and has only 19 NULLs, a systematic hallucination. This pattern of asserting attributes the text does not mention drags the table-level groundedness to moderate."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

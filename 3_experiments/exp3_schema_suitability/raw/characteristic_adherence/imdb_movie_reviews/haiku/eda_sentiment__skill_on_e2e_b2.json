@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_critique_focus",
+    "narrative_quality_signal",
+    "comparison_or_genre_context",
+    "technical_or_creative_root_cause",
+    "recommendation_stance"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "primary_critique_focus",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categorizes which aspect of a film the review centers on (plot, acting, screenplay, etc.). Well-separated, interpretable categories that can be cross-tabulated against sentiment to reveal which themes dominate positive vs negative reviews. Directly serves the query about theme differences."
+      },
+      {
+        "name": "narrative_quality_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable ordinal-ish categories (coherent/engaging vs convoluted/thin vs derivative) that are associational to sentiment without being a bare restatement of the label. Enables meaningful segmentation, though it correlates strongly with sentiment; still informative as a theme dimension."
+      },
+      {
+        "name": "comparison_or_genre_context",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "External rhetorical dimension (whether reviewer compares to other films, contextualizes by genre, or references history/culture). Clean, well-separated categories orthogonal to the label, offering a genuinely exploratory relationship to compare against sentiment."
+      },
+      {
+        "name": "technical_or_creative_root_cause",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Attributes the review's judgment to a source (writing, casting, direction, effects, budget). Interpretable, well-spread categories that support discovering which root causes align with positive vs negative sentiment. Strong EDA variable."
+      },
+      {
+        "name": "recommendation_stance",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Captures explicit/implicit recommend/avoid stance. Interpretable and segmentable, but it is largely a near-proxy for sentiment polarity, so it partially restates the focus rather than opening an independent relationship; still usable for segmentation."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.82,
+    "rationale": "As a set, these columns provide interpretable, well-separated categorical dimensions (critique focus, narrative quality, comparative context, root-cause attribution, recommendation stance) that can each be grouped and cross-tabulated against label_pos to explore how review themes differ by sentiment. Categories are human-readable and reasonably balanced rather than opaque scores or near-constant/fine-grained values. The main caveats are that narrative_quality_signal and recommendation_stance correlate very tightly with sentiment and thus partly restate the focus, but the remaining columns (especially primary_critique_focus, comparison_or_genre_context, and technical_or_creative_root_cause) supply genuinely orthogonal, thematically rich segmentation. Overall a strong realization of the exploratory-EDA claim."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

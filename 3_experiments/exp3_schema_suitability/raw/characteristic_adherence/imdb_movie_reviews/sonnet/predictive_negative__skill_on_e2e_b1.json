@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative IMDb audience satisfaction?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "script_quality_verdict",
+    "acting_quality_verdict",
+    "production_quality_verdict",
+    "plot_coherence",
+    "reviewer_emotional_tone",
+    "comparative_benchmark",
+    "rec_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8286,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8143,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "script_quality_verdict",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A distinct aspect axis (writing/script) that can be grouped against label_pos to see if script complaints predict negativity. Values match text: IMDB-0001 explicitly calls writing insipid (poor), IMDB-0004 silent on script (null) is correct. Well grounded."
+      },
+      {
+        "name": "acting_quality_verdict",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Separate performance axis, useful for modeling. IMDB-0003 'performances are wooden' -> poor is sound; IMDB-0004 'acting is pretty good' -> good is exact. But IMDB-0002 has no clear acting comment yet produced 'poor', a mild over-assertion. Nulls for silent rows appropriate."
+      },
+      {
+        "name": "production_quality_verdict",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful production-craft axis. However near-absence of nulls (only 1) is suspicious given many reviews say nothing on production. IMDB-0005 has no production comment yet got 'mixed', and IMDB-0002 got 'poor' without specific production evidence — signs of forced non-null inference beyond source support."
+      },
+      {
+        "name": "plot_coherence",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Coherence/predictability is a genuine analytical axis distinct from tone. IMDB-0003 'predictable premise' -> predictable is well grounded; silent rows (0001,0002,0004) correctly null. Sound."
+      },
+      {
+        "name": "reviewer_emotional_tone",
+        "analytical_usefulness": 0.62,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well-grounded and graded (strong/mild) so richer than a bare sentiment flag, but it is largely a restatement of the existing label_pos target, offering limited new leverage for predicting satisfaction. Values track text accurately."
+      },
+      {
+        "name": "comparative_benchmark",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether a review benchmarks against other films is a genuine, non-obvious signal. IMDB-0001 compares to Star Trek Voyager (negative_comparison) is correct; silent rows -> no_comparison is right. Grounded."
+      },
+      {
+        "name": "rec_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Recommend/avoid signal is analytically strong for predicting satisfaction. IMDB-0004 'A must see' -> explicit_recommend is exact; IMDB-0001/0002 -> explicit_avoid reasonable though somewhat inferred rather than explicit imperative. Mostly sound."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns decompose reviews into distinct, analytically valuable aspect axes (script, acting, production, plot, tone, comparison, recommendation) that give real grouping/modeling leverage for predicting negative satisfaction. Most values are sound readings of the source text, with appropriate nulls for silent rows. Main weaknesses: reviewer_emotional_tone largely restates the existing label target, and production_quality_verdict shows forced non-null inference (nearly no nulls, values assigned where the text is silent), the clearest groundedness concern."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

@@ -1,0 +1,1277 @@
+[
+  {
+    "var_a": "original",
+    "var_b": "skill_off",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Travel | 61 | 146 | 41.8%",
+          "why": "concrete counts and rates per category"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Mean amount for Declined: $3,912 vs Processed: $4,284",
+          "why": "numeric comparison"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Every declined record (84/84) has an empty processed_date",
+          "why": "acknowledges structural leakage, risks circularity"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "travel_expense_signal 1 | low | 80.0%",
+          "why": "interaction/segmentation analysis"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "6.7% n359 vs 42.6% n141",
+          "why": "contrasted decline rates with sizes"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Actionable rule: A description flagged with travel terminology... low dollar amount, is at very high risk",
+          "why": "decision-ready rule"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B adds interaction segmentation and cleaner decision rules without A's mild processed_date leakage.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "travel_expense_signal = 1 | 42.6% | 141",
+          "why": "quantified predictor with n"
+        },
+        {
+          "dimension": "depth",
+          "quote": "travel_expense_signal | low | 80.0%",
+          "why": "interaction across amount tiers"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "A description flagged with travel terminology... at very high risk",
+          "why": "decision-ready rule"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Declined ... (≈$3,912) vs. processed (≈$4,284)",
+          "why": "concrete magnitudes"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Travel | 61 | 146 | 41.8%",
+          "why": "table-backed rates"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Every declined record (84/84) has an empty processed_date",
+          "why": "concrete field counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "vague or non-standard ci values in travel records correlate",
+          "why": "item-level reasoning"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A gives cleaner quantified predictors and interactions; B leans on structural leakage signals (processed_date) that are label-consistent but less coherent.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.78,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Travel | 61 | 146 | 41.8%",
+          "why": "numeric decline-rate table"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Mean amount for Declined: $3,912 vs Processed: $4,284",
+          "why": "concrete magnitudes"
+        },
+        {
+          "dimension": "depth",
+          "quote": "~57% of auto-generated Travel rows were processed",
+          "why": "within-group nuance"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "vague travel = 44.9% decline vs. specific travel = 25.8%",
+          "why": "interaction/segmentation within travel"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "No | No | 61.4% | 101",
+          "why": "cross-tab decline rates"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Flag immediately; require date before processing",
+          "why": "decision-ready action table"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Yes | No | 0.0% | 72",
+          "why": "consistent necessary-condition logic"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B adds interaction segmentation and a decision-ready action matrix while matching A's evidence.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.68,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "vague travel = 44.9% decline vs. specific travel = 25.8%",
+          "why": "segments within travel category"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "processed_date present / source_id present decline-rate cross-tab",
+          "why": "multi-variable numeric table"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Flag immediately; require date before processing",
+          "why": "decision-ready action table"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "16 of 61 travel declines match this exact template",
+          "why": "concrete keyword magnitude"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "partly structural (declined expenses do not get a processing timestamp)",
+          "why": "acknowledges leakage honestly"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Mean amount for Declined: $3,912 vs Processed: $4,284",
+          "why": "numeric comparison"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper within-travel segmentation and sharper decision-ready actions, though B better flags label-leakage.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "16 of 61 travel declines match this exact template",
+          "why": "concrete description-level counts tied to the goal"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "short_description contains boilerplate language ... without specifying a business need",
+          "why": "decision rule from description text, matching the goal"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "amount alone is a poor predictor",
+          "why": "consistent framing of weak signals"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "No | 84 | 205 | 41.0%",
+          "why": "clean numeric contingency table"
+        },
+        {
+          "dimension": "depth",
+          "quote": "within the Travel category alone, the signal collapses",
+          "why": "conditional segmentation reasoning"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": [
+        {
+          "column": "asset_category",
+          "quote": "rows tagged `travel` have a 41.4% decline rate",
+          "dependent": true
+        },
+        {
+          "column": "action_type",
+          "quote": "travel_expense | 58 | 141 | 41.1%",
+          "dependent": true
+        },
+        {
+          "column": "description_specificity",
+          "quote": "specific_asset_named | 9 | 114 | 7.9%",
+          "dependent": true
+        },
+        {
+          "column": "has_source_id",
+          "quote": "False | 62 | 173 | 35.8%",
+          "dependent": true
+        },
+        {
+          "column": "is_luxury_or_premium",
+          "quote": "True | 4 | 12 | 33.3%",
+          "dependent": true
+        },
+        {
+          "column": "department_group",
+          "quote": "TAPP `department_group` mirrors these rankings",
+          "dependent": false
+        }
+      ]
+    },
+    "reason": "B cites TAPP columns despite 'none' being augmented and centers on structural fields; A stays on-goal with description-text signals and is more internally consistent.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.66,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Travel | 61 | 146 | 41.8%",
+          "why": "quantified category decline rates"
+        },
+        {
+          "dimension": "depth",
+          "quote": "missing source ID is structurally coupled with the Travel category rather than being an independent causal factor",
+          "why": "causal disambiguation"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "No record with a processed_date was ever declined",
+          "why": "strong claim but risks target leakage framed as predictor"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "16 of 61 travel declines match this exact template",
+          "why": "concrete description-level counts tied to goal"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "ci names a vague, discretionary, or non-standard item",
+          "why": "description-signal decision logic"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "~57% of auto-generated Travel rows were processed",
+          "why": "acknowledges exceptions consistently"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B directly analyzes description keywords/ci items answering the goal, while A leans on structural leakage signals.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "`travel_expense_signal = 1` | **42.6%** | 141",
+          "why": "numeric decline rates by signal"
+        },
+        {
+          "dimension": "depth",
+          "quote": "travel_expense_signal + low amount = 80%",
+          "why": "interaction analysis"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "travel language alone is not sufficient",
+          "why": "acknowledges limits consistently"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "No/No | **61.4%** | 101",
+          "why": "concrete cross-tab with n"
+        },
+        {
+          "dimension": "depth",
+          "quote": "vague travel = 44.9% vs specific travel = 25.8%",
+          "why": "segmented interaction reasoning"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "require itemized description",
+          "why": "specific decision-ready actions per signal"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B adds decisive metadata signals and richer interaction segmentation with equally strong evidence.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.66,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "vague travel = 44.9% decline vs. specific travel = 25.8%",
+          "why": "cross-segmentation within travel group"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "No/No 61.4% n=101",
+          "why": "2x2 table with counts"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Flag immediately; require date before processing",
+          "why": "specific decision rules"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "travel_expense_signal=1 + low amount 80.0%",
+          "why": "interaction effect"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "6.7% n=359 vs 42.6% n=141",
+          "why": "numeric with counts"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "57% are not... travel language alone is not sufficient",
+          "why": "consistent caveat"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers broader multi-signal segmentation and richer combined risk profile, edging out B.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 3,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "`travel_expense_signal = 1` | **42.6%** | 141",
+          "why": "numeric decline rates tied to description signals"
+        },
+        {
+          "dimension": "depth",
+          "quote": "travel signal + low amount | 80%",
+          "why": "interaction/segmentation reasoning"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "A description flagged with travel terminology ... is at very high risk",
+          "why": "description-focused decision rule matching the goal"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "\"Rental cost for travel equipment\"",
+          "why": "concrete description phrases"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "61 of 84 declined records (73%)",
+          "why": "precise counts"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "processed_date ... No | 84 | 205 | **41.0%**",
+          "why": "numeric tables"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "No record with a processed_date was ever declined",
+          "why": "leads with a non-description structural signal that drifts from the goal"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A directly answers the description-signal goal with strong evidence, while B's top signals are structural (processed_date) and off-goal.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "No record with a processed_date was ever declined",
+          "why": "sharp structural signal with table backing"
+        },
+        {
+          "dimension": "depth",
+          "quote": "missing source IDs are a necessary but not sufficient condition",
+          "why": "causal disentangling across groups"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "61 of 84 declined records (73%) at a category decline rate of 41.8%",
+          "why": "concrete magnitudes"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "actionability",
+          "quote": "A description flagged with travel terminology... is at very high risk",
+          "why": "decision-ready rule tied to description signals"
+        },
+        {
+          "dimension": "depth",
+          "quote": "travel language alone is not sufficient — policy... plays a role",
+          "why": "interaction and necessity reasoning"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "travel signal + low amount | 80% decline rate",
+          "why": "interaction magnitude"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper causal disentangling and stronger structural evidence, edging out B's more goal-focused description signals.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "500 rows, 84 Declined (16.8% overall)",
+          "why": "concrete dataset framing"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "vague travel = 44.9% decline vs. specific travel = 25.8%",
+          "why": "numeric interaction"
+        },
+        {
+          "dimension": "depth",
+          "quote": "four-cell processed_date × source_id table",
+          "why": "cross-segment analysis"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Route to travel-specific approval workflow",
+          "why": "decision-ready actions"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "all 146 Travel records have has_source_id = False",
+          "why": "identifies confounding/structural coupling"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "necessary but not sufficient condition",
+          "why": "careful causal framing"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "low-amount records (<$2,000) are declined at 57.1%",
+          "why": "segmented numeric evidence"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "61 of 84 declined records (73%)",
+          "why": "precise counts"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B matches A's specificity and adds stronger causal disentangling of confounded signals with equal coherence.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_on",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "No | 84 | 205 | 41.0%",
+          "why": "quantified processed_date signal"
+        },
+        {
+          "dimension": "depth",
+          "quote": "all 146 Travel records have has_source_id = False",
+          "why": "explains confounding/coupling"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "necessary but not sufficient condition",
+          "why": "consistent causal framing"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "actionability",
+          "quote": "require date before processing",
+          "why": "decision-ready actions"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "No | No | 61.4% | 101",
+          "why": "cross-tab numeric signal"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "vague travel = 44.9% decline vs. specific travel = 25.8%",
+          "why": "segmented magnitudes"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "Both strong, but A is more internally consistent while B has minor discrepancies (specificity/purpose counts) despite better action framing.",
+    "validation_warnings": []
+  }
+]

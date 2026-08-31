@@ -1,0 +1,74 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "failure_type",
+    "resolution_action_type",
+    "self_resolved",
+    "is_repeat_incident_type",
+    "urgency_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7417,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.575,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6583,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Categorizing incidents from short_description into device/service types (printer, monitor, database, network) gives a strong grouping axis for analysis. Sample values are sound readings of the source text."
+      },
+      {
+        "name": "failure_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "rationale": "A distinct failure-mode axis useful for pattern analysis. Mostly well-grounded, but some inference is loose: 'Printer not working properly' mapped to 'not_responding_unresponsive' while a nearly identical 'not functioning' printer became 'service_failure', showing inconsistent/under-supported distinctions from terse text."
+      },
+      {
+        "name": "resolution_action_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "rationale": "A resolution-oriented axis is analytically valuable. However the source rows are short_description only with no resolution notes; asserting 'repair_needed' or 'connectivity_fix' as an action outcome is largely inferred from category rather than grounded in stated resolution text, so specificity outruns evidence."
+      },
+      {
+        "name": "self_resolved",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.35,
+        "rationale": "Potentially useful if grounded, but nothing in the sampled source text indicates whether an incident self-resolved; opened/closed timestamps are identical placeholders. Values like True/False appear asserted without textual support, indicating invented specificity."
+      },
+      {
+        "name": "is_repeat_incident_type",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.3,
+        "rationale": "Heavily skewed (452 true) and the flag cannot be derived from a single row's short_description; determining a repeat requires cross-row comparison not evidenced here. Confident True/False values are largely unsupported by the row-level source text."
+      },
+      {
+        "name": "urgency_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "rationale": "An urgency axis could aid prioritization analysis and partly overlaps existing 'priority'. Some values are reasonable ('Internet connectivity lost'->immediate_attention), but many terse descriptions offer no explicit urgency cue, so 'standard'/'immediate_attention' are partly inferred beyond the text."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.55,
+    "rationale": "The categorical columns (incident_category, failure_type, urgency_signal) provide genuinely new grouping/comparison axes well suited to exploring the tickets and are mostly grounded in short_description. The action/behavioral flags (resolution_action_type, self_resolved, is_repeat_incident_type) are analytically appealing but their confident values are largely inferred or asserted beyond what the short, resolution-free source text supports, and some show inconsistent categorization. Overall useful set with moderate groundedness concerns on the inferred behavioral columns."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

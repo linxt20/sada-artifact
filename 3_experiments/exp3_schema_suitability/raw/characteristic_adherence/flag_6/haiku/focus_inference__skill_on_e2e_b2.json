@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_issue_category",
+    "issue_severity_signal",
+    "assigned_technician",
+    "location_or_scope",
+    "issue_recurrence_pattern",
+    "same_person_assigned_closed"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.455,
+    "focus_coherence": 0.65,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/characteristics of incidents themselves -- what the incident is about (issue type, severity, scope, recurrence) as the analyzable focus",
+    "per_column": [
+      {
+        "name": "primary_issue_category",
+        "supports_focus": true,
+        "rationale": "Directly characterizes what the incident is about; a core facet of the incident-nature focus and data-inferable from short_description."
+      },
+      {
+        "name": "issue_severity_signal",
+        "supports_focus": true,
+        "rationale": "A distinct facet describing failure type/severity of the incident, complementing category."
+      },
+      {
+        "name": "location_or_scope",
+        "supports_focus": true,
+        "rationale": "Describes the blast radius/scope of the incident, another coherent facet of incident nature."
+      },
+      {
+        "name": "issue_recurrence_pattern",
+        "supports_focus": true,
+        "rationale": "Captures whether the incident is systemic/recurring vs isolated -- a strong actionable facet of the incident focus."
+      },
+      {
+        "name": "assigned_technician",
+        "supports_focus": false,
+        "rationale": "Largely a normalized restatement of existing assigned_to; centers on handler rather than incident nature, pulling toward a different (workload/ownership) focus."
+      },
+      {
+        "name": "same_person_assigned_closed",
+        "supports_focus": false,
+        "rationale": "A process/workflow flag derivable from existing assigned_to/closed_by; belongs to a handling-process focus, not the incident-nature focus the other columns build."
+      }
+    ],
+    "focus_coherence": 0.65,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "rationale": "Four of six columns (category, severity, scope, recurrence) coherently center on a single inferable focus -- the nature and characteristics of the incidents -- forming a genuine multi-facet analytical structure at useful granularity, all derivable from short_description. This focus is highly actionable (points analysts toward systemic issues, hotspots, severity distributions). However, assigned_technician is essentially a restatement of the existing assigned_to column, and same_person_assigned_closed is a process metric derivable from existing fields; both drift toward a separate handling/workflow focus, diluting single-concept coherence and adding some grab-bag character. The dominant facet cluster is strong, but the two off-focus columns prevent a top score on coherence."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

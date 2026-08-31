@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What business models and customers do these companies describe?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "business_model_type",
+    "primary_customer_segment",
+    "industry_vertical",
+    "product_delivery_mode",
+    "company_stage_type",
+    "core_value_proposition"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8083,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.8042,
+    "hallucination_rate": 0.1667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the 'business model' half of the query and gives a strong grouping axis. Samples map soundly to source text (venture capital, professional services, SaaS all warranted)."
+      },
+      {
+        "name": "primary_customer_segment",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly addresses the 'customers' half of the query. B2C for 23andMe and investor_startup for VC firms are well-grounded. Some segments (e.g. enterprise_B2B for 280 Group) are reasonable inferences from the described offering."
+      },
+      {
+        "name": "industry_vertical",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a useful independent axis for grouping. Values are grounded (healthtech for 23andMe/5AM, fintech for Addepar) and appropriately returns Unknown/NULL when the text is silent, which is correct behaviour."
+      },
+      {
+        "name": "product_delivery_mode",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Somewhat correlated with business_model_type (SaaS->cloud_SaaS, VC->investment_capital), reducing incremental leverage, but the hybrid/API/physical distinctions add genuine delivery detail. Values are sound readings of the text."
+      },
+      {
+        "name": "company_stage_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Stage is a plausible new analytical axis, but descriptions rarely state stage. Labelling 280 Group as 'growth_stage_startup' and 23andMe as 'established_public_or_large' from marketing blurbs is often unwarranted; the frequent confident stage assignment goes beyond source text."
+      },
+      {
+        "name": "core_value_proposition",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a thematic grouping distinct from vertical/model. Samples are well-grounded readings of the description (health outcomes, financial services, data analytics). Some overlap with industry_vertical but not redundant."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns collectively give strong, distinct axes (model, customer, vertical, delivery, value prop) that directly serve the query about business models and customers, and values are largely sound readings of the descriptions with appropriate Unknown handling. The main weakness is company_stage_type, which frequently asserts a specific stage the marketing-style descriptions do not support, and product_delivery_mode partly restates business_model_type. Overall quality is high on both necessary conditions."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_business",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do resolution duration values vary across tickets?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "primary_system_affected",
+    "assigned_to_technician",
+    "ticket_handoff_occurred",
+    "issue_severity_signal",
+    "time_of_day_opened",
+    "scope_impact",
+    "caller_profile",
+    "recurring_issue_indicator"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7278,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.6167,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.6723,
+    "hallucination_rate": 0.5556
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A meaningful grouping axis for duration variance; categories match short_description well (WiFi->connectivity, VPN->connectivity, database->database). Partly overlaps original 'category' column but the derived values from text appear sound."
+      },
+      {
+        "name": "primary_system_affected",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis from category; different systems plausibly have different resolution times. Values are well-grounded in the short_description (VPN->vpn, WiFi->wifi_network, database->database)."
+      },
+      {
+        "name": "assigned_to_technician",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Technician workload/skill is a genuine driver of duration. But values contradict source: row1 closed_by 'Charlie Whitherspoon' yet assigned beth_anglin; row5 closed_by 'Luke Wilson' yet charlie_whitherspoon. Appears to duplicate/misalign existing assigned_to; produced values not consistently grounded."
+      },
+      {
+        "name": "ticket_handoff_occurred",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Handoffs plausibly increase duration, a useful signal. However the table gives no clear evidence of handoffs in the sampled rows; the boolean appears asserted without support from the source text (only assigned_to/closed_by pairs available, not exposed here)."
+      },
+      {
+        "name": "issue_severity_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Severity/impact type is a strong candidate driver for duration. Mappings are mostly defensible (cannot connect/access->access_restricted, printing->service_unavailable), a warranted categorisation of the description."
+      },
+      {
+        "name": "time_of_day_opened",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Directly derivable from opened_at timestamp and could explain duration (off-hours staffing). Buckets match samples exactly. Somewhat derivable from an existing column but adds a usable grouping axis."
+      },
+      {
+        "name": "scope_impact",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Blast radius is a strong duration driver. Grounding is weak: 'single_user' for connectivity/VPN is defensible, but scope is largely inferred and not explicitly stated in short_description; some assignments are speculative."
+      },
+      {
+        "name": "caller_profile",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Essentially a restatement of caller_id with little new leverage for duration. Values also appear misaligned/invented relative to available source (caller not shown in samples, yet specific names asserted)."
+      },
+      {
+        "name": "recurring_issue_indicator",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Recurrence could plausibly affect duration and is a useful axis. But nothing in the sampled source text supports a true/false recurrence determination; the boolean appears asserted without grounding."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.58,
+    "rationale": "Most columns supply genuine, distinct axes (category, affected system, severity, scope, time-of-day, handoff, recurrence) that could plausibly explain duration variance, so analytical usefulness is solid overall. caller_profile is weak (redundant with caller_id). Groundedness is mixed: text-derivable columns (incident_category, primary_system_affected, issue_severity_signal, time_of_day_opened) are well supported, but assigned_to_technician contradicts closed_by in samples, and ticket_handoff_occurred, recurring_issue_indicator, caller_profile, and partly scope_impact assert specifics the sampled source text does not warrant, indicating hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 9
+}

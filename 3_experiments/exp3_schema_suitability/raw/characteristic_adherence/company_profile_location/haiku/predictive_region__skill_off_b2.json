@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "dominant_industry",
+    "description_length",
+    "is_b2b",
+    "has_rd_focus",
+    "tech_depth_score"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.28,
+    "predictor_fraction": 0.8,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.35,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "dominant_industry",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Industry mix varies geographically (e.g., semiconductor/AI concentrations differ by region), so an industry label derived from the description is a legitimate, non-leaking predictor of regional cluster and plausibly carries real signal."
+      },
+      {
+        "name": "description_length",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "rationale": "Bucketed text length is a mechanical, generic feature with no plausible semantic link to geographic region; it does not carry regional signal."
+      },
+      {
+        "name": "is_b2b",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Business model (B2B vs. not) is external to region and can co-vary with regional industry ecosystems, giving weak but plausible predictive signal for the cluster."
+      },
+      {
+        "name": "has_rd_focus",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "R&D orientation tends to concentrate in specific tech/research hubs, so it lies outside the focus and can carry regional signal; however its extreme imbalance (6/199) limits real leverage."
+      },
+      {
+        "name": "tech_depth_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A measure of technical depth from the description is an external attribute that may correlate with tech-heavy regions; heavy skew toward 0 limits its usefulness but it is a legitimate predictor."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.35,
+    "rationale": "Four of five columns are legitimate, non-leaking predictors derived from the description, with dominant_industry offering the most genuine geographic signal. However, is_b2b, has_rd_focus, and tech_depth_score are all heavily imbalanced (near-constant), sharply reducing their discriminative power, and description_length is a mechanical filler with no regional relevance. Notably, the original table already contains City/Latitude/Longitude, which likely define the cluster far more directly; the added text-derived features add only modest incremental leverage as a set."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

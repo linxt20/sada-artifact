@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest a longer visit?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "visit_type",
+    "clinical_severity_level",
+    "new_diagnosis_flag",
+    "chronic_disease_count",
+    "diagnostic_test_ordered",
+    "new_medication_initiated",
+    "specialist_consult_triggered",
+    "counseling_topic",
+    "outbound_referral_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.8167,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7833,
+    "hallucination_rate": 0.4444
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "visit_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A strong categorical axis to group visit length by encounter type. Mostly well-grounded, but the annual physical exam of an adult labeled 'well_child_or_preventive' is a mis-categorization (adult GP visit), showing some slippage though the preventive gist is correct."
+      },
+      {
+        "name": "clinical_severity_level",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "An ordinal severity scale is a plausible and strong predictor of visit duration. Values are defensible readings (viral URI=1, MI follow-up=2, knee injury with MRI=3), though the exact numeric anchoring is somewhat subjective."
+      },
+      {
+        "name": "new_diagnosis_flag",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "New vs ongoing status is analytically meaningful for duration and generally well-supported by the notes (URI new, MI follow-up ongoing, acne new treatment initiation)."
+      },
+      {
+        "name": "chronic_disease_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Comorbidity burden is a useful axis, but values are poorly grounded: the annual physical note mentions no chronic disease yet is given 1, and the acne visit (no chronic disease) is given 1. These are invented specifics beyond what the text supports."
+      },
+      {
+        "name": "diagnostic_test_ordered",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Test ordering strongly relates to longer visits and is a good axis. Mostly accurate (MRI=imaging, lipid panel=lab), but the physical exam ordering only labs was labeled 'both_imaging_and_lab', which contradicts the text."
+      },
+      {
+        "name": "new_medication_initiated",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Medication changes plausibly lengthen visits. Values are well-grounded: adapalene/doxycycline started = new_drug_started, others correctly not_present."
+      },
+      {
+        "name": "specialist_consult_triggered",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Referral/consult signals are relevant to duration. Values are reasonable, though labeling the MRI order as a 'single_referral' is a mild stretch (imaging is not a specialist referral)."
+      },
+      {
+        "name": "counseling_topic",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Counseling content is a plausible driver of longer visits and offers a distinct axis. Values are sensible readings (return precautions for URI, adherence for MI/acne)."
+      },
+      {
+        "name": "outbound_referral_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with specialist_consult_triggered as a numeric restatement, reducing added leverage. Also weakly grounded: the annual physical is assigned 1 referral though the note describes only labs, and the MRI counted as a referral."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns provide multiple genuinely useful axes (visit type, severity, tests, meds, consults, counseling) directly relevant to predicting visit duration, giving strong analytical leverage. Groundedness is generally good but degraded by several unsupported specifics: fabricated chronic_disease/referral counts on the annual-physical row, an imaging label where only labs were ordered, and an adult visit tagged as well_child. outbound_referral_count is also partly redundant with specialist_consult_triggered. Overall the set is analytically strong with moderate, non-trivial grounding concerns."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

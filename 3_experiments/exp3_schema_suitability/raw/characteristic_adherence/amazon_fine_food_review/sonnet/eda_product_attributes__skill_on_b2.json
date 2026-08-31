@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "focus_variable": "satisfaction_score",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "product_category",
+    "flavor_taste_quality",
+    "flavor_intensity_balance",
+    "product_effectiveness",
+    "repeat_purchase_intent",
+    "purchase_motivation"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_score",
+    "per_column": [
+      {
+        "name": "product_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean, well-separated categorical segmentation of products (coffee/tea, snacks, pet food, etc.). An external attribute that can be grouped and compared against satisfaction to reveal which categories score higher."
+      },
+      {
+        "name": "flavor_taste_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal, interpretable taste-quality rating (excellent/good/acceptable/poor/off_flavor). A product attribute that plausibly associates with satisfaction. Some overlap with the satisfaction focus, but taste quality is a distinct describable attribute, not a restatement of the overall score."
+      },
+      {
+        "name": "flavor_intensity_balance",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories (well_balanced, too_mild, too_strong) describing a concrete sensory attribute that can be segmented on and compared to satisfaction. 'not_applicable' is a reasonable bucket for non-flavor products."
+      },
+      {
+        "name": "product_effectiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated categories (works_as_claimed, partially_effective, no_effect, adverse_effect) capturing a distinct product attribute; a strong, interpretable candidate driver of satisfaction."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categories are interpretable, but repurchase intent is essentially an outcome/proxy of satisfaction rather than an external product attribute. Correlating it with satisfaction is near-tautological, not an informative attribute-level relationship, and it is heavily NULL (~46%)."
+      },
+      {
+        "name": "purchase_motivation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable segments (dietary need, curiosity, gifting, price-seeking) describing an external reviewer-context variable that can be compared against satisfaction. High NULL rate (~46%) weakens it, but the categories support meaningful segmentation."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.72,
+    "rationale": "Most columns are external, interpretable, well-separated categorical attributes that a human can group on and compare against satisfaction, directly serving the 'what attributes drive satisfaction' query (product_category, flavor_taste_quality, flavor_intensity_balance, product_effectiveness are strong). repeat_purchase_intent is a satisfaction proxy/outcome rather than an attribute, so it partly restates the focus. Several columns carry substantial NULL/not_applicable mass, which limits comparison in subsets, but no column is opaque or a bare score. As a set, the columns support solid interpretable relationship discovery."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

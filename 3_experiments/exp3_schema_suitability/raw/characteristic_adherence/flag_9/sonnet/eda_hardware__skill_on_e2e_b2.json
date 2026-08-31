@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "focus_variable": "hardware_incident",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_hardware_incident",
+    "incident_domain",
+    "hardware_failure_mode",
+    "software_component_involved",
+    "recurrence_signal",
+    "scope_context"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.8333
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "hardware_incident",
+    "per_column": [
+      {
+        "name": "is_hardware_incident",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is a direct restatement of the focus variable hardware_incident itself, not an external associational variable. Grouping the focus against itself yields no informative relationship."
+      },
+      {
+        "name": "incident_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable categories (hardware, software_application, database, network, vpn, etc.). However, it partially overlaps the focus since 'hardware' is one of its levels, making it somewhat circular; still, the non-hardware categories provide meaningful contrast for segmentation."
+      },
+      {
+        "name": "hardware_failure_mode",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable failure-mode categories (not_functioning, connection_failure, not_powering_on, overheating, etc.) that are strongly associated with hardware. NULLs concentrate on non-hardware cases, so this segments the focus meaningfully, though it is largely defined only when hardware=true (near-tautological presence)."
+      },
+      {
+        "name": "software_component_involved",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear, human-readable software categories (database_client, os_update, vpn_client, office_suite). Its presence/NULL pattern is a good complementary signal that an incident is NOT hardware, supporting contrastive exploration."
+      },
+      {
+        "name": "recurrence_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean binary (true/false) external attribute that can be cross-tabulated against hardware vs non-hardware incidents to explore whether recurrence associates with hardware problems."
+      },
+      {
+        "name": "scope_context",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable spatial/scope categories (user_workstation, server_room, individual_device, building_wide) that can be segmented and compared against the focus to reveal where hardware incidents cluster."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.72,
+    "rationale": "The set is largely strong for exploratory analysis: recurrence_signal, scope_context, software_component_involved, and the failure/domain columns provide interpretable, well-separated categories that a human can group and cross-tabulate against the hardware focus. Weaknesses: is_hardware_incident is a pure restatement of the focus and adds nothing, and incident_domain / hardware_failure_mode are partially circular (they contain 'hardware' as a level or are defined only for hardware cases), reducing genuine associational independence. Enough independent, interpretable segmentations remain to support meaningful relationship discovery, so informativeness is good but not maximal."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

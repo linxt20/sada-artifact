@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a travel expense will be declined?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "travel_related_expense_mention",
+    "asset_category_type",
+    "department_requestor",
+    "asset_type_specificity",
+    "expense_automation_signal",
+    "processing_delay_indicator",
+    "expense_source_tracking_presence"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.55,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.6571,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.6036,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "travel_related_expense_mention",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "The query centers on travel expenses; flagging whether a row mentions travel gives a direct axis to segment on. Values appear grounded in short_description/ci, and 'False' for clearly non-travel hardware rows is sound."
+      },
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizing the asset lets the analyst compare decline rates across categories including travel_equipment, useful for the query. Values map soundly from ci/short_description (Dell->hardware_device, AWS->cloud_service)."
+      },
+      {
+        "name": "department_requestor",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "This largely duplicates the existing 'department' original column, adding little new leverage. Worse, the sampled source text (short_description, ci) contains no departmental information, yet confident labels like Customer_Support/Sales are assigned, suggesting invented or unwarranted values."
+      },
+      {
+        "name": "asset_type_specificity",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether the asset is a specific model vs generic category is a plausible secondary signal but only weakly connected to expense decline; largely derivable from asset_category_type. Values are well-grounded in the ci text."
+      },
+      {
+        "name": "expense_automation_signal",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Manual vs automated entry is a reasonable axis for decline likelihood and is readable from short_description ('Procurement'->manual, 'Automatically generated'->auto). The fine-grained distinction between auto_generated/auto_logged/auto_registered is somewhat speculative but broadly warranted."
+      },
+      {
+        "name": "processing_delay_indicator",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A delay flag is a plausible decline signal. But the derivation is unclear: one 'nan' processed_date row yields True while dated rows yield False, so the logic is only partly supported by visible fields (opened_at vs processed_date not shown together)."
+      },
+      {
+        "name": "expense_source_tracking_presence",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Presence of source tracking could relate to declines, but the value's basis is opaque: original table already has source_id, and the True/False assignments in samples don't clearly follow from the shown source text, indicating weakly grounded or partly guessed values."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.62,
+    "rationale": "Several added columns (travel_related_expense_mention, asset_category_type, expense_automation_signal) give genuine, query-relevant axes for analyzing declines and are well grounded in the ci/short_description text. However, department_requestor is both redundant with the existing 'department' column and appears to fabricate department labels not present in the sampled source text, and expense_source_tracking_presence has an opaque, weakly grounded basis. asset_type_specificity is grounded but adds limited analytical leverage for this specific query. Overall the set is mixed: moderately useful with meaningful groundedness concerns on the requestor and source-tracking columns."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

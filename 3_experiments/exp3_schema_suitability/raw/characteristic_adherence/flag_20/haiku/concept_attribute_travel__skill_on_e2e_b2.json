@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "focus_variable": "travel_policy_risk",
+  "concept": "travel_policy_risk",
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category_type",
+    "travel_purpose_indicator",
+    "business_legitimacy_clarity",
+    "high_value_asset_flag",
+    "processing_delay_flag",
+    "ci_asset_specificity",
+    "creation_method"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1107,
+    "facet_fraction": 0.2857,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.3,
+    "mece": 0.3873,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "travel_policy_risk",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Classifies the type of asset/expense item. This is an attribute of the expense object, not an aspect OF travel policy risk. It may predict risk but is not a part of it."
+      },
+      {
+        "name": "travel_purpose_indicator",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the expense is travel-related is a constitutive dimension of travel policy risk; a policy risk in this domain requires a travel nexus, so this captures the 'travel-relatedness' aspect of the concept."
+      },
+      {
+        "name": "business_legitimacy_clarity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the expense has a clear business purpose vs. personal-travel signal is a core aspect of policy compliance risk (personal use of business funds), an aspect OF the risk itself."
+      },
+      {
+        "name": "high_value_asset_flag",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Value magnitude is an attribute of the expense that may correlate with risk severity but is not a constitutive part of travel policy risk. High value alone is not a policy violation."
+      },
+      {
+        "name": "processing_delay_flag",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Processing/workflow timing is an operational property unrelated to whether the expense violates travel policy. Not an aspect of the risk concept."
+      },
+      {
+        "name": "ci_asset_specificity",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "How specifically the asset is described (branded model vs generic) is a data-quality/description attribute, not a facet of travel policy risk itself."
+      },
+      {
+        "name": "creation_method",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "How the record was created (automated vs manual) is metadata about record provenance, not an aspect of travel policy risk."
+      }
+    ],
+    "facet_columns": [
+      "travel_purpose_indicator",
+      "business_legitimacy_clarity"
+    ],
+    "non_facet_columns": [
+      "asset_category_type",
+      "high_value_asset_flag",
+      "processing_delay_flag",
+      "ci_asset_specificity",
+      "creation_method"
+    ],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.3,
+    "rationale": "Only two of seven added columns are genuine facets (parts) of travel_policy_risk: travel-relatedness and business-purpose legitimacy. The remaining columns are attributes of the expense/asset (asset category, value, description specificity) or record metadata (processing delay, creation method) -- external predictors or irrelevant properties, not constitutive aspects OF the risk. Among the two true facets there is partial overlap, since 'personal_travel_signal' in business_legitimacy_clarity re-encodes travel-relatedness already captured by travel_purpose_indicator, lowering mutual exclusivity. Exhaustiveness is low: key constitutive aspects of travel policy risk such as policy-limit/threshold breaches, documentation/receipt compliance, timing/booking-rule adherence, and reimbursement eligibility are absent, so the two facets do not cover the concept's main aspects."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 3,
+  "added_columns": [
+    "crew_service_inconsistency",
+    "price_value_perception",
+    "traveler_type_expectation_mismatch"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8167,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.62,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.7184,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_inconsistency",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Crew/staff service is one of the most direct drivers of a non-recommend verdict, and the value set (poor_attentiveness, disorganized_service, inconsistent_across_legs, rude_behavior) gives a genuine categorical axis to group and explain negative outcomes rather than restating an existing rating. Grounding is largely sound: purely positive reviews (samples 3, 4) and service-silent reviews correctly map to 'standard_met', with no invented crew facts. The one weakness is sample 2, which explicitly describes uneven service ('pretty good on my aisle and extremely slow where my wife was seated') yet was labeled 'standard_met' — a clear miss of the very inconsistency this column targets. This is under-detection, not fabrication, so no hallucination but a modest groundedness deduction."
+      },
+      {
+        "name": "price_value_perception",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "Perceived value-for-money is highly relevant to why a flight is not recommended, and decomposing it into concrete reasons (price_high_for_decline, premium_price_for_old_aircraft, expensive_wifi_not_included) adds analytical leverage beyond the existing 'Value For Money' rating. Silent rows are appropriately left NULL/Unknown (sample 2). However some values are weakly supported: sample 5 asserts 'price_unjustified_for_product' when the reviewer explicitly says 'no complaints about the service or products onboard' (the grievance is baggage compensation, not price-vs-product), a mild contradiction; and 'good_value' is inferred on sample 3 with no price mention (defensible from strong positivity but not stated). Mostly grounded with a couple of over-reaches."
+      },
+      {
+        "name": "traveler_type_expectation_mismatch",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Segmenting complaints by traveler type and friction mode is a legitimately useful axis for explaining non-recommendation across passenger segments, going beyond the raw 'Type of Traveller' column. But grounding is weak because the column forces a 'mismatch/friction' framing onto rows where none exists. Sample 3, an entirely positive solo review ('remarkable experience', 'nothing negative'), is labeled 'family_separation_complaint' — no family, no complaint present; and sample 4, another all-praise review ('nothing but praises'), is labeled 'business_traveler_operational_friction' with no friction in the text. These are confident assertions the source contradicts, i.e. clear hallucinations. Sample 2 (a couple with uneven service) was also mislabeled 'leisure_comfort_priority' rather than the more fitting couple-coordination issue."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.6,
+    "rationale": "All three added columns target genuine causal axes for the query (crew service quality, price/value perception, and traveler-segment friction), each offering categorical grouping leverage beyond the original rating columns, so table-level analytical usefulness is strong. Source groundedness is more uneven: crew_service_inconsistency is well-behaved (safe defaults on positive/silent rows, one under-detection), price_value_perception is mostly grounded with a couple of unwarranted inferences, but traveler_type_expectation_mismatch repeatedly imposes complaint/friction categories onto explicitly positive reviews (samples 3 and 4), producing values the text directly contradicts. That fabrication drags the holistic groundedness down."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 3
+}

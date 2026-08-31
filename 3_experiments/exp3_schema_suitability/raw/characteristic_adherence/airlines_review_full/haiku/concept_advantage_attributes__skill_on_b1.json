@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "cabin_crew_attentiveness",
+    "seat_comfort_legroom",
+    "customer_service_responsiveness"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7767,
+    "analytical_usefulness__table_level": 0.77,
+    "source_groundedness": 0.71,
+    "source_groundedness__table_level": 0.71,
+    "b1_overall": 0.7433,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_attentiveness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a qualitative categorical axis for crew demeanour (friendly/professional/indifferent/rude/neutral) that goes beyond the numeric 'Staff Service' rating, giving a genuine grouping variable for isolating advantage attributes of high-rated airlines. Values in the samples are well read from the text (welcoming/kind→friendly_attentive; well-trained on hospitality→professional_efficient). In the seat-complaint sample where crew is unmentioned it filled 'neutral_adequate' rather than 'unknown', which is a mild unsupported assertion but a defensible default."
+      },
+      {
+        "name": "seat_comfort_legroom",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Useful as a qualitative seat/legroom axis that adds cabin-condition and pitch nuance beyond the numeric 'Seat Comfort' score, and it correctly returns 'Unknown' for the silent row (sample 3). However groundedness is undermined by the 'spacious_comfortable_flatbed' label being applied to clearly economy contexts: a 1h45 economy flight (sample 1) and an economy 3-3-3 older aircraft (sample 4) that describe only spacious legroom / comfort, not a flatbed. Conflating 'spacious economy legroom' with 'flatbed' invents a specific the text contradicts."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "A distinct-in-principle facet (speed/helpfulness of service), but across all five samples it moves in lockstep with cabin_crew_attentiveness (friendly/professional→proactive_helpful), so much of its signal is a near-restatement of that column, reducing its independent analytical leverage. Values are mostly sound readings of the text, though for the seat-only complaint (sample 2) it asserts 'adequate_available' where service is unmentioned — a mild unsupported fill rather than 'unknown'."
+      }
+    ],
+    "analytical_usefulness": 0.77,
+    "source_groundedness": 0.71,
+    "rationale": "All three columns convert free-text reviews into categorical service/comfort attributes that are directly relevant to identifying advantage attributes of high-rated airlines, giving analysts new axes to group and compare against Overall Rating. They add qualitative granularity beyond the existing numeric Staff Service / Seat Comfort scores. Weaknesses: customer_service_responsiveness overlaps heavily with cabin_crew_attentiveness in the evidence (partial redundancy), and seat_comfort_legroom shows a recurring grounding fault where 'flatbed' is asserted on economy flights the text describes as merely spacious/comfortable, contradicting the source. Silent-row handling is inconsistent (correct 'Unknown' in one case, but unsupported 'adequate' fills elsewhere)."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

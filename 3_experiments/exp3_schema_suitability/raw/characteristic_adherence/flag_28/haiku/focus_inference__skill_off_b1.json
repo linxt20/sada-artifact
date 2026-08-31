@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "n_added_columns": 4,
+  "added_columns": [
+    "completion_gap",
+    "target_achievement_ratio",
+    "priority_rigor",
+    "anomaly_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8375,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8125,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.825,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "completion_gap",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Difference between target_percentage and percent_complete gives a clear new axis to rank goals by how far off-track they are, directly serving 'what's worth attention.' Values are computable from existing numeric columns; sample values (e.g. 0 when at target, large positives when far behind) are consistent readings."
+      },
+      {
+        "name": "target_achievement_ratio",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Ratio of progress to target is a useful normalized measure for comparison/modeling, though partly redundant with completion_gap. Derivable from percent_complete/target_percentage; sample ratios track the gap values sensibly."
+      },
+      {
+        "name": "priority_rigor",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Categorizes records into concern tiers (routine/medium/high/delayed_high_priority), a genuine grouping axis for triage. Plausibly grounded in priority, state, and progress fields; overwhelmingly 'routine' but distribution still discriminates the attention-worthy cases."
+      },
+      {
+        "name": "anomaly_flag",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Composite flags (date_anomaly, stalled_goal, high_target_low_progress, critical_cancelled) directly surface what's worth attention. Most flags are derivable from dates, state, and progress. Minor concern: 'date_anomaly' on rows where source text shows no dates cannot be verified from samples, but such flags are plausibly drawn from start/end_date fields not shown in the sample text; no clear contradiction observed."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.82,
+    "rationale": "All four columns give real analytical leverage for triaging goal records: two numeric off-track measures and two categorical risk/concern classifications, each offering a distinct way to rank or group. The numeric columns are cleanly derivable from existing quantitative fields, and the categorical flags are warranted inferences from state, dates, and progress. Slight redundancy between completion_gap and target_achievement_ratio, and some flag values (date-based) cannot be fully verified from the text samples, but no invented facts or contradictions are evident."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

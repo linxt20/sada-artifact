@@ -1,0 +1,130 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "affected_system",
+    "failure_mode",
+    "ticket_complexity_signal",
+    "location_scope",
+    "resolver_match",
+    "recurrence_indicator",
+    "is_open_unresolved"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query targets 'ticket types that create the heaviest agent workload.' This categorization is the ticket-type dimension the query centers on; it is intervenable in the sense that categories could be reduced/rerouted, and it is the named lever."
+      },
+      {
+        "name": "affected_system",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The affected system is a common cause of both what type/category a ticket is and how long it takes to resolve; not named in the query. It is however largely collinear with category, weakening its distinctness."
+      },
+      {
+        "name": "failure_mode",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The nature of the failure drives both which category/workload bucket a ticket falls in and its resolution difficulty; not named in query."
+      },
+      {
+        "name": "ticket_complexity_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity plausibly influences both which ticket types generate heavy workload and resolution time; not named in query. Borderline mediator, but as an intrinsic difficulty it can act as a common cause."
+      },
+      {
+        "name": "location_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (individual vs enterprise-wide) affects both ticket type/workload and resolution time; not named in query."
+      },
+      {
+        "name": "resolver_match",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Constant (true for all 500 rows); provides no variation and cannot adjust for anything."
+      },
+      {
+        "name": "recurrence_indicator",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an issue recurs can be a common cause of both category/workload and resolution time; not named. Near-constant (480 true), so limited practical value."
+      },
+      {
+        "name": "is_open_unresolved",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Being open/unresolved is downstream of (a function of) resolution time itself; conditioning on it is a collider/selection risk, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "incident_category"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "affected_system",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "failure_mode",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "ticket_complexity_signal",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "location_scope",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "recurrence_indicator",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "A plausible treatment (incident_category / ticket type) is present and is intervenable, matching the 'reduce the ticket types that drive workload' lever. Several genuinely un-named confounders (failure_mode, ticket_complexity_signal, location_scope, affected_system) capture common causes of both ticket type and resolution time, which is what the what-if test rewards. However, quality is diminished: many treatment-adjacent columns are highly collinear with category (mediators/redundant), one column (resolver_match) is a useless constant, and is_open_unresolved is a collider that is outcome-derived and should not be conditioned on. The set sets up an interventional framing but the confounder adjustment is only moderately clean."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

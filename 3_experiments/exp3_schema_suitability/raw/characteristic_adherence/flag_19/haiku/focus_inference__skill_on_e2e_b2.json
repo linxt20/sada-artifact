@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category_primary",
+    "asset_portability_context",
+    "record_creation_signal",
+    "vendor_brand_primary",
+    "processing_lag_indicator",
+    "asset_specification_richness",
+    "asset_expense_purpose"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.504,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.75,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/purpose of the asset or good being expensed (asset-centric characterization of expense records)",
+    "per_column": [
+      {
+        "name": "asset_category_primary",
+        "supports_focus": true,
+        "rationale": "Directly types the asset being expensed (laptop, desktop, service), a core facet of the asset-purpose focus."
+      },
+      {
+        "name": "asset_portability_context",
+        "supports_focus": true,
+        "rationale": "Characterizes the asset by portability/usage context, a coherent facet of the asset concept."
+      },
+      {
+        "name": "record_creation_signal",
+        "supports_focus": false,
+        "rationale": "Provenance of how the record was created; a process/metadata facet only loosely tied to the asset focus."
+      },
+      {
+        "name": "vendor_brand_primary",
+        "supports_focus": true,
+        "rationale": "Vendor/brand of the asset is a strong attribute of what was purchased, supporting asset-centric analysis."
+      },
+      {
+        "name": "processing_lag_indicator",
+        "supports_focus": false,
+        "rationale": "Timing/processing metric unrelated to the asset nature; belongs to a different (operational) focus."
+      },
+      {
+        "name": "asset_specification_richness",
+        "supports_focus": true,
+        "rationale": "Describes how precisely the asset is specified, a facet about the asset/description quality."
+      },
+      {
+        "name": "asset_expense_purpose",
+        "supports_focus": true,
+        "rationale": "The functional purpose of the expense (hardware provisioning, travel, service) is the central asset-purpose facet."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.75,
+    "rationale": "Five of seven columns (category, portability, brand, specification richness, expense purpose) converge cleanly on a single, data-inferable focus: what asset/good the expense represents and why. This is coherent and not a grab-bag. Two columns (record_creation_signal, processing_lag_indicator) drift toward a separate operational/process theme, diluting the centering somewhat. Given the asset focus, the supporting columns form a genuine multi-facet structure (type, portability, vendor, purpose, specification granularity) rather than a single restatement or generic noise, and they enable real analysis such as spend by asset type, vendor concentration, and provisioning purpose. The focus is actionable — an analyst can investigate hardware vs. service spend, vendor consolidation, and portability/usage patterns. Scores are moderated by the two off-focus columns and by some near-overlap between asset_category_primary and asset_expense_purpose."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

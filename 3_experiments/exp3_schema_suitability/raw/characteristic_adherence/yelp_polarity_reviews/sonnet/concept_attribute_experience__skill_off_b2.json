@@ -1,0 +1,75 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "focus_variable": "satisfaction_and_complaint_facets",
+  "concept": "satisfaction_and_complaint_facets",
+  "n_added_columns": 4,
+  "added_columns": [
+    "satisfaction_themes",
+    "complaint_themes",
+    "sentiment_intensity",
+    "theme_count"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.4123,
+    "facet_fraction": 0.5,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.8,
+    "mece": 0.8246,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "satisfaction_and_complaint_facets (the themes of satisfaction and complaint in Yelp reviews)",
+    "per_column": [
+      {
+        "name": "satisfaction_themes",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Directly enumerates the satisfaction aspects (food quality, service, ambiance, speed, value) that constitute half of the concept. These are genuine 'aspects of' the satisfaction/complaint theme space."
+      },
+      {
+        "name": "complaint_themes",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Enumerates the complaint aspects (poor service, food issues, cleanliness, overpriced, order accuracy) constituting the complaint half of the concept. A constitutive part of the theme space."
+      },
+      {
+        "name": "sentiment_intensity",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Overall polarity/intensity is a summary characterization of the whole review's valence, not a constitutive part of WHICH satisfaction/complaint themes are present. It restates the aggregate sentiment rather than carving out a facet of the theme concept."
+      },
+      {
+        "name": "theme_count",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A derived count of how many themes were tagged; it is a metadata summary over the facet columns, not itself an aspect of the concept being decomposed."
+      }
+    ],
+    "facet_columns": [
+      "satisfaction_themes",
+      "complaint_themes"
+    ],
+    "non_facet_columns": [
+      "sentiment_intensity",
+      "theme_count"
+    ],
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.8,
+    "rationale": "The concept 'satisfaction and complaint facets' is genuinely and cleanly decomposed by two columns: satisfaction_themes and complaint_themes, which are true meronymic parts of the theme space and are largely non-overlapping (positive vs. negative aspects, each internally partitioned into distinct categories like food/service/ambiance/value). Together these two cover the main constitutive aspects well, hence solid exhaustiveness (some minor gaps like wait-time/reservation nuances, and overlap risk between 'service_quality' vs 'speed_efficiency'). However, two of the four added columns are NOT facets: sentiment_intensity is an overall-valence restatement of the whole, and theme_count is a derived metadata summary over the facets. These do not carve out additional aspects OF the concept, so they fail the constitutive-facet test even though they are reasonable in general."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

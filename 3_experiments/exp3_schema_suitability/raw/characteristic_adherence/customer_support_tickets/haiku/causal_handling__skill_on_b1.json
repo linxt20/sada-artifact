@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do handling times differ by channel and priority?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "issue_type",
+    "customer_impairment_scope",
+    "resolution_intervention"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.91,
+    "analytical_usefulness__table_level": 0.91,
+    "source_groundedness": 0.8667,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.8883,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.98,
+        "hallucination_observed": false,
+        "rationale": "Provides a genuine new categorical axis to group handling times, well beyond the coarse original 'priority'/'channel'. All sampled values (billing_dispute, auth_or_access_failure, service_outage, feature_request, data_problem) are sound readings of the source text. Strong grounding and high analytical leverage for explaining why handling times vary."
+      },
+      {
+        "name": "customer_impairment_scope",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Scope/blast-radius is a strong explanatory dimension for handling-time differences, distinct from priority. Samples are well grounded: enterprise production downtime, single_user session issue, single_tenant_single_feature for the invoice/CSV cases, not_present for the pure feature request. Categorisations are warranted inferences from the text."
+      },
+      {
+        "name": "resolution_intervention",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "The type of remediation is a useful axis to explain handling-time variation. However, this column asserts resolution actions the source text does not state. For CS-0001 (invoice correction) it produces 'bug_fix_or_hotfix' and for CS-0002 (session drop suspected SSO config) also 'bug_fix_or_hotfix' where the issue descriptions describe the problem, not the resolution taken. These are confident specifics unsupported by the request text, indicating some fabrication despite plausible category vocabulary."
+      }
+    ],
+    "analytical_usefulness": 0.91,
+    "source_groundedness": 0.86,
+    "rationale": "All three added columns supply genuine, non-redundant categorical axes (issue nature, blast radius, remediation type) that directly help explain why handling times differ beyond the existing priority/channel fields. issue_type and customer_impairment_scope are both useful and well grounded in the source text. resolution_intervention is analytically valuable but its values describe actions/outcomes that the issue_description (a request/report) frequently does not state, leading to unsupported confident assertions in at least two of five sampled rows, which lowers overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 3
+}

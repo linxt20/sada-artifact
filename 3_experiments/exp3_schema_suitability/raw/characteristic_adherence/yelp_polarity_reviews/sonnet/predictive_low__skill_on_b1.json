@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict low Yelp user satisfaction?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "service_failure_type",
+    "staff_conduct",
+    "complaint_intensity",
+    "return_intent"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.85,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8175,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8337,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_failure_type",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.93,
+        "hallucination_observed": false,
+        "rationale": "A categorical taxonomy of failure modes gives a strong grouping axis directly relevant to predicting low satisfaction. Values are well grounded: YLP-0002 'forgot me twice' -> ignored_forgotten, YLP-0005 dismissal of guests -> rude_dismissal, positive reviews -> not_present are sound readings."
+      },
+      {
+        "name": "staff_conduct",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Staff conduct categorization offers a distinct behavioral axis useful for correlating with dissatisfaction. Mostly grounded, though YLP-0002 labeling 'rude_condescending' is a mild over-read (text describes forgetful/inattentive, not explicitly rude), and YLP-0003 'neutral' where service was called 'good' is a slight understatement. Generally warranted inferences."
+      },
+      {
+        "name": "complaint_intensity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "An ordinal intensity scale is a genuinely useful continuous predictor for satisfaction modeling, and NULL for non-complaint rows is correct behavior. However the specific numeric values are somewhat arbitrary: YLP-0003 assigns '2' to a minor size gripe (defensible) but the precise 1-5 mapping is a confident quantification the text only loosely supports, lowering groundedness."
+      },
+      {
+        "name": "return_intent",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Return intent is a strong behavioral proxy for satisfaction and a good grouping axis. Mostly grounded with correct 'not_stated' usage. YLP-0001 'will_return_positive' is warranted by 'I always come'; YLP-0003 'neutral_or_conditional' is a reasonable read; YLP-0005 'will_not_return' inferred from 'would not recommend' is a warranted inference."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.82,
+    "rationale": "All four added columns provide distinct, non-redundant analytical axes (failure type, staff behavior, intensity, retention intent) that are directly relevant to predicting low Yelp satisfaction, avoiding trivial constructs like raw sentiment or token counts. Values are largely sound readings of the source text with appropriate use of not_present/not_stated/NULL for silent rows. Minor over-reads (e.g., inferring 'rude_condescending' from inattentive service) and the arbitrariness of the specific complaint_intensity numeric mapping slightly reduce groundedness, but no clear fabrications of unsupported facts are observed."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 4
+}

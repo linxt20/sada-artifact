@@ -1,0 +1,1261 @@
+[
+  {
+    "var_a": "original",
+    "var_b": "skill_off",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "median **28.8 days**; **80%** of his tickets are in the longest quartile",
+          "why": "quantified assignee signal"
+        },
+        {
+          "dimension": "depth",
+          "quote": "After excluding Fred Luddy’s tickets, category gaps narrow",
+          "why": "controls for confounder"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "428 of 500 tickets... 50 produce negative durations",
+          "why": "concrete data quality accounting"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "treat **assignee** as the primary flag",
+          "why": "clear dataset-specific action"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "`agent_workload` vs `agent_avg_resolution_hrs` = **−0.33**",
+          "why": "numeric correlation"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "encodes a historical per-agent average, not a per-ticket outcome",
+          "why": "consistent caveat about proxy"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "750.00 | 84 | Fred Luddy",
+          "why": "exact clustered values"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A computes real per-ticket durations and deconfounds category from assignee, while B relies on a per-agent average that reduces to identity.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.8,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "agent_workload vs agent_avg_resolution_hrs = −0.33",
+          "why": "numeric correlation cited"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "these signals are proxies for agent identity",
+          "why": "acknowledges variable limitation"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "750.00 | 84 | Fred Luddy",
+          "why": "concrete per-agent values"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "After excluding Fred Luddy’s tickets, category gaps narrow",
+          "why": "controls for confounding assignee mix"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "median 28.8 days; 80% of his tickets are in the longest quartile",
+          "why": "quantified segmentation"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "22 rows have missing closed_at, and 50 produce negative durations",
+          "why": "explicit data quality accounting"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "treat assignee as the primary flag",
+          "why": "decision-ready with caveats"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B computes real per-ticket durations, controls for confounding, and quantifies data limitations, whereas A relies on a fixed per-agent proxy variable.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "After excluding Fred Luddy’s tickets, category gaps narrow",
+          "why": "controls for confounder"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "median 28.8 days; 80% of his tickets are in the longest quartile",
+          "why": "numeric backing"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "treat assignee as the primary flag for long resolution time",
+          "why": "decision-ready"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "500 records, 23 columns",
+          "why": "concrete dataset shape"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Fred Luddy | 750 | 691 | 76",
+          "why": "tabular numeric evidence"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "mean ~347 hrs for remote/not-reassigned group likely reflects",
+          "why": "vague/uncertain claim"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A controls for the assignee confounder and stays internally consistent, giving stronger causal depth.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.75,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Fred Luddy | 750 | 691 | 76",
+          "why": "numeric agent comparison table"
+        },
+        {
+          "dimension": "depth",
+          "quote": "combination of remote access + reassignment is the worst scenario",
+          "why": "interaction reasoning"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "authentication has very high mean but very low median",
+          "why": "acknowledges skew consistently"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "After excluding Fred Luddy’s tickets, category gaps narrow",
+          "why": "confound-controlled comparison"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "80% of his tickets are in the longest quartile; all 44 top-decile tickets are his",
+          "why": "quantified concentration"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "treat assignee as the primary flag for long resolution time",
+          "why": "decision-ready with caveats"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B controls for assignee-mix confound and quantifies concentration, giving deeper, more decision-ready analysis.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.8,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "median 28.8 days; 80% of his tickets are in the longest quartile",
+          "why": "numeric agent signal"
+        },
+        {
+          "dimension": "depth",
+          "quote": "After excluding Fred Luddy's tickets, category gaps narrow",
+          "why": "controls for confounding"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "72 rows are unusable for duration analysis",
+          "why": "consistent caveats"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Fred Luddy 691 ... 76 tickets",
+          "why": "concrete magnitudes and counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "his cross-agent tickets median 768 h vs. 312 h for solo tickets",
+          "why": "interaction/segmentation analysis"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Reassigning Fred Luddy's backlog (currently 8 open tickets)",
+          "why": "decision-ready action"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides deeper multi-factor segmentation, interaction effects, and more decision-ready actions.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Fred Luddy | 691 | 750 | 76",
+          "why": "concrete per-agent medians"
+        },
+        {
+          "dimension": "depth",
+          "quote": "cross-agent tickets median 768 h vs. 312 h for solo tickets",
+          "why": "interaction analysis within agent"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Reassigning Fred Luddy's backlog (currently 8 open tickets)",
+          "why": "specific decision"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "89 of 106 VPN tickets (84%) carry remote_access_flag = True",
+          "why": "precise magnitudes"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "coherence",
+          "quote": "50 produce negative durations",
+          "why": "transparent data caveats"
+        },
+        {
+          "dimension": "depth",
+          "quote": "After excluding Fred Luddy’s tickets, category gaps narrow",
+          "why": "confounder control"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "median 28.8 days; 80% of his tickets are in the longest quartile",
+          "why": "numeric evidence"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "treat assignee as the primary flag",
+          "why": "decision guidance"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A covers more signals with richer segmentation and cross-factor depth while remaining coherent.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.68,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "agent_workload vs agent_avg_resolution_hrs = −0.33",
+          "why": "quantified correlation across features"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "these signals are proxies for agent identity",
+          "why": "honest caveat about leakage-like variable"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "priority_numeric | 0.005 | Negligible",
+          "why": "numeric null-signal table"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Fred Luddy | 750 | 691 | 76",
+          "why": "mean and median with counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "consistent across both mean and median",
+          "why": "distinguishes structural pattern from outliers"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "22 tickets had negative resolution times",
+          "why": "data quality accounting"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides richer segmentation with mean/median contrast and outlier reasoning, giving deeper decision-ready signals.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Fred Luddy | 750 | 691 | 76",
+          "why": "concrete per-agent table"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Baseline (median, valid tickets): ~164 hours",
+          "why": "quantified baseline"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "22 tickets had negative resolution times",
+          "why": "notes data quality caveat"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "the variable encodes a historical per-agent average, not a per-ticket outcome",
+          "why": "critical insight about data limitation"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "agent_workload vs agent_avg_resolution_hrs = -0.33",
+          "why": "correlation-backed claim"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "If agent_workload < 80, expect resolution times near 750 hrs",
+          "why": "concrete decision rule"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B reaches the deeper insight that the target is a per-agent average proxy, improving depth and actionability.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.85,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "agent_workload vs agent_avg_resolution_hrs = −0.33",
+          "why": "numeric correlation"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "these signals are proxies for agent identity",
+          "why": "honest caveat about the metric"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Fred Luddy handles Network/Database tickets and other slow-resolving agents concentrate there",
+          "why": "case-mix reasoning"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Fred Luddy | 691 | 750 | 76",
+          "why": "per-agent median/mean/n table"
+        },
+        {
+          "dimension": "depth",
+          "quote": "consistent across all incident_category subtypes (median 460–1,258 h ... ruling out case-mix",
+          "why": "controls for confounder"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "89 of 106 VPN tickets (84%) carry remote_access_flag = True",
+          "why": "concrete cross-factor counts"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Reassigning Fred Luddy's backlog (currently 8 open tickets)",
+          "why": "decision-ready action"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B uses true per-ticket durations with deeper segmentation, confounder control, and specific actions, while A relies on a per-agent average proxy.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.85,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Fred Luddy | 691 | 750 | 76",
+          "why": "concrete per-agent medians and counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "his cross-agent tickets median 768 h vs. 312 h for solo tickets",
+          "why": "interaction analysis across factors"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "89 of 106 VPN tickets (84%) carry remote_access_flag = True",
+          "why": "numeric cross-tabulation"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Reassigning Fred Luddy's backlog (currently 8 open tickets)",
+          "why": "specific decision-ready action"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "agent_workload vs agent_avg_resolution_hrs = −0.33",
+          "why": "correlation cited"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "these signals are proxies for agent identity",
+          "why": "self-consistent caveat about leaked variable"
+        },
+        {
+          "dimension": "depth",
+          "quote": "encodes a historical per-agent average, not a per-ticket outcome",
+          "why": "recognizes data limitation"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A gives richer per-ticket segmentation and decision-ready actions while B mostly reduces to a leaked per-agent average.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.85,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Fred Luddy | 750 | 691 | 76",
+          "why": "numeric agent breakdown"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "22 tickets had negative resolution times ... excluded",
+          "why": "notes data quality"
+        },
+        {
+          "dimension": "depth",
+          "quote": "remote access + reassignment is the worst scenario",
+          "why": "some cross-factor reasoning"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "his cross-agent tickets median 768 h vs. 312 h for solo tickets",
+          "why": "agent-by-factor interaction analysis"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "89 of 106 VPN tickets (84%) carry remote_access_flag = True",
+          "why": "quantified linkage"
+        },
+        {
+          "dimension": "depth",
+          "quote": "consistent across all incident_category subtypes ... ruling out case-mix",
+          "why": "causal control reasoning"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Reassigning Fred Luddy's backlog (currently 8 open tickets)",
+          "why": "specific decision-ready action"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B offers deeper cross-factor and causal analysis with more quantified, decision-ready conclusions.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_on",
+    "swap": true,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.82,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "his cross-agent tickets median 768 h vs. 312 h for solo tickets — while for other agents the difference is negligible",
+          "why": "interaction analysis across agents"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "89 of 106 VPN tickets (84%) carry remote_access_flag = True",
+          "why": "specific numeric cross-reference"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Reassigning Fred Luddy's backlog (currently 8 open tickets)",
+          "why": "concrete decision-ready action"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "coherence",
+          "quote": "22 tickets had negative resolution times (data quality issue) and were excluded",
+          "why": "notes data quality caveat"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Fred Luddy 750 691 76",
+          "why": "agent-level numbers"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "500 records, 23 columns",
+          "why": "dataset framing"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A provides deeper cross-factor segmentation, causal reasoning, and more decision-ready actions.",
+    "validation_warnings": []
+  }
+]

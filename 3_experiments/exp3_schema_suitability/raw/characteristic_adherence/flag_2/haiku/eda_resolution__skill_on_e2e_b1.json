@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "assigned_technician",
+    "primary_issue_domain",
+    "incident_closure_status",
+    "issue_complexity_signal",
+    "issue_severity_signal",
+    "same_person_closure_flag",
+    "caller_frequency_indicator"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.4714,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.5357,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "The query already asks about assignment_group; a technician-level breakdown could add a finer axis, but the table already has 'assigned_to' and 'closed_by' fields, making this near-redundant. Groundedness is questionable: the source_text samples show no caller or assignee field, yet specific technician names are asserted, so values appear invented relative to the shown evidence."
+      },
+      {
+        "name": "primary_issue_domain",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorising incidents by issue domain (connectivity, email, database) is a genuine new axis for grouping resolution time, complementing the existing 'category'. Values are well-grounded readings of short_description (e.g. 'VPN connection issue' -> connectivity, 'Cannot connect to database' -> database)."
+      },
+      {
+        "name": "incident_closure_status",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "This is largely redundant with the existing 'state' and 'closed_at' columns; a bare open/closed flag adds little leverage for comparing resolution time. Values are derivable from closed_at presence, so groundedness is fine."
+      },
+      {
+        "name": "issue_complexity_signal",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A complexity axis could help explain resolution-time variation, but the labels (infrastructure_systemic vs application_focused) are inferred categorisations mostly correlated with primary_issue_domain, partly redundant. Groundedness is shaky: 'infrastructure_systemic' for a WiFi issue is a warranted-ish inference, but the systemic/complexity framing is not clearly supported by the terse source text."
+      },
+      {
+        "name": "issue_severity_signal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Severity is a plausible new axis correlated with resolution time and could help; however the table already has a 'priority' column, reducing novelty. Groundedness is weak: labelling 'VPN connection issue' as 'partial_access' or 'outage_complete' is a confident specific the brief descriptions rarely support."
+      },
+      {
+        "name": "same_person_closure_flag",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether the same person opened and closed the incident is a marginal signal for resolution-time analysis and is essentially derivable from existing assigned_to/closed_by columns. It is computable from those fields, so reasonably grounded, though the shown samples do not include the relevant identity fields."
+      },
+      {
+        "name": "caller_frequency_indicator",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Caller frequency is a tangential axis for a resolution-time query and only weakly relevant. Groundedness is poor for the shown evidence: the source_text samples contain no caller_id or historical counts, yet high/moderate/rare frequency labels are asserted, appearing invented."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.6,
+    "rationale": "The strongest addition is primary_issue_domain, which supplies a genuine grounded new grouping axis for resolution-time analysis. Several columns (incident_closure_status, same_person_closure_flag) are largely redundant with existing state/assigned_to/closed_by fields, and severity partly duplicates the existing priority column. Groundedness is uneven: domain categorisation from short_description is sound, but severity/complexity labels assert specifics the terse text does not clearly support, and assigned_technician and caller_frequency_indicator assert facts (names, call histories) not visible in the provided source evidence, indicating hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 7
+}

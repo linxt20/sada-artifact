@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest high urgency?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "chief_complaint_category",
+    "symptom_onset_acuity",
+    "pain_severity_indicator",
+    "hemodynamic_instability",
+    "organ_system_involved",
+    "visit_type_context",
+    "diagnostic_urgency_proxy"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.8143,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8857,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.85,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "chief_complaint_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the free-text reason into clinically meaningful complaint types that differ sharply in urgency (e.g., chest_pain_cardiac, respiratory_distress vs routine_preventive). Strong grouping axis for the query. Sample values are sound readings of the source text."
+      },
+      {
+        "name": "symptom_onset_acuity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Onset speed (sudden_acute vs weeks_to_chronic) is a canonical urgency signal, directly relevant. Samples are mostly warranted (cough x3 days -> days, twisting injury yesterday -> hours_to_day). The MI-follow-up mapped to weeks_to_chronic is a reasonable inference; nulls for silent rows are acceptable behavior."
+      },
+      {
+        "name": "pain_severity_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Pain severity is a plausible urgency correlate and offers an ordinal axis. Values track the text (acne moderate, denies chest pain -> none). The URI 'mild' assignment (low-grade fever, no explicit pain) is a mild stretch but defensible; large 'none_or_not_mentioned' bucket lowers leverage slightly."
+      },
+      {
+        "name": "hemodynamic_instability",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A near-boolean flag but a highly specific, high-signal marker of true emergencies; despite near-constant distribution the rare true cases are exactly what the urgency query targets. Sample rows with stable vitals correctly marked false."
+      },
+      {
+        "name": "organ_system_involved",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides a useful grouping dimension, though it partially overlaps with chief_complaint_category. Sample mappings are sound (knee -> musculoskeletal, cough -> respiratory). Endocrine_metabolic for an annual exam with HbA1c/lipids is a defensible inference. 'not_specified' for silent rows is correct."
+      },
+      {
+        "name": "visit_type_context",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes acute/emergency activation from routine follow-up, which is relevant to urgency. Some overlap with chief_complaint_category's chronic_disease_followup value, but emergency_activation adds distinct leverage. Sample values well grounded."
+      },
+      {
+        "name": "diagnostic_urgency_proxy",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Workup intensity (stat imaging, emergent labs, ECG monitoring vs no_workup) is a strong actionable urgency signal derivable from documented orders. Samples align (MRI ordered -> stat_imaging, labs -> routine_labs_imaging). Some ordinal inference but well warranted by text."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.9,
+    "rationale": "The added columns collectively give multiple genuine, urgency-relevant axes (complaint type, onset acuity, pain, hemodynamic instability, workup intensity) to group and compare on, directly serving the query. There is some redundancy between chief_complaint_category, organ_system_involved, and visit_type_context, but each still contributes a distinct grouping. Values are consistently sound readings of the source text with reasonable inferences and appropriate null/not_specified handling; no hallucinations observed in the samples."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_high",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

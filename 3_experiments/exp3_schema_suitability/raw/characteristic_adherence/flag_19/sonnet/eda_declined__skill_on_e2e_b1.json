@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category",
+    "procurement_action_type",
+    "entry_origin",
+    "ci_id_quality",
+    "asset_brand",
+    "is_travel_related",
+    "has_source_id"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.5429,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.7214,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.6321,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A meaningful categorization of what the expense is for, directly enabling 'what kinds of expenses get declined' grouping. Values are well-grounded in short_description/ci (Dell Laptop->hardware_laptop, Cloud Database Service->cloud_service). Minor noise: 'iPod touch/ISP Services' mapped to software_service is a defensible but slightly loose read."
+      },
+      {
+        "name": "procurement_action_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Gives a secondary axis (acquisition vs registration vs provisioning), which could differentiate expense types. However it is heavily dominated by 'asset_registration' (386/500), reducing analytical leverage, and the distinction between allocation/provisioning/registration is often inferred from thin text ('Asset assignment' -> allocation is a soft read)."
+      },
+      {
+        "name": "entry_origin",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Manual vs auto-generated has weak relevance to why an expense is declined. Grounding is questionable: the source text shown gives no clear signal for 'manually_entered' vs 'auto_generated', so the value appears asserted beyond available evidence."
+      },
+      {
+        "name": "ci_id_quality",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Classifies the ci string format (model name vs serial vs placeholder). Reasonably derivable from the ci field, but data-quality metadata offers little leverage for analyzing declined expenses by department; largely tangential to the query."
+      },
+      {
+        "name": "asset_brand",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Brand is a genuine new grouping axis and could plausibly correlate with declines. Values are soundly extracted from ci/description (Dell XPS 13->Dell, OptiPlex->Dell), with a sensible 'Other' fallback for silent rows."
+      },
+      {
+        "name": "is_travel_related",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Travel-related is a highly relevant expense type distinction for a declines analysis and gives a clean boolean grouping. Derivable from description/category; sampled rows correctly flagged false. Some overlap with asset_category(travel_equipment) but still analytically useful."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Trivially redundant with the existing source_id original column (mere presence flag) and offers little insight into why expenses are declined. Grounding is fine since it is a direct derivation, but usefulness is low."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.75,
+    "rationale": "The strongest columns (asset_category, asset_brand, is_travel_related) provide genuine, well-grounded axes for characterizing kinds of expenses and slicing by department, directly serving the query. Several others (entry_origin, ci_id_quality, has_source_id) are tangential metadata or redundant with existing fields, dragging down holistic usefulness. Grounding is generally sound and 'Other'/fallback usage is appropriate, but entry_origin shows values not clearly supported by the visible source text, a mild hallucination concern."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 7
+}

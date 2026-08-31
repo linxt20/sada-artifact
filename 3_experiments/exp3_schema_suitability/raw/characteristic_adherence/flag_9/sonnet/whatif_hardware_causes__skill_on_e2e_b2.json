@@ -1,0 +1,76 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "focus_variable": "hardware_incident_rate",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "is_hardware_incident",
+    "incident_category_group",
+    "root_cause_hint",
+    "recurrence_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "hardware_incident_rate",
+    "per_column": [
+      {
+        "name": "is_hardware_incident",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Flags whether a record is a hardware incident; this operationalizes the outcome (hardware incident rate), not a treatment or confounder."
+      },
+      {
+        "name": "incident_category_group",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Categorizes incidents by type; largely a finer version of the outcome definition rather than an intervenable lever or confounder."
+      },
+      {
+        "name": "root_cause_hint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query's intervention is 'addressing the most common failure causes'; this column names those causes (e.g. connectivity_config, physical_damage, overheating). However, a root cause is a diagnostic label of what already happened, not itself a settable lever; addressing it is the action, but the column encodes the cause, not an intervention assignment."
+      },
+      {
+        "name": "recurrence_signal",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Indicates whether an incident recurs; this lies on the pathway between unaddressed causes and future incident counts, so it is a mediator, not a common-cause confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "root_cause_hint"
+    ],
+    "treatment_intervenable": false,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query poses a clear what-if: intervening on the most common hardware failure causes and reading off the change in hardware incident rate. The added columns capture the outcome (is_hardware_incident, incident_category_group) and enumerate candidate failure causes (root_cause_hint), which corresponds to the treatment concept already named in the query. But root_cause_hint encodes a diagnostic label of what happened, not an actor-settable lever (there is no policy/action/assignment column such as maintenance_schedule, firmware_update_applied, cooling_upgrade, or hardware_replacement that one could actually SET). Recurrence_signal is a mediator, not a confounder. Critically, NO confounders -- common causes of both the intervention and the incident rate -- are provided, and certainly none beyond what the query already names (e.g. asset_age, device_model, environment_temperature, usage_load, vendor). Without adjustable treatment levers and adjustable confounders, the counterfactual effect cannot be identified. The set fails the interventional test."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

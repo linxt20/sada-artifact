@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "writing_quality_issue",
+    "complaint_multiplicity",
+    "counterbalancing_positive_elements"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "writing_quality_issue",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Encodes the specific audience complaint (weak script, predictable story, poor dialogue). The query targets 'addressing the most common audience complaints', so this is the intervenable lever a filmmaker could actually change/fix. It is clearly implied by the query."
+      },
+      {
+        "name": "complaint_multiplicity",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "A boolean flag for whether multiple complaints co-occur. This is still part of the complaint-structure being intervened on rather than an independent common cause; it is directly implied by the query's reference to complaints. Not a common cause of both treatment and outcome."
+      },
+      {
+        "name": "counterbalancing_positive_elements",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Positive elements (strong cast, good visuals, emotional resonance) and the presence of complaints both feed into the overall sentiment/rating; conditioning on the outcome-adjacent positives resembles a collider/mediator on the outcome side rather than a common cause of the complaint and the sentiment. It does not adjust confounding."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "writing_quality_issue",
+      "complaint_multiplicity"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "A genuine, intervenable treatment is present: the writing-quality complaint is something filmmakers could actually address/fix, satisfying part (a) of the technical claim. However, part (b) fails entirely: none of the added columns are confounders — common causes of both the complaint and the sentiment that must be adjusted before reading off a counterfactual (e.g., genre, budget, director reputation, reviewer disposition, marketing/expectations). 'counterbalancing_positive_elements' sits on the outcome side (collider/mediator), not as a backdoor confounder. Because no confounders are supplied, no unnamed confounders demonstrate the interventional capability, so the columns do not realise the what-if claim despite having a valid treatment."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

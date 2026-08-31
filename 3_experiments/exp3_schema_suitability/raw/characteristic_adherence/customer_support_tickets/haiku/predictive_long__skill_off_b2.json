@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "has_technical_issue",
+    "is_customer_blocked",
+    "needs_investigation",
+    "has_external_integration",
+    "affects_multiple_users"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.7,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "has_technical_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from issue_description, this flags problem type known at ticket intake. Technical issues plausibly take longer to resolve and it lies outside resolution_minutes with no leakage."
+      },
+      {
+        "name": "is_customer_blocked",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Indicates severity/urgency knowable from the initial ticket text. Carries plausible predictive signal about resolution time without restating or leaking the outcome."
+      },
+      {
+        "name": "needs_investigation",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Signals complexity requiring diagnostic effort, inferable from the description. Investigation-heavy tickets plausibly take longer; it is a legitimate upstream predictor."
+      },
+      {
+        "name": "has_external_integration",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Involvement of third-party systems is a structural attribute derivable from the description and plausibly increases resolution time. Outside the focus, no leakage."
+      },
+      {
+        "name": "affects_multiple_users",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope/blast-radius indicator knowable at intake, plausibly correlated with longer resolution. It is a valid predictor, not a component or restatement of the focus."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.7,
+    "rationale": "All five added columns are binary features extracted from the issue_description text, each capturing a distinct facet of ticket complexity/scope (technical nature, customer-blocking, investigation need, external dependencies, breadth of impact). None restates or is a deterministic function of resolution_minutes, and all are knowable at intake, so there is no leakage. As a set they add genuine incremental signal beyond priority/channel/agent by mining the free-text field. Utility is strong but not maximal: the flags are coarse binary indicators with unspecified extraction reliability and likely mutual correlation, and observed distributions for several are quite skewed, limiting marginal leverage."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

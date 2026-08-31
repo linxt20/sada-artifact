@@ -1,0 +1,74 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "service_quality",
+    "staff_attitude",
+    "food_taste_rating",
+    "standout_item_mention",
+    "value_perception",
+    "ambiance_atmosphere"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8367,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.9,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.8683,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_quality",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "A core theme for satisfaction/complaint analysis with a well-distributed categorical scale. Row samples align well: worst-service review is 'poor', Oliveo/Michelle 'excellent', pizza 'good'."
+      },
+      {
+        "name": "staff_attitude",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "rationale": "Distinct axis from service_quality (attitude vs efficiency), useful for complaint themes. Values mostly grounded; 'indifferent' for the forgotten-twice review is a defensible reading, though 'rude/negligent' could be argued. Sound overall."
+      },
+      {
+        "name": "food_taste_rating",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.95,
+        "rationale": "Central satisfaction theme with good distribution and correct not_present handling for non-food reviews (real estate, nightclub). Pizza rated 'good' matches 'very good pizta'; well grounded."
+      },
+      {
+        "name": "standout_item_mention",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "rationale": "A bare boolean flag with limited analytical leverage; it partially overlaps with food_taste and adds a thin new axis. Values are grounded (specific dishes mentioned = True). Least useful of the set but not redundant enough to score near zero."
+      },
+      {
+        "name": "value_perception",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "rationale": "Price/value is a genuine distinct complaint theme. Mostly grounded, but 'overpriced' for the pizza review is a borderline inference (reviewer muses about staying under $20, not an explicit complaint of overpricing), and 'great_value' for Oliveo leans on the free-pita mention. Reasonable but slightly overconfident."
+      },
+      {
+        "name": "ambiance_atmosphere",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Ambiance is a standard, distinct review theme useful for grouping. Not_present used appropriately; 'neutral' for the pizza review (mentions lunch crowd) is a reasonable reading. Well grounded."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.9,
+    "rationale": "The added columns decompose Yelp reviews into distinct, analytically meaningful themes (service, staff, food, value, ambiance) that directly serve the satisfaction/complaint query, each providing a separate grouping axis. Values are largely sound readings of the source text with appropriate not_present handling for silent rows. Minor overconfidence appears in value_perception (inferring 'overpriced'/'great_value' from tentative cues). standout_item_mention is the weakest link as a thin boolean flag, but it is not redundant. No serious hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

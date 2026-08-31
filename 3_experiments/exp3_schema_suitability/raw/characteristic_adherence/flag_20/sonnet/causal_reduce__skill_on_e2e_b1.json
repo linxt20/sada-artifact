@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined travel expenses?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "is_travel_related",
+    "expense_category",
+    "entry_origin",
+    "has_source_id",
+    "ci_specificity",
+    "processing_lag_category",
+    "expense_action_type",
+    "submitting_department",
+    "asset_brand"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.5444,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.8167,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.6805,
+    "hallucination_rate": 0.1111
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_travel_related",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "The query targets travel expenses specifically, so a travel flag lets the analyst isolate the relevant subset. Derivable from short_description/category. Slightly redundant with expense_category but still a clean filter axis. Samples classify hardware rows correctly as False."
+      },
+      {
+        "name": "expense_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A meaningful categorical axis to compare travel vs other spend types; well grounded in short_description/ci. Partially overlaps is_travel_related but adds finer-grained categories."
+      },
+      {
+        "name": "entry_origin",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes manual/automated/travel-claim origins, plausibly derived from short_description wording ('Automated', 'Procurement'). Offers a process axis relevant to why claims get declined, though moderately correlated with expense_category."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Trivially derived from the existing source_id column (presence check); low new analytical leverage for reducing declined travel expenses. Values are sound."
+      },
+      {
+        "name": "ci_specificity",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorises the ci string's specificity; grounded in ci text but weakly connected to travel-expense declines. Adds a data-quality axis of limited relevance to THIS query."
+      },
+      {
+        "name": "processing_lag_category",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Buckets time between opened_at and processed_date; a genuine axis potentially linked to declines/delays. Derivable from date fields; 'not_processed' correctly handles nan rows."
+      },
+      {
+        "name": "expense_action_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Action taxonomy from short_description; provides a grouping axis but substantially overlaps expense_category/entry_origin. Reasonably grounded."
+      },
+      {
+        "name": "submitting_department",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with the existing 'department' column, and the sample values (Customer Support, Sales) are not evidenced by the shown source_text, suggesting they are not soundly derivable from the provided per-row text. Low usefulness and questionable groundedness."
+      },
+      {
+        "name": "asset_brand",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Extracts brand from ci; well grounded (Dell, etc.) with sensible NULL for non-asset rows, but brand of hardware is only tangential to reducing DECLINED TRAVEL expenses."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.82,
+    "rationale": "Several columns (is_travel_related, expense_category, processing_lag_category) give real analytical leverage for isolating and diagnosing travel-expense outcomes, and most values are soundly derivable from ci/short_description/date fields. However a cluster of columns (has_source_id, ci_specificity, asset_brand, submitting_department) add little leverage for THIS travel-focused query, being redundant with existing columns or oriented at hardware/data-quality axes. submitting_department also duplicates an original column and its produced values are not visibly grounded in the shown source text, the main hallucination concern. Overall groundedness is otherwise strong with correct handling of silent/nan rows."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 9
+}

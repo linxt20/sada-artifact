@@ -1,0 +1,95 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "mentions_service",
+    "mentions_food_quality",
+    "mentions_wait_time",
+    "mentions_price",
+    "mentions_cleanliness",
+    "mentions_atmosphere",
+    "exclamation_count",
+    "positive_words_count",
+    "negative_words_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7444,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7667,
+    "source_groundedness__table_level": 0.76,
+    "b1_overall": 0.7555,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "mentions_service",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "A theme flag is directly on-point for comparing themes across sentiment. Row evidence aligns well: reviews 2, 3, 4 discussing service correctly flagged 1; review 1 with no explicit service theme flagged 0 reasonably."
+      },
+      {
+        "name": "mentions_food_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "rationale": "Food-quality theme is highly relevant. However grounding is questionable: review 3 ('Very good pizza... Crust cooked very well') and review 1 ('good chicken caesar pita', 'greek fries are my favorite') both clearly discuss food quality yet were flagged 0, suggesting missed extraction."
+      },
+      {
+        "name": "mentions_wait_time",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "rationale": "Relevant theme axis. Samples are 0 across the board; review 2 arguably involves being forgotten/waiting but not explicitly wait time, so 0 is defensible. Limited evidence to fully verify."
+      },
+      {
+        "name": "mentions_price",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "rationale": "Price theme is a genuine analytical axis. Review 3 mentions '$20' and cost per serving yet flagged 0, a plausible miss; other 0s look correct."
+      },
+      {
+        "name": "mentions_cleanliness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Legitimate theme flag. All sampled rows are 0, consistent with source texts that do not mention cleanliness."
+      },
+      {
+        "name": "mentions_atmosphere",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Valid theme axis. Sampled 0s are mostly defensible, though review 1's 'rowdy crowd... late night' arguably touches atmosphere; minor uncertainty."
+      },
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "rationale": "A style/intensity proxy that is somewhat generic but does give an emphasis axis that can differ by sentiment. Counts mostly match: review 1 has 3, review 5 has multiple. Review 5 shows 'sucked!!!!!' plus 'none' line; count of 5 is a plausible reading."
+      },
+      {
+        "name": "positive_words_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "rationale": "A lexicon-based sentiment intensity proxy; partially redundant with label_pos but offers a graded axis. Grounding is lossy: review 1 has many positive words ('love' repeatedly) yet only 2 counted, indicating a limited lexicon."
+      },
+      {
+        "name": "negative_words_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.65,
+        "rationale": "Graded negativity proxy, useful but generic. Review 5 ('sucked', 'cons', 'would not recommend') counted 0 negatives, and review 2's strongly negative text counted only 1, suggesting undercounting."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.76,
+    "rationale": "The theme-mention flags (service, food, wait, price, cleanliness, atmosphere) are well-targeted to the query about how themes differ by sentiment, providing genuine grouping axes. The three count-based columns are more generic sentiment/intensity proxies but still add graded axes. Groundedness is generally sound for the flags, but several sampled rows show missed extractions (food quality and price flags at 0 despite relevant text; positive/negative word counts undercounting obvious cues), lowering confidence somewhat. No clear invented facts were observed."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

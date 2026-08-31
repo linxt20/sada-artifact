@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we improve incident resolution efficiency?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "resolution_speed",
+    "priority_level",
+    "is_critical",
+    "assignee_caseload",
+    "category_volume"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6917,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.6333,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.6625,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A continuous resolution-time measure is the central axis for an efficiency query, giving strong grouping/modeling leverage. However, the values are not grounded: in every evidence sample opened_at is not shown, and the only timestamps (sys_updated_on and closed_at) are identical, so a specific figure like 161.13 or 384.32 hours cannot be derived from the visible source text. Likely computed from opened_at (plausible original column) but the samples don't confirm it, and the large spread of unique values suggests possible fabrication."
+      },
+      {
+        "name": "resolution_speed",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A Fast/Moderate/Slow bucketing of resolution time is a useful categorical axis for comparing efficiency across groups. Groundedness inherits from resolution_hours; bucketing itself is a warranted transformation, but rests on the same unverified duration. The Moderate label at 58h vs Slow at 145h is internally consistent."
+      },
+      {
+        "name": "priority_level",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Priority already exists as an original column, making this a near-redundant restatement with limited new leverage. Groundedness is mostly fine as a copy/parse of priority, but the first sample shows priority_level=1 for an incident where is_critical logic and other fields don't obviously establish P1, and no priority is shown in the sample source text, leaving some values unverifiable."
+      },
+      {
+        "name": "is_critical",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A binary criticality flag could help segment high-impact incidents, but it is largely derivable from priority and is a coarse restatement. Groundedness is weak: 421 of 500 rows flagged critical, and a 'Printer not working properly' at priority 2 is marked is_critical=1, which contradicts a sensible reading of the source text and suggests a mislabeled/over-broad threshold."
+      },
+      {
+        "name": "assignee_caseload",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Per-assignee case counts give a genuine new axis (workload vs resolution efficiency), highly relevant to the query. Derivable by aggregating assigned_to over the table, a warranted computation, though the specific counts can't be verified from single-row samples."
+      },
+      {
+        "name": "category_volume",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Category frequency is a reasonable new axis for spotting high-volume categories to prioritize for efficiency gains. Derivable by counting category across rows; the two printer rows sharing 406 is consistent with an aggregate count."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.62,
+    "rationale": "The set offers several genuinely useful axes for an efficiency analysis: a continuous resolution time, its speed bucket, assignee caseload, and category volume all provide real grouping/modeling leverage. priority_level and is_critical add little beyond the existing priority column and drag usefulness down. Groundedness is the bigger concern: resolution_hours produces specific multi-hour figures that cannot be reconstructed from the visible timestamps (which are identical) without an opened_at reference the samples don't show, and is_critical over-flags routine, low-priority incidents (e.g., a P2 printer issue) as critical, contradicting a sound reading of the text."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "focus_variable": "hardware_incident",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "mentions_hardware_device",
+    "mentions_physical_symptom",
+    "is_hardware_category",
+    "likely_hardware_problem"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.225,
+    "predictor_fraction": 0.5,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.45,
+    "interpretable_fraction": 0.5
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "hardware_incident",
+    "per_column": [
+      {
+        "name": "mentions_hardware_device",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean binary flag indicating whether the description mentions a hardware device. This is an external, interpretable textual signal that can be segmented on and compared against the hardware-incident focus, with a well-balanced 365/235 split enabling meaningful comparison."
+      },
+      {
+        "name": "mentions_physical_symptom",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Flags whether the text describes a physical symptom (e.g., noise, smoke, won't power on). This is a distinct, interpretable associational cue in the description that a human can group by and compare to hardware likelihood; 401/199 split is well separated."
+      },
+      {
+        "name": "is_hardware_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This essentially restates the focus: it encodes whether the incident's category is hardware, which is almost definitionally the target 'hardware_incident'. It answers the query by tautology rather than opening an informative external relationship in the description."
+      },
+      {
+        "name": "likely_hardware_problem",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "An opaque aggregate/pre-judged score that directly mirrors the focus label. It is a near-restatement of the target ('likely hardware') rather than an independent segmentation variable, so it cannot yield a genuine discovered relationship."
+      }
+    ],
+    "n_predictors": 2,
+    "relationship_informativeness": 0.45,
+    "rationale": "Two of the four columns (mentions_hardware_device, mentions_physical_symptom) are genuine, interpretable, well-separated textual signals that a human explorer can segment on and compare against hardware incidence, directly serving the query about what in a description signals a hardware problem. However, is_hardware_category and likely_hardware_problem largely restate the focus itself (category equals target; 'likely hardware' is a pre-baked judgment), so they add tautological rather than exploratory value. As a set, the informative textual predictors are useful but diluted by two restatement columns."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

@@ -1,0 +1,84 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "focus_variable": "user_satisfaction",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "service_issue_type",
+    "pricing_value_perception",
+    "staff_conduct_severity",
+    "business_category"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "user_satisfaction",
+    "per_column": [
+      {
+        "name": "service_issue_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Type of service problem (rude, slow, wrong order, understaffed) is an intervenable operational lever a business can address by changing staffing, training, and processes."
+      },
+      {
+        "name": "pricing_value_perception",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Pricing and value perception reflect a configurable business decision (price levels, extra charges, quality-for-price) that an actor can set or change; an intervenable treatment on satisfaction."
+      },
+      {
+        "name": "staff_conduct_severity",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Severity of staff conduct is downstream of, and closely tied to, service_issue_type; it is a settable lever via training/supervision. Could also be read as a mediator of service on satisfaction, but is framed as an actionable treatment."
+      },
+      {
+        "name": "business_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Business category (restaurant, hotel, retail, etc.) is a common cause of both which service/pricing issues arise and baseline satisfaction levels; must be adjusted for to compare interventions across contexts. Not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "service_issue_type",
+      "pricing_value_perception",
+      "staff_conduct_severity"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "business_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The columns supply genuinely intervenable treatments (service issue type, pricing/value perception, staff conduct) that a business could actually change, satisfying part (a) of the what-if claim. For part (b), business_category is a legitimate confounder common cause of both treatment exposure and baseline satisfaction and was NOT named in the query, demonstrating the confounder-discovery capability. However, only a single confounder is provided; other obvious common causes (e.g., establishment tier/price segment, location/demographics, prior reputation) are absent, so confounder coverage is thin. The set meets the interventional bar but with limited confounder adjustment."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

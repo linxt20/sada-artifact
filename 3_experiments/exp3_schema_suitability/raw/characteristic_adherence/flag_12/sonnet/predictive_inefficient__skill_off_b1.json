@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "above_p75_resolution",
+    "reassigned",
+    "high_complexity_category",
+    "critical_or_high_priority",
+    "assignee_slow_relative_to_median"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7917,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.6583,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Directly measures resolution duration, the core efficiency axis for this query. However, the row evidence shows sys_updated_on equals closed_at exactly, and no opened_at is shown in samples; produced values like 161.13, 384.32 cannot be reconciled with the identical timestamps given, suggesting the values may not be soundly derivable from visible fields. Presumably computed from opened_at (an original column) which is plausible, but samples give no support and the samples themselves would imply near-zero durations, casting doubt."
+      },
+      {
+        "name": "above_p75_resolution",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A useful flag isolating long-tail slow resolutions, a strong signal of inefficiency. Derived from resolution_hours distribution; groundedness inherits the uncertainty of that column but the thresholding logic is sound. One sample (384.32 -> 1) is internally consistent."
+      },
+      {
+        "name": "reassigned",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is a classic inefficiency signal, giving a genuine grouping axis. But the source samples show only a single assignment snapshot with no reassignment history evident; the near-uniform 394/106 split and confident per-row 0/1 values are not clearly derivable from the visible table, raising hallucination concern."
+      },
+      {
+        "name": "high_complexity_category",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents by inherent complexity offers analytical leverage on expected effort. Derivable from the original category/short_description (e.g. database -> 1, printer -> 0), and samples are consistent with reasonable categorisation."
+      },
+      {
+        "name": "critical_or_high_priority",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A clean read of the original priority column, well grounded. Somewhat trivially redundant with the existing priority field (a bare threshold flag), lowering usefulness, though it does give a convenient grouping cut for this query."
+      },
+      {
+        "name": "assignee_slow_relative_to_median",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Comparing an assignee's speed to peer median is a strong, non-trivial signal for inefficiency attribution. Derivable in principle from assigned_to plus resolution_hours, but inherits duration-derivation uncertainty and cannot be verified from the given single-row samples."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.62,
+    "rationale": "The added columns are well-aligned with the query about inefficient resolution: duration, long-tail flag, reassignment, category complexity, priority, and assignee-relative slowness together offer several genuine axes to group and model on, with only critical_or_high_priority being somewhat redundant with an original field. Groundedness is the weaker dimension: the row_evidence_samples show sys_updated_on identical to closed_at with no opened_at present, so the numeric resolution_hours (and downstream flags) and the reassigned flag cannot be reconciled with the visible source text, indicating some values may be asserted beyond what the table supports. Category- and priority-based columns are well grounded."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "seat_product_downgrade",
+    "aircraft_age_and_condition",
+    "cabin_crew_service_quality",
+    "food_beverage_quality",
+    "service_consistency_across_legs",
+    "ffp_elite_status_handling"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome (Recommended = no)",
+    "per_column": [
+      {
+        "name": "seat_product_downgrade",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Captures whether the flown seat product matched the expected Business-Class product (qsuite/flat_bed delivered) versus a downgrade with/without notice. This is a concrete candidate CAUSE whose effect on non-recommendation is being attributed. The query only says 'Business-Class'; it does not name a seat downgrade / Qsuite-vs-flatbed distinction, so this is surfaced from the data."
+      },
+      {
+        "name": "aircraft_age_and_condition",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Aircraft age/condition plausibly drives BOTH the seat product actually installed/delivered (older frames less likely to carry the newest Qsuite, more prone to 'downgrade') AND passenger satisfaction/recommendation directly (degraded, worn cabins depress ratings). That makes it a genuine common cause that must be adjusted for, and it is not mentioned in the query."
+      },
+      {
+        "name": "cabin_crew_service_quality",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A parallel/competing cause of the outcome (poor crew service lowers recommendation) but it does NOT cause the seat-product treatment, so it is not a common cause / confounder of that treatment. It is not on the treatment->outcome path either, so not a mediator. Treated as an alternative driver."
+      },
+      {
+        "name": "food_beverage_quality",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Another independent determinant of recommendation. It does not cause a seat-product downgrade, so it is not a confounder of the treatment, and a seat downgrade does not cause food quality, so it is not a mediator. A parallel outcome-driver."
+      },
+      {
+        "name": "service_consistency_across_legs",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Encodes single-leg vs multi-leg and whether service was consistent/variable. This is closer to a downstream summary of the service experience (mediator/outcome-like) or a structural covariate than a clean common cause of the seat-downgrade treatment. Only weakly a confounder, so classified as other."
+      },
+      {
+        "name": "ffp_elite_status_handling",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether frequent-flyer elite status was recognised/handled can plausibly affect BOTH treatment allocation (elites less likely to be silently downgraded, more likely upgraded/accommodated) AND propensity to recommend (better-handled elites rate higher; mishandled ones churn). A plausible, though weakly supported (mostly false), common cause not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "seat_product_downgrade"
+    ],
+    "confounders": [
+      {
+        "name": "aircraft_age_and_condition",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "ffp_elite_status_handling",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The set does establish a causal-estimation frame: seat_product_downgrade is a well-defined treatment (candidate cause of non-recommendation) and at least one column, aircraft_age_and_condition, is a genuine common cause of BOTH that treatment (older frames -> different/downgraded seat product) and the outcome (degraded cabin -> lower recommendation), surfaced from data rather than the query. ffp_elite_status_handling is a further, weaker but plausible confounder also not named in the query. However, the majority of the added columns (cabin_crew_service_quality, food_beverage_quality, service_consistency_across_legs) are parallel/competing outcome drivers rather than common causes of the treatment, so the design leans toward driver enumeration rather than a clean confounder-adjustment set. Because a real, non-copied confounder is present but the confounder set is diluted by non-confounders, confounder_quality is moderate (0.55)."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an incident will take longer to resolve?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "scope_indicator",
+    "assignment_lag",
+    "assigned_equals_closed_by",
+    "caller_type",
+    "assigned_agent"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7571,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.7929,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorising incidents by type gives a genuine grouping axis for comparing resolution time across categories. Values align well with short_description (VPN->vpn, database->database, email->email). Note original table has a 'category' column, but this appears to be a finer text-derived categorisation, not a trivial duplicate."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Failure mode is a plausibly strong predictor of resolution effort (outage vs sync vs crash), giving a new modelling axis. Values are mostly warranted readings ('Cannot connect'->connection_failure). The 'Email system not working properly'->service_outage is a somewhat generous inference but defensible; NULLs for silent rows are acceptable."
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Blast radius (individual vs department-wide vs server-side) is highly relevant to resolution time. Department_wide and location_specific are well grounded when text names a department. However 'server_side'/'individual_user' for texts like 'Cannot connect to database' or 'Email system not working properly' are inferred without explicit textual support, introducing some ungrounded specificity."
+      },
+      {
+        "name": "assignment_lag",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Whether assignment was delayed is a plausible predictor of longer resolution, and the boolean is well balanced (non-constant). However groundedness is uncertain: the samples only expose closed_at/sys_updated_on, and the derivation of a lag boolean (needing opened_at/assignment timing) cannot be verified from the evidence shown; the flag reads 'False' even for rows with no visible timing gap, so the basis is unclear."
+      },
+      {
+        "name": "assigned_equals_closed_by",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Comparing assigned_to to closed_by (handoff indicator) is a reasonable signal for resolution complexity and is directly derivable from two original columns. Slightly lower usefulness as it is a simple equality of existing fields, but it does add a new comparative axis. NULLs for unclosed rows are correct."
+      },
+      {
+        "name": "caller_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing itil_user vs named_user could correlate with resolution behaviour, giving a modest grouping axis. Derivability from caller_id/sys fields is plausible but not directly shown in the evidence samples, so groundedness is moderate."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Agent identity is a legitimate axis for resolution-time analysis, but it substantially overlaps with the existing 'assigned_to' original column, so it is largely a normalised restatement. Values (Beth_Anglin, Fred_Luddy, etc.) are consistent with an assignment field and 'unassigned' is handled reasonably."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns give several genuine new axes (category, failure_mode, scope, assignment handoff/lag) directly relevant to predicting longer resolution, with only mild redundancy (assigned_agent vs assigned_to) and one near-duplicate of the original category column. Groundedness is generally sound for text-extracted fields, with the main weaknesses being (a) inferred scope/failure values that add specificity beyond what terse descriptions state, and (b) assignment_lag/caller_type whose derivation is not verifiable from the exposed source fields. No outright fabrications or contradictions observed, and NULLs are used appropriately."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

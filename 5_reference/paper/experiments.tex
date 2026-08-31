@@ -1,0 +1,400 @@
+%% SADA paper --- Section 5: Experiments
+%% Adheres to 04_experiments_skeleton.md.
+%% Headline experiments: E1.3 confounder coverage, E4.5 ATE error.
+%% (auto-regressive experiment removed after 2026-05-31 meeting; not implemented)
+%% (per-chunk robustness experiment removed 2026-08-01; moved out of the main section)
+
+\section{Experiments}
+\label{sec:experiments}
+
+We evaluate SADA with five experiments that together cover its claims: the end-to-end analytical value of the augmentation, whether the resulting analysis quantifies the text rather than merely describing it, the quality of the augmented table itself, the mechanism by which that table is produced at scale, and its effect on a downstream learner. \textbf{Experiment~1} (\S\ref{subsec:exp-e2e}) measures end-to-end analytical value across all six FOI intent types: when an analyst answers a focus-oriented query, does SADA augmentation yield a better analysis than no augmentation or generic LLM augmentation? \textbf{Experiment~2} (\S\ref{subsec:exp-form}) asks a complementary question about the same reports: not how good they are, but whether they quantify the text at all, classifying each report by the \emph{form} of analysis it performs. \textbf{Experiment~3} (\S\ref{subsec:exp-adherence}) inspects the augmented \emph{schema} itself, scoring how well each intent's added columns realize the \emph{characteristic} its sub-type demands; it is the one experiment that resolves the taxonomy intent by intent. \textbf{Experiment~4} (\S\ref{subsec:exp-scale}) scales the table up to $10^4$ rows, where per-row labelling becomes costly, and asks how each condition then assigns its values and whether those values remain grounded in the row they describe. \textbf{Experiment~5} (\S\ref{subsec:exp-pfe}) isolates the predictive-feature-engineering intent and asks whether SADA-materialized columns improve a fixed downstream learner on text-bearing tables. Unless stated otherwise, every experiment runs on the same two Claude substrates.
+
+\subsection{Setup}
+\label{subsec:setup}
+
+\paragraph{Substrate Models.} All experiments run on two Claude substrates of differing capacity, Haiku~4.5 and Sonnet~4.6, so every result is reported against both a smaller and a larger model. Each experiment defines its own conditions and baselines below, since the settings consume augmentation differently.
+
+\paragraph{Analysis Units.} Experiments~1--3 share a common pool of analysis \emph{units}, each unit pairing a dataset with a focus-oriented intent query. The pool spans 17 datasets: 8 IT-incident and record tables from InsightBench~\citep{insightbench2024}, and 9 real-world datasets of customer reviews, support tickets, and service records. Analysis units per substrate model span all six FOI intent types: predictive feature engineering, exploratory data analysis, what if analysis, causal attribution, faceted decomposition, and focus inference.
+
+\paragraph{Conditions.} Throughout Experiments~1--3, each unit is run under up to four conditions that differ in how augmentation is produced and consumed:
+\begin{itemize}
+\item \textbf{original}. The analyst answers the query over the raw table, with no augmentation. 
+\item \textbf{skill\_off}. Generic LLM augmentation: the model freely adds columns \emph{without} the SADA skill, then analyzes the result.
+\item \textbf{skill\_on}. A \emph{two-stage} setup: SADA first produces the augmented table as a standalone artifact, and the analysis is then run on it as a separate, later step (the analyst receives the finished table under the same generic prompt as the baselines, with no indication of which columns are augmented).
+\item \textbf{skill\_on\_e2e}. A \emph{single end-to-end} setup: augmentation is not a prior step but happens \emph{within} the analysis pipeline itself, as one integrated stage feeding directly into the analysis. Concretely, the analyst is told which columns SADA added and uses them, alongside the original columns, while answering the query. Because \texttt{skill\_on} and \texttt{skill\_on\_e2e} come from separate SADA runs, their augmented schemas need not be identical.
+\end{itemize}
+
+\paragraph{Grader.} All grading in the experiments below is done by \texttt{claude-\allowbreak opus-\allowbreak 4.8-\allowbreak xhigh}.
+
+\subsection{Experiment 1: End-to-End Analysis Utility}
+\label{subsec:exp-e2e}
+
+This experiment scores the analysis an analyst actually produces. For each unit and condition, an analyst LLM is given the table and the query and returns a decision-ready Markdown report. The grader then performs pairwise comparisons between every pair of reports on five rubric dimensions (specificity, evidence grounding, depth, actionability, and coherence), judging each pair in both presentation orders to control for position bias. To keep an order-sensitive grader from inflating differences, each unordered pair is first \emph{swap-stabilized}: the two presentation orders must agree on a winner for that winner to stand, and a disagreement collapses to a tie. The stabilized per-unit outcomes are then aggregated into Bradley--Terry (BT) skill scores; a higher BT score means a condition's reports are preferred more often. Table~\ref{tab:e2e-bt} reports mean BT scores per substrate.
+
+\begin{table}[t]
+\centering
+\caption{End-to-end analysis utility: mean swap-stabilized Bradley--Terry scores across the four conditions (higher is better, best per row in \textbf{bold}). Each row aggregates all $108$ analysis units under one substrate.}
+\label{tab:e2e-bt}
+\footnotesize
+\begin{tabular}{lrrrr}
+\toprule
+Model & original & skill\_off & skill\_on & skill\_on\_e2e \\
+\midrule
+Haiku  & $-6.48$ & $-1.98$ & $1.38$ & \textbf{7.17} \\
+Sonnet & $-4.60$ & $-5.29$ & $1.43$ & \textbf{8.45} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\iffalse  %% rubric-dimension table commented out: dimensions already introduced above
+\begin{table}[t]
+\centering
+\caption{Mean rubric-dimension scores (1--5, higher is better) underlying Table~\ref{tab:e2e-bt}, averaged over all 108 units per substrate. Best per model and column in \textbf{bold}.}
+\label{tab:e2e-dim}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{llccccc}
+\toprule
+Model & Condition & Specif. & Evid. & Depth & Action. & Coher. \\
+\midrule
+\multirow{4}{*}{Haiku}
+ & \texttt{original}       & 4.00 & 3.76 & 3.82 & 3.84 & \textbf{4.17} \\
+ & \texttt{skill\_off}     & 4.37 & 4.39 & 4.08 & 4.11 & 3.91 \\
+ & \texttt{skill\_on}      & 4.53 & 4.47 & 4.32 & 4.34 & 3.96 \\
+ & \texttt{skill\_on\_e2e} & \textbf{4.93} & \textbf{4.93} & \textbf{4.83} & \textbf{4.44} & 4.07 \\
+\cmidrule(lr){1-7}
+\multirow{4}{*}{Sonnet}
+ & \texttt{original}       & 4.38 & 4.15 & 4.17 & 4.14 & 4.39 \\
+ & \texttt{skill\_off}     & 4.30 & 4.38 & 4.04 & 4.16 & 4.27 \\
+ & \texttt{skill\_on}      & 4.54 & 4.54 & 4.36 & 4.39 & 4.27 \\
+ & \texttt{skill\_on\_e2e} & \textbf{4.96} & \textbf{4.98} & \textbf{4.90} & \textbf{4.81} & \textbf{4.52} \\
+\bottomrule
+\end{tabular}
+\end{table}
+\fi  %% end rubric-dimension table
+
+In every setting, \texttt{skill\_on\_e2e} is the best condition by a wide margin. Aggregated over all units, the ordering is monotone in how tightly augmentation is coupled to the intent and to the analysis: \texttt{original} $<$ \texttt{skill\_off} $<$ \texttt{skill\_on} $<$ \texttt{skill\_on\_e2e} on Haiku, and the same ordering on Sonnet except that generic augmentation falls \emph{below} the raw table ($-5.29$ versus $-4.60$).
+
+Two gaps carry the message, and both are aggregate rather than single-factor. The gap from \texttt{skill\_off} to \texttt{skill\_on} measures the combined benefit of augmenting under SADA: simply asking the model for extra columns does not reliably beat the raw table (under Sonnet it is in fact the worst of the four conditions), whereas SADA lifts the analysis above the raw table on both substrates. Because the analyst reads the realized cells and not only the schema, this gap bundles intent-conditioned schema planning together with the mechanism that fills the cells---two things that differ between the conditions, as \S\ref{subsec:exp-scale} shows---so we do not read it as isolating the planning layer on its own; \S\ref{subsec:exp-adherence} takes up that question with a schema-level measurement. The further gap from \texttt{skill\_on} to \texttt{skill\_on\_e2e} likewise compares two deployment modes rather than isolating a single factor: it measures the aggregate benefit of workflow integration, including shared task context, adaptive schema construction, and the analyst's direct awareness of the derived columns.
+
+\subsection{Experiment 2: The Form of the Resulting Analysis}
+\label{subsec:exp-form}
+
+Experiment~1 asks how \emph{good} a report is. This experiment asks a more basic question that an overall quality score cannot answer directly: does the analysis make quantitative use of information in the text column? Doing so requires two steps. First, the report must convert signals in the text into structured variables that can be grouped, counted, and compared, rather than use the text only as a source of quotations. Second, it must use those variables in the analysis rather than merely describe them.
+
+\paragraph{Setup.} Using the same 108 units per substrate and the same four conditions as Experiment~1, the grader reads each finished report and assigns it to exactly one of three mutually exclusive forms, ranging from reports that only quote the text to reports that compute over structured variables derived from it:
+\begin{itemize}
+\item \textbf{C1 (all-qualitative)}. No structured variable is derived from the text. The report quotes or paraphrases passages, with little or no quantitative computation over any column; nothing in it can be grouped or compared.
+\item \textbf{C2 (numeric-only quantification)}. The report computes, but only over the table's \emph{pre-existing numeric} columns. The text is still read rather than measured, so any claim about it rests on selected passages while the quantitative reasoning proceeds separately.
+\item \textbf{C3 (text-augmented quantification)}. A text-derived variable exists and is used: the report quantifies signal derived from the text (group rates, means, cross-tabs, correlations over text-derived categories) alongside the numeric columns. Both steps above are satisfied: the text has become a first-class analytical variable, and the report reasons over it rather than merely describing it.
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\caption{Distribution of analysis form (\% of reports per condition, rows sum to $100$). C3 (text-augmented quantification) is the target form; higher is better.}
+\label{tab:form-class}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrr}
+\toprule
+Model & Condition & C1 qual. & C2 numeric & C3 text-aug. \\
+\midrule
+\multirow{4}{*}{Haiku}
+ & \texttt{original}       & 23.1 & 13.0 & 63.9 \\
+ & \texttt{skill\_off}     & 0.0 & 9.3 & 90.7 \\
+ & \texttt{skill\_on}      & 0.0 & 1.9 & 98.1 \\
+ & \texttt{skill\_on\_e2e} & 0.0 & 0.0 & \textbf{100.0} \\
+\cmidrule(lr){1-5}
+\multirow{4}{*}{Sonnet}
+ & \texttt{original}       & 27.8 & 19.4 & 52.8 \\
+ & \texttt{skill\_off}     & 0.0 & 9.3 & 90.7 \\
+ & \texttt{skill\_on}      & 0.9 & 1.9 & 97.2 \\
+ & \texttt{skill\_on\_e2e} & 0.0 & 0.0 & \textbf{100.0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:form-class} traces how far each condition carries the text. On the raw table, roughly a quarter of reports never operationalise it at all ($23.1\%$ C1 on Haiku, $27.8\%$ on Sonnet) and a further $13$--$19\%$ compute only over the pre-existing numeric columns, so on between a third and a half of all units the analyst can describe the text but not analyze it. Generic augmentation changes this decisively: purely descriptive reports vanish ($0.0\%$ C1) and $90.7\%$ reach C3 under both substrates. A residue of $9.3\%$ nonetheless stays in C2, where the added columns are present but left unused and the analyst quantifies only the original numeric columns. \texttt{skill\_on} cuts that residue to $1.9\%$, and \texttt{skill\_on\_e2e} eliminates it: \emph{every} report reaches C3 under both substrates.
+
+These results distinguish bringing text into computation from aligning the derived variables with the analytical goal. Generic augmentation converts text into structured columns that can be grouped, counted, and compared, whereas intent-conditioned augmentation makes those columns more consistently relevant to downstream analysis.
+
+\subsection{Experiment 3: Semantic Schema Suitability for Focus-Oriented Analysis}
+\label{subsec:exp-adherence}
+
+Experiments~1 and 2 measure what the augmentation enables downstream; this one inspects the augmented table itself. Rather than scoring how many columns of a fixed reference schema are recovered, we ask whether the augmentation realises the \emph{characteristic} its intent sub-type demands (Table~\ref{fig:intent_matrix}, column ``Characteristics'').
+
+\paragraph{Setup.} We reuse the units and conditions of \S\ref{subsec:setup}, minus \texttt{original}, which adds no columns to inspect. Every unit is judged against the sub-type its query expresses, by a grader that sees the query, the \emph{names} of the original columns, and for each added column its name together with the distribution of its values over all rows. It never sees the original table's values, the row texts, any column row by row, or a reference schema, whose particular choices would penalise equally valid alternatives. The judge never outputs the headline number: it emits only per-sub-type checkable signals, so every score can be traced back to the evidence behind it.
+
+\paragraph{Metrics.} Adherence lies in $[0,1]$ and is composed from those signals by a fixed rule outside the model, one per sub-type, so it is comparable across variants but not across sub-types. The correlational sub-types score the \emph{predictor fraction}, the share of added columns that genuinely predict the focus rather than restate it, with \textsf{PFE} additionally penalising \emph{leakage} and \textsf{EDA} rewarding interpretable relationships. The causal sub-types require a \emph{treatment} and its \emph{confounders}, weighted by whether those confounders are genuine common causes rather than mediators, with \textsf{What-If} further requiring the treatment to be intervenable. \textsf{Faceted} scores the \emph{facet fraction} and \emph{MECE}; \textsf{Focus-Inf}, where the query names no focus, scores the coherence and structural quality of the focus proposed.
+
+\iffalse  %% family-level table commented out: sub-type table below carries the analysis
+\begin{table}[t]
+\centering
+\caption{Characteristic adherence by intent family and substrate (mean over units; higher is better; best per row in \textbf{bold}). $n$ is units per variant.}
+\label{tab:characteristic-family}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrrc}
+\toprule
+Family & Model & skill\_off & skill\_on & skill\_on\_e2e & $n$ \\
+\midrule
+\multirow{2}{*}{Causal}
+ & Haiku  & 0.102 & 0.358 & \textbf{0.427} & 36/35/35 \\
+ & Sonnet & 0.242 & 0.386 & \textbf{0.471} & 36/36/36 \\
+\cmidrule(lr){1-6}
+\multirow{2}{*}{Correlational}
+ & Haiku  & 0.356 & \textbf{0.567} & 0.512 & 37/37/37 \\
+ & Sonnet & 0.316 & \textbf{0.583} & 0.566 & 37/37/37 \\
+\cmidrule(lr){1-6}
+\multirow{2}{*}{Focus-internal}
+ & Haiku  & 0.357 & 0.489 & \textbf{0.512} & 35/35/35 \\
+ & Sonnet & 0.457 & \textbf{0.514} & 0.490 & 35/35/35 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\fi  %% end family-level table
+
+\begin{table}[t]
+\centering
+\caption{Characteristic adherence and causal component signals. (a) Mean adherence over units by intent sub-type and substrate. (b) Treatment presence, confounder presence, and confounder quality averaged over both substrates. Higher is better; bold marks the best variant within each row or component.}
+\label{tab:characteristic-subtype}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrr}
+\multicolumn{5}{c}{\textit{(a) Adherence by sub-type and substrate}} \\
+\toprule
+Sub-type & Model & skill\_off & skill\_on & skill\_on\_e2e \\
+\midrule
+\multirow{2}{*}{\textsf{Attribution}}
+ & Haiku  & 0.138 & 0.339 & \textbf{0.413} \\
+ & Sonnet & 0.297 & 0.379 & \textbf{0.472} \\
+\cmidrule(lr){1-5}
+\multirow{2}{*}{\textsf{What-If}}
+ & Haiku  & 0.062 & 0.381 & \textbf{0.443} \\
+ & Sonnet & 0.179 & 0.394 & \textbf{0.470} \\
+\cmidrule(lr){1-5}
+\multirow{2}{*}{\textsf{PFE}}
+ & Haiku  & 0.323 & \textbf{0.451} & 0.369 \\
+ & Sonnet & 0.318 & 0.474 & \textbf{0.487} \\
+\cmidrule(lr){1-5}
+\multirow{2}{*}{\textsf{EDA}}
+ & Haiku  & 0.395 & \textbf{0.704} & 0.679 \\
+ & Sonnet & 0.314 & \textbf{0.711} & 0.660 \\
+\cmidrule(lr){1-5}
+\multirow{2}{*}{\textsf{Faceted}}
+ & Haiku  & 0.131 & 0.383 & \textbf{0.426} \\
+ & Sonnet & 0.295 & \textbf{0.357} & 0.336 \\
+\cmidrule(lr){1-5}
+\multirow{2}{*}{\textsf{Focus-Inf}}
+ & Haiku  & 0.596 & 0.602 & \textbf{0.603} \\
+ & Sonnet & 0.629 & \textbf{0.680} & 0.653 \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrr}
+\multicolumn{5}{c}{\textit{(b) Causal component signals}} \\
+\toprule
+Sub-type & Variant & Treat. pres. & Conf. pres. & Conf. qual. \\
+\midrule
+\multirow{3}{*}{\textsf{Attribution}}
+ & \texttt{skill\_off}     & 0.84 & 0.61 & 0.23 \\
+ & \texttt{skill\_on}      & 0.89 & \textbf{0.84} & 0.41 \\
+ & \texttt{skill\_on\_e2e} & \textbf{1.00} & \textbf{0.84} & \textbf{0.44} \\
+\cmidrule(lr){1-5}
+\multirow{3}{*}{\textsf{What-If}}
+ & \texttt{skill\_off}     & 0.85 & 0.35 & 0.17 \\
+ & \texttt{skill\_on}      & 0.91 & 0.85 & 0.44 \\
+ & \texttt{skill\_on\_e2e} & \textbf{0.97} & \textbf{0.88} & \textbf{0.49} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\iffalse  %% sub-signal table commented out: key signals quoted inline below
+\begin{table}[t]
+\centering
+\caption{Sub-signals behind adherence, averaged over both substrates. Causal panel: treatment presence, confounder presence, confounder quality, and mean number of mislabelled mediators (lower better). Correlational panel: predictor fraction and interpretable fraction (\textsf{EDA}) or leakage rate (\textsf{PFE}, lower better). Focus-internal panel: facet fraction and MECE.}
+\label{tab:characteristic-signals}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+
+\begin{tabular}{llcccc}
+\multicolumn{6}{c}{\textit{Causal}: treatment + confounders} \\
+\toprule
+Sub-type & Variant & Treat. & Conf.\ pres. & Conf.\ qual. & Mediator err. \\
+\midrule
+\multirow{3}{*}{\textsf{Attribution}}
+ & \texttt{skill\_off}     & 0.84 & 0.61 & 0.23 & 1.40 \\
+ & \texttt{skill\_on}      & 0.89 & 0.84 & 0.41 & 1.08 \\
+ & \texttt{skill\_on\_e2e} & \textbf{1.00} & \textbf{0.84} & \textbf{0.44} & \textbf{0.76} \\
+\cmidrule(lr){1-6}
+\multirow{3}{*}{\textsf{What-If}}
+ & \texttt{skill\_off}     & 0.85 & 0.35 & 0.17 & \textbf{0.59} \\
+ & \texttt{skill\_on}      & 0.91 & 0.85 & 0.44 & 0.93 \\
+ & \texttt{skill\_on\_e2e} & \textbf{0.97} & \textbf{0.88} & \textbf{0.49} & 0.82 \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+
+\begin{tabular}{llccc}
+\multicolumn{5}{c}{\textit{Correlational}: correlated predictors} \\
+\toprule
+Sub-type & Variant & Pred.\ frac. & Interp./Util. & Leakage$\downarrow$ \\
+\midrule
+\multirow{3}{*}{\textsf{EDA}}
+ & \texttt{skill\_off}     & 0.55 & 0.56 & --- \\
+ & \texttt{skill\_on}      & \textbf{0.91} & \textbf{0.96} & --- \\
+ & \texttt{skill\_on\_e2e} & 0.89 & 0.94 & --- \\
+\cmidrule(lr){1-5}
+\multirow{3}{*}{\textsf{PFE}}
+ & \texttt{skill\_off}     & 0.61 & 0.47 & 0.20 \\
+ & \texttt{skill\_on}      & \textbf{0.73} & \textbf{0.59} & \textbf{0.18} \\
+ & \texttt{skill\_on\_e2e} & 0.71 & 0.56 & 0.18 \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+
+\begin{tabular}{llcc}
+\multicolumn{4}{c}{\textit{Focus-internal}: constitutive facets} \\
+\toprule
+Sub-type & Variant & Facet frac. & MECE \\
+\midrule
+\multirow{3}{*}{\textsf{Faceted}}
+ & \texttt{skill\_off}     & 0.37 & 0.37 \\
+ & \texttt{skill\_on}      & 0.61 & 0.50 \\
+ & \texttt{skill\_on\_e2e} & \textbf{0.65} & \textbf{0.53} \\
+\bottomrule
+\end{tabular}
+\end{table}
+\fi  %% end sub-signal table
+
+Across all six sub-types and both substrates, both SADA variants outperform generic augmentation, although the gains vary by sub-type (Table~\ref{tab:characteristic-subtype}). The largest gains occur on causal intents: under Haiku, \textsf{What-If} rises from $0.062$ to $0.443$. Panel~(b) shows that these gains come mainly from better confounder coverage and quality rather than treatment detection, which is already strong. Causal intents are also the only cases in which \texttt{skill\_on\_e2e} wins on both substrates, suggesting that joint planning better aligns treatment selection with the estimand.
+
+Correlational intents generally favour schema-first \texttt{skill\_on}. \textsf{EDA} exceeds $0.70$ on both substrates versus $0.31$--$0.40$ for \texttt{skill\_off}, whereas \textsf{PFE} improves more modestly because adherence penalises text-derived features that semantically restate the withheld target. Thus, downstream predictive utility does not necessarily imply clean feature design. The focus-internal tasks expose two boundary cases: SADA substantially improves \textsf{Faceted} under Haiku but yields only modest gains under Sonnet, while \textsf{Focus-Inf} already has a high generic baseline and leaves little room for improvement. The supplementary appendix reports the remaining component signals. Because the grader sees column names and aggregate value distributions rather than row-level correctness, Experiment~3 evaluates schema suitability rather than value grounding.
+
+\subsection{Experiment 4: Semantic Augmentation at Scale}
+\label{subsec:exp-scale}
+
+Experiments~1--3 evaluate the augmented table through the grader, which sees the schema and a sample of values but not \emph{how} those values were produced. This experiment opens that box on the largest table in the pool, the $10{,}000$-row \texttt{amazon\_fine\_food\_review} corpus, an order of magnitude beyond the median unit. Scale is the point: a per-row LLM labelling pass over $10^4$ rows is costly, so this is the regime in which an augmentation engine must show that it can sustain semantic labelling over a long table rather than fall back on cheaper text processing. Over the $7$ analysis units on this table under both substrates, we examine the \emph{mechanism} by which each condition assigns values and whether those values are \emph{grounded} in the row they describe.
+
+\paragraph{Mechanism.} We inspect the augmentation artifacts directly. Under \texttt{skill\_off}, both substrates emit a Python script, and $8$ of the $9$ scripts assign semantic columns by keyword and regular-expression matching (sentiment lexicons, facet dictionaries, \verb|\b|-delimited pattern banks), without a single model call from inside the generated code. SADA also executes code, but no keyword or regular-expression assignment appears anywhere in it: the workspace holds a schema, a categorization tree, and a per-row tagging trace for every chunk, so every value comes from LLM reasoning over the atomic primitives of \S\ref{sec:engine}, while the operator's code chunks the rows, enforces the row-alignment and closed-vocabulary contracts, and re-stitches the results instead of assigning the values itself. The schemas show the consequence: \texttt{skill\_off} yields \texttt{positive\_\allowbreak word\_\allowbreak count} and \texttt{caps\_\allowbreak ratio}, SADA yields \texttt{taste\_\allowbreak flavor\_\allowbreak quality} and \texttt{repeat\_\allowbreak purchase\_\allowbreak intent}.
+\paragraph{Grounding.} The grader judges each augmented cell against the row's own text as \textsf{Supported} (directly stated), \textsf{Inferable} (a defensible reading), or \textsf{Hallucinated} (not recoverable from the row), covering $471{,}200$ cells. SADA is the better-grounded condition on both substrates: on Haiku it reduces hallucination from $12.98\%$ to $10.29\%$, and on Sonnet fourfold, from $24.29\%$ to $5.47\%$. The Sonnet gap inverts the usual capability ordering: under generic augmentation the stronger substrate is the \emph{less} grounded one. The cause is visible in its scripts, which compute table-wide \texttt{groupby} aggregates and write them into row-level cells, a value the row itself does not contain. SADA's residual errors are of a different kind, concentrated in genuinely subjective columns rather than fabricated quantities.
+
+\iffalse  %% caveats paragraph + scale table commented out
+Two caveats bound this result. Grounding was audited on $3$ of the $7$ units for \texttt{skill\_off} and $2$ for the SADA variants; Table~\ref{tab:scale} reports the $2$ units common to all conditions, and \texttt{skill\_off}'s rates over its full $3$-unit coverage ($12.32\%$ on Haiku, $24.09\%$ on Sonnet) are close enough that the conclusion does not hinge on the choice. Second, adherence and grounding can disagree: on the causal-attribution unit, \texttt{skill\_off} under Sonnet earns the \emph{highest} characteristic-adherence score of any condition ($0.72$, with $3$ confounders) precisely by adding the cross-row aggregates that the auditor rejects. An intent-level metric can thus reward a column that a row-level metric shows to be unsupported, which is why we report both.
+
+\begin{table}[t]
+\centering
+\caption{Augmentation mechanism and value grounding on the $10{,}000$-row \texttt{amazon\_fine\_food\_review} table. \textsf{Rule} counts emitted Python scripts that assign semantic columns by keyword or regex matching, out of all scripts emitted; \textsf{Tag} counts per-row LLM tagging traces. Grounding verdicts are over the units common to all three conditions; \textsf{Hall.}\ is the hallucination rate, lower is better, best per substrate in \textbf{bold}.}
+\label{tab:scale}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrrrrr}
+\toprule
+& & \multicolumn{2}{c}{Mechanism} & \multicolumn{4}{c}{Grounding (\% of cells)} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-8}
+Model & Condition & Rule & Tag & Cells & Supp. & Infer. & Hall. \\
+\midrule
+Haiku  & \texttt{skill\_off}     & 4/4 & 0     & 98{,}100  & 67.31 & 19.70 & 12.98 \\
+       & \texttt{skill\_on}      & 0/0 & 5{,}545 & 70{,}625  & 72.66 & 16.97 & \textbf{10.29} \\
+       & \texttt{skill\_on\_e2e} & 0/0 & 3{,}635 & 33{,}639  & 61.01 & 26.59 & 12.40 \\
+\midrule
+Sonnet & \texttt{skill\_off}     & 4/5 & 0     & 125{,}351 & 30.76 & 44.93 & 24.29 \\
+       & \texttt{skill\_on}      & 0/0 & 2{,}700 & 95{,}849  & 73.78 & 20.70 & \textbf{5.47} \\
+       & \texttt{skill\_on\_e2e} & 0/0 & 3{,}175 & 47{,}636  & 76.48 & 15.01 & 8.50 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\fi  %% end caveats + scale table
+
+
+\subsection{Experiment 5: Predictive Feature Engineering}
+\label{subsec:exp-pfe}
+
+The preceding experiments evaluate the analysis and the augmented table under the grader. This one closes the loop with a fully mechanical downstream metric: does SADA augmentation improve a fixed learner? We isolate the predictive-feature-engineering intent (\S\ref{subsec:pfe}) and compare three conditions: \texttt{baseline} (the structured columns only, no text-derived augmentation), \texttt{skill\_off} (generic LLM augmentation, where the model freely writes augmentation code \emph{without} the SADA skill), and \texttt{skill\_on} (SADA augmentation produced by the engine of \S\ref{sec:engine}).
+
+We use eleven text-bearing tabular datasets from TextTabBench~\citep{texttabbench2025}: five regression tasks (airbnb, beer, laptops, sf\_permits, wine) scored by $R^2$ and six classification tasks (customer, hs\_cards, job\_frauds, kickstarter, osha, spotify) scored by Accuracy. The downstream learner is XGBoost under 5-fold cross-validation, applied identically to every condition; each cell reports the mean and standard deviation across the five folds. We report two regimes: without text embeddings (Table~\ref{tab:no_text}), where the only text-derived signal is the augmented columns, and with text embeddings (Table~\ref{tab:text}), where the \texttt{baseline} also includes a Skrub \textsf{GapEncoder} embedding~\citep{skrub2024} of the raw text column. In the second regime the embedding is downsampled to its $64$ most important dimensions by SHAP under every condition, so that each cell receives the same text-representation budget regardless of how many columns its augmentation added.
+
+\begin{table*}[t]
+\centering
+\caption{No-text-embedding results (5-fold CV, mean$\pm$std across folds). The learner is XGBoost; \texttt{baseline} uses the non-textual columns only, and every condition retains all of its structured and augmented columns. Metric is $R^2$ for regression and Accuracy for classification; higher is better. \texttt{skill\_on} is set in \textbf{bold} where it exceeds the \texttt{baseline}.}
+\label{tab:no_text}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrrr}
+\toprule
+Dataset & Metric & baseline & haiku/skill\_off & haiku/skill\_on & sonnet/skill\_off & sonnet/skill\_on \\
+\midrule
+airbnb      & $R^2$ & 0.5704$\pm$0.0434 & 0.5675$\pm$0.0299 & \textbf{0.5787$\pm$0.0426} & 0.5629$\pm$0.0514 & \textbf{0.5735$\pm$0.0529} \\
+beer        & $R^2$ & 0.4693$\pm$0.0447 & 0.5010$\pm$0.0297 & \textbf{0.4891$\pm$0.0421} & 0.4780$\pm$0.0350 & \textbf{0.5392$\pm$0.0390} \\
+laptops     & $R^2$ & 0.7941$\pm$0.0546 & 0.7964$\pm$0.0681 & \textbf{0.7982$\pm$0.0520} & 0.8039$\pm$0.0388 & \textbf{0.8069$\pm$0.0609} \\
+sf\_permits  & $R^2$ & 0.2946$\pm$0.0926 & 0.3000$\pm$0.1351 & \textbf{0.3068$\pm$0.1901} & 0.3406$\pm$0.0709 & \textbf{0.3724$\pm$0.1330} \\
+wine        & $R^2$ & 0.3140$\pm$0.1565 & 0.2526$\pm$0.2069 & \textbf{0.5136$\pm$0.1114} & 0.0443$\pm$0.3314 & \textbf{0.4415$\pm$0.0755} \\
+\midrule
+customer    & Acc & 0.5913$\pm$0.0217 & 0.5823$\pm$0.0031 & \textbf{0.5970$\pm$0.0318} & 0.5940$\pm$0.0181 & \textbf{0.6123$\pm$0.0065} \\
+hs\_cards    & Acc & 0.6349$\pm$0.0149 & 0.6651$\pm$0.0137 & \textbf{0.6445$\pm$0.0116} & 0.6299$\pm$0.0156 & \textbf{0.6416$\pm$0.0040} \\
+job\_frauds  & Acc & 0.8477$\pm$0.0070 & 0.8260$\pm$0.0074 & \textbf{0.8923$\pm$0.0085} & 0.8493$\pm$0.0124 & \textbf{0.8980$\pm$0.0061} \\
+kickstarter & Acc & 0.6507$\pm$0.0161 & 0.6643$\pm$0.0131 & \textbf{0.6657$\pm$0.0251} & 0.6647$\pm$0.0212 & \textbf{0.6703$\pm$0.0189} \\
+osha        & Acc & 0.5200$\pm$0.0213 & 0.5377$\pm$0.0162 & \textbf{0.5370$\pm$0.0107} & 0.5373$\pm$0.0153 & \textbf{0.5533$\pm$0.0222} \\
+spotify     & Acc & 0.6433$\pm$0.0132 & 0.6223$\pm$0.0136 & \textbf{0.6523$\pm$0.0105} & 0.6300$\pm$0.0144 & \textbf{0.7547$\pm$0.0127} \\
+\bottomrule
+\end{tabular}
+
+\vspace{6pt}
+
+\centering
+\caption{Text-embedding results (5-fold CV, mean$\pm$std across folds). Same setup as Table~\ref{tab:no_text}, but the \texttt{baseline} adds a Skrub \textsf{GapEncoder} embedding of the raw text column, downsampled to its $64$ most important dimensions by SHAP in every condition. Metric is $R^2$ for regression and Accuracy for classification; higher is better. \texttt{skill\_on} is set in \textbf{bold} where it exceeds the \texttt{baseline}.}
+\label{tab:text}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrrr}
+\toprule
+Dataset & Metric & baseline & haiku/skill\_off & haiku/skill\_on & sonnet/skill\_off & sonnet/skill\_on \\
+\midrule
+airbnb      & $R^2$ & 0.5617$\pm$0.0119 & 0.5489$\pm$0.0287 & \textbf{0.5942$\pm$0.0239} & 0.5546$\pm$0.0260 & \textbf{0.5787$\pm$0.0313} \\
+beer        & $R^2$ & 0.5729$\pm$0.0220 & 0.5750$\pm$0.0213 & \textbf{0.5895$\pm$0.0203} & 0.5727$\pm$0.0252 & 0.5705$\pm$0.0394 \\
+laptops     & $R^2$ & 0.7491$\pm$0.0943 & 0.7793$\pm$0.0602 & \textbf{0.8018$\pm$0.0474} & 0.7591$\pm$0.0768 & 0.7276$\pm$0.0908 \\
+sf\_permits  & $R^2$ & 0.3542$\pm$0.1202 & 0.3546$\pm$0.0328 & 0.3380$\pm$0.1146 & 0.3475$\pm$0.1156 & \textbf{0.3581$\pm$0.0752} \\
+wine        & $R^2$ & 0.3593$\pm$0.1395 & 0.4636$\pm$0.1342 & \textbf{0.4318$\pm$0.0937} & 0.4496$\pm$0.0264 & \textbf{0.4748$\pm$0.0489} \\
+\midrule
+customer    & Acc & 0.6623$\pm$0.0215 & 0.6620$\pm$0.0199 & 0.6540$\pm$0.0140 & 0.6570$\pm$0.0067 & \textbf{0.6647$\pm$0.0140} \\
+hs\_cards    & Acc & 0.7167$\pm$0.0191 & 0.7149$\pm$0.0150 & \textbf{0.7189$\pm$0.0111} & 0.7174$\pm$0.0138 & \textbf{0.7224$\pm$0.0137} \\
+job\_frauds  & Acc & 0.9467$\pm$0.0092 & 0.9543$\pm$0.0079 & \textbf{0.9583$\pm$0.0059} & 0.9513$\pm$0.0058 & \textbf{0.9577$\pm$0.0029} \\
+kickstarter & Acc & 0.7360$\pm$0.0108 & 0.7397$\pm$0.0190 & \textbf{0.7430$\pm$0.0195} & 0.7293$\pm$0.0248 & \textbf{0.7407$\pm$0.0104} \\
+osha        & Acc & 0.5433$\pm$0.0135 & 0.5527$\pm$0.0122 & \textbf{0.5510$\pm$0.0135} & 0.5613$\pm$0.0237 & \textbf{0.5647$\pm$0.0114} \\
+spotify     & Acc & 0.7590$\pm$0.0120 & 0.7517$\pm$0.0145 & \textbf{0.7607$\pm$0.0145} & 0.7563$\pm$0.0143 & \textbf{0.8177$\pm$0.0147} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Without text embeddings, \texttt{skill\_on} achieves a higher mean score than the baseline on all $11$ datasets under both substrates; compared with \texttt{skill\_off}, it is higher on $8$ of $11$ with Haiku and all $11$ with Sonnet. With embeddings, it exceeds the baseline on $9$ of $11$ datasets under both substrates and \texttt{skill\_off} on $7$ of $11$ with Haiku and $9$ of $11$ with Sonnet. Generic augmentation is less reliable despite adding an average of $130$ columns, whereas SADA adds only $10$. These results show that selecting columns for the analytical intent matters more than generating a large schema and that SADA's structured augmentation remains complementary to text embeddings.
+
+\iffalse  %% commented out for now (no real data yet)
+\subsection{Further Engine-Level Evaluations}
+\label{subsec:rq-further}
+
+The experiments above measure SADA end-to-end. Three engine-internal questions admit more targeted study; we summarize the protocols here and report full results in the appendix.
+
+\paragraph{Schema-decision quality and confounder coverage.}
+\label{subsec:rq1}
+For each intent and dataset we assess whether the emitted schema is appropriate for the intent, non-duplicative with existing structured columns, and, most distinctively for the causal claim, whether it surfaces explicit confounder columns. On causal datasets with a known confounder set we measure confounder recall and precision against SADA without intent conditioning and against feature-engineering and industrial baselines, which we expect to miss confounders almost entirely.
+
+\paragraph{Value materialization and scale.}
+We measure per-value accuracy against expert labels by column type (boolean, categorical, ordinal, numerical), run-to-run stability across repeated runs, and the cost--quality trade-off as the row count grows toward $10^6$, where SADA's map-reduce execution should hold accuracy near-constant while cost grows roughly linearly.
+
+\paragraph{Causal what-if estimation.}
+\label{subsec:rq4}
+On synthetic causal tables with a known average treatment effect (ATE), we compare end-to-end ATE estimation error for SADA-with-confounders, SADA-without-confounders, text-embedding deconfounding~\citep{deconfound2026reading}, and an expert-curated oracle, following~\citep{causalhybrid2025} and CauSciBench~\citep{causcibench2025}. This is the sharpest test of the design claim that text-derived confounders, which the structured columns lack, materially improve downstream causal estimates.
+
+\paragraph{Consolidated ablations.}
+\label{subsec:ablations}
+We isolate each engine layer by switching it off in turn: naive LLM naming in place of perspective-based categorization; no intent conditioning of the schema; intent-independent value domains; substrate-model swap; no prompt-cache sharing; no retry-with-shrinking; and no evidence column.
+
+\paragraph{Audit utility.}
+\label{subsec:audit-eval}
+A small study shows augmented rows (half intentionally wrong) to raters either as the row alone or with the evidence span and confidence flag, and measures time-to-detect-error; we expect roughly $2\times$ faster error detection with the audit surface.
+\fi  %% end commented out

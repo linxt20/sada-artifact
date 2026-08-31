@@ -1,0 +1,106 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.68,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "False | 61 | 94 | 64.9%",
+        "why": "numeric table for missing processed_date"
+      },
+      {
+        "dimension": "depth",
+        "quote": "no processed_date and amount < $2,000: 88.9% decline rate",
+        "why": "combined-filter segmentation"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "single most predictive individual signal",
+        "why": "leans on outcome-stage field as a predictor"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "coherence",
+        "quote": "processed_date is missing... but that is an outcome-stage workflow field, not a pre-decision signal",
+        "why": "avoids leakage, internally consistent"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Mean amount is similar for Declined ($3,792.9) and Processed ($3,927.9)",
+        "why": "numeric refutation of amount signal"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Automatically generated... appears 15 times, but only 5 were declined (33.3%)",
+        "why": "notes exception below baseline"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B correctly flags processed_date as leakage that A treats as its top predictor, making B more coherent and decision-valid.",
+  "validation_warnings": [
+    "winner_conflicts_with_dimension_sum"
+  ],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

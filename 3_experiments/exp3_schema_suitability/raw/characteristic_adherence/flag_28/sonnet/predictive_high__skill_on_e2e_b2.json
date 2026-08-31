@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "focus_variable": "high_goal_achievement",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "intervention_type",
+    "action_mechanism",
+    "technology_enablement",
+    "baseline_stated",
+    "improvement_target_pct_range",
+    "timeline_granularity",
+    "action_specificity",
+    "metric_alignment",
+    "comparative_reference_type"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "high_goal_achievement",
+    "per_column": [
+      {
+        "name": "intervention_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The kind of intervention (process improvement, automation, training, etc.) is a characteristic of the goal knowable in advance and plausibly correlates with achievement likelihood; it does not restate the outcome."
+      },
+      {
+        "name": "action_mechanism",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The concrete mechanism used to pursue the goal is an ex-ante attribute that could differentiate success rates; valid external predictor."
+      },
+      {
+        "name": "technology_enablement",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether technology enables the goal is a design/context feature independent of the achievement outcome and may carry signal."
+      },
+      {
+        "name": "baseline_stated",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a baseline is explicitly stated reflects goal-setting quality, knowable up front, and plausibly relates to achievement without restating it."
+      },
+      {
+        "name": "improvement_target_pct_range",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The ambitiousness of the target range is a property of the goal itself, set before the outcome; harder targets may be less achieved. It is derived from target_percentage (already in original columns) so its marginal leverage is limited, but it is not leakage of the achievement outcome."
+      },
+      {
+        "name": "timeline_granularity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Timeframe structure (annual, quarterly, no timeline) is an ex-ante planning attribute plausibly linked to achievement; does not restate outcome."
+      },
+      {
+        "name": "action_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How specific/multi-pronged the planned actions are is a knowable-in-advance quality attribute that can carry predictive signal about goal achievement."
+      },
+      {
+        "name": "metric_alignment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the metric aligns with the goal is a goal-design property independent of the realized outcome and plausibly predictive of success."
+      },
+      {
+        "name": "comparative_reference_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The type of comparative baseline referenced is an ex-ante framing attribute; not a restatement of achievement and may relate to goal clarity/success."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.6,
+    "rationale": "All added columns are ex-ante, goal-design and intervention attributes that lie outside the focus variable and contain no outcome leakage or restatement of high_goal_achievement. They plausibly encode goal quality (baseline stated, metric alignment, action specificity), ambition (target range), and intervention approach, which are reasonable predictors. However, several are somewhat generic/redundant with existing columns (improvement_target_pct_range largely mirrors target_percentage; timeline_granularity overlaps with start/end dates), and none captures execution progress or resource signals, so the incremental predictive leverage as a set is moderate rather than strong."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

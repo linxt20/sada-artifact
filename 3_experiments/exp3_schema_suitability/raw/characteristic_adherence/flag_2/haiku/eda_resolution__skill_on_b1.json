@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "infrastructure_domain",
+    "problem_severity",
+    "resolution_completion_status",
+    "incident_scope",
+    "authentication_access_failure",
+    "technician_assignment_continuity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6583,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7417,
+    "source_groundedness__table_level": 0.71,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "infrastructure_domain",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizes incidents by technical domain (VPN, network, database, email), giving a genuine new grouping axis that complements the existing 'category' column and is directly useful for comparing resolution time. Values are sound readings of short_description across all samples."
+      },
+      {
+        "name": "problem_severity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Severity is a useful axis for explaining resolution-time variation. However, values are somewhat inferential: 'connectivity_blocking' vs 'partial_access' for terse descriptions like 'VPN connection issue' or 'Email system not working properly' involves guesswork not fully warranted by the text, though generally plausible."
+      },
+      {
+        "name": "resolution_completion_status",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "This boolean is largely redundant with the existing 'state'/'closed_at' fields (a closed record is complete), so it adds little new analytical leverage for resolution-time comparison. Values are derivable from closed_at presence."
+      },
+      {
+        "name": "incident_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Scope (single user vs department vs system-wide) is a genuinely useful axis for explaining resolution time. Groundedness is mixed: 'WiFi in sales department' correctly maps to department-scoped, but 'Email system not working properly' -> 'system_wide_service' and 'VPN connection issue' -> 'single_user_affected' are inferences the terse text does not clearly support."
+      },
+      {
+        "name": "authentication_access_failure",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binary access-failure flag offers a modest additional cross-tab axis. Values in samples (all False for connectivity/email issues) are reasonable readings, though it is a fairly generic single-flag feature."
+      },
+      {
+        "name": "technician_assignment_continuity",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Assignment continuity could relate to resolution time, but the value is not derivable from the sampled source text (short_description/timestamps); it would require assigned_to vs closed_by comparison not shown. The True/False assignments in samples appear unsupported by provided evidence."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.71,
+    "rationale": "Several columns (infrastructure_domain, problem_severity, incident_scope) provide genuine new grouping axes well-aligned with the query about resolution-time variation, and are largely grounded in short_description. resolution_completion_status is largely redundant with existing state/closed fields. Groundedness is weakened by inferential severity/scope labels on terse text and by technician_assignment_continuity, whose values are not derivable from the sampled evidence."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

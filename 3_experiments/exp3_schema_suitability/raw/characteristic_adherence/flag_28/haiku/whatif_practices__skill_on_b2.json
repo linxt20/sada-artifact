@@ -1,0 +1,153 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "focus_variable": "percent_complete",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "goal_domain",
+    "management_lever_type",
+    "target_improvement_magnitude",
+    "mechanism_type",
+    "quantified_specificity",
+    "baseline_context_provided",
+    "has_feedback_loop",
+    "involves_stakeholder_engagement",
+    "implementation_feasibility_signal",
+    "implementation_scope",
+    "outcome_metric_type"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "percent_complete",
+    "per_column": [
+      {
+        "name": "goal_domain",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The domain of the goal (e.g. revenue vs satisfaction) plausibly influences both which management practices are adopted and baseline achievement rates, acting as a common cause. Not named in the query."
+      },
+      {
+        "name": "management_lever_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Represents the type of goal-management practice/lever adopted -- an intervenable action an actor could set or choose. This is the treatment implied by 'adopting the practices'."
+      },
+      {
+        "name": "target_improvement_magnitude",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Encodes the target/expected improvement size; this is closer to a restatement of the outcome ambition than a common cause. Not a confounder."
+      },
+      {
+        "name": "mechanism_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The mechanism through which the practice operates lies on the causal path from treatment to outcome, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "quantified_specificity",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Whether the practice is quantified is a property of the practice description; constant (all true) so carries no adjustment value."
+      },
+      {
+        "name": "baseline_context_provided",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether a baseline was provided can affect both how a practice is framed/adopted and measured achievement, plausibly a common cause. Weakly so."
+      },
+      {
+        "name": "has_feedback_loop",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A configurable design property of the practice that could be set/changed; functions as an intervenable feature rather than a confounder."
+      },
+      {
+        "name": "involves_stakeholder_engagement",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another settable design feature of the practice, part of the treatment bundle rather than a common cause."
+      },
+      {
+        "name": "implementation_feasibility_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Implementation barriers affect both whether/how a practice is adopted and the achievable completion, a plausible common cause to adjust for. Not named in query."
+      },
+      {
+        "name": "implementation_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope of implementation influences both which practices are chosen and achievement outcomes; plausible common cause not named in the query."
+      },
+      {
+        "name": "outcome_metric_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of metric conditions how percent_complete is measured and correlates with domain/practice choice; a plausible common cause. Not named in query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "management_lever_type",
+      "has_feedback_loop",
+      "involves_stakeholder_engagement"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "goal_domain",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "baseline_context_provided",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "implementation_feasibility_signal",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "implementation_scope",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "outcome_metric_type",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The added columns clearly establish an intervenable treatment: goal-management practice characteristics (lever type, feedback loop, stakeholder engagement) are things actors can actually set or change, satisfying condition (a). Several columns also serve as genuine confounders -- common causes of both practice adoption and achievement -- none of which were named in the query (goal_domain, implementation_feasibility, implementation_scope, outcome_metric_type), which demonstrates the capability under test. However, the set is diluted by a mediator (mechanism_type), a near-restatement of the outcome (target_improvement_magnitude), and a constant, non-informative column (quantified_specificity). The confounders are plausible but individually of moderate strength and the treatment/confounder distinction is somewhat blurred, so overall confounder quality is moderate rather than strong."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 11
+}

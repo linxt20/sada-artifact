@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "hardware_equipment_class",
+    "failure_mechanism",
+    "recurrence_pattern",
+    "assigned_technician",
+    "caller_identity",
+    "urgency_impact_level"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.5583,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.4333,
+    "source_groundedness__table_level": 0.44,
+    "b1_overall": 0.4958,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_equipment_class",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A strong axis for explaining a hardware-incident spike by equipment type, directly relevant to the query. Groundedness is mixed: the 'system' label for a MySQL connection issue is a stretch (that is software/DB, not hardware), and the large NULL share is honest for silent rows. Categories appear plausibly readable from descriptions but at least one sample is questionable."
+      },
+      {
+        "name": "failure_mechanism",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Highly useful for diagnosing WHY incidents spiked (e.g. update_failure clustering). However groundedness is weak: 'Need assistance with software installation' and 'Issue installing new software' are labelled update_failure, which is an unwarranted inference from installation requests, and there is no failure language in the source. This overstates specificity the text does not support."
+      },
+      {
+        "name": "recurrence_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Recurrence directly speaks to a spike explanation and offers a genuine grouping axis. But such a classification requires cross-row evidence; per-row it is asserted (all samples 'isolated_incident') without visible support, and the derivation basis is unclear, so groundedness is only moderate."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Trivially redundant with the existing 'assigned_to' original column, adding little new analytical leverage for a cause-of-spike query. Values also appear as specific names not evidenced in the sampled source text, suggesting reformatting of an existing field or invention."
+      },
+      {
+        "name": "caller_identity",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Redundant with the original 'caller_id' column and adds no new axis for explaining the spike. Specific caller names are not derivable from the shown source text samples."
+      },
+      {
+        "name": "urgency_impact_level",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "A bare boolean flag largely duplicative of the existing 'priority' column and offering little leverage. The true/false values are not derivable from the sampled source text, and the name implies a graded level while values are binary."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.44,
+    "rationale": "The first three columns (equipment class, failure mechanism, recurrence pattern) give genuinely useful new axes for diagnosing a hardware-incident spike, but their values frequently over-assert specifics the source text does not support (e.g. software-install tickets labelled update_failure or 'system' hardware). The remaining three columns are largely redundant with existing original fields (assigned_to, caller_id, priority) and their specific values are not evidenced in the sampled text. Overall the set is moderately useful but weakly grounded."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

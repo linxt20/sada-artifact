@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "ticket_type_primary",
+    "agent_assignment",
+    "ticket_scope_extent",
+    "ticket_complexity_judgment"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "ticket_type_primary",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query explicitly targets 'ticket types that create the heaviest agent workload' as the lever to reduce. This is the intervention variable and is directly named."
+      },
+      {
+        "name": "agent_assignment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Which agent handles a ticket can influence both the ticket type routed to them (specialization) and the resolution time (agent skill/speed), making it a common cause. Not named in the query."
+      },
+      {
+        "name": "ticket_scope_extent",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (single user vs enterprise-wide) plausibly affects both the ticket type distribution and resolution time, acting as a common cause. Not named in the query."
+      },
+      {
+        "name": "ticket_complexity_judgment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Intrinsic complexity drives both which ticket type/workload a ticket represents and how long it takes to resolve. A common cause not named in the query. (Arguably borderline with mediator, but as a pre-treatment intrinsic property it functions as a confounder.)"
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "ticket_type_primary"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "agent_assignment",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "ticket_scope_extent",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "ticket_complexity_judgment",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The added set correctly instantiates a what-if intervention. ticket_type_primary is a genuine intervenable treatment: it is the settable lever named in the query (ticket types whose workload could be 'reduced'), and it is manipulable via routing/policy rather than being an immutable attribute. Three additional columns serve as plausible confounders -- common causes of both ticket type/workload and resolution time -- none of which are named in the query, which is exactly the capability under test. Agent assignment and ticket scope are solid confounders; complexity is somewhat borderline (could be read as a mediator of workload) but is best treated as a pre-treatment intrinsic driver. Overall this satisfies both parts of the technical claim: an intervenable treatment plus non-trivial, query-external confounders adjusted for before reading off the counterfactual effect."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

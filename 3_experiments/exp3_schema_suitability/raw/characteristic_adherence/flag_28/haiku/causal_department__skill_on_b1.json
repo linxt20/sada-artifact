@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do goal achievement rates differ across departments?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "goal_scope_domain",
+    "intervention_mechanism_type",
+    "goal_quantification_specificity",
+    "time_horizon_feasibility",
+    "organizational_complexity",
+    "metric_type",
+    "resource_constraint_signal",
+    "change_adoption_mechanism"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6312,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.7625,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.6968,
+    "hallucination_rate": 0.125
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_scope_domain",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derived from description/category and gives a topical axis to group goals. However it is largely redundant with the existing 'category' column, limiting new leverage for explaining rate differences across departments."
+      },
+      {
+        "name": "intervention_mechanism_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Classifies the lever used (market_expansion, workforce_engagement, etc.). This is a genuine new axis, plausibly correlated with achievement rates. Values are reasonable readings of the description, though it tracks goal_scope_domain closely."
+      },
+      {
+        "name": "goal_quantification_specificity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes how a target is quantified; specificity of targets could plausibly relate to achievement. Mostly grounded, but the split between percentage vs rate target is somewhat arbitrary (e.g. a percentage-change goal labeled 'specific_rate_target'), introducing minor inconsistency."
+      },
+      {
+        "name": "time_horizon_feasibility",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Extracts the time frame (quarter, fiscal_year), a strong candidate explanatory variable for why goals are met or missed. Well grounded in phrases like 'end of Q4' or 'next fiscal year'; NULLs for silent rows are acceptable. Name implies feasibility judgment but values are really horizon buckets."
+      },
+      {
+        "name": "organizational_complexity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Scope of coordination (single_department vs cross_functional vs enterprise_wide) is a highly relevant driver of achievement differences. Mostly a warranted inference, though some labels (e.g. 'cross_functional' for a communication-channels goal) are interpretive and not always explicit in the text."
+      },
+      {
+        "name": "metric_type",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Essentially a normalized restatement of the existing 'metric' column, adding little new analytical leverage. Values faithfully mirror the source metric field."
+      },
+      {
+        "name": "resource_constraint_signal",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A resource-constraint flag could help explain achievement, but every sampled row is labeled 'True' despite texts that give no constraint signal (e.g. 'increase premium subscriptions'). The value appears asserted beyond the source, suggesting weak grounding and near-constant behavior."
+      },
+      {
+        "name": "change_adoption_mechanism",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Type of change required (process/behavioral/technology) is a plausible axis for achievement variance. Generally a defensible inference, though the classification is interpretive and partly overlaps with intervention_mechanism_type."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.75,
+    "rationale": "Most added columns supply genuine new axes (time horizon, organizational complexity, intervention/change mechanism) that plausibly explain department-level achievement differences and are soundly read from the description text. Weak spots: metric_type and goal_scope_domain largely duplicate existing columns, and resource_constraint_signal appears asserted (uniformly True across samples without textual support). Overall the set is useful and mostly grounded, with one column showing hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

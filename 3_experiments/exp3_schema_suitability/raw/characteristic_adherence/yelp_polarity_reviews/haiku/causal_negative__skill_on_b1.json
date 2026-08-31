@@ -1,0 +1,53 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "service_quality_failure",
+    "staff_rudeness_dismissiveness",
+    "expectations_versus_reality_gap"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.86,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.7667,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.8134,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_quality_failure",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "A categorical typology of operational service failures (slow, disorganized, forgotten) gives a genuine grouping axis directly relevant to explaining negative experiences. Values are well grounded: YLP-0002 explicitly describes being forgotten twice ('forgotten_or_ignored'), and positive rows correctly get 'not_present'. YLP-0005 arguably could be flagged given policy failures, but 'not_present' is a defensible reading since it centers on entry/drinks rather than service delivery."
+      },
+      {
+        "name": "staff_rudeness_dismissiveness",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.85,
+        "rationale": "Interpersonal staff behavior is a distinct, analytically valuable dimension separate from operational service. Grounding is mostly sound: YLP-0005's discriminatory door policy reasonably reads as 'rude_hostile'. YLP-0002 'no_apology' is a slight stretch — the text says 'Oops' and even calls it 'forgivable', so 'no_apology' is a weakly warranted inference, but not a clear fabrication."
+      },
+      {
+        "name": "expectations_versus_reality_gap",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "rationale": "Conceptually useful axis for negative experiences. However groundedness is weaker: for YLP-0002 'marketed_well_delivered_poorly' is not supported — the review never mentions marketing or hype, only in-service failures, so this is an invented specific. YLP-0005 'not_as_described' is likewise unsupported by any described marketing/promise. The high 'marketed_well_delivered_poorly' frequency (68) suggests systematic over-assertion where texts are silent about marketing claims."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.72,
+    "rationale": "All three columns provide genuine, non-redundant categorical axes for explaining negative Yelp experiences, distinguishing operational failures, interpersonal staff behavior, and expectation gaps — strong analytical leverage for the query. Grounding is solid for the first two columns (categorizations track the source text, silent rows correctly marked not_present/null). The expectations_versus_reality_gap column is the weakness: it repeatedly asserts marketing/hype gaps that the underlying texts do not mention, introducing hallucinated specifics that lower overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 3
+}

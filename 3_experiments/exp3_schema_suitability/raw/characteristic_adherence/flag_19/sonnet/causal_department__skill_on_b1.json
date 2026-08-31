@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do expense decline rates differ across departments?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_type",
+    "entry_origin",
+    "has_source_id",
+    "processing_lag",
+    "vendor_brand",
+    "department_function_type",
+    "is_travel_related",
+    "is_new_asset_acquisition"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.5563,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.6032,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Categorizes what was expensed, giving a genuine axis to explain why decline rates vary (e.g. hardware vs cloud). Mostly grounded in ci/short_description, but the 'iPod touch / ISP Services' row labeled software_service is questionable, showing some misreads."
+      },
+      {
+        "name": "entry_origin",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Manual vs auto-generated entry could plausibly correlate with decline/scrutiny, so it has some analytical leverage. But the source text shown gives no clear signal for this distinction; values appear inferred without support."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is a trivial presence/absence flag directly restating the existing source_id column, adding little analytical leverage for explaining decline rates. It is, however, well grounded (derivable directly)."
+      },
+      {
+        "name": "processing_lag",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Bucketed lag between opened_at and processed_date is a strong new axis; slow processing could plausibly relate to declines and differ by department. Values are computable from the date fields, and 'not_processed' for nan dates is correct behaviour."
+      },
+      {
+        "name": "vendor_brand",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Vendor brand extracted from ci/short_description gives a comparison axis for spend patterns. Extractions (Dell, AWS_Azure_Google) match source text well; 'Other' for silent rows is reasonable."
+      },
+      {
+        "name": "department_function_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Grouping departments into functional types is directly relevant to a cross-department comparison. But the mapping appears unreliable: the same-looking asset rows are labeled 'revenue_facing' with no visible department text in the samples, and the classification seems asserted rather than clearly warranted."
+      },
+      {
+        "name": "is_travel_related",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A travel flag is a bare boolean but could distinguish expense types that decline differently. Values are a reasonable reading of descriptions, though it overlaps conceptually with asset_type's travel_equipment category."
+      },
+      {
+        "name": "is_new_asset_acquisition",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Near-constant (True for all 500 rows), so it offers no discriminating power for the analysis. A universally-true acquisition flag also overreaches given many rows describe services/deployments rather than clear new acquisitions."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.65,
+    "rationale": "Several columns (processing_lag, asset_type, department_function_type, vendor_brand) give real axes to explain cross-department decline variation. However, is_new_asset_acquisition is degenerate near-constant, has_source_id merely restates an original column, and entry_origin/department_function_type show inference not clearly supported by the visible source text, dragging groundedness down."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

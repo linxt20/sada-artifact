@@ -1,0 +1,104 @@
+{
+  "var_a": "skill_on",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.68,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "EXP00000397: HP Spectre x360 Laptop Asset ($8,817, IT)",
+        "why": "concrete IDs, amounts, department"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Mean: $4,934 ... Median: $4,752",
+        "why": "numeric distribution"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "30 of 46 declined expenses (65.2%) are hardware assets",
+        "why": "conflicts with later '27 declined out of 310' style; overlapping/inconsistent counts across sections"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Assets: 27 declined out of 310 total",
+        "why": "declines given against category base rates"
+      },
+      {
+        "dimension": "depth",
+        "quote": "IT: 19 declined out of 43 total",
+        "why": "rate-normalized comparison identifies true overrepresentation"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "declined average is lower than the non-declined average",
+        "why": "correctly rejects amount as driver, consistent"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B normalizes declines by base rates and stays internally consistent, while A is more detailed but has overlapping/contradictory counts.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

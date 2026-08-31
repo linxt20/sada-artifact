@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "problem_type",
+    "problem_frequency_rank"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.625,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.6125,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Directly answers the query by categorising incidents into recurring problem types -- a genuine grouping axis. Most samples map soundly (VPN, Email, WiFi->Network), but one clear misclassification: 'Cannot connect to database' is labelled VPN_Connectivity when it should be Database_Issues, contradicting the source text and indicating unreliable extraction."
+      },
+      {
+        "name": "problem_frequency_rank",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "This is a deterministic restatement of problem_type's global frequency ordering -- it adds no new analytical axis beyond simply counting problem_type values, so it offers little independent leverage. Groundedness inherits problem_type's errors: the misclassified database row gets rank 1, propagating the same source mismatch."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.6,
+    "rationale": "problem_type is highly on-point for identifying recurring incident categories and gives a real grouping axis, though its values show at least one clear source-contradicting misclassification (database issue labelled as VPN). problem_frequency_rank is largely redundant, a mechanical mapping from problem_type's frequency, and inherits the same grounding weakness. Overall the added columns are useful but marred by observable misclassification."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 2
+}

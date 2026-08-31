@@ -1,0 +1,50 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "focus_variable": "food_quality",
+  "concept": "food_quality",
+  "n_added_columns": 1,
+  "added_columns": [
+    "comparative_positioning"
+  ],
+  "metrics": {
+    "n_added_columns": 1,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.0,
+    "exhaustiveness": 0.0,
+    "mece": 0.0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "food_quality",
+    "per_column": [
+      {
+        "name": "comparative_positioning",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Comparative positioning captures how a product stacks up against alternatives (superior/inferior/best-in-category). This is a relational judgment ABOUT the product relative to others, not a constitutive aspect OF food quality itself. Intrinsic facets of food quality would be things like taste/flavor, texture, freshness, aroma, or ingredient quality. Being 'better than homemade' is an evaluative comparison that may correlate with quality but does not decompose the concept into its parts."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "comparative_positioning"
+    ],
+    "mutual_exclusivity": 0.0,
+    "exhaustiveness": 0.0,
+    "rationale": "The single added column is a comparative/relational assessment rather than a meronymic part of food quality. It does not carve food_quality into non-overlapping intrinsic aspects (taste, texture, freshness, etc.), so there is no facet set to evaluate. With no constitutive facets present, both mutual exclusivity and exhaustiveness are 0."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 1
+}

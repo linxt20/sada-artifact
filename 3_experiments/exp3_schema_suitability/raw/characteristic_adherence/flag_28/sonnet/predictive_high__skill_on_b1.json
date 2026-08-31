@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "intervention_type",
+    "action_specificity",
+    "baseline_reference_present",
+    "improvement_magnitude",
+    "time_horizon",
+    "scope_breadth",
+    "metric_category_alignment",
+    "technology_enablement",
+    "feedback_loop_present"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7611,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7889,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.2222
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "intervention_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the kind of action a goal describes, giving a genuine grouping axis for comparing achievement across intervention types. Samples map soundly from description text (e.g., duplicated-resource optimization -> process_optimization, subscription growth -> marketing_sales)."
+      },
+      {
+        "name": "action_specificity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether specific actions are named is a plausible predictor of achievement and offers a useful axis. Mostly warranted from text, though somewhat subjective (e.g., the status-meeting goal rated high_specific seems generous), but within reasonable reading."
+      },
+      {
+        "name": "baseline_reference_present",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derivable: goals stating 'from X% to Y%' get True, others False. Samples all consistent. Presence of a measurable baseline is a reasonable signal for the query."
+      },
+      {
+        "name": "improvement_magnitude",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Extracts the stated percentage improvement into bands, directly grounded in the text (20% -> standard_20pct) with correct Unknown/NULL for silent rows. Strong axis for modeling achievement."
+      },
+      {
+        "name": "time_horizon",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Reads timeframe cues (Q4 -> within_quarter, fiscal year -> within_fiscal_year) soundly and marks unspecified appropriately. Useful for comparing achievement by deadline pressure."
+      },
+      {
+        "name": "scope_breadth",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Conceptually useful axis, but groundedness is weaker: several source texts are silent on scope yet get confident labels (e.g., 'across functions' -> company_wide is defensible, but subscription growth -> company_wide and status-meetings -> single_department appear inferred beyond what text states)."
+      },
+      {
+        "name": "metric_category_alignment",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Alignment between goal and its tracked metric is a reasonable signal, but the provided metric values are clearly mismatched/noisy (e.g., Customer Satisfaction paired with 'Expense Ratio'), and the True/False assignments are inconsistent with those pairings (Cost Reduction+Expense Ratio -> True but Efficiency+Turnover -> False is defensible; Employee Satisfaction+Turnover -> True is questionable). Judgment appears partly unsupported."
+      },
+      {
+        "name": "technology_enablement",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Flags whether tech/automation drives the goal; a distinct axis from intervention_type. Sample rows lacking tech mentions are correctly False. Grounded, useful."
+      },
+      {
+        "name": "feedback_loop_present",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Somewhat overlaps with intervention_type=feedback_survey, reducing added leverage, but the survey/satisfaction goals being False here suggests a narrower construct. Groundedness acceptable though the distinction is fuzzy."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns collectively provide multiple genuine, distinct axes (magnitude, baseline, time horizon, intervention type, tech) that directly serve the 'signals of high achievement' query and are largely derivable from the goal descriptions. Weaker spots are scope_breadth and metric_category_alignment, which assert scope/alignment judgments the source text does not always support, and feedback_loop_present partly duplicates intervention_type. No column is near-constant or a trivial length/token restatement, so both necessary conditions are broadly met."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

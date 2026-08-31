@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_hours",
+    "efficiency_category",
+    "priority_level",
+    "efficiency_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7375,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6687,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A continuous resolution-time metric is exactly the axis the query needs to compare efficiency across category, priority, and group. However, the row evidence shows opened_at is not present in the samples and, critically, closed_at equals sys_updated_on in every sample, yet the produced resolution_hours (e.g. 161, 384, 145) cannot be derived from the shown identical timestamps. The values appear computed from opened_at (plausibly present in the full table), but as shown they are not clearly grounded, and the large 24-value spike (57 rows) suggests a default/imputed constant rather than a true reading."
+      },
+      {
+        "name": "efficiency_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A Slow/Normal bucketing gives a clean categorical axis to group and compare on, useful for the query. It is a defensible thresholding of resolution_hours, so it is only as grounded as its parent metric; the labels themselves are a sound derived categorisation and do not assert unsupported facts."
+      },
+      {
+        "name": "priority_level",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "The query already calls for analysis by priority, but the original table contains a 'priority' column; this is a near-restatement/duplicate of an existing original column, adding little new analytical leverage. Values (1-4) are consistent with a standard priority reading, so groundedness is reasonable."
+      },
+      {
+        "name": "efficiency_score",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A normalised 0-100 efficiency score is a genuine modelling/comparison axis for the query. However it is a monotone transform of resolution_hours (score falls as hours rise), so it inherits that metric's grounding issues, and the large 95.33 spike (57 rows, matching the 24-hour spike) points to a default value rather than a per-row derivation."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.55,
+    "rationale": "The added columns give directly relevant axes (a time metric, a categorical efficiency bucket, and a normalised score) for comparing resolution efficiency across category, priority, and group; priority_level is weak because it largely duplicates the existing 'priority' column. Groundedness is the main concern: the row evidence shows closed_at == sys_updated_on and no visible opened_at, so the specific resolution_hours values are not verifiably derivable from the shown text, and a repeated 24h/95.33/57-row spike suggests imputed defaults presented as measured values. The derived category and score are sound transforms but inherit that uncertainty."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "expense_category_type",
+    "asset_subcategory",
+    "asset_brand",
+    "entry_generation_method",
+    "has_source_id",
+    "ci_identifier_quality",
+    "is_premium_or_high_end",
+    "is_new_procurement",
+    "travel_context_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "expense_category_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Cleanly separated, interpretable expense-type categories (hardware, travel, software) that can be segmented and compared against decline rates and crossed with department."
+      },
+      {
+        "name": "asset_subcategory",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Finer but still human-readable asset categories with well-populated buckets, enabling meaningful comparison of decline propensity across item types."
+      },
+      {
+        "name": "asset_brand",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable vendor/brand segmentation with reasonable spread; decline patterns by brand are an informative exploratory angle."
+      },
+      {
+        "name": "entry_generation_method",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Manual vs auto-generated is a clear, well-balanced binary that plausibly relates to declines (data-quality/process angle) and can be grouped on."
+      },
+      {
+        "name": "has_source_id",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Presence/absence of source id is a well-separated binary provenance flag that can be compared against decline rates."
+      },
+      {
+        "name": "ci_identifier_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable data-quality tiers (standard name vs placeholder vs opaque id) with balanced buckets; a natural correlate of declines."
+      },
+      {
+        "name": "is_premium_or_high_end",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable cost-tier flag; imbalanced (445/55) but still large enough to compare decline rates for premium vs standard items."
+      },
+      {
+        "name": "is_new_procurement",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable procurement-context flag; identical 445/55 split to is_premium suggests possible redundancy, but conceptually a distinct segmentation."
+      },
+      {
+        "name": "travel_context_flag",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear travel-vs-non-travel binary that segments expenses and can be compared against declines; partially overlaps expense_category_type but adds a usable axis."
+      }
+    ],
+    "n_predictors": 9,
+    "relationship_informativeness": 0.82,
+    "rationale": "The set provides a strong, coherent collection of external, interpretable segmentation variables around declines: expense type, asset subcategory, brand, provenance/data-quality flags, cost tier, and travel context. Categories are well-separated and human-readable, and none merely restate state_declined. Combined with the existing department column, they directly support exploring what gets declined and how it differs by department. Minor deductions: is_premium_or_high_end and is_new_procurement share an identical 445/55 split hinting at redundancy, and travel_context_flag overlaps with expense_category_type, so the effective number of independent informative axes is somewhat less than nine."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

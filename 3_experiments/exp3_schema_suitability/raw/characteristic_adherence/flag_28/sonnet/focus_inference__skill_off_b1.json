@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "n_added_columns": 4,
+  "added_columns": [
+    "completion_gap",
+    "is_overdue",
+    "attention_flag",
+    "duration_days"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8125,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8187,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "completion_gap",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A signed gap between percent_complete and target_percentage gives a strong new axis to rank goals by shortfall/overshoot, directly serving 'what's worth attention'. Values are derivable from the two existing percentage columns; sampled magnitudes are plausible."
+      },
+      {
+        "name": "is_overdue",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Overdue status derived from end_date and completion/state is a useful binary for triage on this query. Derivable from end_date plus current date and completion, so grounded. Reasonable split observed."
+      },
+      {
+        "name": "attention_flag",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A three-way triage label (On Track / Needs Attention / Cancelled) is directly aligned with the query's intent and offers a clean grouping axis. Values are warranted from state and completion gap. Some overlap with is_overdue but it adds a distinct Cancelled category."
+      },
+      {
+        "name": "duration_days",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Span between start_date and end_date is a legitimate new numeric axis for comparing goal scope/timelines. Derivable from the two date columns. Negative values (e.g. -15) suggest occasional end-before-start data but reflect the underlying dates rather than invention."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.83,
+    "rationale": "All four added columns provide genuine analytical leverage for triaging goal records: completion_gap and attention_flag are the strongest, is_overdue and duration_days add supporting temporal/status axes with modest redundancy. Values are consistently derivable from existing percentage and date columns; no invented facts observed, and occasional negative durations reflect source data rather than hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

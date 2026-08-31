@@ -1,0 +1,67 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_category",
+    "issue_subtype",
+    "affected_component",
+    "incident_scope",
+    "operational_impact"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.878,
+    "analytical_usefulness__table_level": 0.89,
+    "source_groundedness": 0.888,
+    "source_groundedness__table_level": 0.89,
+    "b1_overall": 0.883,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.95,
+        "rationale": "Directly answers the query about the main kinds of issues; provides a clean, balanced grouping axis (bug, feature_request, outage, etc.). Sample values are well-grounded: SSO session drop -> bug, 502 for whole tenant -> outage, pin reports -> feature_request. The billing duplicate line item labelled data_integrity over billing is defensible."
+      },
+      {
+        "name": "issue_subtype",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Adds a genuine finer-grained functional axis (auth_and_sso, data_export_import, ui_and_ux) that complements rather than restates issue_category. Samples map soundly to source text. CS-0003 subtype api_and_integration is a slightly weaker read (a 502 gateway on a dashboard), but still plausible."
+      },
+      {
+        "name": "affected_component",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "rationale": "A useful system-oriented axis distinct from category/subtype. Most samples are well-grounded (billing_engine, authentication, dashboard_ui). The dominant 'other' bucket (105) reflects honest 'unknown' behaviour for silent rows and should not be penalised; CS-0005 CSV export -> 'other' is a reasonable non-commitment."
+      },
+      {
+        "name": "incident_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.88,
+        "rationale": "Blast-radius axis (single_user vs entire_tenant vs subset) is a genuinely new dimension for triage-style analysis. Grounded well: 'all members of the Acme tenant' -> entire_tenant, individual customer -> single_user. CS-0005 marked entire_tenant is a slight inference but account-level toggle request supports tenant scope."
+      },
+      {
+        "name": "operational_impact",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.86,
+        "rationale": "Impact severity axis (blocked_workflow, financial_exposure, compliance_risk) offers real analytical leverage beyond category. Samples are warranted: duplicate invoice inflating total -> financial_exposure, 502 blocking presentation -> blocked_workflow. CS-0002 'blocked_workflow' for periodic session drops is somewhat generous but defensible."
+      }
+    ],
+    "analytical_usefulness": 0.89,
+    "source_groundedness": 0.89,
+    "rationale": "The added columns form a coherent, multi-axis decomposition (what kind, finer subtype, affected component, blast radius, operational impact) that directly serves the query about the main kinds of issues, with each column contributing a distinct non-redundant grouping dimension. Values across the row_evidence_samples are sound readings of the source text, with only minor generous inferences and no clear hallucinations; the large 'other' bucket reflects appropriate abstention rather than invention."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

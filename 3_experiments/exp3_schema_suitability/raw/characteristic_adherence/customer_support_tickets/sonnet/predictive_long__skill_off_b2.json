@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "priority_rank",
+    "description_word_count",
+    "urgency_keyword_count",
+    "multi_system_keyword_count",
+    "investigation_keyword_count",
+    "scope_keyword_count",
+    "has_error_code",
+    "channel_complexity",
+    "composite_complexity_score"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4278,
+    "predictor_fraction": 0.7778,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "priority_rank",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is a deterministic re-encoding of the existing 'priority' column already present in the original table; it adds no new signal beyond what priority already carries."
+      },
+      {
+        "name": "description_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from issue_description, known at ticket creation, and plausibly correlated with resolution time (longer descriptions may indicate more complex issues). A weak but legitimate ex-ante predictor."
+      },
+      {
+        "name": "urgency_keyword_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Counts urgency-signaling words in the description, available before resolution and plausibly related to how the ticket is handled and how long it takes. Legitimate predictor."
+      },
+      {
+        "name": "multi_system_keyword_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Signals that multiple systems are involved, a plausible driver of longer resolution. Known at intake from the description, no leakage."
+      },
+      {
+        "name": "investigation_keyword_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Mentions of investigation/diagnosis in the description plausibly indicate harder, longer tickets. Ex-ante and not a restatement of the focus."
+      },
+      {
+        "name": "scope_keyword_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures breadth/scope language that plausibly correlates with resolution effort. Available at intake, legitimate predictor."
+      },
+      {
+        "name": "has_error_code",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of an error code in the description is a diagnosable-at-intake signal that could shorten or lengthen resolution; a valid, outside-the-focus predictor."
+      },
+      {
+        "name": "channel_complexity",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is a deterministic re-encoding of the existing 'channel' column (three channels mapped to complexity levels); it duplicates information already in the original table rather than adding new signal."
+      },
+      {
+        "name": "composite_complexity_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "An aggregate of the keyword/complexity features. It is built from ex-ante inputs and not from the focus, so it is a legitimate (if partly redundant with its components) predictor of resolution time."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.55,
+    "rationale": "Most added columns are legitimate ex-ante features derived from issue_description that plausibly carry signal about how long a ticket takes to resolve, with no post-outcome leakage. Two columns (priority_rank, channel_complexity) merely re-encode existing original columns and add no new leverage, and the composite score is largely a combination of the other keyword features (redundant but valid). The keyword-count features are somewhat mechanical and sparse (many zeros), limiting individual strength, but as a set they provide moderate genuine predictive lift beyond priority and channel."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

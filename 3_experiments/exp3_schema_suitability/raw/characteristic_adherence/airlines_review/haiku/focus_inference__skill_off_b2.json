@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "avg_rating",
+    "rating_consistency",
+    "lowest_rated_aspect",
+    "satisfaction_gap",
+    "review_length",
+    "is_verified",
+    "traveler_type",
+    "is_business_class"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.504,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Overall passenger satisfaction (a synthesized rating/satisfaction measure derived from the per-aspect scores)",
+    "per_column": [
+      {
+        "name": "avg_rating",
+        "supports_focus": true,
+        "rationale": "Aggregate of aspect ratings — a direct operationalization of overall satisfaction, the central focus concept."
+      },
+      {
+        "name": "rating_consistency",
+        "supports_focus": true,
+        "rationale": "Std dev across aspects; a coherent facet describing how uniform a passenger's satisfaction is."
+      },
+      {
+        "name": "lowest_rated_aspect",
+        "supports_focus": true,
+        "rationale": "Identifies the weakest driver of dissatisfaction — a useful diagnostic facet of the satisfaction focus."
+      },
+      {
+        "name": "satisfaction_gap",
+        "supports_focus": true,
+        "rationale": "Spread/gap between best and worst aspect; directly names and characterizes the satisfaction concept."
+      },
+      {
+        "name": "review_length",
+        "supports_focus": false,
+        "rationale": "Bare text length; a generic mechanical feature not centered on satisfaction, weak signal."
+      },
+      {
+        "name": "is_verified",
+        "supports_focus": false,
+        "rationale": "Metadata flag; a potential predictor/segment but tangential to the satisfaction concept itself."
+      },
+      {
+        "name": "traveler_type",
+        "supports_focus": true,
+        "rationale": "Segmentation variable enabling analysis of satisfaction by traveler group — supports investigation of the focus."
+      },
+      {
+        "name": "is_business_class",
+        "supports_focus": true,
+        "rationale": "Class segment predictor for satisfaction differences — coherent attribute around the focus."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "rationale": "The columns collectively cohere around a clear, data-inferable focus: overall passenger satisfaction synthesized from the existing per-aspect ratings. Several columns realize this well — avg_rating (level), rating_consistency (dispersion), satisfaction_gap (spread), and lowest_rated_aspect (dissatisfaction driver) form a genuine multi-facet structure at a useful granularity rather than a single restatement. Segmentation variables (traveler_type, is_business_class) add actionable predictor structure for investigating who is satisfied and why. The set is dragged down by two generic/tangential additions — review_length (bare text length) and is_verified (metadata flag) — which are the mechanical grab-bag elements this test penalizes. The implied focus is clearly actionable: an analyst can rank aspects, compare segments, and target the lowest-rated driver. Not a perfect score because the focus is somewhat under-differentiated (multiple columns hover close to a single 'average satisfaction' restatement) and two columns dilute coherence."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

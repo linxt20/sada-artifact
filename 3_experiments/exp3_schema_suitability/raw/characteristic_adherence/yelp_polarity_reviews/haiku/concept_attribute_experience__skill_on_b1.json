@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "staff_professionalism_attitude",
+    "order_accuracy_timeliness",
+    "flavor_quality_rating",
+    "portion_adequacy",
+    "food_freshness_temperature",
+    "ambiance_atmosphere",
+    "pricing_value_perception",
+    "cleanliness_standard"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8812,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.8562,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8687,
+    "hallucination_rate": 0.75
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "staff_professionalism_attitude",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "A core satisfaction/complaint theme; strong categorical axis. Mostly well-grounded (friendly for YLP-0001/0004, indifferent for YLP-0002). YLP-0003 labels staff 'friendly_attentive' though text only says 'Service was good' — a slight over-read but warranted."
+      },
+      {
+        "name": "order_accuracy_timeliness",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly captures a common complaint theme. 'forgotten_delayed' for YLP-0002 is a sound reading; 'not_present' for non-food/service rows is appropriate. Grounded."
+      },
+      {
+        "name": "flavor_quality_rating",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "Central to food satisfaction analysis. Mostly grounded, but YLP-0005 marks 'poor_subpar' from 'Drinks sucked'—conflates drinks with food flavor, a mild stretch. Otherwise sound."
+      },
+      {
+        "name": "portion_adequacy",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "Useful sub-theme. YLP-0003 'small_microscopic' is questionable—text says the smallest pie is 'too much for one,' i.e. large, so this contradicts the source. Other rows reasonable."
+      },
+      {
+        "name": "food_freshness_temperature",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "Relevant quality axis. YLP-0003 'fresh_hot_proper' while the review actually laments the smallest pie; text notes crust cooked well so partly warranted. Other silent rows correctly 'not_present'/'unknown'."
+      },
+      {
+        "name": "ambiance_atmosphere",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "Well-known satisfaction theme, good grouping axis. YLP-0001 'pleasant_comfortable' inferred from 'rowdy crowd' context is a stretch; YLP-0003 'pleasant' from 'good lunch crowd' is thin. Silent rows handled correctly."
+      },
+      {
+        "name": "pricing_value_perception",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "Strong value axis. YLP-0001 'cheap_good_deal' from free-pita mention is loosely warranted; YLP-0003 'expensive_overpriced' from 'stay under $20' is a defensible read. Mostly grounded."
+      },
+      {
+        "name": "cleanliness_standard",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Legitimate complaint theme. Very conservative—almost all sampled rows 'unknown_unmentioned', which is correct for silent text. High groundedness though sparse signal reduces usefulness slightly."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns decompose Yelp satisfaction/complaint themes into distinct, analyzable categorical axes (staff, order accuracy, flavor, portion, freshness, ambiance, pricing, cleanliness), each offering genuine grouping and comparison leverage for the query—none are trivially redundant or mere sentiment flags. Values are generally sound readings of the source text, and silent rows are appropriately marked unknown/not_present rather than fabricated. Groundedness is docked modestly for a few over-confident inferences (e.g., portion 'small' for YLP-0003 which the text describes as too large, ambiance inferred from crowd mentions), but these are minor and mostly warranted stretches rather than invented facts."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "crew_service_quality",
+    "aircraft_age_condition",
+    "ground_staff_service",
+    "traveler_segment",
+    "cabin_class"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.57,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.644,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.607,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Crew/cabin service is a primary driver of overall rating and recommendation, so qualitative categories (professional_warm vs rude_dismissive vs inattentive_perfunctory) give a genuine grouping axis beyond the numeric 'Staff Service' rating and directly serve the improvement query. Groundedness is mostly sound: samples 1,3,4,5 map cleanly to explicit crew praise ('very kind & helpful', 'staff well-trained on hospitality', 'crew came round regularly', 'friendly Singaporean culture'). However sample 2 mentions NO crew at all (only seats and entertainment) yet was labeled 'inattentive_perfunctory' — an unwarranted inference where 'Unknown' was the correct value."
+      },
+      {
+        "name": "aircraft_age_condition",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Aircraft/cabin condition is a useful, distinct axis (relates to but is richer than numeric 'Seat Comfort') and helps diagnose non-recommendation. NULLs (1852) appropriately mark silent rows. But grounding has a clear contradiction: sample 2 calls the seats 'dreadful...poor padding' yet the column reports 'adequate_acceptable', the opposite of the text. Sample 1 ('modern_well_maintained' from just 'well sanitized/spacious legroom') and sample 5 ('modern' from a merely 'comfortable' seat) also over-specify 'modern' where the text only supports 'well-maintained'. Sample 4 ('older aircraft...good condition' → adequate_acceptable) is well grounded."
+      },
+      {
+        "name": "ground_staff_service",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Ground/airport service is a legitimately separate lever from inflight crew and is relevant to why passengers do not recommend, so it adds analytical value. On the five samples the operator correctly returned 'Unknown' where the reviews never mention check-in/boarding/airport staff — correct silent-row behaviour. Caveat: the aggregate distribution shows only 215 nulls against ~7,900 assigned values, which is hard to reconcile with reviews that so often omit ground-service detail and hints at possible over-inference beyond the clean samples shown; scored on the sample evidence, which is sound."
+      },
+      {
+        "name": "traveler_segment",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Trivially redundant with the existing original 'Type of Traveller' column, so it adds little new grouping leverage for the query — hence low usefulness. Its values plausibly derive from that existing column (categories mirror standard Solo/Couple/Family/Business labels), which would make it grounded within the table. But judged against the shown source text it is unsupported: sample 1 involves flying with 'my mom' yet is tagged 'solo_leisure', and samples 3 and 5 are tagged 'family_with_children' with zero textual evidence of a family/children. Values are asserted where the visible source is silent."
+      },
+      {
+        "name": "cabin_class",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Trivially redundant with the existing original 'Class' column, so it offers little additional analytical axis — low usefulness. Groundedness is reasonable: sample 4 explicitly says 'flying in economy class' → economy, and the four values map to standard cabin classes likely lifted from the existing Class field. Sample 1's 'business' label is not explicitly supported by the visible review text (a 1h45m regional flight) but is plausibly sourced from the Class column."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.65,
+    "rationale": "Three of the five added columns (crew_service_quality, aircraft_age_condition, ground_staff_service) give genuine qualitative axes that directly help diagnose drivers of low ratings and non-recommendation, adding leverage beyond the original numeric sub-ratings. The other two (traveler_segment, cabin_class) are trivially redundant with existing original columns ('Type of Traveller' and 'Class'), dragging holistic usefulness down. On groundedness, silent-row handling is generally correct (appropriate NULL/Unknown values), but there are real over-inference and contradiction problems in the sampled rows: aircraft_age_condition labels 'dreadful' seats as 'adequate_acceptable' (direct contradiction), crew_service_quality assigns a negative crew tag to a review with no crew mention, and traveler_segment invents 'family_with_children'/'solo' where the text gives no such signal. These lower but do not collapse overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

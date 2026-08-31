@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative IMDb audience satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "neg_word_ratio",
+    "pos_word_ratio",
+    "neg_minus_pos_ratio",
+    "negation_count",
+    "intensified_neg_count",
+    "exclamation_count",
+    "avg_sentence_length",
+    "caps_ratio",
+    "review_length_log",
+    "negation_before_pos_count"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 1.0,
+    "n_predictors": 10,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "neg_word_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Fraction of negative-lexicon words, derived from review_text and external to the label; a classic sentiment signal that plausibly predicts negative satisfaction."
+      },
+      {
+        "name": "pos_word_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Fraction of positive-lexicon words; external to the label and carries directional sentiment signal for predicting positivity."
+      },
+      {
+        "name": "neg_minus_pos_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Net sentiment balance combining the two ratios; a single directional signal plausibly correlated with the label, not a restatement of it."
+      },
+      {
+        "name": "negation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of negation tokens; captures polarity flips and modulates sentiment interpretation, a legitimate lexical predictor."
+      },
+      {
+        "name": "intensified_neg_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of intensified negatives (e.g., 'very bad'); a targeted signal of strong negativity, external to the label."
+      },
+      {
+        "name": "exclamation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Punctuation-based intensity marker; weak but plausible affective signal, not derived from the label."
+      },
+      {
+        "name": "avg_sentence_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Stylistic feature; only weakly related to sentiment but a legitimate, non-leaking structural predictor."
+      },
+      {
+        "name": "caps_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Proportion of capitalized characters; a plausible affect/emphasis proxy, external to the label."
+      },
+      {
+        "name": "review_length_log",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Log review length; a generic but legitimate structural feature that can correlate with satisfaction, no leakage."
+      },
+      {
+        "name": "negation_before_pos_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Negation preceding positive words captures sarcasm/polarity reversal; a targeted, non-leaking sentiment predictor, though very sparse in observed values."
+      }
+    ],
+    "n_predictors": 10,
+    "predictive_utility": 0.6,
+    "rationale": "All added columns are functions of review_text and none restate or leak the label_pos outcome, so they qualify as legitimate predictors. The set includes genuinely intent-relevant sentiment engineering (neg/pos ratios, net balance, negation handling, intensified negatives, negation-before-positive for sarcasm) that carries real signal about audience satisfaction, plus weaker generic structural features (length, caps, exclamation, sentence length). The lexicon-based sentiment features provide meaningful predictive leverage beyond the raw text, but sparsity in several counts (e.g., intensified_neg_count and negation_before_pos_count are mostly zero) and reliance on some generic features limit the overall lift, yielding moderate predictive utility."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

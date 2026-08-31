@@ -1,0 +1,106 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "ticket_category",
+    "issue_mechanism_type",
+    "affected_resource_type",
+    "scope_breadth",
+    "reassignment_indicator",
+    "resolution_lag_bucket"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "ticket_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query is explicitly about reducing certain ticket types; ticket_category identifies the ticket type, the intervenable lever an actor could reduce/reroute."
+      },
+      {
+        "name": "issue_mechanism_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The underlying failure mechanism (connectivity, outage, access) affects both which ticket type is generated and how long resolution takes; not named in the query, and is a common cause rather than a mediator of the intervention."
+      },
+      {
+        "name": "affected_resource_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The affected resource shapes both the category of ticket and the intrinsic difficulty/resolution time; a plausible common cause not named in the query. However it is nearly collinear with ticket_category, weakening its independent confounding value."
+      },
+      {
+        "name": "scope_breadth",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an issue is individual vs infrastructure-wide drives both ticket volume/type and resolution time; a common cause not named in the query."
+      },
+      {
+        "name": "reassignment_indicator",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Reassignment is a downstream consequence of the ticket type/workload that in turn lengthens resolution; it lies on the causal path and is a mediator, not a confounder."
+      },
+      {
+        "name": "resolution_lag_bucket",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "This is a bucketed restatement of resolution_time, i.e., the outcome itself, not a confounder or treatment."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "ticket_category"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "issue_mechanism_type",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "affected_resource_type",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "scope_breadth",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The set correctly supplies an intervenable treatment (ticket_category / type), which an actor could reduce or reroute, matching the what-if framing. It adds several plausible confounders not named in the query (issue_mechanism_type, scope_breadth, and to a lesser degree affected_resource_type, which is largely collinear with category). However, the schema is diluted by a mediator (reassignment_indicator, on the causal path) and by resolution_lag_bucket, which merely re-encodes the outcome. Confounder coverage is moderate but real, so the interventional claim is partially satisfied."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

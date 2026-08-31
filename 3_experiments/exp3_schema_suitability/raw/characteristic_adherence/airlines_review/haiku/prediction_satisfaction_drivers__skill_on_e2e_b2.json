@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "crew_service_quality",
+    "meal_quality_consistency",
+    "seat_comfort_adequacy",
+    "ground_operations",
+    "customer_service_responsiveness"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "role": "predictor",
+        "rationale": "A qualitative categorization of crew/staff service extracted from reviews. It lies outside the overall rating, is not a deterministic function of it, and plausibly carries strong predictive signal about satisfaction. Note some redundancy with existing 'Staff Service' column, but it adds granularity."
+      },
+      {
+        "name": "meal_quality_consistency",
+        "role": "predictor",
+        "rationale": "Categorical assessment of food/meal experience derived from review text. Distinct from the outcome, plausibly predictive of overall satisfaction, though it partly overlaps with the existing 'Food & Beverages' column."
+      },
+      {
+        "name": "seat_comfort_adequacy",
+        "role": "predictor",
+        "rationale": "Categorical seat comfort description drawn from reviews. It is an antecedent driver of satisfaction, not a restatement of the rating; predictive despite overlap with existing 'Seat Comfort'."
+      },
+      {
+        "name": "ground_operations",
+        "role": "predictor",
+        "rationale": "Captures check-in/boarding/ground handling quality, a dimension NOT already present in the original columns. Legitimate external predictor with plausible signal and genuine novelty beyond the base schema."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "role": "predictor",
+        "rationale": "Responsiveness of customer service, an antecedent experience factor not directly in the original schema. Legitimate predictor with plausible signal, distinct from the outcome."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.55,
+    "rationale": "All five columns are legitimate, non-leaking antecedent drivers of satisfaction extracted from the review text; none restate or are deterministic functions of overall_rating, and none are post-outcome. As a set they carry real predictive signal. However, three of them (crew_service_quality, meal_quality_consistency, seat_comfort_adequacy) substantially duplicate existing structured columns (Staff Service, Food & Beverages, Seat Comfort), so their MARGINAL leverage beyond the original table is modest. Ground_operations and customer_service_responsiveness add genuinely new dimensions, which lifts the incremental utility to a moderate level."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

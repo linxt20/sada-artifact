@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "teaching_approach",
+    "innovative_curriculum_adaptation",
+    "student_engagement_level",
+    "subject_remote_fit",
+    "instructor_responsiveness"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.85,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.825,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "teaching_approach",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A genuine new axis for grouping open-response themes against satisfaction. However groundedness is shaky: ED-0001 (algebra with frozen whiteboard sharing) labeled 'active_interactive' and ED-0004 (recorded lectures) labeled 'mixed' when the text describes lecture/passive delivery; several labels are not clearly warranted by the text."
+      },
+      {
+        "name": "innovative_curriculum_adaptation",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful thematic axis distinct from teaching approach. Values are well grounded: kitchen-chemistry -> high_innovation, silent-participation -> minimal_or_none, documentary clips -> moderate_adaptation are all sound readings."
+      },
+      {
+        "name": "student_engagement_level",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to satisfaction analysis and clearly derivable: 'cries before every session'/'cameras off, silent' -> low_disengaged, 'show up on time with materials' -> high_engagement. Well warranted."
+      },
+      {
+        "name": "subject_remote_fit",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Provides a subject-suitability axis useful for the query's subject dimension. Mostly grounded, though somewhat correlated with engagement; ED-0004's high_fit is a reasonable inference from positive self-paced remarks."
+      },
+      {
+        "name": "instructor_responsiveness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Meaningful axis. Values track the text well: 'teacher can't tell when she's lost' -> slow_or_absent, silent for student rows -> null (correct silent handling). ED-0004 'highly_responsive' is a mild stretch but defensible."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.8,
+    "rationale": "All five columns give genuine, non-redundant analytical axes (approach, innovation, engagement, subject fit, responsiveness) that directly support grouping open-response themes against satisfaction across role/grade/subject; none are near-constant or trivial. Groundedness is generally sound with correct 'unknown'/null handling for silent rows, but teaching_approach shows some labels contradicting the source text (recorded lectures tagged 'mixed', frozen-whiteboard algebra tagged 'active_interactive'), lowering overall groundedness slightly."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

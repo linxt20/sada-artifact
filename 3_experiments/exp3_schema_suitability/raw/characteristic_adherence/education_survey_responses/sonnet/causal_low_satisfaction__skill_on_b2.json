@@ -1,0 +1,97 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "pedagogy_adaptation_quality",
+    "student_engagement_signal",
+    "peer_social_interaction_loss",
+    "teacher_feedback_responsiveness",
+    "subject_format_compatibility",
+    "instructional_design_mode"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "pedagogy_adaptation_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Quality of pedagogical adaptation is a candidate cause whose effect on satisfaction is being attributed; it is a plausible driver ('which factors drive it')."
+      },
+      {
+        "name": "student_engagement_signal",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Engagement plausibly lies on the causal path from pedagogy/instructional quality to satisfaction (better teaching -> more engagement -> higher satisfaction). Adjusting for it would block part of the effect, so it is a mediator rather than a confounder."
+      },
+      {
+        "name": "peer_social_interaction_loss",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Loss of peer interaction is an alternative candidate cause of low satisfaction; it is another 'factor' being tested, not a common cause of another treatment."
+      },
+      {
+        "name": "teacher_feedback_responsiveness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Feedback responsiveness is another candidate driver of satisfaction; treated as an alternative cause rather than a common cause."
+      },
+      {
+        "name": "subject_format_compatibility",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How well a subject fits the delivery format plausibly influences BOTH the instructional design/pedagogy chosen (treatments) AND satisfaction, making it a common cause that must be adjusted for. It also connects to the existing 'subject' column."
+      },
+      {
+        "name": "instructional_design_mode",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The instructional delivery mode is itself a candidate cause of satisfaction; it is a treatment-like factor, not a common cause of another treatment."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "pedagogy_adaptation_quality",
+      "peer_social_interaction_loss",
+      "teacher_feedback_responsiveness",
+      "instructional_design_mode"
+    ],
+    "confounders": [
+      {
+        "name": "subject_format_compatibility",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The added columns supply an abundance of candidate causes/treatments (pedagogy quality, peer interaction loss, feedback responsiveness, instructional mode), satisfying requirement (a). However, requirement (b) is only weakly met. Most columns are parallel candidate drivers rather than common causes of both a treatment and the outcome. student_engagement_signal is best read as a mediator (on the causal path), so counting it as a confounder would be an error. subject_format_compatibility is the only genuine confounder candidate: it plausibly influences which instructional design/pedagogy is used AND satisfaction, and it was surfaced (not named in the query, though 'subject' exists in the original table). No demographic/group confounders (e.g., respondent_role, grade_level) were adjusted for despite the query explicitly asking about 'certain groups' — a notable omission for unbiased attribution. Overall the system demonstrates treatment enumeration but only shallow confounder surfacing."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

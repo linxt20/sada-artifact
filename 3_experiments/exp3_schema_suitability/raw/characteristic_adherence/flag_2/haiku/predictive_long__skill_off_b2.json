@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "resolution_hours",
+    "resolution_hours.1",
+    "priority_level",
+    "is_critical_high",
+    "category_complexity",
+    "same_assignee_caller",
+    "updater_is_system",
+    "status_risk",
+    "time_risk",
+    "description_complexity"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.14,
+    "predictor_fraction": 0.4,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.35,
+    "leakage_rate": 0.3
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is resolution time itself expressed in hours (closed_at - opened_at). It is the focus variable restated, and is only knowable after the incident is resolved -- direct leakage."
+      },
+      {
+        "name": "resolution_hours.1",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Duplicate of resolution_hours; identical restatement/leakage of the focus variable."
+      },
+      {
+        "name": "priority_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from priority, known at/near intake, plausibly correlates with resolution time. Legitimate predictor lying outside the focus."
+      },
+      {
+        "name": "is_critical_high",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Binary flag on priority severity, available up-front and plausibly predictive of longer resolution. Partly redundant with priority_level but still a valid predictor."
+      },
+      {
+        "name": "category_complexity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Encodes category into a complexity ordinal, known at intake and plausibly related to resolution difficulty. Legitimate predictor."
+      },
+      {
+        "name": "same_assignee_caller",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "rationale": "Constant (0 for all 500 rows), so it carries zero variance and no predictive signal. Not usable as a feature."
+      },
+      {
+        "name": "updater_is_system",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Derived from sys_updated_by, which reflects post-hoc update activity during/after handling. Reflects the resolution process rather than an intake-time signal, so it leaks outcome information."
+      },
+      {
+        "name": "status_risk",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Derived from state, which changes as the incident progresses and is only settled once resolved/closed. Encodes outcome state -- leakage rather than a pre-outcome predictor."
+      },
+      {
+        "name": "time_risk",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A 'time' risk band almost certainly derived from elapsed/resolution timing, i.e., a coarse binning of the focus variable itself. Restatement/leakage."
+      },
+      {
+        "name": "description_complexity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Complexity signal derived from short_description text, available at intake and plausibly correlated with resolution difficulty. Legitimate predictor."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.35,
+    "rationale": "Of ten added columns, two are direct restatements of the focus (resolution_hours duplicated), three leak outcome/process state (updater_is_system, status_risk, time_risk), and one is a zero-variance constant (same_assignee_caller). Only four -- priority_level, is_critical_high, category_complexity, description_complexity -- are legitimate intake-time predictors, and they are largely simple re-encodings of existing priority/category/description columns, so they add limited genuine leverage beyond the original table. The set is dominated by leakage and redundancy, giving modest overall predictive utility."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

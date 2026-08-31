@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 5,
+  "added_columns": [
+    "rating_consistency",
+    "value_perception",
+    "service_gap",
+    "experience_score",
+    "issue_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.7,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.59,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.645,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "rating_consistency",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "A variance-of-ratings meta-feature can help separate uniformly-bad flights from mixed ones, which is a mildly useful lens on non-recommendation, but it is a weak/derivative axis rather than a strong explanatory one. Groundedness is questionable: the two glowing, uniformly-positive reviews (samples 3 and 4, 'remarkable experience' and 'can't get it any better') are both labelled High_Variance, which the text does not support. If this is computed from numeric sub-ratings (not shown) it might be defensible, but against the visible source text the label reads as inconsistent."
+      },
+      {
+        "name": "value_perception",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Directly on-point for the query: perceived value-for-money is a core driver of whether a premium Business-Class ticket earns a recommendation, and the four-level split (Good/Acceptable/Premium_Price_Complaint/Poor_Value_Overall) gives a genuine grouping axis. Sample values are sound readings: $2300 for a broken seat -> Poor_Value_Overall, glowing reviews -> Good_Value, mid 7/10 -> Acceptable_Value, service-fine-but-baggage-fail -> Acceptable_Value. Reasonable throughout."
+      },
+      {
+        "name": "service_gap",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Identifying which specific dimension (seat, food, staff, IFE) failed is a strong, decomposable axis for explaining non-recommendation. However at least one produced value contradicts the source: sample 3 explicitly praises the seat ('Seat very good, leg space and incredible service') yet is tagged Weak_Seat. Samples 4 (No_Weak_Areas) and 5 (No_Weak_Areas, issue was baggage not onboard) are correct. Mixed groundedness with a clear contradiction."
+      },
+      {
+        "name": "experience_score",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "This is a composite numeric score that largely restates the already-present Overall Rating (and other sub-ratings), so it adds limited new analytical leverage for the query. Calibration also looks off: the two glowing reviews score only ~2.9-3.2 while a lost-bag/refuse-to-reimburse review scores 2.8 — nearly identical — and the whole scale is compressed to 0.8-3.2, so it discriminates weakly between clearly different experiences."
+      },
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Categorising the nature of the complaint (operational / ground service / compensation / product) is highly useful for explaining non-recommendation and gives a clean grouping axis. But 'Operational_Issue' behaves like a catch-all default (417 rows, ~62%) and is applied to the two glowing reviews (samples 3 and 4) that describe no problem at all — inventing an issue the text does not contain. Sample 5 (Compensation_Issue) is correctly captured, so the categoriser works when a real issue exists but over-asserts one when none is present."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.58,
+    "rationale": "Holistically, the set provides several genuinely useful new axes for explaining non-recommendation — value_perception, service_gap, and issue_type each let the analyst group and compare drivers of dissatisfaction, which is exactly what the query needs. experience_score is largely redundant with the existing Overall Rating and adds little. Groundedness is the main weakness: across the visible samples, uniformly positive reviews are repeatedly mis-tagged (High_Variance, Weak_Seat, and a fabricated Operational_Issue), and issue_type/rating_consistency appear to fall back on dominant default buckets that assert content the source text does not support. Useful axes overall, but the produced values are only moderately faithful to the source text."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

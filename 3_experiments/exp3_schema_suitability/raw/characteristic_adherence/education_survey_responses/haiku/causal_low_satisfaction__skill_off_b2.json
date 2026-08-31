@@ -1,0 +1,100 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "satisfaction_category",
+    "mentions_community_impact",
+    "mentions_hands_on_limitation",
+    "mentions_technical_issues",
+    "mentions_emotional_wellbeing",
+    "mentions_teacher_quality",
+    "mentions_async_learning"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "satisfaction_category",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A coarsened bin of the focus variable satisfaction_1to5; it is a restatement of the outcome, not a treatment or confounder."
+      },
+      {
+        "name": "mentions_community_impact",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate driver of satisfaction surfaced from open_response text; a plausible cause whose effect is being attributed."
+      },
+      {
+        "name": "mentions_hands_on_limitation",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate driver extracted from text; a possible cause of low satisfaction."
+      },
+      {
+        "name": "mentions_technical_issues",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of satisfaction surfaced from responses."
+      },
+      {
+        "name": "mentions_emotional_wellbeing",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate driver from text; plausible cause of satisfaction."
+      },
+      {
+        "name": "mentions_teacher_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate driver of satisfaction surfaced from text."
+      },
+      {
+        "name": "mentions_async_learning",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate driver of satisfaction surfaced from text."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "mentions_community_impact",
+      "mentions_hands_on_limitation",
+      "mentions_technical_issues",
+      "mentions_emotional_wellbeing",
+      "mentions_teacher_quality",
+      "mentions_async_learning"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns enumerate multiple candidate drivers (treatments) mined from the open_response text, plus a re-binned version of the outcome. This is a driver-screening / feature-importance setup, not a causal estimation. No column functions as a confounder -- a common cause of BOTH a given treatment and the outcome that must be adjusted for. Pre-existing structural covariates that could confound (e.g., respondent_role, grade_level, subject) already exist in the original table but were NOT added, and no newly surfaced confounder is provided. Because the technical claim requires the system to supply confounders (ideally ones not already named in the query), and none are present, the causal-attribution claim is not satisfied."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

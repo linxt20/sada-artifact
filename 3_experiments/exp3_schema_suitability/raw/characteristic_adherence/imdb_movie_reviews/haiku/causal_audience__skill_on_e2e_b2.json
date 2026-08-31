@@ -1,0 +1,85 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "focus_variable": "audience_dissatisfaction",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "narrative_structure_issue",
+    "originality_or_novelty",
+    "tone_or_consistency_issue",
+    "genre_audience_mismatch",
+    "reliance_on_clich_s"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "audience_dissatisfaction",
+    "per_column": [
+      {
+        "name": "narrative_structure_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of dissatisfaction (weak/incoherent narrative) surfaced from the review text. It is a plausible driver of the outcome, functioning as a treatment/cause dimension."
+      },
+      {
+        "name": "originality_or_novelty",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Formulaic/derivative content as a candidate cause of dissatisfaction. Another treatment-like cause dimension, not a common prior cause of other treatments."
+      },
+      {
+        "name": "tone_or_consistency_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Inconsistent tone / genre fit as a candidate cause. Again a treatment/cause dimension rather than a confounder of another cause and the outcome."
+      },
+      {
+        "name": "genre_audience_mismatch",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Marketed-vs-delivered mismatch as candidate cause of dissatisfaction. A cause dimension, not a common cause of the other treatments."
+      },
+      {
+        "name": "reliance_on_clich_s",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Overuse of cliches/stock characters as candidate cause. Overlaps heavily with originality; still a cause dimension, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "narrative_structure_issue",
+      "originality_or_novelty",
+      "tone_or_consistency_issue",
+      "genre_audience_mismatch",
+      "reliance_on_clich_s"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns are all candidate causes (treatment dimensions) that catalogue reasons a review might express dissatisfaction. They set up an attribution-of-reasons exercise but do NOT supply any confounder -- i.e., no variable that plausibly causes BOTH one of these treatments AND the outcome and therefore must be adjusted for (e.g., genre, budget, director reputation, reviewer strictness, release era, viewer expectations). Without confounders there is no adjustment set, so the causal estimation is not properly identified; the schema realises 'list of causes' rather than genuine causal-attribution reasoning. The decisive test (surfacing an unnamed common cause) is not met because no confounder was produced at all."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

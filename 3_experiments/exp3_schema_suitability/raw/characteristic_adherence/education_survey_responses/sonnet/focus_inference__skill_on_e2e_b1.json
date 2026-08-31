@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different themes do students raise in these open responses?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "tech_experience",
+    "pedagogy_quality",
+    "subject_format_fit",
+    "student_engagement_level",
+    "social_peer_community_loss",
+    "teacher_feedback_responsiveness",
+    "unexpected_positive_outcome"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.8143,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.8429,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8286,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "tech_experience",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes platform vs connectivity vs positive tech experience, a genuine thematic axis. Values track source well (camera freezes->connectivity, logs out->platform, pause recordings->positive), and 'not_present' correctly used for silent rows."
+      },
+      {
+        "name": "pedagogy_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful ordinal axis for comparing teaching quality themes. Readings are mostly warranted (documentary clips->high_quality, can't tell when lost->neglectful). Slight interpretive stretch labeling ED-0001 'low_quality_passive' from a connectivity complaint, but defensible."
+      },
+      {
+        "name": "subject_format_fit",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures whether subject suits remote format, a distinct and analytically valuable theme. Values are sound readings (algebra doesn't click->poor, recorded history lectures->strong)."
+      },
+      {
+        "name": "student_engagement_level",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Engagement is a core theme in these responses and gives a real grouping axis. Values well grounded (show up on time->increased, cameras off/silent->disengaged)."
+      },
+      {
+        "name": "social_peer_community_loss",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures a clearly distinct theme (peer/social isolation) with its own analytical leverage. Grounded (zero peer interaction->significant_loss; missing hand-raise->loss). Some inference on ED-0005 but reasonable."
+      },
+      {
+        "name": "teacher_feedback_responsiveness",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Feedback responsiveness is a legitimate theme, but several values overreach the text. ED-0003 ('can't tell when she's lost') and ED-0005 (about participation, essays graded 'manageably') do not actually describe slow/minimal feedback, so 'slow_or_minimal' is an unwarranted specific reading. High rate of 'not_present' is appropriate for silent rows."
+      },
+      {
+        "name": "unexpected_positive_outcome",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A meaningful theme (silver-lining outcomes) that adds a non-redundant axis. Values mostly grounded (kitchen-chemistry->curriculum_innovation, documentary clips->innovation) and silent rows correctly 'not_present'. Slight redundancy with pedagogy_quality on some rows."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns collectively decompose the responses into several genuinely distinct, non-trivial thematic axes (tech, pedagogy, subject fit, engagement, social loss, feedback, positive outcomes), each offering a real basis to group and compare open responses for the query. Most values are sound extractions or clearly warranted categorisations of the source text, with appropriate 'not_present' handling for silent rows. The main weakness is teacher_feedback_responsiveness, which asserts specific feedback-timing judgments (e.g., 'slow_or_minimal') on rows whose text does not address feedback, an over-specific inference. Overall quality is high on both necessary conditions."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

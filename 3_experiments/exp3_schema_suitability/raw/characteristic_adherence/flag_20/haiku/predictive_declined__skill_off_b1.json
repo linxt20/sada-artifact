@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a travel expense will be declined?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "has_processed_date",
+    "is_customer_support_travel",
+    "is_sales_travel"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.4833,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.7167,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.6,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "has_processed_date",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.95,
+        "rationale": "Presence of a processed_date could weakly relate to whether an expense was handled/declined, giving a coarse group axis, but it is a generic presence flag trivially derivable from the existing processed_date column and only loosely tied to the decline query. Values correctly mirror the source (1 when a date exists, 0 for nan).",
+        "hallucination_observed": false
+      },
+      {
+        "name": "is_customer_support_travel",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "rationale": "A department/type-scoped travel flag is a plausible new axis to compare decline rates across travel origins, offering some analytical leverage for the query. However, none of the sampled rows are travel expenses (they are hardware/cloud asset entries) so groundedness cannot be strongly confirmed; the flag appears derivable from category/department but evidence is thin and all sampled values are 0.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "is_sales_travel",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "rationale": "Same rationale as the customer-support travel flag: a reasonable grouping axis for comparing decline likelihood by travel type, but the samples are all non-travel asset rows so the flag's derivation is only weakly evidenced, and it partially overlaps conceptually with the sibling travel flag.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.7,
+    "rationale": "The two travel-type flags provide a modest new axis for comparing decline patterns across travel categories, which is relevant to the query, though they are near-constant (mostly 0) and partly redundant with each other and with existing category/department fields. has_processed_date is a generic presence flag with weak tie to the decline question. Groundedness is decent where checkable, but the sampled rows are all non-travel asset entries, so the travel flags' derivation is only partially evidenced; no invented facts observed."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 3
+}

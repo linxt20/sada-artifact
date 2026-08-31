@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "goal_outcome_type",
+    "metric_alignment_clarity",
+    "implementation_mechanism_type",
+    "goal_scope_span",
+    "timeline_horizon",
+    "financial_quantification_present"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7417,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.7833,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_outcome_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A meaningful grouping axis for comparing achievement by outcome, though it closely tracks the existing category column, limiting novelty. Values match description/category cleanly across all samples."
+      },
+      {
+        "name": "metric_alignment_clarity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Highly relevant to the query: whether the tracking metric matches the goal is a plausible driver of achievement. Judgments are well grounded (e.g., Expense Ratio for customer satisfaction correctly flagged as proxy/misaligned; Employee Turnover for satisfaction as misaligned), a warranted inference from metric vs description."
+      },
+      {
+        "name": "implementation_mechanism_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Gives a genuine new axis (how the goal is pursued) to model achievement. Mechanisms are reasonably read from descriptions (resource optimization, behavioral change, process redesign, training), with only mild interpretive latitude."
+      },
+      {
+        "name": "goal_scope_span",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Scope/breadth is a sensible signal for achievability. Sample rows are all single_initiative, plausibly grounded, though distinguishing multi_department/enterprise_wide from often-terse text carries some inference risk not verifiable here."
+      },
+      {
+        "name": "timeline_horizon",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Time horizon is a strong candidate signal for achievement and gives a good grouping axis. Values largely match textual cues (Q4->quarter, next fiscal year->fiscal_year), though 'upcoming year' mapped to multi_year is a mild overreach; NULLs for silent rows are acceptable."
+      },
+      {
+        "name": "financial_quantification_present",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A binary presence flag is useful for distinguishing quantified financial goals but is coarse. Some readings look generous: a customer satisfaction 78%->90% goal marked True for financial quantification is questionable, since the percentages are non-financial, slightly undermining groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns supply several genuine, query-relevant axes (metric alignment, mechanism, scope, horizon) that let an analyst group and model goal achievement, going well beyond the original fields. Values are mostly sound readings of the description/metric/category text. Minor groundedness concerns include a broad 'financial_quantification_present' flag firing on non-financial percentage targets and an occasional horizon overreach ('upcoming year'->multi_year), but no systematic invention of facts. goal_outcome_type is somewhat redundant with the existing category column, capping its usefulness."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

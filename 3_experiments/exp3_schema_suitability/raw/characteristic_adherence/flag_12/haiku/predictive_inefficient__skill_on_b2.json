@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "focus_variable": "inefficient_resolution",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "incident_type",
+    "description_clarity",
+    "upstream_dependency",
+    "problem_recurrence"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.7,
+    "predictor_fraction": 1.0,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "inefficient_resolution",
+    "per_column": [
+      {
+        "name": "incident_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Category of the incident (printer, hardware, software, connectivity) is knowable at intake and plausibly correlates with resolution efficiency, since some incident types are inherently harder or slower to resolve. It lies outside the focus and carries genuine predictive signal."
+      },
+      {
+        "name": "description_clarity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the incident description is clear is knowable early and plausibly predicts efficiency: unclear descriptions cause back-and-forth, misrouting, and rework. It does not restate or leak the outcome."
+      },
+      {
+        "name": "upstream_dependency",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of an upstream dependency is a structural property of the incident, knowable before resolution, that plausibly slows resolution (waiting on external systems/teams). Legitimate predictor, no leakage."
+      },
+      {
+        "name": "problem_recurrence",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the issue is a recurring device-type problem vs a novel issue is knowable at intake and plausibly predicts efficiency: recurring issues may have known runbooks (faster) while novel ones require investigation (slower). Outside the focus and carries signal."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.7,
+    "rationale": "All four added columns are legitimate, pre-outcome predictors that lie outside the focus variable and none restate or leak it. As a set they capture complementary drivers of resolution efficiency: what kind of incident it is, how well it was described, whether it depends on other systems, and whether it is a known recurring problem. These add real leverage beyond the original mostly-administrative columns (IDs, timestamps, states). Utility is not higher because the features are coarse booleans/categoricals that may only partially explain efficiency, and some overlap with existing category/priority fields."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

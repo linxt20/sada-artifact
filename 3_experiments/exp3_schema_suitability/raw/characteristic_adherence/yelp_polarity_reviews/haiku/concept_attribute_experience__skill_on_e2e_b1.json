@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "food_quality_sentiment",
+    "service_sentiment",
+    "atmosphere_sentiment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8833,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.8166,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "food_quality_sentiment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A per-aspect food sentiment axis directly serves the query's satisfaction/complaint theme analysis and enables grouping. Values are mostly well-grounded (good/poor/not_present read soundly), and 'not_present' for non-food reviews is correct behaviour. However YLP-0002 and YLP-0005 are labelled 'poor' for food where the text discusses only service or drinks/entry policy, not food quality; these are unwarranted specifics that should be 'not_present', indicating some hallucination."
+      },
+      {
+        "name": "service_sentiment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Service is a central satisfaction/complaint theme; a positive/negative/neutral axis gives strong analytical leverage. Sampled values are sound readings of the text (worst service -> negative, friendly employees -> positive, great service -> positive)."
+      },
+      {
+        "name": "atmosphere_sentiment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Atmosphere is a legitimate distinct theme adding a new axis. But several sampled values are weakly supported: YLP-0002 (a service failure, no atmosphere described) marked 'negative', and YLP-0005 (entry/drinks complaints) marked 'negative' seem inferred from overall tone rather than actual atmosphere cues. This over-asserts atmosphere sentiment where the text is largely silent, lowering groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.75,
+    "rationale": "The three aspect-based sentiment columns (food, service, atmosphere) decompose satisfaction and complaint into distinct, groupable themes that are highly relevant to the query and non-redundant with the existing pos/neg label. Service sentiment is well grounded; food and atmosphere columns show a recurring tendency to project a specific per-aspect sentiment onto rows where that aspect is not actually discussed (e.g. non-restaurant or single-aspect reviews), rather than using 'not_present'/'neutral'. This yields real but moderate hallucination, so groundedness is good-but-imperfect while usefulness remains high."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

@@ -1,0 +1,117 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are some incidents resolved inefficiently, and which underlying issues drive it?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_type_category",
+    "equipment_criticality",
+    "issue_specificity",
+    "assigned_technician",
+    "resolution_handler_change",
+    "recurring_issue_pattern",
+    "caller_entity_type"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "incident_type_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident (printer, network, database) plausibly affects both which handling/technician path is taken and the resolution efficiency, making it a common cause not stated in the query."
+      },
+      {
+        "name": "equipment_criticality",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Criticality of the affected equipment can drive assignment/escalation decisions (treatment) and the difficulty/speed of resolution (outcome); surfaced from data, not named in query."
+      },
+      {
+        "name": "issue_specificity",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the issue description is specific/actionable vs vague is a candidate cause whose effect on resolution efficiency is being attributed; it is an underlying issue-quality driver."
+      },
+      {
+        "name": "assigned_technician",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The individual technician handling the incident is a candidate cause whose effect on efficiency can be attributed."
+      },
+      {
+        "name": "resolution_handler_change",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Reassignments/escalations lie on the causal path between upstream factors and efficiency and are themselves part of the (in)efficient process; adjusting for this would block the mechanism, so it is a mediator not a confounder."
+      },
+      {
+        "name": "recurring_issue_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an issue is recurring can influence both how it is handled/assigned and how efficiently it is resolved; a plausible common cause surfaced from data."
+      },
+      {
+        "name": "caller_entity_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Caller type (named user vs ITIL user) can affect routing/handling and resolution efficiency, a common cause not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "issue_specificity",
+      "assigned_technician"
+    ],
+    "confounders": [
+      {
+        "name": "incident_type_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "equipment_criticality",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "recurring_issue_pattern",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "caller_entity_type",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The added columns do set up a causal attribution: they include candidate treatments (issue_specificity, assigned_technician) whose effects on resolution_efficiency are being attributed, plus several confounders (incident_type_category, equipment_criticality, recurring_issue_pattern, caller_entity_type) that plausibly cause both the handling/treatment and the outcome. Crucially, none of these confounders were named or clearly implied by the generic query ('underlying issues'), so they demonstrate genuine surfacing of common causes from the data. However resolution_handler_change is a mediator on the causal path (part of the inefficiency mechanism) and must not be adjusted for; its inclusion as a driver is a modest error, and some confounders (caller_entity_type) are weaker, so quality is moderate rather than high."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_inefficiency",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

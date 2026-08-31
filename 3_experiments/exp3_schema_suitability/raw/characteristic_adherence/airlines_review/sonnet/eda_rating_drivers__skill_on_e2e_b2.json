@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "crew_service_quality",
+    "service_consistency",
+    "food_quality",
+    "special_meal_fulfillment",
+    "seat_comfort_condition",
+    "cabin_class_expectation_gap",
+    "service_amenity_cuts",
+    "service_decline_perception",
+    "value_for_money_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.48,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.7778
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable categories (attentive_warm, inattentive_robotic, professional_neutral, rude_hostile) that capture a review theme distinct from the numeric focus and can be segmented against Overall Rating."
+      },
+      {
+        "name": "service_consistency",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean three-way split (consistent_high, consistently_poor, variable_mixed) offers an interpretable associational dimension for comparing ratings."
+      },
+      {
+        "name": "food_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordered, interpretable categories (excellent/acceptable/poor_bland) with reasonable spread; nulls present but categories remain comparable against the focus."
+      },
+      {
+        "name": "special_meal_fulfillment",
+        "role": "predictor",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Boolean is extremely imbalanced (17 true vs 883 false), making it near-constant; too few positive cases to draw a meaningful comparison with Overall Rating."
+      },
+      {
+        "name": "seat_comfort_condition",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct, interpretable comfort categories that map to a review theme and can be segmented, though heavy nulls weaken coverage."
+      },
+      {
+        "name": "cabin_class_expectation_gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable expectation-gap tiers that are especially aligned with the query's Class dimension and support informative rating comparisons."
+      },
+      {
+        "name": "service_amenity_cuts",
+        "role": "predictor",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Highly imbalanced boolean (79 true vs 821 false); limited but not trivial, yet the near-constant distribution restricts segmentation power."
+      },
+      {
+        "name": "service_decline_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Boolean with 106 true cases; interpretable theme with enough minority mass to compare rating distributions, though imbalance limits it."
+      },
+      {
+        "name": "value_for_money_perception",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categories are interpretable, but this largely restates the existing 'Value For Money' column and correlates tightly with Overall Rating, adding little external associational information."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.72,
+    "rationale": "As a set, most added columns provide interpretable, well-separated categorical themes (crew service, consistency, food, seat condition, expectation gap) that segment cleanly and support discovering informative relationships with Overall Rating, directly serving the query's theme-vs-rating exploration. Weaknesses lower the score: two booleans (special_meal_fulfillment, service_amenity_cuts) are so imbalanced they enable little comparison, and value_for_money_perception essentially restates an existing column highly collinear with the focus. Overall the set is genuinely EDA-oriented rather than opaque feature engineering, but redundancy and near-constant booleans keep it from being fully informative."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

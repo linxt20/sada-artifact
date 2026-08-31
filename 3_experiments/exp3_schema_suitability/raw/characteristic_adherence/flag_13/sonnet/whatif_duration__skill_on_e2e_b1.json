@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "failure_type",
+    "affected_system_scope",
+    "reassignment_indicator",
+    "recurrence_signal",
+    "scope_indicator",
+    "time_of_day_band",
+    "assigned_agent",
+    "caller_segment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.5556,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.4833,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.5194,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents from short_description gives a strong axis to group operational burdens and compare resolution durations. Values (network_connectivity, vpn_access, database, printing) match source text soundly."
+      },
+      {
+        "name": "failure_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Failure mode is a genuine analytical axis distinct from category. Values are well-warranted readings (connectivity_failure for WiFi/VPN, access_denial for 'unable to access database'), and silent rows correctly get Unknown/NULL."
+      },
+      {
+        "name": "affected_system_scope",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Useful axis for locating burden. But scope is partly inferred beyond the text: 'Cannot connect to office WiFi' and VPN labeled 'infrastructure' is defensible, yet 'online database' as server_side and printing as client_side are inferences the terse text only weakly supports, so groundedness is moderate."
+      },
+      {
+        "name": "reassignment_indicator",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is highly relevant as an operational burden affecting duration. However, the short_description/opened_at/closed_by text carries no evidence of reassignment; true/false values (403/97) appear invented and not derivable from the sampled source fields."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.1,
+        "hallucination_observed": true,
+        "rationale": "Near-constant (496 true / 4 false) so it offers almost no analytical leverage. Recurrence is also not derivable from a single row's terse text; the near-uniform 'true' appears fabricated."
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Individual vs system_wide is a useful burden axis, but largely redundant with affected_system_scope and weakly grounded: labeling WiFi/VPN issues 'individual' vs database 'individual' is inconsistent guesswork not clearly supported by text."
+      },
+      {
+        "name": "time_of_day_band",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Derived directly from opened_at timestamps, a legitimate axis for whether off-hours load drives duration. Mostly sound, though 7:34 labeled business_hours and 8:50 business_hours vs 18:14 after_hours are reasonable bandings."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.15,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with existing assigned_to/closed_by columns. Values also contradict source: row 1 closed_by 'Fred Luddy' but sampled rows show assigned_agent differing from closed_by (e.g. VPN row assigned Beth Anglin while closed_by is Charlie), suggesting an ungrounded remapping."
+      },
+      {
+        "name": "caller_segment",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Named a 'segment' but values are just individual caller names, offering little grouping leverage and duplicating caller_id. There is no caller field in the sampled source text, so the specific names appear ungrounded."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.45,
+    "rationale": "Several columns give genuine axes for the 'operational burden vs duration' query: incident_category, failure_type, and time_of_day_band are both useful and well-grounded in short_description and opened_at. However a substantial subset is weak: recurrence_signal is near-constant and fabricated, reassignment_indicator asserts a fact the sampled text cannot support, assigned_agent and caller_segment are redundant restatements of existing columns and additionally contradict/lack source evidence, and scope_indicator overlaps affected_system_scope with shaky grounding. Overall the set offers moderate analytical leverage but notable hallucination in the process/behavioral columns drags groundedness below acceptable."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 9
+}

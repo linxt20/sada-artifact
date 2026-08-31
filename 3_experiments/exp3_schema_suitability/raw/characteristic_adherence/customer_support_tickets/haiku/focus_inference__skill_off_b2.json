@@ -1,0 +1,50 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "issue_category",
+    "issue_type"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.8075,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The semantic categorization of support tickets by the kind of issue they concern (a taxonomy of issue types)",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "supports_focus": true,
+        "rationale": "Provides a coarse-grained classification of each ticket into a small set of issue kinds (Bug, Feature Request, Billing, etc.), directly realising the query's request for the main kinds of issues."
+      },
+      {
+        "name": "issue_type",
+        "supports_focus": true,
+        "rationale": "Provides a finer-grained sub-classification of the issue, adding a second level of granularity to the same taxonomy focus rather than a distinct concept."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "rationale": "Both added columns centre tightly on ONE coherent, data-inferable focus: a taxonomy of the issue kinds represented in the tickets, which is exactly what the query asks for. They are not a scattered grab-bag nor mechanical features (no token counts or bare sentiment). The structure is sound: issue_category gives a coarse partition and issue_type gives a finer-grained partition, forming a two-level hierarchy at a useful granularity that is neither a single restatement nor undifferentiated noise. The minor weakness is that the two levels overlap somewhat (e.g., 'Authentication', 'Security', 'Integration' appear at both levels), so the coarse/fine distinction is not cleanly nested, slightly reducing structure_quality. The focus is highly actionable: an analyst can aggregate ticket volume by category, cross with priority/resolution_minutes, and prioritise support improvements."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

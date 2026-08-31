@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "service_issue_type",
+    "pricing_value_perception",
+    "staff_conduct_severity",
+    "business_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8875,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8562,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_issue_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the query on improving satisfaction by categorizing service failures; a strong axis to group actionable problems. Samples are well grounded: 'ignored_forgotten' matches being forgotten twice, 'rude_dismissive' matches discriminatory refusal, positive reviews correctly 'not_present'."
+      },
+      {
+        "name": "pricing_value_perception",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Value perception is a distinct, actionable lever for satisfaction. Mostly grounded, though YLP-0003's 'overpriced_for_quality' is a slight stretch (reviewer notes portion-size/pricing suggestion, not overpricing for quality); acceptable warranted inference. Positive/silent rows handled well."
+      },
+      {
+        "name": "staff_conduct_severity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "An ordinal severity scale enables modeling/ranking of staff issues, complementing the categorical issue type rather than duplicating it. Values are plausible readings (praise=1, forgotten-twice=4, discriminatory=3), but the scale is somewhat subjective and NULL vs 1 handling is inconsistent, introducing mild grounding uncertainty."
+      },
+      {
+        "name": "business_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a genuine grouping dimension to compare satisfaction drivers across business types. Samples are sound: grill/pizza=restaurant, cabana/drinks venue=nightclub_bar, real-estate professional=other. Some categories require inference but are warranted from text cues."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.83,
+    "rationale": "All four columns give distinct, non-redundant analytical axes (issue type, pricing perception, severity, business segment) directly serving the satisfaction-improvement query. Values are generally sound readings of the source text with correct 'not_present' handling for silent/positive rows; only mild subjectivity in the severity scale and one borderline pricing label slightly reduce groundedness. No clear hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

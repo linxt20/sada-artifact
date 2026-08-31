@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "reason_category",
+    "urgency_score",
+    "duration_vs_dept_median",
+    "age_group_order",
+    "is_complex_visit"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.16,
+    "predictor_fraction": 0.4,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.4,
+    "interpretable_fraction": 0.4
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "reason_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Rolls up free-text reasons into a compact set of interpretable clinical categories with well-separated, meaningfully-populated buckets. Directly supports segmenting visit duration by reason type -- a core external associational variable for this query."
+      },
+      {
+        "name": "urgency_score",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is a numeric re-encoding of the existing 'urgency' column already in the table. It adds no new external variable; it merely restates the focus/predictor already present, so it opens no new relationship."
+      },
+      {
+        "name": "duration_vs_dept_median",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is a transformation of the focus variable itself (duration relative to department median). It restates visit_duration rather than providing an external variable to compare against it; using it to 'explain' duration is circular."
+      },
+      {
+        "name": "age_group_order",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Merely an ordinal integer encoding of the existing age_group column. No new external information; a mechanical re-labeling that duplicates an existing predictor."
+      },
+      {
+        "name": "is_complex_visit",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A binary, interpretable flag distinguishing complex vs. routine visits with a usable split (49 vs 201). It is a plausibly external clinical attribute that can be segmented on and compared against duration, though its derivation is unstated and risks being duration-derived."
+      }
+    ],
+    "n_predictors": 2,
+    "relationship_informativeness": 0.4,
+    "rationale": "Only two of five added columns realise the EDA claim. reason_category is the strongest: an interpretable, well-populated segmentation directly serving the query. is_complex_visit adds a clean binary segment. The remaining three (urgency_score, age_group_order, duration_vs_dept_median) either re-encode columns already in the table or are transformations of the focus itself, offering no new external relationship to explore. The set is thus only partially informative, dominated by restatements."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

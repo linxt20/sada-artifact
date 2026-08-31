@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "baseline_reference_clarity",
+    "timeline_explicitness",
+    "goal_category",
+    "intervention_specificity",
+    "implementation_scope",
+    "supporting_mechanism_depth",
+    "execution_explicitness",
+    "metric_goal_fit",
+    "resource_or_investment_mention"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.6056,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.7028,
+    "hallucination_rate": 0.1111
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "baseline_reference_clarity",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Whether a goal states an explicit baseline/comparison is a plausible signal for achievability and gives a real grouping axis. Values are well-grounded: samples with '78% to 90%' or 'compared to last quarter' correctly get explicit; the categorisation reads the source soundly."
+      },
+      {
+        "name": "timeline_explicitness",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Timeline specificity is a reasonable achievement signal and offers a distinct axis. Grounding is mostly sound, though 'next fiscal year' and 'upcoming year' are labelled fiscal_period while 'by end of Q4' is specific_date—slight inconsistency but defensible readings of the text."
+      },
+      {
+        "name": "goal_category",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Values are directly grounded (they mirror the description and the original 'category' column). But this largely duplicates the existing 'category' column, so it adds little new analytical leverage."
+      },
+      {
+        "name": "intervention_specificity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Type of intervention is a genuine new axis for modelling achievement. Grounded generally, but some labels are debatable—'increase premium subscriptions' tagged strategic_direction while similar concrete goals get process_improvement; borderline but not invented."
+      },
+      {
+        "name": "implementation_scope",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Single vs multi-faceted scope is a usable signal. Grounding is reasonable (goals naming two levers get multi_faceted), though single_lever vs multi_faceted judgements can be somewhat subjective. Overlaps conceptually with supporting_mechanism_depth."
+      },
+      {
+        "name": "supporting_mechanism_depth",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Its two-value single-vs-multiple-lever distinction is largely a restatement of implementation_scope, adding little independent leverage. Also note inconsistency: the Employee Engagement sample is multi_faceted in scope but single_primary_lever here."
+      },
+      {
+        "name": "execution_explicitness",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Whether a named/tested program is cited is a plausible achievement signal and a distinct axis. Grounding is sound: 'Employee Engagement Program' -> explicit_program_name; goals lacking named methods -> vague_intent."
+      },
+      {
+        "name": "metric_goal_fit",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Alignment between the 'metric' column and the goal is a strong achievement signal and directly analysable. Well grounded: mismatches like customer-satisfaction goal with 'Expense Ratio' metric are correctly flagged metric_mismatched."
+      },
+      {
+        "name": "resource_or_investment_mention",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Presence of resource/investment language is a reasonable signal, but grounding is questionable: the first sample about 'optimize duplicated resources' is marked True as a resource mention, which conflates a cost lever with an actual resource/investment commitment—an over-reading."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.8,
+    "rationale": "Most added columns provide genuine, distinct axes (metric_goal_fit, baseline clarity, timeline explicitness, intervention/execution specificity) that materially help model what drives high goal achievement, and their values are largely sound readings of the description text. Weaknesses: goal_category duplicates the existing 'category' column, supporting_mechanism_depth largely restates implementation_scope, and resource_or_investment_mention shows some over-reading of the source. Overall grounding is strong with a few debatable/inconsistent labels."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

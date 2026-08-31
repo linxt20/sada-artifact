@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "overall_stance",
+    "acting_assessment",
+    "writing_script_assessment",
+    "directing_assessment",
+    "technical_production_assessment",
+    "story_plot_assessment",
+    "pacing_engagement_assessment",
+    "specific_praised_element",
+    "specific_complained_element",
+    "audience_recommendation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.82,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.835,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8275,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "overall_stance",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "rationale": "Adds a mixed category beyond the existing label_pos binary, giving finer stance grouping. Partly redundant with label_pos but the 'mixed' tier adds leverage. Values align with source samples.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "acting_assessment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.88,
+        "rationale": "Aspect-level valence directly serves the praise/complaint query. Grounded: IMDB-0004 acting 'pretty good'=praised, IMDB-0003 'wooden'=criticised. IMDB-0001 lacks acting mention yet marked criticised, a minor over-assertion.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "writing_script_assessment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Genuine aspect axis. IMDB-0001 'writing beyond insipid'=criticised is well grounded; silent rows marked not_present correctly.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "directing_assessment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "Useful aspect. Some samples (IMDB-0001, 0002) marked criticised where directing isn't explicitly discussed, suggesting over-attribution from overall negativity.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "technical_production_assessment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "Valid production axis. IMDB-0004 'well-made'=praised is grounded; but IMDB-0001/0002 criticised without clear technical comment indicates halo-effect labeling.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "story_plot_assessment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "rationale": "Strong aspect for the query. IMDB-0005 'mixed' fits the frustrating-yet-engaging text; some negative rows may inherit stance rather than explicit plot judgment.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "pacing_engagement_assessment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "rationale": "Useful engagement axis. However IMDB-0001/0002 'boring_or_slow' and IMDB-0004/0005 'engaging' are inferred; pacing is rarely explicitly stated, so several values are weakly warranted.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "specific_praised_element",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Directly captures praise for the query with concrete categories. IMDB-0004 performance_standout grounded; silent rows correctly not_present.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "specific_complained_element",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Directly captures complaints, the core of the query. IMDB-0001 script_or_dialogue, IMDB-0003 acting_performance well grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "audience_recommendation",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Adds a recommend/discourage axis with a caveats tier, useful for actionable grouping. IMDB-0004 'must see'=recommends grounded; some values inferred from stance but reasonable.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns form a coherent aspect-based sentiment decomposition (acting, writing, directing, technical, plot, pacing) plus explicit praised/complained-element extractions and a recommendation flag, all of which give genuine analytical leverage for a praise/complaints query well beyond the original binary label. Groundedness is generally sound where the source explicitly discusses an aspect, and silent rows are appropriately marked not_present. The main weakness is a halo effect: for strongly negative reviews, several aspect columns (directing, technical, pacing) are labeled criticised/boring even when the text does not explicitly evaluate that aspect, constituting mild over-attribution. This lowers but does not undermine overall quality."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 10
+}

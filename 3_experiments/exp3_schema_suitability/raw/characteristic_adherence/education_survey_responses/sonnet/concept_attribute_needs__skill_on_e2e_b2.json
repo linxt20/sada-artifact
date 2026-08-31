@@ -1,0 +1,75 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "focus_variable": "learner_needs_and_pain_points",
+  "concept": "learner_needs_and_pain_points",
+  "n_added_columns": 4,
+  "added_columns": [
+    "instructional_delivery_quality",
+    "engagement_barrier",
+    "hands_on_deficit_severity",
+    "positive_adaptation_type"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.2475,
+    "facet_fraction": 0.5,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.35,
+    "mece": 0.495,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "learner_needs_and_pain_points",
+    "per_column": [
+      {
+        "name": "instructional_delivery_quality",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Quality of instructional delivery is an environmental/teaching condition that may drive or explain learner pain points, but it is not itself an aspect OF the learner's needs or pain points. It describes the teacher/instruction, not a part of the learner-need concept."
+      },
+      {
+        "name": "engagement_barrier",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Engagement barriers (low motivation, passive consumption, dropout) are a genuine sub-aspect of learner pain points -- a constitutive category of the difficulties learners experience."
+      },
+      {
+        "name": "hands_on_deficit_severity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The severity of a hands-on/practical-experience deficit is a specific type of learner need/pain point, capturing an aspect of what learners lack. It is a constitutive part of the concept."
+      },
+      {
+        "name": "positive_adaptation_type",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Positive adaptations and benefits (innovative practice, flexibility, expanded access) are the OPPOSITE of needs and pain points. They capture gains/upsides, not aspects of learner difficulties, so they do not decompose the target concept."
+      }
+    ],
+    "facet_columns": [
+      "engagement_barrier",
+      "hands_on_deficit_severity"
+    ],
+    "non_facet_columns": [
+      "instructional_delivery_quality",
+      "positive_adaptation_type"
+    ],
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.35,
+    "rationale": "The concept 'learner needs and pain points' should be decomposed into constitutive types/dimensions of learner difficulties (e.g., engagement barriers, access/connectivity needs, content/pedagogical needs, social-emotional needs, assessment/feedback needs, practical/hands-on gaps). Only two of the four added columns are true facets: engagement_barrier and hands_on_deficit_severity. instructional_delivery_quality is an external teaching-condition predictor rather than an aspect of the learner's needs, and positive_adaptation_type captures benefits/upsides -- the semantic opposite of pain points. Mutual exclusivity among the qualifying facets is fairly good (engagement vs hands-on deficit are distinct), but overall coverage is weak: major expected pain-point facets such as access/connectivity, social-emotional/isolation, and content-comprehension needs are missing, and half the columns fail the part-of test."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

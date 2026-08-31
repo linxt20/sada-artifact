@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "focus_variable": "review_score",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "sentiment_polarity",
+    "product_quality_assessment",
+    "taste_flavor_experience",
+    "sensory_assessment",
+    "repeat_purchase_intent",
+    "price_value_assessment",
+    "product_defect_or_issue",
+    "expectation_fit",
+    "comparison_to_alternatives",
+    "health_dietary_concern"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.01,
+    "predictor_fraction": 0.1,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "predictive_utility": 0.1,
+    "leakage_rate": 0.9
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "review_score",
+    "per_column": [
+      {
+        "name": "sentiment_polarity",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Overall polarity of the review is essentially a proxy/restatement of the score; positive/negative sentiment is what the star rating encodes, so it leaks the outcome rather than predicting it from independent signal."
+      },
+      {
+        "name": "product_quality_assessment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "An excellent/poor/defective quality judgment extracted from the same review text is a direct evaluative summary of the score; it near-deterministically tracks the rating and constitutes leakage."
+      },
+      {
+        "name": "taste_flavor_experience",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Excellent/poor taste is an evaluative sentiment aspect derived from the review itself; it mirrors the reviewer's satisfaction and thus the score, not an external predictor."
+      },
+      {
+        "name": "sensory_assessment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Pleasant/unpleasant sensory verdict is another aspect-level restatement of the reviewer's evaluation, strongly collinear with the star rating."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Willingness to repurchase is a canonical expression of satisfaction that co-occurs with and encodes the rating; extracted from the review, it leaks the outcome."
+      },
+      {
+        "name": "price_value_assessment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Good/poor/overpriced value is an evaluative judgment mined from the review text and moves directly with the score; it is a restatement rather than an independent price feature."
+      },
+      {
+        "name": "product_defect_or_issue",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A flag that the review mentions a defect is a strong negative-evaluation signal drawn from the same text, effectively encoding low scores; leakage, not external predictor."
+      },
+      {
+        "name": "expectation_fit",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Exceeded/unmet expectations is virtually the definition of satisfaction and maps almost one-to-one onto the star rating; classic outcome restatement."
+      },
+      {
+        "name": "comparison_to_alternatives",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Favorable/unfavorable-vs-competitor is an evaluative sentiment aspect extracted from the review, tightly coupled to the reviewer's overall verdict and hence the score."
+      },
+      {
+        "name": "health_dietary_concern",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the review raises a health/dietary topic is a content/topic feature that is not itself an evaluative verdict; it can carry weak predictive signal about the score without being a restatement of it, though it borders on aspect extraction."
+      }
+    ],
+    "n_predictors": 1,
+    "predictive_utility": 0.1,
+    "rationale": "Nine of the ten added columns are aspect-level or overall evaluative judgments (sentiment, quality, taste, sensory, value, defect, expectations, repurchase, competitor comparison) mined from the same review text whose score is being predicted. These are near-deterministic restatements/leakage of the reviewer's satisfaction, so a model using them would 'predict' the score only because the columns already encode it. Only health_dietary_concern is a genuine topical feature that lies outside the evaluative outcome, and it offers modest signal at best. As a set they provide little legitimate predictive leverage beyond leakage."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 10
+}

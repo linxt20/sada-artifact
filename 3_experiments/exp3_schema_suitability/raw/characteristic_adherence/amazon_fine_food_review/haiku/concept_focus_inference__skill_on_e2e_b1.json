@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "pod_defect_quality_issue",
+    "user_expectation_mismatch",
+    "repeat_purchase_intent",
+    "flavor_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8375,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8438,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "pod_defect_quality_issue",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A defect/quality flag is directly actionable for improving product scores—it isolates reviews driven by physical/product problems that can be fixed. Values align well with source: the mislabeled peanuts row is True, positive dog food and taffy rows are False. Not near-constant (11% True) and not redundant with Score."
+      },
+      {
+        "name": "user_expectation_mismatch",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorising whether expectations were met/mismatched gives a strong axis to find fixable gaps between description and product—highly relevant to raising scores. Readings are sound: 'Not as Advertised' → mismatch, positive reviews → exceeded. The medicinal-flavor row as 'mismatch' is a defensible inference. NULLs for silent rows are acceptable."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Repurchase intent is a useful loyalty axis correlated with satisfaction and helps prioritise actions. Some values are inferred rather than stated (e.g., dog food row lacks explicit repurchase statement, though prior repeat buying is mentioned), but readings are broadly warranted; the uncertain/mismatch cases are handled reasonably. Slight overlap in signal with expectation_mismatch but distinct enough."
+      },
+      {
+        "name": "flavor_category",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Grouping by flavor category enables comparing scores across product types to target improvements—genuinely useful. Values are mostly sound (taffy→sweet, confection→other). The dog food row labeled 'regular_unflavored' is a stretch but not clearly wrong; NULLs for silent rows are correct. Reasonable extraction overall."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.85,
+    "rationale": "All four columns give genuine new grouping/comparison axes relevant to identifying fixable drivers of product scores (defects, expectation gaps, loyalty, product category), rather than trivial redundancies or bare sentiment flags. Produced values are generally sound readings of the source text, with only mild inferential stretches (some repurchase and flavor assignments) and appropriate NULL handling for silent rows. No clear hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 4
+}

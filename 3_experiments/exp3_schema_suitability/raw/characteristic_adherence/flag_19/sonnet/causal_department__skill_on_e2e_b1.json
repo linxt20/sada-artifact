@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do expense decline rates differ across departments?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "device_form_factor",
+    "entry_origin",
+    "vendor_brand",
+    "is_travel_related",
+    "ci_identifier_quality",
+    "has_source_id",
+    "recurring_submitter"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.575,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.7375,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.6562,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Categorizing expenses (hardware/travel/software) gives a strong new axis to explain why decline rates differ across departments, since spend composition varies by department. Values are well-grounded in short_description and ci text.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "device_form_factor",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "A finer-grained breakdown of asset type; adds a useful axis for spend composition analysis, though partly redundant with asset_category_type. Values are soundly read from ci/short_description, with reasonable NULLs.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "entry_origin",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "rationale": "Whether an entry is manual vs auto-generated could plausibly relate to review/decline behavior, giving some analytical leverage. However groundedness is weak: the source samples show no clear textual signal distinguishing manual from auto entries, so the labeling basis is unclear and possibly inferred from source_id presence.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "vendor_brand",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Vendor is a legitimate axis for comparing decline rates and cost patterns across departments. Values are extracted well from text (Dell, HP), with 'Other' a reasonable fallback.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "is_travel_related",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "rationale": "A bare boolean that is largely redundant with asset_category_type's 'travel' value; adds little independent leverage. Well grounded in text.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "ci_identifier_quality",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.55,
+        "rationale": "Identifier quality is a data-hygiene meta-attribute with a plausible but weak link to why expenses are declined. The sample 'ISP Services' labeled 'standard_model_name' is questionable, suggesting inconsistent grounding.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "rationale": "This is a trivial presence flag derived directly from the existing source_id column, offering little new analytical leverage for the decline-rate query. Values are trivially derivable and grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "recurring_submitter",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "rationale": "Recurring submitters could correlate with decline patterns, offering a genuine behavioral axis. But this requires aggregation over the 'user' column and cannot be verified from single-row text samples; the basis is not clearly grounded in the shown evidence.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.72,
+    "rationale": "The strongest columns (asset_category_type, vendor_brand, device_form_factor) provide genuine new axes on expense composition that plausibly explain departmental differences in decline rates and are soundly grounded in the text. Several columns are weaker: is_travel_related and has_source_id are near-redundant/trivial flags, while entry_origin, ci_identifier_quality, and recurring_submitter have unclear textual grounding in the shown evidence. Overall the set offers moderate analytical value with mostly acceptable but uneven groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_attitude",
+    "food_quality_rating",
+    "seat_comfort_issue",
+    "disruption_handling_quality",
+    "class_product_value_gap",
+    "special_service_handling",
+    "route_haul_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7571,
+    "analytical_usefulness__table_level": 0.76,
+    "source_groundedness": 0.6743,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.7157,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_attitude",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "A qualitative attitude typology (warm/cold/professional/rude) is a genuinely useful diagnostic axis for service optimization beyond the raw Staff Service score, so usefulness is high. Groundedness is mixed: positive samples (3,4) are well read, but sample 2 describes only a gate/announcement delay with no cabin-crew interaction yet is forced to 'cold_robotic', and sample 1's 'rude_dismissive' is inferred from absence rather than described rudeness. The near-total lack of an Unknown category (only 7 NULL) indicates the operator forces an attitude even when the text is silent about crew."
+      },
+      {
+        "name": "food_quality_rating",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Overlaps with the existing Food & Beverages rating but adds diagnostic granularity (poor_taste vs poor_quantity vs special_meal_failure), giving analytical leverage for service fixes. Groundedness is good: it correctly returns Unknown/NULL for silent rows (samples 1,2, 263 NULLs), and populated values are defensible readings, with only mild over/understatement (sample 3 'excellent', sample 4 'great'→'acceptable')."
+      },
+      {
+        "name": "seat_comfort_issue",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Somewhat redundant with the numeric Seat Comfort column, but the specific failure mode (narrow_cramped, uncomfortable_padding, broken_defective) is actionable for the optimization query. Values are well grounded: sample 4 'narrow_cramped' matches the leg-space complaint, and NULL is used for silent rows. Minor miss on sample 5 where a poor-recline business seat is folded into 'comfortable_adequate'."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.58,
+        "hallucination_observed": true,
+        "rationale": "This captures a distinct service axis not present in the original columns and is directly relevant to lifting Overall Rating, so usefulness is high. However groundedness is weakened by a clear contradiction: sample 2 describes a 2+ hour delay and gate change with poor communication yet is labelled 'no_disruption', which the text plainly refutes. Sample 1 ('poorly_handled') is correct."
+      },
+      {
+        "name": "class_product_value_gap",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A cabin-class expectation-gap axis is a reasonable modelling feature relating Class and Value For Money. But groundedness is the weakest here: with essentially no NULLs (only 1), the operator asserts a value gap for almost every row even when the review never discusses class product or value (sample 2 delay → 'slight_shortfall'), and sample 5's explicitly 'very poor' business seat is rated 'meets_class_expectations', contradicting the text. Several values are confident specifics where the source is silent."
+      },
+      {
+        "name": "special_service_handling",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Provides a diagnostic axis for special-service requests, though it is sparse (580/706 not_applicable) and overlaps with disruption_handling in sample 1 where the same post-diversion neglect drives both fields. Grounding is acceptable: the vast majority of rows are correctly 'not_applicable', and populated values are defensible, so no clear invention is observed."
+      },
+      {
+        "name": "route_haul_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "Directly supports the route-optimization goal by giving a clean grouping axis derived from Route, high usefulness. Values are a warranted geographic inference and mostly correct, but sample 4 mislabels Hong Kong–Melbourne (~9h) as 'medium_haul_4_8h' when it is clearly long-haul, and the Beijing→Bangkok via HK segment classification is debatable. These factual mis-bucketings reduce groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.76,
+    "source_groundedness": 0.63,
+    "rationale": "Holistically the added columns give the Cathay MD real analytical leverage for the route/service optimization query: route_haul_type supports route grouping, and the service-quality typologies (crew attitude, food, seat issue, disruption, special service, value gap) turn free text into comparable diagnostic dimensions. Some overlap the existing numeric ratings (Food & Beverages, Seat Comfort, Staff Service) but add actionable failure-mode granularity rather than being mere restatements, so usefulness stays high. Groundedness is only moderate: several columns force a value even when the source text is silent (class_product_value_gap has ~0 NULLs; cabin_crew_attitude infers attitudes with no crew described), and there are outright contradictions (sample 2 delay labelled 'no_disruption'; HK–Melbourne mislabelled medium-haul). Appropriate use of Unknown/NULL in food_quality_rating and seat_comfort_issue is correct and not penalized. Completeness was not assessed per scope."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

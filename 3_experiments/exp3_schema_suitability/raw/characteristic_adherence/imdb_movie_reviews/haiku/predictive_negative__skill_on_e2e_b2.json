@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative IMDb audience satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "DirectCondemnation",
+    "EmotionalDistressSignal",
+    "WasteRegretLanguage",
+    "CriticalTargetBreadth",
+    "SystemicFailureAttribution",
+    "direct_condemnation_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "DirectCondemnation",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Harsh judgment vs neutral/absent is a linguistic signal extractable from review_text that lies outside the label and plausibly correlates with negative satisfaction without being a restatement of it."
+      },
+      {
+        "name": "EmotionalDistressSignal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of distress language is an observable textual feature distinct from the sentiment label; it carries predictive signal about negativity and is not a deterministic function of label_pos."
+      },
+      {
+        "name": "WasteRegretLanguage",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Expressions of wasted time/regret are a concrete lexical pattern in the text, external to the label, plausibly predictive of dissatisfaction."
+      },
+      {
+        "name": "CriticalTargetBreadth",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether criticism is broad/systematic vs narrow is a text-derived attribute that adds nuance beyond mere polarity and can predict severity of dissatisfaction; not a restatement of the label."
+      },
+      {
+        "name": "SystemicFailureAttribution",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Framing of failure as fundamental vs isolated is an extractable rhetorical feature outside the focus variable and plausibly predictive of negative satisfaction."
+      },
+      {
+        "name": "direct_condemnation_signal",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is a near-duplicate of DirectCondemnation (same harsh_judgment vs neutral_or_absent categories); it adds no independent signal beyond the first column."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.6,
+    "rationale": "Five of the six columns are legitimate, non-leaking textual features that each capture a distinct facet of negativity (condemnation, distress, waste/regret, breadth of criticism, failure attribution) and plausibly predict label_pos. None restates the label deterministically or introduces post-outcome leakage. However, the features are correlated with one another (all proxies for negativity), and the sixth column is a redundant duplicate of the first, so the marginal predictive leverage of the set is moderate rather than high."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

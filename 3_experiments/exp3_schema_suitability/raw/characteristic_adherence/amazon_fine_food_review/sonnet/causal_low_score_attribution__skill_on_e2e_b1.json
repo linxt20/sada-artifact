@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What factors explain low review scores?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "product_category",
+    "brew_strength_complaint",
+    "palatability_rejection",
+    "product_freshness_staleness",
+    "product_performance_failure",
+    "fulfillment_service_failure",
+    "ingredient_transparency_concern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7286,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8929,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.8108,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Provides a strong grouping axis to compare low-score rates across product types; well-populated and non-trivial. Sample categorizations (pet_food_treat, snack, candy, beverage) are sound readings of the source text."
+      },
+      {
+        "name": "brew_strength_complaint",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A specific complaint dimension relevant to a large coffee/tea segment, giving a real axis for explaining low scores within that segment. Values are correctly 'not_applicable' for non-brew items in samples, appropriately silent-handling."
+      },
+      {
+        "name": "palatability_rejection",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Taste/refusal is a plausible driver of low scores and offers a graded axis (full/partial/refused). Sample values match text (positive reviews = full_acceptance; medicinal-flavor and mislabel cases = not_applicable is defensible)."
+      },
+      {
+        "name": "product_freshness_staleness",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Staleness is a genuine potential cause of low scores; though heavily skewed (171 true), it still isolates a meaningful failure mode. Sample values (all false for reviews not mentioning staleness) are correct."
+      },
+      {
+        "name": "product_performance_failure",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Graded failure/adverse-effect axis directly targets reasons for dissatisfaction. Sample readings are consistent with text (positive/neutral reviews = no_failure)."
+      },
+      {
+        "name": "fulfillment_service_failure",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Shipping/service problems are a well-known driver of low scores independent of product quality, so this is a useful distinct axis. However, the mislabeled 'Not as Advertised' peanuts row arguably reflects a fulfillment/vendor issue yet is marked false; still defensible as a labeling vs. shipping distinction."
+      },
+      {
+        "name": "ingredient_transparency_concern",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures labeling/ingredient concerns that can explain complaints. Skewed but non-trivial. The 'Not as Advertised' row could plausibly be true here yet is false, a minor grounding softness, but no invented facts observed in samples."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.9,
+    "rationale": "The added columns form a coherent set of complaint/failure-mode axes plus a product-category grouping, all directly relevant to explaining low review scores and offering genuine axes to group and model on. None are trivial constants or mere restatements of Score/Summary. Values in the row-evidence samples are sound readings of the source text, with appropriate not_applicable/false handling for silent rows and no invented facts; only minor debatable calls (e.g., mislabeled peanuts not flagged as fulfillment/transparency) slightly soften groundedness."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

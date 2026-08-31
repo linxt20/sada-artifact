@@ -1,0 +1,126 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce declined travel expenses?",
+  "focus_variable": "travel_expense_declined_status",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "travel_expense_relevance",
+    "expense_initiation_method",
+    "documentation_completeness",
+    "asset_cost_tier_signal",
+    "processing_delay_presence",
+    "requestor_department",
+    "requestor_frequency_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 0.75,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "travel_expense_declined_status",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of asset/expense is not something an actor sets to reduce declines, but it plausibly affects both what documentation/method is used and whether the expense is declined; a pre-existing attribute of the expense acting as a common cause."
+      },
+      {
+        "name": "travel_expense_relevance",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "This essentially flags whether a row is a travel expense at all -- it is a scoping/selection variable implied by the query focus, not a treatment or confounder."
+      },
+      {
+        "name": "expense_initiation_method",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Automated vs manual submission is an intervenable, configurable process lever an organization could set/change to affect decline rates."
+      },
+      {
+        "name": "documentation_completeness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the submission includes complete documentation (source_id) is an actionable lever -- policy/enforcement could require complete docs to reduce declines."
+      },
+      {
+        "name": "asset_cost_tier_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Cost tier plausibly influences both scrutiny/method of processing and the likelihood of decline; a pre-existing common cause not settable as an intervention."
+      },
+      {
+        "name": "processing_delay_presence",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Processing delay likely lies on the causal path between submission method/documentation and the decline outcome rather than being a common cause; treated as a mediator, not a confounder."
+      },
+      {
+        "name": "requestor_department",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Department is already present in the original table and clearly implied; it can affect both submission practices (method/docs) and decline rates, so a confounder, but named in query context."
+      },
+      {
+        "name": "requestor_frequency_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How often a requestor submits plausibly affects both their submission behavior/method and their decline likelihood (familiarity), acting as a common cause; largely a fixed behavioral attribute rather than a direct lever."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "expense_initiation_method",
+      "documentation_completeness"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "asset_category_type",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "asset_cost_tier_signal",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "requestor_department",
+        "named_in_query": true,
+        "plausibility": 0.6
+      },
+      {
+        "name": "requestor_frequency_pattern",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "The set genuinely realizes the what-if claim: it includes at least two intervenable treatments (expense_initiation_method and documentation_completeness) that an actor could set or enforce to reduce declines, satisfying part (a). For part (b), several plausible confounders NOT named in the query are supplied (asset_category_type, asset_cost_tier_signal, requestor_frequency_pattern) that are common causes of both submission practices and decline likelihood, demonstrating the capability under test. However, confounder quality is only moderate: processing_delay_presence is really a mediator (should be excluded from adjustment), requestor_department is already implied by the original schema, and travel_expense_relevance is a scoping flag. The confounders adjust for asset/cost/behavior common causes but leave the treatment-outcome identification only partially secured."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

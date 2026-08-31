@@ -1,0 +1,109 @@
+{
+  "var_a": "skill_on",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.78,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "Pearson correlation of r = 0.856",
+        "why": "quantified strongest signal"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Median 1,032 hours (~43 days), range 24–2,206 hours",
+        "why": "concrete magnitudes"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "assignment_lag (boolean)... r = 0.856",
+        "why": "treats a lag flag as top predictor without noting censoring/leakage risk"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "strongest inside network incidents: category = Network has median 1428.0h overnight vs 801.6h in the morning",
+        "why": "cross-segment interaction analysis"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "opened_at month overwhelms this dataset... control for that timing effect first",
+        "why": "identifies confounding, consistent caveats"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "It opens overnight, especially if it is a network issue",
+        "why": "decision-ready ranked rules with confound caveat"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "overnight (00:00-05:59): median 1276.8h, long-case rate 29.2%",
+        "why": "numeric with rates"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B matches A's specificity/evidence but adds interaction depth and correctly flags censoring/confounding that A ignores.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "service_staff_behavior",
+    "food_quality_signal",
+    "food_freshness_issue",
+    "return_intent"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "service_staff_behavior",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Captures a distinct review theme (staff conduct) with well-separated, interpretable categories (friendly, rude, indifferent) that can be segmented and cross-tabulated against label_pos to reveal how service themes differ by sentiment."
+      },
+      {
+        "name": "food_quality_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "An external thematic axis on food quality with an ordered, interpretable scale (excellent to inedible). Distinct from the sentiment label itself and directly groupable for comparison against positive/negative reviews."
+      },
+      {
+        "name": "food_freshness_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A more specific theme (freshness/hygiene) with interpretable categories. Some categories are sparse (4 each), but the dominant fresh vs. issue split still supports meaningful segmentation against sentiment."
+      },
+      {
+        "name": "return_intent",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Captures reviewer's stated return intention as an interpretable ordinal category. Highly associated with but not identical to sentiment; it is a downstream behavioral theme worth comparing, though it borders on restating overall satisfaction."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.82,
+    "rationale": "All four added columns are external, thematic categorical variables with interpretable, well-separated categories that can be grouped and cross-tabulated against the focus (label_pos), directly serving the query about how review themes differ by sentiment. They avoid opaque scores and mere restatements of the focus (return_intent leans closest to restating sentiment but adds a distinct behavioral angle). Weaknesses: high NULL/not-assessed/neutral dominance in each column reduces effective comparison mass, and freshness sub-categories are very sparse, slightly limiting the strength of relationships discoverable. Overall a strong, interpretable segmentation set for EDA."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review facets differ by sentiment label?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "product_performance_state",
+    "defect_or_failure_present",
+    "expectation_met_or_exceeded",
+    "primary_attribute_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8125,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8313,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_performance_state",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A functional works/doesn't-work/partial axis gives a genuine grouping dimension to compare against sentiment. Values are well-grounded: NULL for reviews about books/dolls where performance is not applicable, works_as_intended for the skincare/DVD reviews. Sound readings with appropriate silence handling."
+      },
+      {
+        "name": "defect_or_failure_present",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing defect/failure types is a useful facet for sentiment analysis. Heavily skewed toward not_present, but the distinction between broken/design_flaw/premature failure adds leverage. Values are reasonable readings; 'not_present' correctly assigned to samples that describe no physical defect."
+      },
+      {
+        "name": "expectation_met_or_exceeded",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Expectation-fulfillment is a strong axis for comparing against sentiment labels, though it partly correlates with sentiment itself. Values are well-grounded: 'disappointed' for the negative doll/book/music reviews, 'exceeded_expectations' for the praised skincare/DVD reviews. The 'misled_by_advertising' category adds nuance beyond raw sentiment."
+      },
+      {
+        "name": "primary_attribute_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Categorising the primary review facet (functionality, quality, ease-of-use, etc.) is directly on-point for a 'review facets by sentiment' query and gives strong grouping power. Values are mostly sound; 'emotional_impact' dominates and is defensible for the book/music reviews, though it risks being a catch-all bucket. Sample assignments are reasonable readings of the source text."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.85,
+    "rationale": "All four added columns provide genuine, distinct facet dimensions (performance, defects, expectations, attribute type) that let an analyst group and compare against the sentiment label, directly serving the query. There is some correlation between expectation and sentiment, and 'emotional_impact' functions somewhat as a catch-all, but each column still offers real analytical leverage. Values across the row evidence are sound readings of the source text, with NULLs appropriately used for non-applicable rows; no hallucinated specifics observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

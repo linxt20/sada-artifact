@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "primary_service_complaint_category",
+    "complaint_frequency_pattern",
+    "cabin_class",
+    "aircraft_cabin_condition",
+    "cabin_crew_service_tone",
+    "food_quality_consistency",
+    "multi_complaint_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6986,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.6814,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.69,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_service_complaint_category",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the query: identifying the most common cabin-service complaints is the core grouping needed to estimate rating uplift. Values are well grounded in samples (seat_comfort for the seat-complaint review; 'unknown' correctly assigned to praise-only reviews)."
+      },
+      {
+        "name": "complaint_frequency_pattern",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Whether a complaint is systemic vs isolated is relevant to prioritising which complaints to eliminate. However, it is not well grounded per-row: a single review generally cannot support 'recurring_systemic_issue' or 'route_dependent', which require cross-review aggregation. Labelling the narrow-seat review 'recurring_systemic_issue' asserts more than the text states."
+      },
+      {
+        "name": "cabin_class",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with the existing original 'Class' column, so adds little new leverage. Groundedness is also weak: sample rows are confidently assigned 'business'/'economy' where the review text gives no clear class signal (e.g. the 'business' assignment for the Jakarta-Singapore praise review is unwarranted)."
+      },
+      {
+        "name": "aircraft_cabin_condition",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Cabin condition is a distinct axis relevant to cabin-service quality and rating. Some values are grounded (outdated for the 'dreadful seats' review; modern for the well-maintained review), but several are asserted where the text is silent, and NULL is used appropriately for others. Mixed reliability."
+      },
+      {
+        "name": "cabin_crew_service_tone",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Crew service tone is a genuine service-quality axis pertinent to the query. Grounded where crew is described (warm_attentive for welcoming crew), but 'robotic_rushed' assigned to the seat-complaint review that never mentions crew is an unsupported inference."
+      },
+      {
+        "name": "food_quality_consistency",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Food service is one of the cabin-service dimensions the query cares about, providing a usable grouping axis. Values track the source well (high_varied_menu for food-praise reviews) and NULL is used sensibly when food is unmentioned."
+      },
+      {
+        "name": "multi_complaint_pattern",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing single vs multiple service issues supports estimating combined rating uplift from eliminating complaints. Reasonably grounded: no_major_complaint for praise reviews, single_primary_issue for the lone seat complaint."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.68,
+    "rationale": "Most added columns give genuine, query-relevant axes for grouping cabin-service complaints and modelling their impact on Overall Rating; primary_service_complaint_category is especially on-point. Weaknesses: cabin_class largely duplicates the existing 'Class' column and adds little, and several columns (complaint_frequency_pattern, cabin_class, aircraft_cabin_condition, cabin_crew_service_tone) exhibit confident per-row assertions unsupported by silent source text—e.g. 'robotic_rushed' and 'recurring_systemic_issue' on a review mentioning neither crew nor recurrence. Groundedness is otherwise decent, with NULL used appropriately for silent rows."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 7
+}

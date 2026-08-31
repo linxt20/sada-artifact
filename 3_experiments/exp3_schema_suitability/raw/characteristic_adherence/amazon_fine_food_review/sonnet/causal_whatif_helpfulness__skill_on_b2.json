@@ -1,0 +1,142 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How would HelpfulnessNumerator change if reviews provided more detailed product information?",
+  "focus_variable": "helpfulness_numerator_outcome",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "product_detail_depth",
+    "comparative_reference",
+    "usage_instruction",
+    "sensory_description_depth",
+    "review_narrative_type",
+    "review_sentiment_valence",
+    "reviewer_expertise_signal",
+    "product_category",
+    "use_case_context",
+    "purchase_or_delivery_detail"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.75,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.75,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "HelpfulnessNumerator",
+    "per_column": [
+      {
+        "name": "product_detail_depth",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Directly operationalizes 'more detailed product information' -- the intervenable lever the query asks about. Authors can decide how much product detail to include."
+      },
+      {
+        "name": "comparative_reference",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "A specific facet of providing detailed product information (comparisons to other products); a settable/editable content choice, part of the treatment construct."
+      },
+      {
+        "name": "usage_instruction",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Whether the review includes usage instructions is another dimension of detailed product information; an authorable, intervenable content property."
+      },
+      {
+        "name": "sensory_description_depth",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Depth of sensory description is another sub-dimension of the detail-provision treatment; settable by the writer."
+      },
+      {
+        "name": "review_narrative_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Narrative type is largely a consequence/expression of how the review is written; it lies on the path between detail choices and helpfulness rather than being a common prior cause. Treated as mediator, not a confounder."
+      },
+      {
+        "name": "review_sentiment_valence",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Sentiment can drive both how much detail a reviewer supplies and how helpful readers rate the review, so it is a plausible common cause requiring adjustment. Not named in the query."
+      },
+      {
+        "name": "reviewer_expertise_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Reviewer expertise plausibly causes both the amount of detailed product information provided and the perceived helpfulness -- a classic unnamed confounder."
+      },
+      {
+        "name": "product_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category affects both how much product detail is typically written and baseline helpfulness votes; a common cause not named in the query."
+      },
+      {
+        "name": "use_case_context",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The use case can influence both the detail provided and reader-perceived helpfulness; plausible unnamed common cause."
+      },
+      {
+        "name": "purchase_or_delivery_detail",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether the review mentions purchase/delivery is a competing content type more like an alternative outcome of writing choices than a common cause of both treatment and helpfulness; weak as a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "product_detail_depth",
+      "comparative_reference",
+      "usage_instruction",
+      "sensory_description_depth"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "review_sentiment_valence",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "reviewer_expertise_signal",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "product_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "use_case_context",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.75,
+    "rationale": "The set cleanly captures the intervenable treatment ('more detailed product information') across several settable content dimensions, satisfying claim (a). It also supplies multiple plausible confounders -- reviewer expertise, product category, sentiment, and use-case context -- that are common causes of both the detail level and helpfulness and are NOT named in the query, demonstrating the capability under test. review_narrative_type is best read as a mediator and purchase_or_delivery_detail as an alternative-content collider, so they do not count as confounders, but enough genuine unnamed confounders remain for a solid what-if design."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_whatif_helpfulness",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 10
+}

@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative IMDb audience satisfaction?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "explicit_condemnation_language",
+    "comparative_dismissal_type",
+    "narrative_plot_failure_type",
+    "wasted_potential_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.78,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8375,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.8088,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "explicit_condemnation_language",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binary condemnation flag is somewhat generic (close to a sentiment-intensity signal), but for predicting negative satisfaction it gives a usable axis distinct from the raw label. Values track the source well: harsh 'pile of crap'/'terrible movie' reviews are True, the positive praise review is False."
+      },
+      {
+        "name": "comparative_dismissal_type",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A typed categorisation of how a review dismisses a film by comparison is a genuine new grouping axis for the query. IMDB-0001's 'comparison_to_classics' is defensibly grounded (invokes Star Trek: Voyager/quality comparison); silent rows correctly marked not_present. Grounding is sound though borderline in edge cases."
+      },
+      {
+        "name": "narrative_plot_failure_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Categorising the specific plot-failure mode gives a meaningful axis to correlate with negativity. Sampled values are conservative and defensible: rows without clear plot criticism are not_present rather than invented. Distribution shows discriminating categories (pacing, incoherent, cliche)."
+      },
+      {
+        "name": "wasted_potential_type",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "A distinct and useful axis (premise/talent/budget squandered) for explaining dissatisfaction. Mostly grounded, but IMDB-0001 tagged 'premise_squandered' is a weakly supported reading — the review pans writing/quality rather than clearly a squandered premise, indicating some over-inference risk in this category."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.84,
+    "rationale": "The added columns provide several genuinely distinct categorical axes (condemnation intensity, comparative dismissal, plot-failure mode, wasted-potential mode) that give real leverage for modelling what review signals predict negative satisfaction, well beyond raw sentiment or text length. Values are largely sound readings of the source text, with conservative not_present labels for silent rows. The main weakness is occasional over-confident inference in the more interpretive categories (e.g., 'premise_squandered' on a review focused on bad writing), but no clear contradictions or invented facts were observed."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 4
+}

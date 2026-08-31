@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What customer issues create the most support burden?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 3,
+  "added_columns": [
+    "severity_score",
+    "issue_category",
+    "customer_impact_level"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.0,
+    "mece": 0.0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "severity_score",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Severity is a property/driver of the issue that predicts how much burden it may generate, not a constitutive part of operational burden itself. Burden is the labor/resource load; severity is an attribute of the ticket that influences it. Additionally it overlaps heavily with customer_impact_level (same 76/74/50/50 distribution), suggesting it captures the same underlying aspect."
+      },
+      {
+        "name": "issue_category",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A taxonomy of what the issue is about (feature_request, billing, security, etc.). This is a segmentation dimension for grouping tickets, not an aspect OF operational burden. Categorizing the issue does not decompose the burden concept into its parts (e.g., handling effort, volume, recurrence)."
+      },
+      {
+        "name": "customer_impact_level",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Customer-facing impact (low/medium/high/critical) is an outcome/attribute of the issue affecting the customer, not a constitutive part of the internal operational load carried by the support organization. It also mirrors severity_score's distribution, so it is largely a restatement of the same severity aspect."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "severity_score",
+      "issue_category",
+      "customer_impact_level"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.0,
+    "rationale": "Operational burden is the load a support organization bears -- its constitutive facets would be aspects such as handling effort/time-to-resolve, volume/frequency, escalation/rework load, staffing/resource consumption, and recurrence. None of the added columns are parts OF this load. severity_score and customer_impact_level are external attributes/predictors of the issue (and near-duplicates of each other, hurting mutual exclusivity), while issue_category is a grouping taxonomy. The set fails the meronymy test: no column is 'an aspect of' operational burden, so exhaustiveness is 0. Note that a genuine burden facet (resolution_minutes, a handling-effort measure) already exists in the original table but was not among the added columns."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "food_quality_rating",
+    "food_item_highlight",
+    "service_quality_rating",
+    "service_issue_type",
+    "staff_behavior_tone"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.68,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Experiential aspects/dimensions of Yelp restaurant reviews (the review 'aspects' being discussed), organized around food and service experience",
+    "per_column": [
+      {
+        "name": "food_quality_rating",
+        "supports_focus": true,
+        "rationale": "Captures the food-experience aspect and its sentiment valence, a core review dimension."
+      },
+      {
+        "name": "food_item_highlight",
+        "supports_focus": true,
+        "rationale": "Adds granularity within the food aspect (specific dishes praised/criticized), a coherent facet."
+      },
+      {
+        "name": "service_quality_rating",
+        "supports_focus": true,
+        "rationale": "Captures the service-experience aspect and valence, parallel to food_quality."
+      },
+      {
+        "name": "service_issue_type",
+        "supports_focus": true,
+        "rationale": "Decomposes service problems into actionable subtypes, deepening the service facet."
+      },
+      {
+        "name": "staff_behavior_tone",
+        "supports_focus": true,
+        "rationale": "Captures staff interpersonal tone, a distinct aspect of the service/staff experience."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The columns collectively centre on a single coherent, data-inferable focus: the experiential aspects of restaurant reviews. They cluster tightly around two well-formed dimensions -- food (quality valence + specific-item highlight) and service (quality valence + issue type + staff tone) -- rather than being a scattered grab-bag, and none are mechanical (no token counts or bare sentiment on the whole review). Structure is sound: each aspect has both a valence facet and a finer categorical facet, giving useful granularity beyond a single restatement, though there is mild overlap between service_issue_type and staff_behavior_tone (rude appears in both), and other plausible aspects (ambiance, price, wait time, cleanliness) are absent, slightly narrowing coverage of 'aspects of their experience.' The implied focus is clearly actionable -- an analyst could quantify which experiential dimensions dominate reviews and drill into specific failure modes. Deductions are for the narrow aspect coverage and the partial redundancy between the two service categoricals."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

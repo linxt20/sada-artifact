@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "Avg Subcategory Score",
+    "Value For Money Poor",
+    "Overall Rating Band",
+    "Weakest Category",
+    "Non-Rec Risk Factors"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome (Recommended = no)",
+    "per_column": [
+      {
+        "name": "Avg Subcategory Score",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Aggregates the service subcategory ratings (seat, staff, food, IFE, value). These subjective quality scores plausibly drive the reviewer's recommendation, so this is a candidate cause/driver of the outcome, not a common cause of some other treatment. It is a predictor being attributed, not a confounder."
+      },
+      {
+        "name": "Value For Money Poor",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Binary flag derived from the Value For Money rating. It is a candidate cause whose effect on non-recommendation is being attributed. It is not a common cause of any other treatment and the outcome, so it is a treatment/driver, not a confounder."
+      },
+      {
+        "name": "Overall Rating Band",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Overall Rating is a summary satisfaction score that sits downstream of the subcategory scores and is essentially co-determined with (a near-proxy of) the recommendation decision. On the path subcategory-scores -> overall-rating -> recommendation it is a mediator/outcome proxy; adjusting for it would bias, not enable, causal attribution."
+      },
+      {
+        "name": "Weakest Category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Identifies which subcategory scored lowest, i.e. names the candidate driver responsible for a poor review. It is a descriptor of the candidate cause, not a common cause of both a treatment and the outcome."
+      },
+      {
+        "name": "Non-Rec Risk Factors",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A post-hoc engineered concatenation of 'poor_X' flags. It mixes candidate causes (poor_value_for_money, poor_seat_comfort, etc.) with 'very_low_overall_rating', which is an outcome proxy/mediator. It is a circular attribution label constructed from outcome-adjacent variables rather than an adjustable confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "Avg Subcategory Score",
+      "Value For Money Poor",
+      "Weakest Category"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns perform a descriptive/correlational decomposition of the outcome: they flag which service subcategory scores are poor and label the weakest driver. This surfaces candidate causes/treatments (poor value-for-money, weakest category, per-category poor flags) but supplies ZERO confounders. A confounder here would be a common cause of both a subcategory rating and the recommendation that must be adjusted to avoid biased attribution -- e.g. Type of Traveller, Route, Month Flown, or reviewer disposition. None of these are added; nothing is surfaced from the data/text as a common cause. Worse, several columns (Overall Rating Band, and 'very_low_overall_rating' inside Non-Rec Risk Factors) are downstream proxies/mediators of the recommendation itself; treating them as explanatory factors would be a modelling mistake. Because the required treatment+confounder structure is absent (no common causes to adjust for), the causal-estimation claim is not realised. confounder_quality = 0."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

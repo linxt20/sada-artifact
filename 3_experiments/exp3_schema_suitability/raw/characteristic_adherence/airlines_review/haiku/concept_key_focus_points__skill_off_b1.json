@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "average_component_rating",
+    "rating_variance",
+    "satisfaction_group",
+    "is_complaint_review"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7125,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7688,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "average_component_rating",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Aggregating the six component ratings into a single mean gives a genuine new axis to rank and compare reviews, useful for the 'key points' query. Values are derivable from the existing rating columns and the samples are plausible aggregates."
+      },
+      {
+        "name": "rating_variance",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Variance across component ratings surfaces mixed/polarised experiences (e.g. good food but bad seat), a legitimate new analytical dimension distinct from the mean. Computed from present rating columns, so well grounded."
+      },
+      {
+        "name": "satisfaction_group",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A three-level satisfaction bucket is a useful grouping variable for summarising the table. Mostly grounded, though the mapping is imperfect: the 'can't fault a single aspect' rave is only 'highly_satisfied' while the clearly negative Tokyo-Haneda review is labelled 'satisfied', showing the derivation from ratings can misalign with sentiment, slightly lowering groundedness."
+      },
+      {
+        "name": "is_complaint_review",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binary complaint flag helps isolate negative reviews to concentrate on, but it is fairly redundant with satisfaction_group/mean and is a coarse positive/negative-style flag, limiting added leverage. Sample labels align well with the source text (rave = 0, complaints = 1)."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns give real analytical leverage for an overview query: a mean rating for ranking, a variance for detecting polarised reviews, and a satisfaction bucket for grouping. The complaint flag is somewhat redundant with the satisfaction grouping. Values are largely derivable from the existing rating columns and review text, with no invented facts, though the satisfaction/complaint labels occasionally misalign with the narrative sentiment (e.g. a clearly negative review tagged 'satisfied'), modestly reducing groundedness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

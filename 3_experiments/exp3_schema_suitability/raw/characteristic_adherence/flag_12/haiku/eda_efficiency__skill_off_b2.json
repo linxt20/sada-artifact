@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_hours",
+    "efficiency_category",
+    "priority_level",
+    "efficiency_score"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.05,
+    "interpretable_fraction": 0.25
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Resolution hours is essentially the operationalization of resolution efficiency itself (the inverse of speed), not an external associational variable. It restates the focus rather than opening a relationship to segment against, and its continuous, near-unique values offer no interpretable categories for grouping."
+      },
+      {
+        "name": "efficiency_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is a binned version of the focus variable (Slow/Normal), i.e. a direct restatement of resolution efficiency. While categorical, it is the focus itself, not an independent explanatory dimension to compare it against."
+      },
+      {
+        "name": "priority_level",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Priority is already present in the original table (priority) and named as a query dimension; this merely duplicates it. It has well-separated interpretable categories, but it adds no new external variable beyond what already exists."
+      },
+      {
+        "name": "efficiency_score",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "An opaque numeric score that is itself the focus (efficiency), not an external segmentation variable. Its fine-grained, near-unique values provide no interpretable categories for human exploration and restate the target."
+      }
+    ],
+    "n_predictors": 0,
+    "relationship_informativeness": 0.05,
+    "rationale": "None of the added columns introduce an external, associational variable that can be grouped and compared against resolution efficiency. resolution_hours, efficiency_category, and efficiency_score are all restatements/operationalizations of the focus itself, and priority_level merely duplicates an existing original column. The set fails the exploratory-analysis claim because it does not open up any new interpretable relationship for a human explorer; it circles around the focus rather than providing independent dimensions to segment on."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

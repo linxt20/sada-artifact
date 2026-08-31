@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_clinical_object",
+    "severity_or_impact",
+    "visit_episode_type",
+    "acuity_class",
+    "clinical_domain"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.574,
+    "focus_coherence": 0.82,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The clinical nature/type of the patient's presenting concern (categorizing what each visit is about, by body system, episode type, and severity)",
+    "per_column": [
+      {
+        "name": "primary_clinical_object",
+        "supports_focus": true,
+        "rationale": "Directly types the concern by clinical body-system/category, which is the core of 'main types of concerns' -- the strongest realization of the focus."
+      },
+      {
+        "name": "severity_or_impact",
+        "supports_focus": true,
+        "rationale": "A coherent facet of a presenting concern: how serious/impactful it is, differentiating types of concerns along severity."
+      },
+      {
+        "name": "visit_episode_type",
+        "supports_focus": true,
+        "rationale": "Characterizes the concern as acute/chronic/preventive, a meaningful facet of what type of concern is being presented."
+      },
+      {
+        "name": "acuity_class",
+        "supports_focus": false,
+        "rationale": "Routine/Urgent/Emergency largely restates the existing 'urgency' column and overlaps with severity; adds little distinct concern-typing signal."
+      },
+      {
+        "name": "clinical_domain",
+        "supports_focus": false,
+        "rationale": "Department/specialty (General Practice, Pediatrics...) mostly duplicates the existing 'department' column and correlates with primary_clinical_object rather than adding an independent facet of the concern itself."
+      }
+    ],
+    "focus_coherence": 0.82,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "rationale": "The columns collectively center on one coherent, data-inferable focus: characterizing the type of presenting clinical concern. primary_clinical_object, severity_or_impact, and visit_episode_type form a genuine multi-facet decomposition (what/how-severe/what-kind-of-episode) at useful granularity, directly serving the 'main types of concerns' query and giving an analyst actionable categories. Structure quality is dented because acuity_class and clinical_domain are near-duplicates of the pre-existing urgency and department columns and correlate with the primary categorization rather than adding independent, differentiating facets -- so the set is slightly padded with redundant restatements. Overall a solid, actionable focus with a somewhat diluted structure."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

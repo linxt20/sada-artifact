@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict low Yelp user satisfaction?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "staff_attitude",
+    "complaint_intensity",
+    "unresolved_complaint",
+    "revisit_intent"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.875,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.8625,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.8688,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "staff_attitude",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorises service/staff behavior into a meaningful multi-valued axis directly relevant to predicting dissatisfaction. Sample values are well-grounded: 'friendly_positive' for Oliveo Grill, 'dismissive_indifferent' for the forgotten-table review, 'discriminatory' for the review refusing entry to people of color. 'not_present' appropriately used when silent."
+      },
+      {
+        "name": "complaint_intensity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "An ordinal severity scale is a genuine new axis for modeling low satisfaction. Grounding is mostly reasonable (5 for 'worst service ever', null when no complaint), but assigning intensity '2.0' to the largely positive pizza review whose 'only complaint' is pie size, and '4.0' to the cabana review, show some subjective/overstated scoring, so slightly less than fully warranted."
+      },
+      {
+        "name": "unresolved_complaint",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A boolean flag for whether a complaint went unresolved is a useful predictive signal distinct from intensity. Sample assignments are sound: True for reviews with clear grievances and no resolution, False for positive reviews. Some inference required but reasonably warranted from text."
+      },
+      {
+        "name": "revisit_intent",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Revisit intention is a strong, near-canonical proxy for satisfaction and gives a genuine axis to compare against label. Values are well-grounded: 'will_definitely_return' for the enthusiastic Oliveo review, 'will_not_return' for the worst-service and discriminatory reviews, 'not_present' when unstated. 'neutral_or_uncertain' for the pizza review is a defensible reading."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.86,
+    "rationale": "All four added columns provide distinct, non-redundant analytical axes (staff behavior type, complaint severity, complaint resolution status, revisit intent) that are directly relevant to predicting low Yelp satisfaction, and none merely restate label_pos or each other. Values are largely well-grounded in the source text with appropriate 'not_present'/null handling for silent rows. The main weakness is some subjective inflation in complaint_intensity scoring (e.g., assigning nonzero intensity to a predominantly positive review), a minor grounding concern rather than a systemic hallucination."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 4
+}

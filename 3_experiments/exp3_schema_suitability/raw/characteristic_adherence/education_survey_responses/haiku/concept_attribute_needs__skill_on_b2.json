@@ -1,0 +1,90 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "focus_variable": "learner_needs_and_pain_points",
+  "concept": "learner_needs_and_pain_points",
+  "n_added_columns": 6,
+  "added_columns": [
+    "hands_on_exploration_need",
+    "instructional_delivery_quality",
+    "attention_focus_sustainability",
+    "household_equity_barrier",
+    "peer_interaction_loss",
+    "subject_specific_challenge"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.7433,
+    "facet_fraction": 1.0,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.65,
+    "exhaustiveness": 0.85,
+    "mece": 0.7433,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "learner_needs_and_pain_points",
+    "per_column": [
+      {
+        "name": "hands_on_exploration_need",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Captures the need for physical/hands-on/lab/manipulative experiences -- a genuine aspect of learner needs and a distinct category of pain point."
+      },
+      {
+        "name": "instructional_delivery_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Represents pain points about how instruction is delivered (interactivity, pacing, feedback, live discussion) -- a constitutive aspect of learner needs regarding teaching."
+      },
+      {
+        "name": "attention_focus_sustainability",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Covers cognitive/engagement pain points (attention span, screen fatigue, comprehension loss) -- a legitimate aspect of learner needs during remote learning."
+      },
+      {
+        "name": "household_equity_barrier",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Captures access/equity barriers (materials, tech, parental support) -- a constitutive category of learner pain points, distinct from instructional or cognitive facets."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Represents social/collaborative needs and their loss -- a distinct constitutive aspect of learner needs."
+      },
+      {
+        "name": "subject_specific_challenge",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Captures subject-dependent needs (labs, literacy groups, studio, ensemble). Partially overlaps with hands_on_exploration_need (science_lab, art_studio) and peer_interaction (ensemble/community), cross-cutting existing facets rather than being cleanly orthogonal."
+      }
+    ],
+    "facet_columns": [
+      "hands_on_exploration_need",
+      "instructional_delivery_quality",
+      "attention_focus_sustainability",
+      "household_equity_barrier",
+      "peer_interaction_loss",
+      "subject_specific_challenge"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.65,
+    "exhaustiveness": 0.85,
+    "rationale": "All six columns are genuine constitutive facets of learner needs and pain points -- each names an aspect OF the concept (hands-on experience, instructional delivery, cognitive engagement, equity/access, social interaction, subject specificity) rather than an external predictor, cause, or restatement of the whole. Coverage of the concept's main aspects is strong. However, mutual exclusivity is weakened because subject_specific_challenge is a cross-cutting facet whose values overlap other columns (science_lab_dependent overlaps hands_on_exploration; art_studio_community_needed / performance_ensemble_required overlap peer_interaction and hands-on facets), meaning the same underlying pain point can register under multiple columns. This categorization-vs-aspect overlap prevents a clean MECE partition despite good exhaustiveness."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

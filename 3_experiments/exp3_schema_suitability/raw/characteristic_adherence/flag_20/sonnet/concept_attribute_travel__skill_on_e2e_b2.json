@@ -1,0 +1,99 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "focus_variable": "travel_policy_risk",
+  "concept": "travel_policy_risk",
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category",
+    "transport_expense_misclassified",
+    "asset_description_quality",
+    "entry_method",
+    "missing_source_id_flag",
+    "processing_lag_flag",
+    "repeat_user_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.035,
+    "facet_fraction": 0.1429,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.15,
+    "mece": 0.2449,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "travel_policy_risk",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A taxonomy of asset/expense types (hardware, cloud, travel_item). This is a general classification of the expense, not an aspect of travel policy risk itself. At best it is context that could predict risk, not a part-of the risk concept."
+      },
+      {
+        "name": "transport_expense_misclassified",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Misclassification of a transport expense is a genuine constitutive aspect of travel policy risk -- a specific type of policy-compliance problem embedded in the description."
+      },
+      {
+        "name": "asset_description_quality",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Descriptive quality (specific_model, vague_generic) is a property of the text that may signal risk, but it characterizes description quality, not a part of travel policy risk per se."
+      },
+      {
+        "name": "entry_method",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "How the entry was created (manual vs automated) is a process/provenance attribute that may cause errors, but it is not a facet OF the risk itself."
+      },
+      {
+        "name": "missing_source_id_flag",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Absence of a source ID is a data-completeness flag on the record, a possible indicator of risk, not a constitutive aspect of travel policy risk."
+      },
+      {
+        "name": "processing_lag_flag",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Processing delay is a workflow-timing attribute; it may correlate with risk but is not a part-of the policy-risk concept."
+      },
+      {
+        "name": "repeat_user_flag",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether a user appears repeatedly is a behavioral/frequency attribute external to the risk concept, not an aspect of the risk itself."
+      }
+    ],
+    "facet_columns": [
+      "transport_expense_misclassified"
+    ],
+    "non_facet_columns": [
+      "asset_category",
+      "asset_description_quality",
+      "entry_method",
+      "missing_source_id_flag",
+      "processing_lag_flag",
+      "repeat_user_flag"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.15,
+    "rationale": "Only one column (transport_expense_misclassified) is a genuine constitutive facet of travel_policy_risk -- an actual policy-compliance violation type. The remaining columns are external predictors, causes, or irrelevant taxonomies: asset_category is a generic expense classification; asset_description_quality, missing_source_id_flag, processing_lag_flag and repeat_user_flag are metadata/data-quality signals that may correlate with risk but are not aspects OF it; entry_method is a provenance cause. The set therefore does not carve the concept into non-overlapping constitutive aspects (many overlap as 'data-quality/process anomaly' proxies), and coverage of the actual sub-dimensions of travel policy risk (e.g., unauthorized spend categories, out-of-policy amounts, missing approvals, duplicate/personal expenses, timing/limit breaches) is almost entirely absent."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

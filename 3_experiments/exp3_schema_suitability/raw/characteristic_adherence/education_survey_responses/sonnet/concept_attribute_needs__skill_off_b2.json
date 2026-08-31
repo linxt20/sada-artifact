@@ -1,0 +1,75 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "focus_variable": "learner_needs_and_pain_points",
+  "concept": "learner_needs_and_pain_points",
+  "n_added_columns": 4,
+  "added_columns": [
+    "pain_points",
+    "learner_needs",
+    "response_sentiment",
+    "pain_point_count"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3992,
+    "facet_fraction": 0.5,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.75,
+    "mece": 0.7984,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "learner_needs_and_pain_points",
+    "per_column": [
+      {
+        "name": "pain_points",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The 'pain points' half of the concept is a constitutive aspect OF learner needs and pain points; its multi-valued categories (instructor_feedback, hands_on_lab_access, social_isolation, etc.) enumerate genuine parts of the concept."
+      },
+      {
+        "name": "learner_needs",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The 'learner needs' half is the other constitutive aspect OF the concept; categories like teacher_support, interactive_content, peer_connection are aspects of the concept itself."
+      },
+      {
+        "name": "response_sentiment",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Overall response sentiment (positive/negative/mixed) is an affective property of the response text, not a constitutive part of the needs-and-pain-points concept. It is a generic sentiment tag, not a facet."
+      },
+      {
+        "name": "pain_point_count",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A count derived from pain_points is an aggregate/measure over an existing facet, not an independent aspect of the concept; it re-expresses information already in pain_points."
+      }
+    ],
+    "facet_columns": [
+      "pain_points",
+      "learner_needs"
+    ],
+    "non_facet_columns": [
+      "response_sentiment",
+      "pain_point_count"
+    ],
+    "mutual_exclusivity": 0.85,
+    "exhaustiveness": 0.75,
+    "rationale": "The concept has two natural constitutive halves: needs and pain points, and both are directly captured as multi-valued faceted columns (pain_points, learner_needs), which cleanly and non-redundantly carve the concept into its two main aspects. Mutual exclusivity is high because needs and pain points are conceptually distinct, though some categories mirror each other (e.g., instructor_feedback pain vs teacher_support need), creating mild latent overlap. Exhaustiveness is fairly good—together they cover the concept's principal constitutive aspects across pedagogical, social, technical, and access dimensions—though within-facet subcategories are somewhat coarse. The two non-facet columns weaken instruction following: response_sentiment is an irrelevant affective property external to the concept, and pain_point_count is a derived restatement of pain_points rather than a distinct facet."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

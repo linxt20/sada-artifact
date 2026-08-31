@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "is_hardware_incident",
+    "hardware_failure_category",
+    "addressable_by_top_causes"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.9,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.9,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.9,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_hardware_incident",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly identifies hardware incidents, the essential filter for the query about hardware incident rate. Evidence rows are software issues correctly flagged 0, a sound reading of short_description."
+      },
+      {
+        "name": "hardware_failure_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides the grouping axis to identify the most common failure causes, which is the core of the query. NULL for non-hardware rows is correct behaviour; categories like Printer/Monitor are plausibly extractable from descriptions."
+      },
+      {
+        "name": "addressable_by_top_causes",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly supports the counterfactual 'how much would the rate drop' by flagging incidents attributable to top causes. Values align with category (132 addressable roughly matches top hardware categories). Slightly derivative of the category column but adds the specific top-cause-addressability leverage the query needs."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.9,
+    "rationale": "All three columns map tightly onto the query: identify hardware incidents, categorise failure causes, and flag those addressable by top causes to estimate the rate reduction. Sampled values are consistent, well-grounded readings of the source text, with correct NULL/0 handling for non-hardware software rows. No hallucination observed in the samples."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

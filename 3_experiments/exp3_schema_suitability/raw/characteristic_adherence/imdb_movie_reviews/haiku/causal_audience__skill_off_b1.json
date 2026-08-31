@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "has_acting_complaints",
+    "has_pacing_issues",
+    "writing_quality_signal",
+    "has_character_depth_signal",
+    "production_quality_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.82,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.67,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.745,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "has_acting_complaints",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Acting complaints are a core axis for 'why dissatisfied', with a well-distributed flag (53/197). Grounding is mixed: IMDB-0003 ('performances are wooden') is correct, but IMDB-0001 flags acting complaints where the review targets writing/dialogue, and IMDB-0002 ('worst movies') flags acting with no acting-specific criticism in the excerpt. Some over-firing."
+      },
+      {
+        "name": "has_pacing_issues",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Pacing is a legitimate dissatisfaction axis. The flag is very rare (6/250) but not near-constant enough to be trivial. Sampled rows all set 0, consistent with source texts that do not mention pacing; appears conservative and grounded."
+      },
+      {
+        "name": "writing_quality_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Writing quality is directly relevant and appears multi-level. IMDB-0001 ('writing is beyond insipid') correctly gets 1; other silent rows get 0. Reasonable readings, though sparse distribution limits leverage."
+      },
+      {
+        "name": "has_character_depth_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Character depth is a valid axis with good distribution (52/198). However grounding is weak in samples: IMDB-0002 (cats-strung-up horror description) and IMDB-0003 are flagged 1 without clear character-depth commentary in the excerpts, suggesting the flag fires on tangential cues."
+      },
+      {
+        "name": "production_quality_flag",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Production quality is a distinct, useful axis (45/205). IMDB-0002 flags production issues plausibly (low-budget King adaptation), but the excerpt doesn't explicitly criticize production values, so the specific attribution is somewhat unsupported. Other sampled rows correctly 0."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns each capture a distinct, non-redundant reason for dissatisfaction (acting, pacing, writing, characters, production), which directly serves the query and provides real axes to group and compare on. None are trivial restatements of the original label. Groundedness is the weaker dimension: while conservative 0-values on silent rows are appropriate, several sampled 1-flags (acting on IMDB-0001/0002, character depth on IMDB-0002/0003) fire without clear textual warrant, indicating a tendency to over-attribute complaints. Overall the columns are analytically strong but moderately over-firing."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

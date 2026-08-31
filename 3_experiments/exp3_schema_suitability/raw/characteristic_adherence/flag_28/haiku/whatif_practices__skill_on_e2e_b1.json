@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "goal_domain",
+    "implementation_mechanism",
+    "employee_involvement_level",
+    "outcome_metric_alignment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.6375,
+    "analytical_usefulness__table_level": 0.66,
+    "source_groundedness": 0.7625,
+    "source_groundedness__table_level": 0.76,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_domain",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean grouping axis, but it largely mirrors the existing 'category' column (cost_reduction/Cost Reduction, etc.), so it is close to redundant for this query. Values are well-grounded, matching category and description in every sample."
+      },
+      {
+        "name": "implementation_mechanism",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures the 'how' (practices) of each goal, directly relevant to comparing goal-management practices to achievement. Values are reasonable readings of the description (engagement_program, process_automation), though some are loose inferences (efficiency->process_automation where text says communication channels)."
+      },
+      {
+        "name": "employee_involvement_level",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Potentially a useful practice axis, but the source texts do not state involvement scope; every sample is labeled 'team' with no textual warrant, suggesting a near-constant, largely invented assignment rather than a grounded reading."
+      },
+      {
+        "name": "outcome_metric_alignment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Whether the tracking metric fits the goal is highly relevant to why some goals achieve more, giving a genuine modeling axis. Grounded by comparing description/category to metric (e.g., Customer Satisfaction goal measured by Expense Ratio -> misaligned is sound); the aligned case is also defensible."
+      }
+    ],
+    "analytical_usefulness": 0.66,
+    "source_groundedness": 0.76,
+    "rationale": "implementation_mechanism and outcome_metric_alignment provide genuine practice/quality axes for relating goal-management to achievement and are mostly well-grounded. goal_domain is grounded but largely duplicates the existing category column. employee_involvement_level is the weak point: it appears near-constant ('team') and is not supported by the source texts, indicating hallucinated categorization."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

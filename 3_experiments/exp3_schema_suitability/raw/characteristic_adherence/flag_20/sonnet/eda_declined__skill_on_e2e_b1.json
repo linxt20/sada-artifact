@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "asset_category",
+    "asset_brand_vendor",
+    "action_type",
+    "creation_method",
+    "description_specificity",
+    "has_source_id",
+    "is_luxury_or_premium",
+    "department_group",
+    "hardware_subtype"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.4389,
+    "analytical_usefulness__table_level": 0.42,
+    "source_groundedness": 0.7611,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.6,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "rationale": "Well-grounded categorization from short_description/ci. Only mildly useful for the decline-prediction query since travel is one slice; still gives a grouping axis but most rows are hardware, off-target for travel-expense focus.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "asset_brand_vendor",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.9,
+        "rationale": "Cleanly extracted from ci field. But brand/vendor is largely irrelevant to whether a TRAVEL expense is declined; travel rows would mostly be NULL here, giving little leverage for this query.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "action_type",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "rationale": "Reasonable reading of the description. Distinguishes travel_expense from other actions, which helps segment the population, though it partly restates asset_category.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "creation_method",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "rationale": "manual vs automated is inferable from wording ('Automated creation'). A plausibly predictive process signal for decline outcomes.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "description_specificity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "rationale": "Directly targets the query: how the description is written (generic vs template vs specific) is a genuine candidate signal for decline. Some rows show inconsistent labeling (a specific 'Dell Latitude 6520' marked generic_category_label), so grounding is imperfect but defensible.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.95,
+        "rationale": "Trivially derivable from presence of source_id (redundant with an existing original column). Low new leverage though soundly grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "is_luxury_or_premium",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.55,
+        "rationale": "Near-constant (488 false / 12 true) limiting analytical value; and the 'premium' judgment is a weakly warranted inference from ci strings that rarely state luxury status. Marginal for the query.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "department_group",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.5,
+        "rationale": "Department could plausibly relate to declines, but the department original column exists so this is a normalized restatement. Samples raise concern: 'AWS EC2' mapped to sales, mappings appear unsupported by row text, suggesting values not reliably grounded.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "hardware_subtype",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.6,
+        "rationale": "Grounded when ci names hardware, but 'AWS EC2 Instance' labeled server is questionable, and hardware subtype is off-target for a travel-expense decline query.",
+        "hallucination_observed": true
+      }
+    ],
+    "analytical_usefulness": 0.42,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns are largely oriented toward asset/hardware inventory analysis, not the travel-expense-decline question. The few columns that plausibly bear on the query (description_specificity, creation_method, action_type) offer modest leverage, but most (asset_brand_vendor, hardware_subtype, is_luxury_or_premium) are off-target or near-constant, and has_source_id/department_group largely restate existing original columns. Grounding is generally solid for extractions from ci and short_description, but several inferred fields (department_group mappings, is_luxury_or_premium, cloud-service labeled as server/hardware) assert specifics the source text does not support."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

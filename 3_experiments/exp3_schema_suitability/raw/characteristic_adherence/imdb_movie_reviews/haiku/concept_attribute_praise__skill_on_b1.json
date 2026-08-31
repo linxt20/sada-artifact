@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "praise_type",
+    "complaint_type",
+    "subject_target"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.9067,
+    "analytical_usefulness__table_level": 0.92,
+    "source_groundedness": 0.8233,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.865,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "praise_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Directly categorizes the type of praise, which is exactly the axis the query needs for grouping and comparison. Mostly well-grounded, but row IMDB-0003 assigns 'acting_performance' as praise when the source calls the performances 'wooden' — a contradiction (that is a complaint, not praise), indicating some misattribution."
+      },
+      {
+        "name": "complaint_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides a genuine complaint-category axis central to the query. Sampled values are sound readings: insipid writing→screenplay_writing, terrible King movie→screenplay_writing, wooden/predictable premise→screenplay_writing. Silent rows correctly marked not_present."
+      },
+      {
+        "name": "subject_target",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a useful cross-cutting dimension (what the sentiment is about) enabling grouping beyond praise/complaint type. Mostly grounded, though IMDB-0004 tagged 'performance_actor' is a stretch when praise there centers on visuals/atmosphere and appearance rather than acting per se, but the text does mention acting so it is defensible."
+      }
+    ],
+    "analytical_usefulness": 0.92,
+    "source_groundedness": 0.82,
+    "rationale": "All three columns give genuine, non-redundant analytical axes that directly serve the query about praise and complaints in IMDb reviews, supporting grouping and comparison. Grounding is generally sound with correct use of 'not_present' for silent rows, but there is at least one clear misattribution (praise_type on IMDB-0003 labeling 'wooden' performances as acting praise) and a borderline subject_target assignment, lowering groundedness modestly."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

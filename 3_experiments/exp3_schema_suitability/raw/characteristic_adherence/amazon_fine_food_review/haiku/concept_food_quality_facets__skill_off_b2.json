@@ -1,0 +1,123 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "focus_variable": "food_quality",
+  "concept": "food_quality",
+  "n_added_columns": 10,
+  "added_columns": [
+    "facet_taste_flavor",
+    "facet_texture",
+    "facet_freshness",
+    "facet_packaging",
+    "facet_value_price",
+    "facet_health_nutrition",
+    "facet_product_variety",
+    "facet_consistency_reliability",
+    "facet_comparison_brand",
+    "facet_delivery_service"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3241,
+    "facet_fraction": 0.5,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.7,
+    "mece": 0.6481,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "food_quality",
+    "per_column": [
+      {
+        "name": "facet_taste_flavor",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Taste/flavor is a core intrinsic aspect of food quality."
+      },
+      {
+        "name": "facet_texture",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Mouthfeel/texture is a constitutive sensory aspect of food quality."
+      },
+      {
+        "name": "facet_freshness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Freshness is an intrinsic quality dimension of the food itself."
+      },
+      {
+        "name": "facet_packaging",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Packaging is a property of the product presentation, not an aspect of the food's quality itself; it can influence perception but is external to the food."
+      },
+      {
+        "name": "facet_value_price",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Price/value is an economic attribute distinct from the food's intrinsic quality, not a part-of quality."
+      },
+      {
+        "name": "facet_health_nutrition",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Nutritional/health properties are a legitimate intrinsic dimension of food quality."
+      },
+      {
+        "name": "facet_product_variety",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Variety of product offerings is an assortment attribute, not a facet of the quality of a given food."
+      },
+      {
+        "name": "facet_consistency_reliability",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Consistency of quality across purchases is a defensible quality dimension, though it partly overlaps with freshness/reliability."
+      },
+      {
+        "name": "facet_comparison_brand",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Comparison to other brands is a rhetorical/relational move in a review, not a constitutive aspect of food quality."
+      },
+      {
+        "name": "facet_delivery_service",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Delivery/service concerns the transaction and logistics, entirely external to the food's quality."
+      }
+    ],
+    "facet_columns": [
+      "facet_taste_flavor",
+      "facet_texture",
+      "facet_freshness",
+      "facet_health_nutrition",
+      "facet_consistency_reliability"
+    ],
+    "non_facet_columns": [
+      "facet_packaging",
+      "facet_value_price",
+      "facet_product_variety",
+      "facet_comparison_brand",
+      "facet_delivery_service"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.7,
+    "rationale": "Half of the added columns are genuine constitutive facets of food quality (taste/flavor, texture, freshness, health/nutrition, and arguably consistency), carving the sensory and intrinsic dimensions well and fairly exhaustively. However, the set is diluted by several external attributes that are not meronymic parts of food quality: packaging, value/price, product variety, brand comparison, and delivery/service belong to the broader consumer-experience or transactional space, not the food-quality concept itself. Mutual exclusivity is moderately weakened by overlap between consistency/reliability and freshness, and exhaustiveness is reduced because the presence of non-facets shows the decomposition targets the whole review experience rather than the quality concept alone."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "focus_variable": "airline_competitive_advantage",
+  "concept": "airline_competitive_advantage",
+  "n_added_columns": 5,
+  "added_columns": [
+    "seat_comfort_and_spaciousness",
+    "aircraft_modernity_and_condition",
+    "ground_service_efficiency",
+    "value_for_money_perception",
+    "food_and_beverage_quality"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.4596,
+    "facet_fraction": 0.8,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_competitive_advantage",
+    "per_column": [
+      {
+        "name": "seat_comfort_and_spaciousness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Physical comfort of the seating is a genuine constitutive aspect of an airline's product/service quality, hence a facet of its competitive advantage."
+      },
+      {
+        "name": "aircraft_modernity_and_condition",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The state and modernity of the fleet is an aspect of the airline's product offering and thus a part of its competitive advantage."
+      },
+      {
+        "name": "ground_service_efficiency",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Ground handling/check-in efficiency is a distinct dimension of the airline's service experience, a constitutive facet."
+      },
+      {
+        "name": "value_for_money_perception",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Value-for-money is an aggregate summary judgment of the whole offering (price vs. total quality), not a distinct constitutive part; it restates the overall advantage rather than decomposing it, and overlaps with all other facets."
+      },
+      {
+        "name": "food_and_beverage_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Catering quality is a discrete aspect of the inflight product and a legitimate facet of competitive advantage."
+      }
+    ],
+    "facet_columns": [
+      "seat_comfort_and_spaciousness",
+      "aircraft_modernity_and_condition",
+      "ground_service_efficiency",
+      "food_and_beverage_quality"
+    ],
+    "non_facet_columns": [
+      "value_for_money_perception"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "rationale": "Four of the five columns are true constitutive facets (seat comfort, aircraft condition, ground service, catering), carving relatively distinct aspects of the airline product. Mutual exclusivity is lowered because value_for_money_perception is an aggregate summary of the whole offering that overlaps with every other facet rather than being an independent aspect. Exhaustiveness is moderate: important constitutive facets are missing, notably inflight staff/cabin service, inflight entertainment, punctuality/reliability, and network/schedule/route breadth, so the set does not fully cover the concept's main aspects."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

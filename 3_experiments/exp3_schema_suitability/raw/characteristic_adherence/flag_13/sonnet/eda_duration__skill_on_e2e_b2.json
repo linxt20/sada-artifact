@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "affected_system_component",
+    "incident_symptom_type",
+    "scope_indicator",
+    "resolver_match",
+    "opened_hour_of_day",
+    "repeat_incident_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.4857,
+    "predictor_fraction": 0.7143,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.68,
+    "interpretable_fraction": 0.8571
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "The query already names incident category as a segmentation axis and the original table has a 'category' column; this largely restates an existing focus/grouping variable rather than opening a new relationship."
+      },
+      {
+        "name": "affected_system_component",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated categories (email_server, database_server, vpn_server) that can be grouped and compared against resolution_duration; adds an associational dimension beyond category."
+      },
+      {
+        "name": "incident_symptom_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear categorical symptom classes (cannot_connect, not_responding, outage_down) that plausibly relate to how long resolution takes and support meaningful segmentation."
+      },
+      {
+        "name": "scope_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Three interpretable, well-balanced buckets (individual_user, system_wide, location_specific); scope is a strong associational driver of resolution duration."
+      },
+      {
+        "name": "resolver_match",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Opaque boolean whose meaning is unclear; without a clear definition it is not an interpretable segmentation and its relationship to duration cannot be reasoned about."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable time buckets (business_hours, after_hours, overnight) that segment well and plausibly relate to resolution duration via staffing patterns."
+      },
+      {
+        "name": "repeat_incident_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable boolean flag with reasonable balance (139 true / 361 false); recurring incidents may resolve differently, enabling meaningful comparison."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.68,
+    "rationale": "As a set, the columns provide several well-separated, interpretable segmentation axes (affected_system_component, incident_symptom_type, scope_indicator, opened_hour_of_day, repeat_incident_signal) that let a human explore how resolution_duration varies, complementing the query's category/priority axes. Deductions: incident_category largely restates an existing grouping variable, and resolver_match is an opaque boolean with unclear semantics that does not support interpretable comparison. Overall the additions meaningfully support relationship discovery but include redundancy and one uninterpretable column."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

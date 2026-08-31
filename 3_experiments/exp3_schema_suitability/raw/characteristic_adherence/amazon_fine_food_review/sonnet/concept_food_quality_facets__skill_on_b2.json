@@ -1,0 +1,75 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "focus_variable": "food_quality",
+  "concept": "food_quality",
+  "n_added_columns": 4,
+  "added_columns": [
+    "taste_quality",
+    "flavor_authenticity",
+    "functional_performance",
+    "palatability_acceptance"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1732,
+    "facet_fraction": 0.5,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.3,
+    "mece": 0.3464,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "food_quality",
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Taste is a core constitutive sensory aspect of food quality -- a genuine part-of relationship."
+      },
+      {
+        "name": "flavor_authenticity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether flavor is true-to-type is an aspect of food quality, but it substantially overlaps with taste_quality since both concern the flavor/taste dimension."
+      },
+      {
+        "name": "functional_performance",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the product 'works as described' captures product performance/efficacy, not a constitutive aspect of food quality itself; it is external to the sensory/quality concept."
+      },
+      {
+        "name": "palatability_acceptance",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Acceptance/refusal (eagerly accepted, refused) measures a reaction or outcome driven by quality, not a facet OF quality itself. It is a consequence, not a constitutive part."
+      }
+    ],
+    "facet_columns": [
+      "taste_quality",
+      "flavor_authenticity"
+    ],
+    "non_facet_columns": [
+      "functional_performance",
+      "palatability_acceptance"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.3,
+    "rationale": "Only two of four columns are genuine facets of food quality (taste_quality, flavor_authenticity), and those two overlap heavily as both concern flavor/taste, lowering mutual exclusivity. functional_performance is product efficacy (external predictor) and palatability_acceptance is an acceptance outcome/reaction (consequence), neither being constitutive parts of the concept. The facet set also omits major constitutive aspects of food quality such as texture/mouthfeel, freshness, appearance, and aroma, so exhaustiveness is low."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

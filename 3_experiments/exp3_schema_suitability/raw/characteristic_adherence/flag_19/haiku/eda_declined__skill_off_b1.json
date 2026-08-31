@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "is_declined",
+    "expense_amount_bucket",
+    "category_type",
+    "dept_decline_rate"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8375,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.8063,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_declined",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly encodes the outcome the query centers on (declined vs not), derivable from the original 'state' column. This is the core dependent variable for analyzing declines by category and department."
+      },
+      {
+        "name": "expense_amount_bucket",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Bucketing 'amount' into Low/Medium/High gives a usable axis to check whether declines correlate with expense size. Values are a sound transformation of the numeric amount field; thresholds are unverifiable but reasonable."
+      },
+      {
+        "name": "category_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Consolidates fine-grained category/description into broad expense types (Hardware, Travel, Software/Services, Other), which is exactly the 'kinds of expenses' grouping the query asks for. Readings from short_description/ci are mostly sound (e.g. Dell Laptop->Hardware, ISP Services->Software/Services), though 'Miscellaneous hardware component'->Other is arguably inconsistent."
+      },
+      {
+        "name": "dept_decline_rate",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A per-department decline rate directly supports the 'does it differ by department' half of the query. However it is a redundant aggregate derivable from is_declined+department, and the row-level values are inconsistent: two rows appear to share a department yet get 4.9, 0.0, and 6.0, and a Software/Services row shows 4.9 while another shows 6.0, suggesting the rate is not a clean, correctly-joined department statistic."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.78,
+    "rationale": "The column set targets the query well: is_declined is the outcome, category_type and expense_amount_bucket provide the 'kinds of expenses' axes, and dept_decline_rate addresses the department dimension. Groundedness is generally sound as transformations/categorizations of existing fields, but dept_decline_rate shows internally inconsistent per-row values indicating a flawed derived statistic, and category_type has a minor mis-bucketing. No completeness penalty applied."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

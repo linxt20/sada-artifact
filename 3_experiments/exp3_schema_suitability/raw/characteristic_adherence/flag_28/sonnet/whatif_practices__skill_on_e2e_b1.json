@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "primary_lever",
+    "action_plan_detail",
+    "feedback_loop_present",
+    "goal_specificity",
+    "target_ambition_level",
+    "time_horizon",
+    "measurement_mechanism",
+    "goal_category_alignment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7688,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8688,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.8188,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_lever",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the described practice/mechanism driving each goal, giving a strong axis to compare achievement across intervention types -- directly relevant to the query about which practices help. Values are sound readings of the descriptions (e.g., engagement program, process optimization), though 'market_expansion' for a premium-subscription goal is a slightly loose but defensible inference."
+      },
+      {
+        "name": "action_plan_detail",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes single-action vs multi-step detailed plans, a plausible top-performer practice differentiator to correlate with achievement. Values align with source: multi-step for descriptions listing multiple mechanisms, single for terse ones."
+      },
+      {
+        "name": "feedback_loop_present",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A binary feedback-loop flag is a named goal-management practice highly relevant to the query. Somewhat coarse but adds a groupable axis. Groundedness is moderate: the customer-satisfaction row explicitly mentions after-sales support/feedback yet is marked False, suggesting a narrow reading, but this is a defensible strict interpretation rather than an invented fact."
+      },
+      {
+        "name": "goal_specificity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Whether a goal has baseline+target vs target-only is a canonical goal-setting quality dimension tied to achievement. Values match the text precisely (78%->90% => baseline_and_target; bare 20% => target_only)."
+      },
+      {
+        "name": "target_ambition_level",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Bucketing target magnitude gives leverage to test whether ambition relates to achievement. Derivable from stated percentages; 20% -> moderate_15_to_25pct is correct, and NULLs for silent rows are acceptable."
+      },
+      {
+        "name": "time_horizon",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Time framing is a relevant practice dimension and somewhat redundant with start/end dates but adds a normalized categorical axis. Values well grounded ('by end of Q4' => within_quarter; 'next fiscal year' => within_year); 'unspecified' for silent rows is correct."
+      },
+      {
+        "name": "measurement_mechanism",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "How progress is measured is a useful axis but partly overlaps with the existing metric/category columns. Values mostly sound from description context, though the existing 'metric' field is often mismatched/noisy, so inference leans on the description -- reasonable."
+      },
+      {
+        "name": "goal_category_alignment",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Values are well grounded but nearly duplicate the existing 'category' column (cost_reduction, customer_satisfaction, etc.), offering little new analytical leverage for this query."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.87,
+    "rationale": "Most added columns decompose the goal-management practices named in the query (specificity, ambition, plan detail, feedback loop, lever, horizon) into groupable axes that genuinely enable comparing achievement across practice profiles. Values are consistently sound readings of the source descriptions, with reasonable inference and acceptable nulls/unspecified for silent rows; no clear hallucinations. The main weakness is goal_category_alignment, which largely restates the original category column, and feedback_loop_present is somewhat coarse and arguably under-reads feedback cues in one sample."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 8
+}

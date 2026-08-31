@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "writing_script_complaint",
+    "complaint_severity",
+    "genre_expectation_mismatch"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7333,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.6167,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.675,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "writing_script_complaint",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the query's 'most common audience complaints' by categorizing writing/script grievances, giving a strong axis to group and quantify complaint prevalence and its correlation with sentiment. Values are well-grounded: IMDB-0001 explicitly cites 'stilted dialogue' and 'insipid writing' (bad_dialogue), IMDB-0003 cites wooden performances and forced poignancy (weak_screenplay), and silent rows correctly get 'not_present'. Minor risk that some 'not_present' assignments miss subtler writing complaints, but no invented facts observed."
+      },
+      {
+        "name": "complaint_severity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A severity ordinal is useful for weighting how impactful addressing complaints would be, adding a genuine modeling axis. However, groundedness is weak: the specific 1-5 values are largely subjective inventions not clearly warranted by the text. IMDB-0004 is a positive review yet the NULL is fine; but IMDB-0005 is labeled positive with mild 'frustrating' language assigned severity 2, and IMDB-0002's '5.0' vs IMDB-0001's '4.0' reflect confident precision the text does not clearly support. The scale is defensible in direction but the exact numbers are inferred beyond what the source states."
+      },
+      {
+        "name": "genre_expectation_mismatch",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Genre offers a plausible grouping axis, but the column name implies a 'mismatch' between expectation and delivery, whereas the values appear to just tag the film's genre (horror, sci_fi, drama) rather than an actual expectation violation. As a genre tag it is moderately useful but only loosely tied to 'complaints.' Groundedness is mixed: IMDB-0001 (sci_fi) and IMDB-0002/0004 (horror) are supported by explicit content, but many assignments require inference of genre from thin cues, and 'mismatch' is asserted where the text does not frame it as an expectation gap."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.62,
+    "rationale": "The columns collectively provide genuine new axes—complaint type, severity, and genre—that let an analyst group reviews by complaint and estimate sentiment lift, directly serving the query. writing_script_complaint is the strongest on both dimensions. complaint_severity and genre_expectation_mismatch are analytically reasonable but suffer groundedness issues: severity encodes specific ordinal values not clearly derivable from the text, and genre_expectation_mismatch asserts a 'mismatch' framing beyond what several rows support. No column is near-constant or trivially redundant, so usefulness holds up; the main weakness is confident specifics on silent or ambiguous rows."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

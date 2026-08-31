@@ -1,0 +1,109 @@
+{
+  "var_a": "original",
+  "var_b": "skill_off",
+  "swap": false,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.8,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 3,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Network (52%, 260 incidents), Database (27%, 134 incidents)",
+        "why": "concrete counts"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Critical incidents (83 total) predominantly involve server-side infrastructure",
+        "why": "cross-group reasoning"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "High Attention (Immediate Escalation)",
+        "why": "tiered triage rules"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "Critical incidents average attention scores of 4.51/5, while High-priority issues score 2.68/5",
+        "why": "quantified group comparison"
+      },
+      {
+        "dimension": "depth",
+        "quote": "52 of 83 Critical incidents (62.7%) include contains_outage_signal=1",
+        "why": "quantified pattern"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "has_critical_keyword=1 (n=22 incidents) average attention 3.95/5",
+        "why": "precise segment stats"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Escalate automatically if: Priority = Critical AND contains_outage_signal = 1",
+        "why": "decision-ready rule"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B provides stronger quantified evidence and deeper attention-score segmentation with equally actionable rules.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

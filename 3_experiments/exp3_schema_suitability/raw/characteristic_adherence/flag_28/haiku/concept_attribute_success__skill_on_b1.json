@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What goal-management practices support high achievement?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "goal_outcome_domain",
+    "improvement_mechanism",
+    "success_enabler_type",
+    "timeframe_horizon",
+    "baseline_reference_included",
+    "stakeholder_focus",
+    "improvement_multiplicity",
+    "outcome_metric_alignment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7063,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.7937,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.75,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_outcome_domain",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.95,
+        "rationale": "Cleanly derivable from description/category and matches source in all samples, but largely duplicates the existing 'category' column, limiting new analytical leverage for the achievement query.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "improvement_mechanism",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Captures the lever used to drive the goal (training, service, process redesign), a genuinely new axis directly tied to 'practices that support achievement'. Readings match source text well.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "success_enabler_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "rationale": "Useful enabler axis, but strongly correlated with improvement_mechanism/domain (e.g. training->people_capability, service->customer_engagement), so much of its content restates a sibling column.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "timeframe_horizon",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "rationale": "Timeframe is a valuable axis for achievement analysis, but mapping is unreliable: 'end of Q4' and 'compared to last quarter' rendered as next_fiscal_year, and 'upcoming year' as multi_year, contradicting the source.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "baseline_reference_included",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Whether a goal states a measurable baseline (e.g. 'from 78% to 90%') is a strong, well-grounded goal-management practice signal. One sample (20% cost reduction target, no baseline) marked True is arguable.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "stakeholder_focus",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "rationale": "Well grounded but largely redundant with goal_outcome_domain/category (financial<->cost/revenue, customer, employee), adding limited independent leverage.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "improvement_multiplicity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "rationale": "Whether a goal bundles multiple mechanisms is a reasonable practice signal, but labels look inconsistent: the multi-lever cost/premium goals marked False while a single after-sales+personalization goal marked True.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "outcome_metric_alignment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "Alignment between goal domain and its metric is highly relevant (metrics are often mismatched, e.g. Customer Satisfaction with Expense Ratio). Values plausibly encode this, though all samples returning False is hard to fully verify.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.78,
+    "rationale": "The set provides several genuinely useful axes for analyzing goal-management practices tied to achievement (improvement_mechanism, baseline_reference_included, outcome_metric_alignment, timeframe_horizon), giving new dimensions to group and compare on. Usefulness is dragged down by redundancy among goal_outcome_domain, success_enabler_type, and stakeholder_focus, which heavily overlap each other and the original category column. Groundedness is generally sound for extraction/categorisation columns, but timeframe_horizon and improvement_multiplicity show clear misreadings that contradict the source text, so some non-trivial hallucination is present."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

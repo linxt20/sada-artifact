@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict low Yelp user satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "staff_rudeness_or_indifference",
+    "excessive_wait_or_slow_service",
+    "staff_inattention_or_neglect",
+    "poor_taste_or_flavor",
+    "staff_forgot_or_ignored_table"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.76,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.87,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.815,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "staff_rudeness_or_indifference",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A meaningful service-quality axis that plausibly predicts dissatisfaction and gives a real grouping variable. Grounded on most rows (rows 1-4 correct), but row 5 flags rudeness/indifference where the source describes discriminatory door policy and giving away a cabana rather than staff rudeness per se; a mild overreach, so slightly reduced groundedness."
+      },
+      {
+        "name": "excessive_wait_or_slow_service",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct, analytically useful signal for predicting low satisfaction. Sampled values are sound: row 2's repeated forgetting implies waiting, others correctly False. Well grounded in the text."
+      },
+      {
+        "name": "staff_inattention_or_neglect",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful behavioral axis, though it overlaps heavily with staff_forgot_or_ignored_table, slightly reducing incremental leverage. Values are well supported (row 2 neglect correctly True, others False)."
+      },
+      {
+        "name": "poor_taste_or_flavor",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures a food-quality dimension orthogonal to the service columns, a genuinely different axis for the query. Sampled values are correct, including False for reviews that praise or don't mention flavor."
+      },
+      {
+        "name": "staff_forgot_or_ignored_table",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Grounded and query-relevant (row 2 explicitly forgotten twice, correctly True), but it is a near-subset of staff_inattention_or_neglect, so its independent analytical contribution is limited by redundancy."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.87,
+    "rationale": "The added columns decompose negative-experience drivers (rudeness, wait, inattention, food quality, being forgotten) that directly bear on predicting low Yelp satisfaction, giving real axes to compare against label_pos. Usefulness is somewhat diluted by overlap among the three staff-attention columns (inattention vs. forgot/ignored), but each still offers analytical value. Groundedness is strong across sampled rows, with the main weakness being an arguable over-flag of rudeness on row 5 where the complaint is about discriminatory admission rather than staff manner. No systematic invention of facts observed."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "predictive_low",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

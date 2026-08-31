@@ -1,0 +1,139 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What patient needs appear in visit notes?",
+  "focus_variable": "patient_needs",
+  "concept": "patient_needs",
+  "n_added_columns": 12,
+  "added_columns": [
+    "identified_patient_needs",
+    "needs_count",
+    "needs_pain_management",
+    "needs_medication_management",
+    "needs_diagnostic_testing",
+    "needs_specialist_referral",
+    "needs_monitoring_followup",
+    "needs_lifestyle_counseling",
+    "needs_mental_health",
+    "needs_preventive_care",
+    "needs_wound_skin_care",
+    "needs_physical_rehabilitation"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.7288,
+    "facet_fraction": 0.8333,
+    "n_facets": 10,
+    "mutual_exclusivity": 0.9,
+    "exhaustiveness": 0.85,
+    "mece": 0.8746,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "patient_needs",
+    "per_column": [
+      {
+        "name": "identified_patient_needs",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A multi-label list of all needs; it restates the whole concept rather than isolating a single constitutive facet."
+      },
+      {
+        "name": "needs_count",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A count aggregate over the needs set; it summarizes the whole concept, not an aspect OF it."
+      },
+      {
+        "name": "needs_pain_management",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A specific type of patient need; a genuine part-of the concept."
+      },
+      {
+        "name": "needs_medication_management",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A distinct constitutive need category."
+      },
+      {
+        "name": "needs_diagnostic_testing",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A distinct constitutive need category."
+      },
+      {
+        "name": "needs_specialist_referral",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A distinct constitutive need category."
+      },
+      {
+        "name": "needs_monitoring_followup",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A distinct constitutive need category."
+      },
+      {
+        "name": "needs_lifestyle_counseling",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A distinct constitutive need category."
+      },
+      {
+        "name": "needs_mental_health",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A distinct constitutive need category."
+      },
+      {
+        "name": "needs_preventive_care",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A distinct constitutive need category."
+      },
+      {
+        "name": "needs_wound_skin_care",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A distinct constitutive need category."
+      },
+      {
+        "name": "needs_physical_rehabilitation",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "A distinct constitutive need category."
+      }
+    ],
+    "facet_columns": [
+      "needs_pain_management",
+      "needs_medication_management",
+      "needs_diagnostic_testing",
+      "needs_specialist_referral",
+      "needs_monitoring_followup",
+      "needs_lifestyle_counseling",
+      "needs_mental_health",
+      "needs_preventive_care",
+      "needs_wound_skin_care",
+      "needs_physical_rehabilitation"
+    ],
+    "non_facet_columns": [
+      "identified_patient_needs",
+      "needs_count"
+    ],
+    "mutual_exclusivity": 0.9,
+    "exhaustiveness": 0.85,
+    "rationale": "The ten binary indicator columns are true meronymic facets: each is a specific type of patient need, an aspect OF the concept, and they are mutually distinct with minimal semantic overlap (pain_management vs medication_management is the only mild boundary blur). Together they cover the major constitutive categories of clinical patient needs (clinical/medication, diagnostic, referral, monitoring, preventive, lifestyle, mental health, wound, rehab), giving strong exhaustiveness; possible gaps include social/financial/care-coordination and patient-education needs. Two columns are not facets: 'identified_patient_needs' restates the whole multi-label set and 'needs_count' is an aggregate summary of the whole, neither carving out a single aspect. Because the decomposition is nonetheless dominated by genuine, well-separated MECE facets, the facet set satisfies the technical claim."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 12
+}

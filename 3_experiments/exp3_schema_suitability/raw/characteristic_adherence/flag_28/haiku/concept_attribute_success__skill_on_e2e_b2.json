@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What goal-management practices support high achievement?",
+  "focus_variable": "goal_management_success_factors",
+  "concept": "goal_management_success_factors",
+  "n_added_columns": 9,
+  "added_columns": [
+    "goal_domain",
+    "improvement_mechanism",
+    "quantitative_target_specificity",
+    "timeline_specificity",
+    "implementation_scope",
+    "baseline_reference_specified",
+    "technology_enablement",
+    "employee_engagement_lever",
+    "stakeholder_coordination_requirement"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.2635,
+    "facet_fraction": 0.5556,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.5,
+    "mece": 0.4743,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "goal_management_success_factors",
+    "per_column": [
+      {
+        "name": "goal_domain",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Captures WHAT the goal is about (subject area), not a facet of the practices/factors that make goal management successful. It classifies goal content, an external descriptor, not an aspect of success factors."
+      },
+      {
+        "name": "improvement_mechanism",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes the substantive lever used to achieve the goal's outcome (market expansion, cost control). This is content/means of the goal itself, not a constitutive aspect of goal-management practice quality."
+      },
+      {
+        "name": "quantitative_target_specificity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Target specificity is a genuine aspect of good goal-management practice (how precisely the target is quantified), a part-of the success-factor concept."
+      },
+      {
+        "name": "timeline_specificity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Time-bound clarity is a constitutive facet of well-managed goals (the 'time-bound' aspect of goal quality)."
+      },
+      {
+        "name": "implementation_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Scope of implementation is a structural aspect of how the goal is managed, plausibly a facet of goal-management characteristics."
+      },
+      {
+        "name": "baseline_reference_specified",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether a baseline is specified is an aspect of measurement rigor in goal setting; a facet. However it overlaps heavily with quantitative_target_specificity's 'percentage_with_baseline' value."
+      },
+      {
+        "name": "technology_enablement",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether technology enables the goal is an external means/support, not an intrinsic aspect of the goal-management practice's quality."
+      },
+      {
+        "name": "employee_engagement_lever",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the goal uses an employee-engagement lever describes the mechanism/content driving outcomes, overlapping with improvement_mechanism and goal_domain, not a facet of success factors."
+      },
+      {
+        "name": "stakeholder_coordination_requirement",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Coordination requirement is a genuine facet of goal management (ownership/collaboration structure), though it overlaps with implementation_scope (both carry 'customer_facing', cross-functional vs cross-departmental)."
+      }
+    ],
+    "facet_columns": [
+      "quantitative_target_specificity",
+      "timeline_specificity",
+      "implementation_scope",
+      "baseline_reference_specified",
+      "stakeholder_coordination_requirement"
+    ],
+    "non_facet_columns": [
+      "goal_domain",
+      "improvement_mechanism",
+      "technology_enablement",
+      "employee_engagement_lever"
+    ],
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.5,
+    "rationale": "Several columns are not constitutive facets of goal-management success factors but rather describe the goal's content or external enablers (goal_domain, improvement_mechanism, technology_enablement, employee_engagement_lever), failing the meronymy test. Among the genuine facets, there is substantial overlap: baseline_reference_specified duplicates an aspect already captured in quantitative_target_specificity, and stakeholder_coordination_requirement overlaps with implementation_scope (both encode organizational reach and 'customer_facing'), lowering mutual exclusivity. The facet subset does touch key aspects of goal quality (specificity, timing, scope, measurement, coordination) but misses others (e.g., accountability/ownership clarity, feedback/progress-tracking cadence, prioritization/alignment), and it is diluted by non-facet columns, so exhaustiveness is moderate at best."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

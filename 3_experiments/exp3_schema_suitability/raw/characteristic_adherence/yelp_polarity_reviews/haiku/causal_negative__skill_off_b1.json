@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "service_factor",
+    "food_quality_factor",
+    "cleanliness_factor",
+    "price_factor",
+    "ambiance_factor",
+    "num_complaint_factors",
+    "emotional_intensity",
+    "emotional_language"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7625,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.64,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.7012,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_factor",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "A concrete factor axis directly relevant to explaining negative experiences; groupable and comparable. Values track service mentions well across samples (0002, 0003, 0004 all correctly flagged), including positive mentions which is defensible as topic presence."
+      },
+      {
+        "name": "food_quality_factor",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.62,
+        "hallucination_observed": false,
+        "rationale": "Highly relevant factor for the query. However YLP-0001 praises food (chicken caesar pita, greek fries) yet is coded 0, a clear miss, suggesting inconsistent extraction that weakens groundedness."
+      },
+      {
+        "name": "cleanliness_factor",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Relevant distinct factor. Sample rows contain no cleanliness content and all are 0, which is correct silent behaviour; no contradictions observed."
+      },
+      {
+        "name": "price_factor",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Useful pricing axis for the query. But YLP-0003 explicitly discusses price ($20, single-serve) yet is coded 0, a missed positive, indicating imperfect grounding."
+      },
+      {
+        "name": "ambiance_factor",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Distinct and relevant factor. Sampled rows lack clear ambiance content and are all 0, consistent with the text; no contradictions seen."
+      },
+      {
+        "name": "num_complaint_factors",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A complaint-count aggregate could help ranking severity, but values are inconsistent: YLP-0005 lists multiple cons yet is 0, while YLP-0003 (one complaint) is 2. Does not track either the factor flags or the actual complaint text."
+      },
+      {
+        "name": "emotional_intensity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A graded intensity scale gives a modeling axis distinct from the factor flags. Grounding is mixed: YLP-0005 outrage=5 is apt, but YLP-0001 (positive, gentle) scored 3 is questionable and the scale mixes positive/negative arousal."
+      },
+      {
+        "name": "emotional_language",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A bare binary emotional flag adds little leverage beyond emotional_intensity (near-restatement). Also poorly grounded: YLP-0005 is clearly emotional ('sucked!!!!!', discriminatory rant) yet coded 0, contradicting the text."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.62,
+    "rationale": "The five factor columns (service, food, cleanliness, price, ambiance) form a genuinely useful, groupable decomposition for explaining negative Yelp experiences and are largely grounded, though food and price show missed mentions. num_complaint_factors and emotional_language are the weakest: the former is internally inconsistent with the text, and the latter is a near-redundant binary restatement of emotional_intensity that also contradicts an obviously emotional sample. Overall the set offers real analytical leverage but grounding is uneven."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

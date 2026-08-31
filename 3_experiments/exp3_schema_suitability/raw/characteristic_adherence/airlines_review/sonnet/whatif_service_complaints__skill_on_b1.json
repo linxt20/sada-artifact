@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_service_failure_type",
+    "food_beverage_complaint_type",
+    "service_recovery_quality",
+    "service_decline_perception",
+    "ground_service_complaint",
+    "delay_or_punctuality_issue",
+    "cabin_class_expectation_gap"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7329,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8271,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.78,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_failure_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the query's 'cabin-service complaints' focus with a clean categorical taxonomy enabling grouping and rating-delta estimation. Sample values (no_complaint on positive reviews) are well-grounded."
+      },
+      {
+        "name": "food_beverage_complaint_type",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Food/beverage is a core cabin-service dimension; typed complaint categories give a genuine grouping axis beyond the existing numeric 'Food & Beverages' score. Samples correctly read as no_complaint for the praise-heavy reviews."
+      },
+      {
+        "name": "service_recovery_quality",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.62,
+        "hallucination_observed": false,
+        "rationale": "Relevant angle on how failures were handled. However coding 'absent' for reviews with no service failure at all (e.g. wholly positive flights) conflates 'no recovery needed' with 'recovery absent', which is a weakly warranted reading and slightly muddies groundedness."
+      },
+      {
+        "name": "service_decline_perception",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean that is largely a coarse restatement of whether service was criticized; adds limited new leverage for a complaint-elimination delta beyond the typed complaint columns. Values on samples are correctly False."
+      },
+      {
+        "name": "ground_service_complaint",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Ground service is arguably outside 'cabin-service' but still a useful controllable-complaint axis for isolating cabin effects; well-categorized and no_issue values on samples are grounded."
+      },
+      {
+        "name": "delay_or_punctuality_issue",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A boolean confounder useful to control for when attributing rating changes to cabin-service, though tangential to the cabin focus. Sample values correctly False."
+      },
+      {
+        "name": "cabin_class_expectation_gap",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Meaningful ordinal axis relating experience to class expectation. Groundedness is moderate: 'exceeds_class_standard' for a 1h45 short-haul praising a birthday cake is a defensible but somewhat interpretive inference, and such judgments risk over-specific coding on brief texts."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns give several genuine grouping axes (typed crew and food complaints, recovery quality, expectation gap) that directly support estimating how eliminating cabin-service complaints would move Overall Rating, plus useful confounder flags. service_decline_perception is the weakest, being a coarse boolean restatement. Groundedness is generally sound on the samples; the main soft spots are 'absent' recovery for complaint-free reviews and interpretive expectation-gap calls on short texts, but no outright fabrications were observed."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 7
+}

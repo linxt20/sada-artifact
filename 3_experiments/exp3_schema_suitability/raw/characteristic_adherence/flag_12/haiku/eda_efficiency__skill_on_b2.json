@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "problem_domain",
+    "equipment_type",
+    "root_cause_type",
+    "assigned_team_member",
+    "incident_recurrence"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.576,
+    "predictor_fraction": 0.8,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.8
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "problem_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A small set of clean, well-separated interpretable categories (hardware, software, network, infrastructure) that can be segmented and compared against resolution efficiency. Partly overlaps with existing 'category' but adds an external associational lens."
+      },
+      {
+        "name": "equipment_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-populated categories (printer, monitor, keyboard, etc.) that support meaningful grouping; efficiency likely varies by equipment type, enabling relationship discovery."
+      },
+      {
+        "name": "root_cause_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear, interpretable causal categories that are strongly associational with resolution efficiency and easy to segment on for a human explorer."
+      },
+      {
+        "name": "assigned_team_member",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Essentially duplicates the existing 'assigned_to' field and overlaps with assignment_group, which is already a query dimension. It restates the assignment focus rather than opening a new external relationship."
+      },
+      {
+        "name": "incident_recurrence",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clean binary flag with a reasonable split (423/77) that offers an informative, interpretable segmentation; recurring vs. non-recurring incidents plausibly differ in resolution efficiency."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.72,
+    "rationale": "As a set, the added columns provide several interpretable, well-separated categorical segmentations (problem_domain, equipment_type, root_cause_type, incident_recurrence) that a human can group on and compare against resolution efficiency, supporting genuine exploratory analysis. They avoid opaque scores and near-constant values. The main weaknesses are that 'assigned_team_member' largely restates the pre-existing assignment fields, and problem_domain partially overlaps with the existing 'category' dimension, so novelty is modest. Overall the set meaningfully opens up informative relationships around the focus."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

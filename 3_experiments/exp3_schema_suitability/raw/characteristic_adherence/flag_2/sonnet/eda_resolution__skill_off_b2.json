@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_time_hours",
+    "is_resolved",
+    "priority_rank",
+    "avg_resolution_hours_by_category",
+    "avg_resolution_hours_by_priority",
+    "avg_resolution_hours_by_assignment_group"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.025,
+    "predictor_fraction": 0.1667,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.15,
+    "interpretable_fraction": 0.3333
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is the focus variable itself expressed in hours (with -1 sentinels for unresolved). It restates resolution_time rather than opening an external relationship to compare against, and as a continuous value it is not a groupable segmentation."
+      },
+      {
+        "name": "is_resolved",
+        "role": "predictor",
+        "is_interpretable_segmentation": true,
+        "is_predictor": true,
+        "rationale": "A clean binary flag (resolved vs. not) that is external to the focus and offers an interpretable, well-separated segmentation. Comparing resolution_time across resolved/unresolved status is meaningful, though partly definitional for the -1 cases."
+      },
+      {
+        "name": "priority_rank",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Priority is already an original column and a stated grouping dimension of the query; a numeric re-encoding of it adds no new external variable. It is interpretable but merely re-encodes existing information."
+      },
+      {
+        "name": "avg_resolution_hours_by_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A group-mean aggregate of the focus itself keyed on category. It is derived directly from resolution_time, so it restates the focus rather than providing an independent associational variable; its opaque continuous values are not a clean segmentation."
+      },
+      {
+        "name": "avg_resolution_hours_by_priority",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Group mean of the focus by priority. Circular restatement of resolution_time, not an external explanatory variable."
+      },
+      {
+        "name": "avg_resolution_hours_by_assignment_group",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Group mean of the focus by assignment group. Same circularity; it encodes the answer rather than enabling independent exploration."
+      }
+    ],
+    "n_predictors": 1,
+    "relationship_informativeness": 0.15,
+    "rationale": "The set largely fails the EDA claim. Three columns are group-mean aggregates of the focus variable itself (by category, priority, assignment group), which are circular restatements of resolution_time rather than external associational variables to segment on. resolution_time_hours is the focus re-expressed. priority_rank merely re-encodes an existing grouping column. Only is_resolved provides a genuine, interpretable external segmentation, and even it is partly definitional. No new external dimensions (e.g., caller/user attributes, business hours, reassignment counts, SLA class) were introduced to open up informative relationships."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

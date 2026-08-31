@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What company traits explain regional clustering?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_market_sector",
+    "core_technology_infrastructure",
+    "operational_delivery_model",
+    "company_maturity_and_scale",
+    "primary_customer_segment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.83,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.73,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.78,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_market_sector",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A well-distributed sector taxonomy gives a strong axis to correlate against geography, directly serving the clustering query. Samples are sound readings (23andMe as consumer_internet is arguable but defensible; 5AM Ventures/Accel as VC, Addepar as financial_services are well grounded)."
+      },
+      {
+        "name": "core_technology_infrastructure",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Technology axis is a useful additional grouping dimension. However groundedness is weaker: labeling VC firms (5AM Ventures, Accel) as 'fintech_payments' is an unwarranted stretch from silent/irrelevant text, and 'other_tech' is a frequent catch-all that adds little for those rows."
+      },
+      {
+        "name": "operational_delivery_model",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Delivery model (SaaS vs hardware vs consulting vs investing) is a genuine analytical axis distinct from sector. Sample values are well warranted by the descriptions (consulting for 280 Group, venture_investing for VC firms, saas for Addepar)."
+      },
+      {
+        "name": "company_maturity_and_scale",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Maturity/stage is highly relevant to clustering hypotheses, but the source text (short descriptions, address, website) rarely states funding stage or public status. Values like 'growth_stage_series' for 280 Group and 'late_stage_venture' assignments appear to be confident inventions not supported by the row evidence; 23andMe as publicly_traded is externally correct but not derivable from the given text."
+      },
+      {
+        "name": "primary_customer_segment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "B2B/B2C/investor segmentation is a legitimate grouping axis, though somewhat correlated with sector/delivery model. Sample values are sound readings of the descriptions."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns provide several genuinely distinct axes (sector, technology, delivery model, customer segment) well suited to explaining regional clustering, so analytical usefulness is high overall. Groundedness is mixed: sector, delivery model, and customer segment are largely sound extractions from the descriptions, but company_maturity_and_scale and parts of core_technology_infrastructure assert specifics (funding stage, public status, 'fintech_payments' for VCs) that the short source texts do not support, indicating hallucination on those dimensions."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_regional",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

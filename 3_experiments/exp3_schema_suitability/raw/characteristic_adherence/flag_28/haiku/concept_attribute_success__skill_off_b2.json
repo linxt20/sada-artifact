@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What goal-management practices support high achievement?",
+  "focus_variable": "goal_management_success_factors",
+  "concept": "goal_management_success_factors",
+  "n_added_columns": 5,
+  "added_columns": [
+    "achievement_gap",
+    "progress_status",
+    "priority_score",
+    "priority_completion_alignment",
+    "achievement_level"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0283,
+    "facet_fraction": 0.2,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.1,
+    "mece": 0.1414,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "goal_management_success_factors",
+    "per_column": [
+      {
+        "name": "achievement_gap",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "The gap between actual and target achievement is a measure of the OUTCOME (achievement) itself, not a constitutive practice/aspect of how goals are managed. It restates the success being explained rather than decomposing the management factors."
+      },
+      {
+        "name": "progress_status",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Whether a goal is on_track/below/exceeds is the achievement outcome itself, a restatement of success, not a facet of the management practices that produce it."
+      },
+      {
+        "name": "priority_score",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Prioritization is a genuine aspect OF goal-management practice; how goals are prioritized is a constitutive part of managing goals."
+      },
+      {
+        "name": "priority_completion_alignment",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "This correlates priority with completion, i.e., a derived relationship between a practice and an outcome. It is an analytic/predictive construct linking to achievement, not a standalone constitutive aspect of the management concept."
+      },
+      {
+        "name": "achievement_level",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Achieved/in_progress/abandoned is the achievement outcome itself, a direct restatement of the success being studied, not a facet of the managing practices."
+      }
+    ],
+    "facet_columns": [
+      "priority_score"
+    ],
+    "non_facet_columns": [
+      "achievement_gap",
+      "progress_status",
+      "priority_completion_alignment",
+      "achievement_level"
+    ],
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.1,
+    "rationale": "The concept to decompose is the set of goal-MANAGEMENT PRACTICES that support achievement. A proper faceted decomposition would carve management practices into constitutive aspects such as goal setting/clarity, prioritization, ownership/accountability, cadence of tracking/updates, resourcing, and review/adjustment. Only priority_score is a true facet of the management practice. achievement_gap, progress_status, and achievement_level are all restatements of the achievement OUTCOME being explained, and they heavily overlap with each other (three encodings of the same outcome), badly harming mutual exclusivity. priority_completion_alignment is a derived practice-outcome correlation, an analytic/predictor construct rather than a constitutive facet. The set leaves the concept's main constitutive aspects (setting, tracking cadence, accountability, review) almost entirely uncovered, so exhaustiveness is very low."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

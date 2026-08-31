@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "writing_quality_issue",
+    "plot_structural_issue",
+    "genre_execution_quality"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8833,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.8167,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.85,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "writing_quality_issue",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly addresses the query on why audiences are dissatisfied by categorizing writing-related complaints, giving a genuine grouping axis. Values are well-grounded: IMDB-0001 mentions 'stilted dialogue' (poor_dialogue) and 'insipid/uninspired' writing; IMDB-0003 'wooden performances' maps loosely to uninspired_writing. not_present used appropriately for silent rows. Minor slippage where multiple issues co-exist but single value chosen, but no invented facts."
+      },
+      {
+        "name": "plot_structural_issue",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a distinct plot/structure axis complementary to writing, useful for explaining dissatisfaction. IMDB-0003's 'predictable and well-trodden premise' soundly supports predictable_plot. not_present correctly assigned to positive reviews and rows without plot complaints. Categorizations are warranted readings; no evident fabrication."
+      },
+      {
+        "name": "genre_execution_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Combining genre with failure verdict gives a useful axis to compare dissatisfaction across genres. Grounding is mostly sound: IMDB-0002 explicitly about a horror movie (failed_horror), IMDB-0003 discusses 'drama' (failed_drama). However IMDB-0001 (Stargate SG-1, sci-fi) labeled 'failed_drama' is a weak/questionable genre inference, and 'failed_' framing risks conflating negative label with genre where text may not explicitly deem the genre failed. Positive reviews correctly not_present."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.82,
+    "rationale": "All three added columns give genuine, distinct analytical axes (writing, plot, genre execution) directly relevant to 'why IMDb audiences are dissatisfied,' enabling grouping and comparison beyond the raw label_pos flag. Values are generally sound readings of the source text with appropriate not_present handling for silent/positive rows. The main weakness is occasional over-confident genre categorization (e.g., a sci-fi TV show tagged failed_drama), which slightly lowers groundedness, but no gross fabrications are observed."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 3
+}

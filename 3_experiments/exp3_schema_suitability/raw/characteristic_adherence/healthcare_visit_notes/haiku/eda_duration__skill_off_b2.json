@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "visit_complexity",
+    "symptom_category",
+    "has_procedure"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 3,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "visit_complexity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal, interpretable categories (Low/Moderate/High) that can be segmented and compared against visit duration; a natural driver of duration. However the distribution is heavily skewed (High=222 vs Moderate=5), so the Moderate/Low buckets are near-empty and limit meaningful comparison, though High vs rest still yields signal."
+      },
+      {
+        "name": "symptom_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, human-readable clinical categories (pain, infection, chronic_condition, etc.) that meaningfully decompose the free-text reason_for_visit into groupable segments. Excellent for cross-tabbing duration/urgency by symptom type; some categories are thin but the top ones support real comparison."
+      },
+      {
+        "name": "has_procedure",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean, well-balanced binary (Yes=140/No=110) representing an external associational fact plausibly linked to longer visits; ideal for a two-group duration comparison."
+      }
+    ],
+    "n_predictors": 3,
+    "relationship_informativeness": 0.72,
+    "rationale": "All three columns are external, interpretable segmentation variables rather than restatements of visit_duration_min, and each can be grouped against the focus to reveal relationships. symptom_category and has_procedure are strong: balanced/well-separated and directly derived from the query's reason_for_visit angle. visit_complexity is conceptually apt but its extreme skew (Moderate=5, Low=23) weakens comparative power. As a set they support genuine exploratory analysis of how visit reasons relate to duration, so informativeness is moderately high but capped by the imbalance."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

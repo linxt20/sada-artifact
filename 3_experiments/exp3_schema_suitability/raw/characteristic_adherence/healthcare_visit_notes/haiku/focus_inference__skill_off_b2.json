@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_concern",
+    "concern_category",
+    "visit_severity",
+    "primary_concern.1",
+    "concern_category.1",
+    "visit_severity.1"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.495,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The clinical nature of the patient's presenting concern (what the patient came in for)",
+    "per_column": [
+      {
+        "name": "primary_concern",
+        "supports_focus": true,
+        "rationale": "Directly proposes the focus by classifying the presenting concern into a granular clinical taxonomy, answering the query's 'main types of concerns'."
+      },
+      {
+        "name": "concern_category",
+        "supports_focus": true,
+        "rationale": "Provides a higher-level rollup of the concern (chronic vs acute vs infectious etc.), a coherent facet of the same focus."
+      },
+      {
+        "name": "visit_severity",
+        "supports_focus": true,
+        "rationale": "Adds a severity/acuity dimension to the concern, a sound complementary facet."
+      },
+      {
+        "name": "primary_concern.1",
+        "supports_focus": true,
+        "rationale": "Coherent with focus but an exact duplicate of primary_concern, adding no new analytical structure."
+      },
+      {
+        "name": "concern_category.1",
+        "supports_focus": true,
+        "rationale": "Exact duplicate of concern_category; redundant restatement."
+      },
+      {
+        "name": "visit_severity.1",
+        "supports_focus": true,
+        "rationale": "Exact duplicate of visit_severity; redundant restatement."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.85,
+    "rationale": "The columns clearly and coherently centre on a single inferable focus: the type/nature of the patient's presenting concern, which is exactly what the query asks about. The three distinct columns form a reasonable multi-granularity structure (fine-grained concern type, higher-level category, and severity axis), and the focus is highly actionable for an analyst investigating patient demand. However, structure quality is materially undermined by the fact that half the added columns (primary_concern.1, concern_category.1, visit_severity.1) are verbatim duplicates of the first three, contributing no new facet or predictive structure and revealing a mechanical padding of the schema. There is also mild category-scheme inconsistency between primary_concern and concern_category (some values like Skin/Dermatology, Neurological appear un-rolled-up). The underlying three-column design is sound, but the duplication caps the structural credit."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

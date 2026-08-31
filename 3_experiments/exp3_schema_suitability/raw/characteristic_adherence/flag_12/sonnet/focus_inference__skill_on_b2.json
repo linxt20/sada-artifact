@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "incident_symptom_type",
+    "affected_asset_type",
+    "software_trigger",
+    "self_resolved"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.7055,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.83,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/characterization of incidents (what is failing and how) derived from short_description text",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "supports_focus": true,
+        "rationale": "Classifies the incident into a substantive type, a core facet of characterizing what the incident is about."
+      },
+      {
+        "name": "incident_symptom_type",
+        "supports_focus": true,
+        "rationale": "Captures the manifested problem/symptom, a coherent facet of incident nature."
+      },
+      {
+        "name": "affected_asset_type",
+        "supports_focus": true,
+        "rationale": "Identifies the asset involved, complementing category/symptom to describe the incident."
+      },
+      {
+        "name": "software_trigger",
+        "supports_focus": true,
+        "rationale": "A causal attribute distinguishing software-driven vs other incidents; adds an analytically useful dimension."
+      },
+      {
+        "name": "self_resolved",
+        "supports_focus": true,
+        "rationale": "A resolution-behavior attribute; slightly drifts toward outcome rather than incident nature but still ties to how incidents behave."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.83,
+    "focus_actionability": 0.85,
+    "rationale": "The columns collectively centre on one inferable focus: characterizing the substance of each incident (category, symptom, affected asset) with two causal/behavioral attributes (software trigger, self-resolution). These are extracted from the free-text short_description rather than mechanical text metrics, and form a differentiated multi-facet structure at a useful granularity, not a single restatement. The focus is clearly actionable: an analyst can profile incident types, spot high-volume failure modes (e.g., printers not responding), and study self-resolution or software triggers. Minor drift: self_resolved leans toward outcome rather than incident nature, and category/asset_type overlap somewhat (both keyed on printer/monitor/etc.), slightly reducing structural crispness. Overall a coherent, actionable, well-structured focus proposal."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

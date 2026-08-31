@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which clinical factors best explain longer visit durations?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "clinical_complexity",
+    "acuity_level",
+    "diagnostic_workload",
+    "intervention_type"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.08,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.2,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "clinical_complexity",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Complexity of the clinical situation is a plausible candidate cause of longer visit duration; it directly represents a 'clinical factor' being attributed."
+      },
+      {
+        "name": "acuity_level",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Acuity duplicates the existing 'urgency' column already in the table and is implied by the query's clinical-factor framing. It plausibly drives both intervention/diagnostic workload and duration, but it is essentially named in-context, so it does not demonstrate surfacing capability."
+      },
+      {
+        "name": "diagnostic_workload",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Ordering imaging/labs or performing procedures lies on the causal path between a clinical condition and longer visits -- it is a mechanism producing extra time, not a common cause. Adjusting for it would block the effect being studied."
+      },
+      {
+        "name": "intervention_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The type of intervention performed is a downstream response to the clinical situation that consumes visit time; it sits on the causal path to duration rather than being a pre-treatment common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "clinical_complexity"
+    ],
+    "confounders": [
+      {
+        "name": "acuity_level",
+        "named_in_query": true,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.2,
+    "rationale": "The set does supply a plausible treatment (clinical_complexity) and outcome (visit_duration_min), but the causal-estimation setup is weak. Two of the four added columns (diagnostic_workload, intervention_type) are mediators on the path from clinical condition to longer visits, not confounders; adjusting for them would bias the attribution downward. The only variable functioning as a common cause is acuity_level, and that is essentially a restatement of the pre-existing 'urgency' column and is implied by the query, so it is named_in_query=true and does not demonstrate the capability under test. No genuine, newly surfaced confounder (e.g., patient comorbidity burden, physician/provider, time-of-day, department staffing) was introduced. Hence confounder quality is low."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_long_visit",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

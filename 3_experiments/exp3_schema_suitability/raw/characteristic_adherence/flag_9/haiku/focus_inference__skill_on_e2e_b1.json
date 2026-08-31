@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "problem_manifestation",
+    "affected_scope",
+    "failure_mechanism"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8333,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.5833,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.7083,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_manifestation",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Directly answers the query by categorizing how the hardware problem shows up (connectivity, not functioning, error message, etc.), giving a strong axis to group incident kinds. Grounding is mostly sound: 'Unable to establish connection to MySQL server' -> connectivity_issue and software-install rows -> Unknown are reasonable. However 'Unable to install new update on system' -> error_message asserts an error message the text does not state, indicating some over-specific inference."
+      },
+      {
+        "name": "affected_scope",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A useful orthogonal axis (device vs infrastructure vs shared equipment) for comparing incident types. But grounding is weak: software-installation rows with no hardware target are confidently labelled 'single_user_device' despite the text not indicating scope. These are unwarranted specifics where 'unknown' would be correct."
+      },
+      {
+        "name": "failure_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Adds a genuine mechanistic dimension (connectivity/component/power/boot/physical) distinct from manifestation, useful for classifying hardware problem types. Grounding is reasonable in samples: connection failure -> connectivity_failure, and silent/software rows correctly left NULL rather than fabricated."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.58,
+    "rationale": "All three added columns provide distinct, analytically useful axes (manifestation, scope, mechanism) that directly serve the query about kinds of hardware problems, with low redundancy against the original columns. Grounding is mixed: failure_mechanism handles silent rows well, but affected_scope over-asserts 'single_user_device' on rows lacking scope evidence and problem_manifestation invents 'error_message' where the text is silent, lowering overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

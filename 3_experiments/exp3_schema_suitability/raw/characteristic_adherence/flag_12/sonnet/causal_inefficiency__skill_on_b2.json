@@ -1,0 +1,137 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are some incidents resolved inefficiently, and which underlying issues drive it?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "issue_subtype",
+    "affected_asset_type",
+    "reassignment_flag",
+    "requires_physical_intervention",
+    "resolution_action_type",
+    "recurrence_signal",
+    "software_trigger_present",
+    "urgency_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.65,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.65,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident plausibly influences both what remediation (treatment) is applied and how efficiently it can be resolved; a common cause not named in the query."
+      },
+      {
+        "name": "issue_subtype",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The nature of the underlying fault (e.g. malfunction vs not_responding) affects both the required action and the resolution speed; common cause surfaced from data."
+      },
+      {
+        "name": "affected_asset_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Asset type (printer, server, database) drives both the kind of intervention needed and how quickly it can be resolved; plausible common cause not in query."
+      },
+      {
+        "name": "reassignment_flag",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Reassignment is a candidate treatment/mechanism on the causal path to inefficiency rather than a pre-existing common cause; treating it as a confounder would be an error."
+      },
+      {
+        "name": "requires_physical_intervention",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether physical intervention is needed is a candidate cause whose effect on efficiency is being attributed; a plausible treatment."
+      },
+      {
+        "name": "resolution_action_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The action taken lies on the path between the underlying issue and the resolution outcome; a mediator, not a confounder."
+      },
+      {
+        "name": "recurrence_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Recurrence of an incident plausibly affects both the handling/treatment and the resolution efficiency; a common cause surfaced from data."
+      },
+      {
+        "name": "software_trigger_present",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Presence of a software trigger is a candidate cause whose effect on efficiency could be attributed; a treatment-like variable."
+      },
+      {
+        "name": "urgency_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Urgency influences both prioritization/treatment and resolution efficiency; a plausible common cause not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "requires_physical_intervention",
+      "software_trigger_present",
+      "reassignment_flag"
+    ],
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "issue_subtype",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "affected_asset_type",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "recurrence_signal",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "urgency_signal",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.65,
+    "rationale": "The columns set up a causal attribution around resolution efficiency: candidate treatments (requires_physical_intervention, software_trigger_present) are present, and several plausible confounders (incident_category, issue_subtype, affected_asset_type, urgency_signal, recurrence_signal) were surfaced from the data rather than copied from the vague query, which named none of them. However, resolution_action_type and reassignment_flag are mediators on the causal path and would bias attribution if adjusted for as confounders. Overall genuine causal reasoning is demonstrated, though the confounder set is partly diluted by mediator-type variables."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

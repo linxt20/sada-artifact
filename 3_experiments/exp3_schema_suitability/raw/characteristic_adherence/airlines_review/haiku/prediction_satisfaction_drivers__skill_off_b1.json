@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "Average_Service_Rating",
+    "Service_Consistency",
+    "Lowest_Rated_Dimension",
+    "Poor_Dimensions_Count",
+    "Review_Length",
+    "Review_Word_Count",
+    "Is_Premium_Class",
+    "Traveler_Category",
+    "Review_Verified"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.8889,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.7445,
+    "hallucination_rate": 0.1111
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Average_Service_Rating",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A composite of the sub-rating columns; gives a useful aggregate service axis to relate to Overall Rating. Values are directly derivable from the rating columns and match samples plausibly."
+      },
+      {
+        "name": "Service_Consistency",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Standard deviation across the service dimensions; a genuine new axis (variance vs mean) that could explain satisfaction. Computed from existing rating columns, so well grounded."
+      },
+      {
+        "name": "Lowest_Rated_Dimension",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Identifies the weakest service axis per review — directly useful for diagnosing satisfaction drivers. Derived from the sub-rating columns. Sample 1 (a glowing review picking Inflight Entertainment as lowest) is plausible if that dimension simply had the numerically lowest score."
+      },
+      {
+        "name": "Poor_Dimensions_Count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Counts how many dimensions fall below a threshold; a useful severity/breadth measure for modeling dissatisfaction. Derivable from existing rating columns and consistent with samples."
+      },
+      {
+        "name": "Review_Length",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw character length of review text — a generic surface feature explicitly flagged as low-leverage. Values are trivially derivable from the text but add little analytical value for what drives satisfaction."
+      },
+      {
+        "name": "Review_Word_Count",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Token count; near-redundant with Review_Length and generic. Grounded but adds negligible analytical leverage for this query."
+      },
+      {
+        "name": "Is_Premium_Class",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Binary flag derived from the Class column; a clean grouping axis to compare satisfaction across cabin tiers. Sample 4 (Business Class mentioned in text) correctly flagged premium."
+      },
+      {
+        "name": "Traveler_Category",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Traveler segmentation is a useful grouping axis, but the mapping is questionable: sample 1 (no party info in text) labeled 'Group', sample 3 (a couple/family return trip) labeled 'Group', while sample 2 labeled 'Solo' without clear support. Likely derived from Type of Traveller column but several assignments look under-supported."
+      },
+      {
+        "name": "Review_Verified",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A numeric restatement of the existing Verified column — trivially redundant with an original column, so low added leverage. Values are grounded."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.87,
+    "rationale": "Most columns are well-grounded, being computed from existing rating/class/traveller fields. The rating-derived composites (Average_Service_Rating, Service_Consistency, Lowest_Rated_Dimension, Poor_Dimensions_Count) and the class/traveller groupings provide genuine new axes for explaining Overall Rating. Weak spots: Review_Length and Review_Word_Count are generic surface features with little leverage, Review_Verified merely restates an original column, and Traveler_Category shows some under-supported category assignments in the samples."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

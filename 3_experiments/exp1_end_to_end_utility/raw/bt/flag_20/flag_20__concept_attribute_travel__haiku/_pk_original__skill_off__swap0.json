@@ -1,0 +1,109 @@
+{
+  "var_a": "original",
+  "var_b": "skill_off",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.72,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "EXP00000212 — Travel expense for laptop purchase / Dell Latitude 7400 (Processed, amount 1262)",
+        "why": "concrete row IDs, ci, amount, state"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "61 are Declined, 52 Processed, 18 Pending, and 15 Submitted",
+        "why": "numeric breakdown tied to rows"
+      },
+      {
+        "dimension": "depth",
+        "quote": "similar items appear across both Processed and Declined states",
+        "why": "cross-state comparison reasoning"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Priority review should focus on Travel rows with ci values for laptops/devices",
+        "why": "dataset-specific decision guidance"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "64.4% of travel expenses (94/146) have flagged \"Unresolved Status\"",
+        "why": "quantified but relies on unclear policy_risks column"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "$7,984: \"Automatically generated expense line for creation of travel accessory\"",
+        "why": "concrete amounts and descriptions"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "The dataset variant uses a \"skill_off\" LLM configuration",
+        "why": "meta-commentary introduces inconsistency about data source"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "A gives richer concrete row-level evidence and cleaner reasoning, while B leans on ambiguous meta-columns and self-references.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

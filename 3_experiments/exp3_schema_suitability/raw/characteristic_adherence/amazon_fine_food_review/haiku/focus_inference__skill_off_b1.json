@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "n_added_columns": 5,
+  "added_columns": [
+    "review_length",
+    "sentiment",
+    "helpfulness_ratio",
+    "has_criticism",
+    "engagement_level"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.72,
+    "source_groundedness__table_level": 0.66,
+    "b1_overall": 0.66,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "review_length",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Raw character count is trivially derivable but a generic, low-leverage feature for a 'what's worth attention/actionable' query. Values match source text lengths."
+      },
+      {
+        "name": "sentiment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Sentiment is a genuine analytical axis for triaging reviews. Mostly grounded, but the Robitussin/'very medicinal' review labeled Negative is a strained reading of an ambiguous text, and it partly duplicates Score."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Numerator/denominator ratio is a useful normalized signal of community-validated helpfulness, giving leverage on which reviews merit attention. Directly derivable from existing columns."
+      },
+      {
+        "name": "has_criticism",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Flagging criticism is actionable, but values look unreliable: purely positive reviews (dog food praise, 'tiny mouthful of heaven') are marked True while the medicinal-flavor complaint is False, contradicting the source text."
+      },
+      {
+        "name": "engagement_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A bucketed engagement tier could aid prioritization, but its basis is unclear and inconsistent—it appears to track review_length rather than any grounded engagement signal, making it largely redundant with that column."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.66,
+    "rationale": "The set offers several genuine analytical axes (sentiment, helpfulness_ratio, criticism flag) useful for triaging reviews, though review_length is generic and engagement_level appears redundant with length. Groundedness is mixed: helpfulness_ratio and review_length are directly derivable and correct, but has_criticism shows clear mislabels contradicting source text, and sentiment/engagement have questionable individual assignments."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

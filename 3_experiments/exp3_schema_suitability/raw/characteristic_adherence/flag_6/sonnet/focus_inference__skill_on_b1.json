@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 8,
+  "added_columns": [
+    "affected_system",
+    "symptom_type",
+    "incident_scope",
+    "is_open_unresolved",
+    "self_resolved",
+    "recurrence_signal",
+    "opened_hour_of_day",
+    "access_context"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6937,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7212,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7074,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "affected_system",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Categorizes the system domain from short_description, giving a strong grouping axis for triage/volume analysis. Samples (database, vpn, internet_connectivity, os_software) are sound readings of the source text."
+      },
+      {
+        "name": "symptom_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "rationale": "A distinct failure-mode axis orthogonal to affected_system, useful for pattern analysis. Sample mappings (no_access, unstable_intermittent, not_working_generic) are well-grounded in the descriptions."
+      },
+      {
+        "name": "incident_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "rationale": "Scope (individual vs infrastructure-wide) is analytically valuable for impact prioritization, but the short descriptions rarely state scope explicitly. Labels like 'infrastructure_wide' for 'Internet connection unstable' and 'individual_user' for 'Unable to access the database' appear to be unsupported inferences from silent text."
+      },
+      {
+        "name": "is_open_unresolved",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.95,
+        "rationale": "Derivable from existing state/closed_at columns, so largely redundant with original data; adds little new analytical leverage. Values are well-grounded (closed_at populated => not open)."
+      },
+      {
+        "name": "self_resolved",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.4,
+        "rationale": "Whether an incident self-resolved is analytically interesting, but nothing in the sampled source text supports a self_resolved determination; 'Unable to access company intranet' marked True has no textual basis, suggesting weakly grounded inference."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "rationale": "Near-constant (472 True / 28 False), so it provides almost no discriminating power. It is also marked True for one-off phrasings like 'Unable to access the database' with no recurrence wording, indicating an unsupported label."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Temporal bucketing gives a genuine axis for load/timing analysis. Grounded in opened_at, though the samples only expose sys_updated_on/closed_at; buckets are plausible and warranted from a timestamp."
+      },
+      {
+        "name": "access_context",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "rationale": "Remote vs on-premise is a useful axis, especially for VPN/connectivity tickets. Mostly labeled 'unspecified' (a correct silent-row value) with 'remote' warranted for VPN, so groundedness is reasonable."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.72,
+    "rationale": "The strongest columns (affected_system, symptom_type, opened_hour_of_day, access_context) provide genuine, orthogonal grouping axes well-grounded in the ticket text and timestamps. Weaknesses: is_open_unresolved is largely redundant with existing state/closed_at; recurrence_signal is near-constant and its True labels are not supported by the short descriptions; incident_scope and self_resolved make confident assertions the terse source text does not warrant. Overall a useful but partly over-asserting augmentation."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 8
+}

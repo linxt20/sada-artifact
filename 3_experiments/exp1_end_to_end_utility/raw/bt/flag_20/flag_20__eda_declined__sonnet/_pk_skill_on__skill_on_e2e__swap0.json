@@ -1,0 +1,114 @@
+{
+  "var_a": "skill_on",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.72,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "500 rows, 84 Declined (16.8% overall)",
+        "why": "concrete dataset framing"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "vague travel = 44.9% decline vs. specific travel = 25.8%",
+        "why": "numeric interaction"
+      },
+      {
+        "dimension": "depth",
+        "quote": "four-cell processed_date × source_id table",
+        "why": "cross-segment analysis"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Route to travel-specific approval workflow",
+        "why": "decision-ready actions"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "all 146 Travel records have has_source_id = False",
+        "why": "identifies confounding/structural coupling"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "necessary but not sufficient condition",
+        "why": "careful causal framing"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "low-amount records (<$2,000) are declined at 57.1%",
+        "why": "segmented numeric evidence"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "61 of 84 declined records (73%)",
+        "why": "precise counts"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B matches A's specificity and adds stronger causal disentangling of confounded signals with equal coherence.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

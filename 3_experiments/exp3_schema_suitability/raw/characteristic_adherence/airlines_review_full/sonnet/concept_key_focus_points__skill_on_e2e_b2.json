@@ -1,0 +1,90 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 6,
+  "added_columns": [
+    "crew_service_quality",
+    "food_quality_assessment",
+    "proactive_service_frequency",
+    "seat_comfort_issue",
+    "complaint_resolution_quality",
+    "communication_failure"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6245,
+    "facet_fraction": 1.0,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.65,
+    "mece": 0.6245,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The demeanor and helpfulness of cabin crew (warm/attentive vs. rude/indifferent) is a core constitutive aspect OF service quality — a genuine part-of relationship, not an external predictor."
+      },
+      {
+        "name": "food_quality_assessment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Quality of food & beverages served is a standard, direct sub-dimension of the inflight service experience; it is an aspect of the concept itself."
+      },
+      {
+        "name": "proactive_service_frequency",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How proactively/frequently crew deliver service is a genuine aspect of service quality, but it is a sub-dimension of crew interaction and overlaps heavily with crew_service_quality (warm_attentive vs. frequent_proactive capture nearly the same underlying dimension)."
+      },
+      {
+        "name": "seat_comfort_issue",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Physical seat comfort (comfortable / cramped / broken) is a well-established constitutive facet of the onboard service quality experience."
+      },
+      {
+        "name": "complaint_resolution_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Service recovery — how complaints are handled — is a legitimate aspect OF overall service quality, distinct from the other in-cabin facets, and adds coverage beyond the original rating columns."
+      },
+      {
+        "name": "communication_failure",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Adequacy of information/communication is a recognized aspect of service quality; however as a crew-interaction dimension it partially overlaps with crew_service_quality and proactive_service_frequency, weakening exclusivity."
+      }
+    ],
+    "facet_columns": [
+      "crew_service_quality",
+      "food_quality_assessment",
+      "proactive_service_frequency",
+      "seat_comfort_issue",
+      "complaint_resolution_quality",
+      "communication_failure"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.65,
+    "rationale": "Every added column passes the meronymy test: each is an aspect OF airline service quality (crew behavior, food, proactivity, seat comfort, complaint handling, communication) rather than an external predictor, cause, or restatement of the whole. So on the constitutive-facet criterion the set is clean (all 6 are facets). MECE is where it weakens. Mutual exclusivity is only moderate because crew_service_quality, proactive_service_frequency, and communication_failure all decompose the same crew-interaction dimension — proactivity and communication are largely sub-aspects of overall crew demeanor, so the carving is not cleanly non-overlapping. Exhaustiveness is moderate: it covers the classic service pillars of staff, food, and seat comfort and usefully adds service recovery, but it omits inflight entertainment (an explicit service dimension present in the source data) and ground/boarding/baggage service, so it does not fully cover the concept's main constitutive aspects."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_key_focus_points",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "problem_nature",
+    "affected_system_type",
+    "self_resolved",
+    "cross_assignment",
+    "recurrent_caller",
+    "opened_hour_of_day"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.4896,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.68,
+    "focus_actionability": 0.75,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/characterisation of incidents worth attention -- what kind of problem each incident is and whether it exhibits attention-worthy patterns (recurrence, cross-assignment, self-resolution)",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "supports_focus": true,
+        "rationale": "Classifies the incident domain (database, email, vpn, etc.), a core facet of characterising what an incident is about."
+      },
+      {
+        "name": "problem_nature",
+        "supports_focus": true,
+        "rationale": "Captures the type of failure (outage, access_denied, crash), directly describing what is worth attention about the incident."
+      },
+      {
+        "name": "affected_system_type",
+        "supports_focus": true,
+        "rationale": "Identifies what class of system is impacted, a coherent facet of incident characterisation."
+      },
+      {
+        "name": "self_resolved",
+        "supports_focus": true,
+        "rationale": "Flags whether the incident resolved itself, a meaningful attention signal distinguishing noise from real issues."
+      },
+      {
+        "name": "cross_assignment",
+        "supports_focus": true,
+        "rationale": "Indicates handoff/reassignment, a process-friction signal relevant to what warrants attention."
+      },
+      {
+        "name": "recurrent_caller",
+        "supports_focus": false,
+        "rationale": "This is a bare caller name enumeration; labelled 'recurrent' but values are just top callers, drifting toward a caller-directory attribute rather than an incident-attention facet."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "supports_focus": false,
+        "rationale": "A near-uniform temporal extraction with no discriminating signal; a generic time-derived feature not centred on incident attention-worthiness."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.68,
+    "focus_actionability": 0.75,
+    "rationale": "The majority of columns (category, problem_nature, affected_system_type, self_resolved, cross_assignment) cohere well around a single inferable focus: characterising incidents to surface what merits attention. This gives a sound multi-facet structure spanning what/where/how-handled at a useful granularity, and the focus is genuinely actionable (an analyst can triage by problem type, spot self-resolving noise, and flag cross-assignment friction). However, coherence is diluted by two weaker additions: recurrent_caller collapses to a bare caller enumeration (an attribute more about people than incident nature), and opened_hour_of_day is a near-uniform, low-information temporal extraction that adds noise rather than an attention signal. These prevent top marks but do not make the set a scattered grab-bag; the centre of gravity remains a coherent, investigable incident-attention focus."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

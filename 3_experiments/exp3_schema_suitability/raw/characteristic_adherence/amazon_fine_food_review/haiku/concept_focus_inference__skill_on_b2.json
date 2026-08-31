@@ -1,0 +1,105 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "focus_variable": "product_score_outcome",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "taste_quality",
+    "flavor_intensity_alignment",
+    "price_value_fit",
+    "product_freshness",
+    "expectation_mismatch",
+    "consumer_segment",
+    "repeat_purchase_intent"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "product_score_outcome",
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "An actionable product attribute (taste) that plausibly drives the score; a candidate cause whose effect on score can be attributed and improved via action."
+      },
+      {
+        "name": "flavor_intensity_alignment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether flavor intensity matches ideal is an actionable product characteristic that could causally affect scores."
+      },
+      {
+        "name": "price_value_fit",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Perceived price/value is an actionable lever plausibly affecting the score; candidate cause."
+      },
+      {
+        "name": "product_freshness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Freshness/degradation is an actionable product/supply-chain attribute that could drive scores."
+      },
+      {
+        "name": "expectation_mismatch",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Mismatch between expectation and delivery is an actionable driver of dissatisfaction and lower scores."
+      },
+      {
+        "name": "consumer_segment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Consumer type (e.g., health-conscious, pet owner) plausibly influences both which product attributes are experienced/valued (treatment) and how strictly they score, so it is a common cause requiring adjustment; not on the causal path itself."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Repeat-purchase intent is downstream of satisfaction/score rather than a common cause; it lies on the effect side (or is a collider-like outcome proxy), so treating it as a confounder would be an error."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "taste_quality",
+      "flavor_intensity_alignment",
+      "price_value_fit",
+      "product_freshness",
+      "expectation_mismatch"
+    ],
+    "confounders": [
+      {
+        "name": "consumer_segment",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The added columns supply an abundance of candidate treatments -- actionable product attributes (taste, flavor intensity, price/value, freshness, expectation mismatch) whose effect on the score can be attributed, so requirement (a) is clearly met. Requirement (b), genuine confounders that are common causes of BOTH treatment and outcome and surfaced from the data rather than the query, is only weakly met. Consumer_segment is the sole plausible confounder (segment shapes both which attributes matter/are experienced and scoring behavior) and it was not named in the query, showing some real capability. However, it is arguably as much an effect-modifier as a classic common cause, and repeat_purchase_intent is a downstream mediator/outcome proxy mislabelled as a driver, not a confounder. No design variables (e.g., verified-purchase status, review time period, product category, reviewer helpfulness/experience) that would classically confound attribute-score attribution were surfaced. Overall: strong on treatments, thin and only moderately valid on confounders."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

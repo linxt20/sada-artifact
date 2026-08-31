@@ -1,0 +1,74 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "poor_writing",
+    "weak_acting",
+    "bad_pacing",
+    "poor_direction",
+    "shallow_characters",
+    "sentiment_boost_if_complaints_fixed"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.875,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.7667,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.8209,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "poor_writing",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "A specific complaint category that gives a genuine grouping axis directly relevant to the 'most common complaints' query. Samples 1-3 correctly flag insipid/wooden writing; sample 4-5 correctly 0. Well grounded in the text."
+      },
+      {
+        "name": "weak_acting",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "Distinct complaint axis. Sample 3 ('performances are wooden') and sample 4 (positive acting -> 0) are well grounded. Sample 2's '1' is less explicitly supported by the excerpt but a plausible reading of a broadly panned film."
+      },
+      {
+        "name": "bad_pacing",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "rationale": "Useful separate complaint dimension. Silent rows correctly set to 0. Sample 2's '1' is somewhat asserted without direct pacing evidence, but overall readings are reasonable."
+      },
+      {
+        "name": "poor_direction",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "rationale": "Valid complaint category adding a new axis. Grounded on most rows; sample 2 flags all complaints at once which is slightly weakly supported for direction specifically."
+      },
+      {
+        "name": "shallow_characters",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Distinct dimension. Sample 3's flag is defensible given the 'predictable premise/violent men' stereotype critique; other rows plausibly grounded."
+      },
+      {
+        "name": "sentiment_boost_if_complaints_fixed",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.4,
+        "rationale": "Directly answers the query's counterfactual, so highly useful analytically. However values are a speculative estimate not derivable from the source text; the specific magnitudes (0.35, 0.65, 0.85) are modeling assertions the reviews do not support, though the 0.0 for positive/complaint-free rows is sound."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.75,
+    "rationale": "The five complaint flags are each a genuine, distinct grouping axis that directly serves the query about common audience complaints, and are largely well grounded in the review text with correct 0 values for silent/positive rows. The sentiment_boost column is the most query-relevant for the counterfactual but its specific numeric magnitudes are speculative estimates not warranted by the text, lowering table-level groundedness. Some complaint flags on the uniformly-panned sample 2 are asserted broadly rather than from explicit evidence, a minor grounding concern."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

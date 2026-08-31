@@ -1,0 +1,135 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.7,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "depth",
+        "quote": "It opens overnight, especially if it is a network issue",
+        "why": "interaction segmentation across two dimensions"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "opened_at month overwhelms this dataset",
+        "why": "flags censoring confound consistently"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "median 1428.0h overnight vs 801.6h in the morning",
+        "why": "numeric within-group comparison"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "Network group ... resolves ~130 h slower than Database",
+        "why": "table-backed magnitudes"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "highest-risk combination is: Network/Service Desk group + off-hours...",
+        "why": "composite decision rule"
+      },
+      {
+        "dimension": "depth",
+        "quote": "off-hours Critical: 1,154 h vs. business-hours Critical: 1,095 h",
+        "why": "cross-segment interaction"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "incident_category",
+        "quote": "`incident_category` (TAPP) adds semantic granularity",
+        "dependent": true
+      },
+      {
+        "column": "problem_symptom_type",
+        "quote": "`problem_symptom_type` (TAPP) reveals the outage symptom",
+        "dependent": true
+      },
+      {
+        "column": "opened_hour_of_day",
+        "quote": "Off-Hours Opening Time (`opened_hour_of_day`)",
+        "dependent": true
+      },
+      {
+        "column": "is_unassigned_at_open",
+        "quote": "All resolved records = `False`; no variance",
+        "dependent": true
+      },
+      {
+        "column": "assignee_resolver_match",
+        "quote": "Match=True: 1,055 h vs. Match=False: 1,041 h",
+        "dependent": true
+      },
+      {
+        "column": "is_recurring_issue_type",
+        "quote": "Non-recurring: 1,090 h vs. Recurring: 1,039 h",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "A matches B's rich evidence while more rigorously flagging the dominant censoring confound, giving a slight coherence and depth edge.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

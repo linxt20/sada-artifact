@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "focus_variable": "inefficient_resolution",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "above_p75_resolution",
+    "reassigned",
+    "high_complexity_category",
+    "critical_or_high_priority",
+    "assignee_slow_relative_to_median"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.2,
+    "predictor_fraction": 0.5,
+    "n_predictors": 3,
+    "redundancy": 0.0,
+    "predictive_utility": 0.4,
+    "leakage_rate": 0.3333
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "inefficient_resolution",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Inefficiency of a resolution is essentially defined by how long it takes; resolution_hours is the underlying quantity from which 'inefficient_resolution' is derived. It is only fully known after the incident closes (closed_at - opened_at), so it both leaks and restates the outcome rather than predicting it."
+      },
+      {
+        "name": "above_p75_resolution",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "A binary flag for resolution time above the 75th percentile is a direct thresholded version of resolution_hours and almost certainly the very operationalization of 'inefficient_resolution'. It is a deterministic function of the outcome, hence leakage/restatement, not a predictor."
+      },
+      {
+        "name": "reassigned",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether an incident was reassigned is a process signal that plausibly correlates with slow/inefficient handling but is not a deterministic component of resolution time. It can carry predictive signal without restating the focus, though it may be partly concurrent with the outcome."
+      },
+      {
+        "name": "high_complexity_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from category, known at intake, and independent of the resolution duration itself. Complexity plausibly predicts inefficiency, making it a legitimate feature."
+      },
+      {
+        "name": "critical_or_high_priority",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Priority is set at/near opening and is external to the focus variable. It plausibly carries predictive signal about resolution efficiency and is not a component of it."
+      },
+      {
+        "name": "assignee_slow_relative_to_median",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This flags the assignee as slow relative to median, which is itself computed from resolution-time behavior. It is effectively another thresholded restatement of the outcome (and uses post-hoc timing), so it leaks the focus rather than predicting it."
+      }
+    ],
+    "n_predictors": 3,
+    "predictive_utility": 0.4,
+    "rationale": "Three of six columns (reassigned, high_complexity_category, critical_or_high_priority) are legitimate ex-ante predictors that add modest signal beyond the original schema. However, half the set (resolution_hours, above_p75_resolution, assignee_slow_relative_to_median) directly restates or leaks the focus variable, since 'inefficient_resolution' is essentially defined by resolution duration. The valid predictors offer real but limited leverage, so overall predictive utility is moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

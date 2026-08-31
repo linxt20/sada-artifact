@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative IMDb audience satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "writing_quality",
+    "directing_quality",
+    "technical_production_quality",
+    "acting_quality",
+    "reviewer_disgust_intensity",
+    "franchise_sequel_fatigue"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5833,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.1667
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "writing_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A judgment about the film's writing extracted from the review; it is an aspect-level assessment distinct from the overall positive/negative label and plausibly carries strong predictive signal about satisfaction without deterministically encoding it."
+      },
+      {
+        "name": "directing_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Aspect-level appraisal of directing; a legitimate feature that correlates with but does not restate the overall label."
+      },
+      {
+        "name": "technical_production_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Assessment of technical/production aspects, a distinct dimension that plausibly predicts overall sentiment while remaining separable from it."
+      },
+      {
+        "name": "acting_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Aspect-level acting judgment; a valid predictor that carries signal about satisfaction without being a deterministic function of the label."
+      },
+      {
+        "name": "reviewer_disgust_intensity",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Disgust intensity is essentially a graded restatement of the reviewer's negative affect, which is nearly synonymous with a negative label. High disgust ~ negative satisfaction, so it largely encodes the outcome rather than an independent predictor."
+      },
+      {
+        "name": "franchise_sequel_fatigue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures franchise/sequel context that could bias satisfaction; though some values (e.g., 'standalone_poorly_received') edge toward encoding the outcome, the construct overall is a contextual signal separable from the label."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.7,
+    "rationale": "The four aspect-quality columns (writing, directing, technical, acting) are genuine aspect-level features that provide real predictive leverage over the overall label while remaining distinct from it, and franchise fatigue adds contextual signal. reviewer_disgust_intensity is effectively a restatement of the reviewer's negative affect and leaks the outcome. As a set, the columns give substantial genuine leverage beyond the raw text, though high missingness and some outcome-adjacent values temper the utility."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do reasons for visit relate to urgency and visit duration across department and age group?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "visit_complexity",
+    "symptom_category",
+    "has_procedure"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.4,
+    "source_groundedness__table_level": 0.4,
+    "b1_overall": 0.575,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "visit_complexity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.15,
+        "hallucination_observed": true,
+        "rationale": "A complexity axis could genuinely help relate reasons to urgency/duration. But the distribution is near-degenerate (222/250 'High') and the samples confirm this: a routine annual physical with only mild fatigue and a viral URI with supportive care are both labelled 'High', which the source text does not support. The value is effectively constant and mis-grounded."
+      },
+      {
+        "name": "symptom_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A clinically meaningful categorisation of reason_for_visit is exactly the new grouping axis the query needs. However groundedness is compromised: the annual physical exam with fatigue is labelled 'pain' though no pain is mentioned, a clear misread. Other samples (infection, chronic_condition, skin) are sound. Mixed reliability."
+      },
+      {
+        "name": "has_procedure",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Whether a procedure occurred is a reasonable new axis that could correlate with duration/urgency. Grounding is shaky: the acne visit (topical/oral medication only, no procedure) is marked 'Yes', which the text does not support; the knee case with MRI 'ordered' is arguably a procedure yet marked 'No'. Inconsistent extraction."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.4,
+    "rationale": "All three columns offer legitimate new axes (complexity, symptom type, procedure presence) that would help relate reasons to urgency and duration, so analytical usefulness is fairly high, though visit_complexity is weakened by being near-constant. Source groundedness is the main weakness: multiple sampled values are mislabelled (physical exam tagged 'pain' and 'High' complexity, acne tagged 'has_procedure=Yes'), indicating the operator frequently asserts readings the source text does not warrant."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 3
+}

@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "taste_quality",
+    "flavor_authenticity",
+    "functional_performance",
+    "palatability_acceptance"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.7625,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7562,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "taste_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A sentiment-style axis specifically about taste is directly on-target for the query about aspects of food quality. Sample readings are sound (positive for good dog food, negative for medicinal soda). Slightly generic as a positive/negative axis, but scoped to taste it retains leverage. NULLs for silent rows are appropriate."
+      },
+      {
+        "name": "flavor_authenticity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures a distinct 'true-to-type vs off-from-expected' dimension not covered by raw taste sentiment, giving a genuine new grouping axis. Values are well-grounded: mislabeled peanuts and medicinal cherry soda are correctly 'off_from_expected'; confection true-to-type. High NULL rate is acceptable as a not-stated default."
+      },
+      {
+        "name": "functional_performance",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A works/does-not-work axis is somewhat useful for non-taste products, but for pure food reviews it strains: labeling the dog food or taffy 'works_as_described' and the medicinal soda 'does_not_work' conflates functional performance with taste, an inference the text does not clearly support. Values often duplicate the taste_quality signal, reducing new leverage."
+      },
+      {
+        "name": "palatability_acceptance",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Acceptance/refusal (eagerly accepted vs refused) is a meaningful consumption-focused axis distinct from taste rating, useful for the query. Grounding is reasonable for the samples (finicky Lab accepts, medicinal soda refused), though 'refused' for the mislabeled peanuts is an inference the text does not directly state, and it partly tracks taste sentiment."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns decompose 'food quality' into several genuinely distinct aspects (taste, authenticity, acceptance), directly serving the query about distinct quality aspects. taste_quality and flavor_authenticity are strong and well-grounded. functional_performance is the weakest: it maps awkwardly onto taste-centric reviews and produces inferences (does_not_work for medicinal soda, works_as_described for taffy) that read more as taste re-labels than warranted functional judgments, and it correlates heavily with taste_quality. palatability_acceptance is useful and mostly grounded but occasionally infers refusal where the text is silent. Overall solid, with minor grounding strain on the functional axis."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

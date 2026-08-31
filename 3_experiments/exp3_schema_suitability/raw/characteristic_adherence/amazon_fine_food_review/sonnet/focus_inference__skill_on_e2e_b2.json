@@ -1,0 +1,98 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "product_category",
+    "taste_quality_verdict",
+    "texture_quality",
+    "health_dietary_claim",
+    "product_safety_concern",
+    "use_case_context",
+    "repeat_purchase_intent",
+    "product_consistency_change",
+    "availability_sourcing_note",
+    "product_effectiveness_outcome"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.792,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.92,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Product-review-derived assessment of food product quality and satisfaction (what drives whether a product is worth attention/action)",
+    "per_column": [
+      {
+        "name": "product_category",
+        "supports_focus": true,
+        "rationale": "Segmenting variable that lets quality/satisfaction facets be analysed by product type; a coherent grouping dimension."
+      },
+      {
+        "name": "taste_quality_verdict",
+        "supports_focus": true,
+        "rationale": "Core quality facet for food products, directly central to whether a product is good."
+      },
+      {
+        "name": "texture_quality",
+        "supports_focus": true,
+        "rationale": "Distinct sensory quality facet complementing taste."
+      },
+      {
+        "name": "health_dietary_claim",
+        "supports_focus": true,
+        "rationale": "Attribute facet relevant to product appeal and actionable positioning."
+      },
+      {
+        "name": "product_safety_concern",
+        "supports_focus": true,
+        "rationale": "High-priority actionable flag surfacing reviews worth attention."
+      },
+      {
+        "name": "use_case_context",
+        "supports_focus": true,
+        "rationale": "Context facet enriching how/why the product is used, supports segmentation."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "supports_focus": true,
+        "rationale": "Direct satisfaction/outcome signal, strongly actionable proxy for product value."
+      },
+      {
+        "name": "product_consistency_change",
+        "supports_focus": true,
+        "rationale": "Actionable flag for quality drift over time, worth attention."
+      },
+      {
+        "name": "availability_sourcing_note",
+        "supports_focus": true,
+        "rationale": "Somewhat peripheral but ties to actionable supply/availability issues."
+      },
+      {
+        "name": "product_effectiveness_outcome",
+        "supports_focus": true,
+        "rationale": "Outcome facet capturing whether the product delivered, central to worthiness."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.92,
+    "rationale": "The columns collectively centre on a single, data-inferable focus: extracting from review text a structured assessment of food-product quality and customer satisfaction, with an emphasis on 'what's worth attention/actionable'. Sensory quality (taste, texture), attributes (health/dietary claims), context (category, use case), and outcome/signal facets (effectiveness, repeat-purchase intent, safety concerns, consistency changes, availability notes) form a differentiated, well-granulated structure rather than a restatement or noise. Explicit boolean flags (safety concern, consistency change) directly realise the 'worth attention' actionability. availability_sourcing_note is slightly peripheral to a pure quality focus, marginally diluting coherence, but the set is otherwise tightly organised and clearly investigable by an analyst."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

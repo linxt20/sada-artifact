@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce declined travel expenses?",
+  "focus_variable": "travel_expense_declined_status",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_travel_related",
+    "asset_category",
+    "creation_method",
+    "expense_source_clarity",
+    "data_completeness",
+    "requester_approval_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "travel_expense_declined_status",
+    "per_column": [
+      {
+        "name": "is_travel_related",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "A scoping/filter flag identifying travel expenses, which is the population the query already restricts to. It is not an intervenable lever nor a confounder; it just marks the analysis subset already named in the query."
+      },
+      {
+        "name": "asset_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The kind of asset/purchase can influence both how expenses are submitted/handled and whether they are declined. It is a common cause not an intervenable treatment for reducing declines, and it is not named in the query."
+      },
+      {
+        "name": "creation_method",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How a record is created (automated vs manual vs system_generated) is a configurable process choice an actor could set/change, making it a plausible intervenable lever that may affect decline rates."
+      },
+      {
+        "name": "expense_source_clarity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Clarity of the expense source reflects underlying record characteristics that plausibly affect both processing and decline outcomes; it is descriptive rather than a settable lever, functioning as a common cause."
+      },
+      {
+        "name": "data_completeness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Record completeness (missing source_id/dates) is something a submitter/process could be made to fix, i.e. an intervenable property that plausibly drives declines; could also be read as confounder, but it is settable."
+      },
+      {
+        "name": "requester_approval_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Submitter behavior/volume is a characteristic of the requester that plausibly affects both submission practices and decline outcomes; not readily settable, so treated as a common cause rather than a lever."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "creation_method",
+      "data_completeness"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "asset_category",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "expense_source_clarity",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "requester_approval_pattern",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "The set does include at least one genuinely intervenable treatment (creation_method, and arguably data_completeness), satisfying part (a) of the interventional claim. It also supplies several unnamed confounders (asset_category, expense_source_clarity, requester_approval_pattern) that are plausible common causes of both how expenses are submitted/processed and whether they are declined, none of which are named in the query. However, the confounders are somewhat generic and descriptive, the treatment/confounder distinction is blurry for data_completeness, and is_travel_related is merely a scoping flag. The columns partially but not cleanly realize a rigorous what-if setup: a defensible intervenable treatment plus adjustment confounders exist, but the causal structure is loosely specified."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

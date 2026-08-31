@@ -1,0 +1,106 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce incident resolution time?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "incident_location_scope",
+    "resolution_status",
+    "same_technician_assigned_closed",
+    "assigned_technician",
+    "recurring_incident_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category (connectivity, email, database) is an intrinsic property of the incident that affects both which technician/handling approach is applied and the resolution time. It is not settable by an actor, so it is a confounder rather than a treatment. Not named in the query."
+      },
+      {
+        "name": "incident_location_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (network_wide, single_user) reflects intrinsic incident severity/breadth that influences both assignment decisions and resolution time. Immutable given the incident, so a confounder. Not named in the query."
+      },
+      {
+        "name": "resolution_status",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "Whether the incident is resolved vs open is itself an outcome/status of the resolution process, not a treatment or a common cause. Overlaps with the focus outcome; can act as a selection/collider on resolution_time."
+      },
+      {
+        "name": "same_technician_assigned_closed",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the same technician who was assigned also closed the incident is a consequence of the handling process that lies on the path to resolution time; it is downstream of assignment, functioning as a mediator rather than an adjustable confounder."
+      },
+      {
+        "name": "assigned_technician",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Who is assigned to an incident is a decision an actor can actually SET or CHANGE, making it a genuine intervenable lever ('assign a different technician to reduce resolution time'). This is a valid what-if treatment."
+      },
+      {
+        "name": "recurring_incident_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the incident is part of a recurring pattern is an intrinsic characteristic that affects both handling/assignment and resolution time. Not settable by an actor; a confounder. Not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "assigned_technician"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "incident_location_scope",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "recurring_incident_pattern",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The query poses an interventional what-if about reducing resolution_time. One added column, assigned_technician, is a genuinely intervenable treatment (assignment is a decision an actor can set), satisfying part (a). Several columns (incident_category, incident_location_scope, recurring_incident_pattern) are plausible confounders that are common causes of both assignment and resolution time and were NOT named in the query, demonstrating the capability under test. However, the set is imperfect: same_technician_assigned_closed is a mediator, and resolution_status is an outcome/collider rather than a confounder, and the confounders are intrinsic incident attributes of moderate strength. Overall the intervention structure is partially realised."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

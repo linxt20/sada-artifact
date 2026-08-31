@@ -1,0 +1,63 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "focus_variable": "product_satisfaction",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "usability_or_design_issue",
+    "value_for_price_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "product_satisfaction",
+    "per_column": [
+      {
+        "name": "usability_or_design_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Usability/design characteristics (feature match, clarity of instructions, ergonomic fit, setup difficulty) are properties a seller/manufacturer could actually change or improve, so this functions as an intervenable treatment lever on satisfaction rather than an immutable attribute."
+      },
+      {
+        "name": "value_for_price_perception",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Price/value positioning is a settable lever (pricing, quality-to-price framing) that a seller can decide, making it a plausible intervenable treatment. However, as a buyer perception it partly reflects the same experience that drives satisfaction, so it also risks being a mediator/proxy for the outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "usability_or_design_issue",
+      "value_for_price_perception"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query is a clear what-if intent ('How can sellers improve...'), and both added columns are settable levers a seller could change, so the intervenable-treatment requirement (a) is satisfied. However, requirement (b) is entirely unmet: no confounder — a common cause of both a treatment and satisfaction — was added. Candidate confounders such as product category, price tier, brand reputation, or reviewer expectations (which affect both usability/value perceptions and satisfaction) are absent. Because there is no adjustment set, the counterfactual effect of the treatments on satisfaction cannot be identified, so the columns fail the decisive test for this subtype."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 2
+}

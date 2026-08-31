@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary by agent and issue type?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_type",
+    "assigned_agent",
+    "resolver_matches_assignee",
+    "failure_mode",
+    "affected_system",
+    "issue_severity_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.8733,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.7616,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Directly provides the 'issue type' axis the query calls for, enabling grouping of resolution time. Derived soundly from short_description in all samples. Partially overlaps with the original 'category' column but offers finer granularity, so it retains strong analytical leverage."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Provides the 'agent' axis the query needs, which is highly useful. However, the original table already has 'assigned_to', so this is largely a restatement/normalization of an existing column, reducing its incremental value. Values are well grounded (nulls preserved)."
+      },
+      {
+        "name": "resolver_matches_assignee",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A boolean comparing closed_by vs assigned_to; a genuine new derived axis that could correlate with resolution time (reassignment/handoff often lengthens resolution). Derivable from original closed_by and assigned_to fields. Slightly less central to the by-agent/by-type query but a legitimate modeling variable."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Offers a cross-cutting categorization of how the issue manifests, giving an additional grouping axis beyond issue_type. Mostly sound readings (no_access, connectivity_loss). Some risk of overlap with issue_type/severity, and 'other' for 'software update issue' is a weak reading but not a hallucination."
+      },
+      {
+        "name": "affected_system",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well grounded in the source text, but largely redundant with issue_type (vpn->vpn, database->database, etc.), so it adds limited new analytical leverage for the resolution-time-by-type query."
+      },
+      {
+        "name": "issue_severity_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Severity-like categorization is a plausible driver of resolution time and gives a new axis distinct from priority (which is original). Mostly warranted from text; some inferences like 'degraded_slow' for 'frequent disconnection' are reasonable readings, though 'error' for a bare 'software update issue' is a mild over-read."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.87,
+    "rationale": "The added columns supply the two axes the query centers on (issue_type and assigned_agent) plus several plausible resolution-time drivers (resolver_matches_assignee, failure_mode, severity). Values are consistently sound readings of short_description and original assignment fields, with no clear hallucinations—only mild over-reads on generic descriptions. Usefulness is moderated because assigned_agent restates original assigned_to, and affected_system largely duplicates issue_type; failure_mode and severity partially overlap. Per the scope rule, no penalty applied for completeness."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

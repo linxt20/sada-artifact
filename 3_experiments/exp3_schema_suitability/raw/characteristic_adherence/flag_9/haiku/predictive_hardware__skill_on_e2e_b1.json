@@ -1,0 +1,67 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals indicate a hardware incident is in the anomaly window?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "failure_symptom",
+    "incident_scope_context",
+    "technician_assignment_stability",
+    "caller_repeat_status",
+    "software_update_interference"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.71,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.71,
+    "source_groundedness__table_level": 0.71,
+    "b1_overall": 0.71,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "failure_symptom",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Directly relevant to identifying hardware incident signals; provides a strong categorical axis (connection_failure, disk_failure, overheating, etc.) to group/model on. Samples show sound readings: 'connection to MySQL server' -> connection_failure, software-install rows -> Unknown, which is correct silent-row behaviour."
+      },
+      {
+        "name": "incident_scope_context",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Scope (single_workstation vs server_infrastructure vs network_segment) is a genuine grouping axis useful for characterising incidents in an anomaly window. 'MySQL server' -> server_infrastructure is well warranted; software-install rows -> Unknown is appropriate."
+      },
+      {
+        "name": "technician_assignment_stability",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.55,
+        "rationale": "A boolean stability flag could plausibly be a signal (reassignment churn), giving some analytical leverage. However groundedness is questionable: the source text/columns shown (short_description, timestamps) do not clearly support a true/false stability determination, and no evidence of assignment history is exposed. Values default to False without visible justification."
+      },
+      {
+        "name": "caller_repeat_status",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "rationale": "Repeat-caller status is a reasonable anomaly signal (recurring hardware failures). Derivable in principle from caller_id frequency, an original column. But two identical software-install rows for the same description yield 'first_time' and later 'repeat_caller' inconsistently across samples, and the value isn't clearly grounded in the shown source text, lowering confidence."
+      },
+      {
+        "name": "software_update_interference",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.7,
+        "rationale": "A boolean about update interference is somewhat relevant since updates can precipitate incidents, giving a distinguishing axis. Grounding is partial: 'Unable to install new update on system' -> True is well supported, but for a hardware-focused query this is a weaker, mostly-negative flag."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.71,
+    "rationale": "The added columns give several genuine new axes (symptom type, scope, repeat behaviour, update linkage) directly relevant to detecting hardware-incident signals, so usefulness is solid. Groundedness is strongest for failure_symptom and incident_scope_context, which show sound extraction from short_description and appropriate 'Unknown' on silent rows. The two boolean columns (technician_assignment_stability, software_update_interference) and caller_repeat_status are weaker: their values are not clearly supported by the visible source text and appear to default heavily to False/first_time without shown evidence, with some cross-row inconsistency. No overt hallucination of invented specifics observed in the samples."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "predictive_hardware",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

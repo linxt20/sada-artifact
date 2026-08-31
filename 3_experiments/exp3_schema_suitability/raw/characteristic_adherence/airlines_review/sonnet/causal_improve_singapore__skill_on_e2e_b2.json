@@ -1,0 +1,93 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "crew_service_quality",
+    "food_quality_issue_type",
+    "amenity_reduction_signal",
+    "cabin_class_value_gap",
+    "perceived_service_decline"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "overall_rating_recommendation",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of overall rating and recommendation, capturing perceived attentiveness/warmth of crew as an experiential driver whose effect on the outcome can be attributed."
+      },
+      {
+        "name": "food_quality_issue_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause (food service failures) that plausibly drives dissatisfaction and non-recommendation; an experiential driver of the outcome rather than a common cause of another treatment."
+      },
+      {
+        "name": "amenity_reduction_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Cost-cutting / amenity reduction plausibly affects both service quality delivered (treatment) and passenger ratings (outcome), acting as a common cause; surfaced from review text, not in query."
+      },
+      {
+        "name": "cabin_class_value_gap",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The gap between expected and delivered value by class relates to expectations and product tier, which can influence both perceived service and the overall rating; not simply on the crew->rating path. Borderline, but plausibly a common cause of expectation-driven service perception and outcome."
+      },
+      {
+        "name": "perceived_service_decline",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A perception of service decline sits on the causal path between actual service quality (treatment) and the rating/recommendation (outcome); it is an intermediate perception, not a common cause, so treating it as a confounder would be an error."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "crew_service_quality",
+      "food_quality_issue_type"
+    ],
+    "confounders": [
+      {
+        "name": "amenity_reduction_signal",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "cabin_class_value_gap",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The added columns clearly supply treatments (crew_service_quality, food_quality_issue_type) that are candidate causes of the outcome, none copied from the query. However, the confounder story is weak. amenity_reduction_signal and cabin_class_value_gap are the only plausible common causes, and even these read more as alternative treatments/expectation moderators than as clean common causes of a specific treatment AND the outcome. perceived_service_decline is a mediator (on the treatment->outcome path) and must not be adjusted for. Overall the set demonstrates driver decomposition more than a properly specified causal-adjustment design: treatments are present, but genuine surfaced confounders are thin and partly ambiguous, so confounder quality is low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

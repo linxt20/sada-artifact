@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we improve incident resolution efficiency?",
+  "focus_variable": "incident_resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "priority_level",
+    "is_reassigned",
+    "resolution_efficiency_tier"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "incident_resolution_efficiency",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Resolution time is a direct operationalization of resolution efficiency itself (the focus), not a treatment or confounder. It is essentially the outcome measure restated."
+      },
+      {
+        "name": "priority_level",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Priority is set by triage and influences both how incidents are handled (e.g. reassignment/assignment decisions) and resolution efficiency. It is a plausible common cause not named in the query. It could also be argued to be a partially intervenable lever, but functions primarily as a confounder here."
+      },
+      {
+        "name": "is_reassigned",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Reassignment is an actionable, settable operational lever: management can decide whether/how often to reassign tickets, making it a genuine intervenable treatment on resolution efficiency."
+      },
+      {
+        "name": "resolution_efficiency_tier",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A bucketed (Slow/Medium/Fast) version of resolution efficiency; it is a restatement/binning of the outcome, not a treatment or confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "is_reassigned"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "priority_level",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The set contains a genuine intervenable treatment (is_reassigned), satisfying claim (a): reassignment is an operational decision an actor can set. However, the confounding structure (claim b) is weak. Two of the four added columns (resolution_time_hours, resolution_efficiency_tier) merely restate/bin the outcome and contribute nothing to confounder adjustment. Only priority_level serves as a plausible common cause of both reassignment and resolution efficiency, and it is a single, fairly obvious confounder. There is no adjustment for other common causes such as assignment_group workload/skill, category complexity, or caller/agent factors — precisely the kind of not-named-in-query confounders that would demonstrate the capability. Thus the counterfactual effect of reassignment cannot be cleanly read off; the interventional setup is only partially realized."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

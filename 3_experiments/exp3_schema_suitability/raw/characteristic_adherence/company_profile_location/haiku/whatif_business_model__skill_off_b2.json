@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "focus_variable": "regional_fit",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "Business_Model_Orientation",
+    "Localization_Potential_Score",
+    "Regional_Fit_Improvement_With_Service_Model"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "regional_fit",
+    "per_column": [
+      {
+        "name": "Business_Model_Orientation",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The business model orientation (product/service/mixed) is the lever the query proposes shifting toward a service-oriented model. It is intervenable in principle -- a company can decide to reorient its business model -- and is explicitly named in the query."
+      },
+      {
+        "name": "Localization_Potential_Score",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "This captures the 'localized model' dimension the query proposes shifting toward. It represents a second intervenable lever explicitly named in the query. It is not a common cause of orientation and fit distinct from the treatment; it is itself part of the treatment axis."
+      },
+      {
+        "name": "Regional_Fit_Improvement_With_Service_Model",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the counterfactual change in the outcome (regional fit) under the intervention. It is the estimated effect itself, i.e. the outcome delta, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "Business_Model_Orientation",
+      "Localization_Potential_Score"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns encode the treatment (business model orientation, localization potential) and directly encode the counterfactual outcome delta (Regional_Fit_Improvement_With_Service_Model). Treatments are intervenable, satisfying part (a). However, the set contains NO confounders -- no common causes of both the business-model/localization treatment and regional fit (e.g., company size, industry sector, resource capacity, existing geographic footprint, product complexity) that would need to be adjusted for to read off a valid counterfactual effect. All treatment-related columns were already named or clearly implied in the query. Since the third column simply asserts the effect without any adjustment set, the interventional claim under test is not properly realised: the operator supplied the outcome delta directly rather than the confounders required to identify it. The decisive capability -- surfacing confounders not named in the query -- is entirely absent."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

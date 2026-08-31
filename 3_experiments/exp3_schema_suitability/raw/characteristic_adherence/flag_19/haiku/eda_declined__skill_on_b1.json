@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "asset_type_category",
+    "asset_acquisition_context",
+    "travel_related_marker",
+    "device_brand",
+    "department_requesting"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.38,
+    "analytical_usefulness__table_level": 0.38,
+    "source_groundedness": 0.51,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.445,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Categorising the asset/item type from short_description and ci is a reasonable grouping axis, though it describes WHAT was expensed rather than the decline reason directly. Values are mostly well-grounded readings of the text, though 'RAM component' mapped to 'peripheral' is a loose call."
+      },
+      {
+        "name": "asset_acquisition_context",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "The acquisition context (procurement vs auto_generated vs manual_registration) is only weakly relevant to why expenses get declined. More importantly, the source text rarely states this; labels like 'procurement' for an iPod service line appear to be invented distinctions not clearly warranted by the visible text."
+      },
+      {
+        "name": "travel_related_marker",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean flag; travel expenses are a plausible decline category, so it offers some analytical leverage, but as a single binary it is fairly generic. It is derivable from description text and largely grounded, though it duplicates the intent of the travel_equipment asset type."
+      },
+      {
+        "name": "device_brand",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Brand extraction is a genuine new axis and mostly grounded where the text names a vendor (Dell). However confident brand assignments where the source is silent (e.g. 'AWS' for a generic 'Cloud Database Service' line) are unsupported inferences. Relevance to decline reasons is moderate."
+      },
+      {
+        "name": "department_requesting",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "This is trivially redundant with the existing original 'department' column, adding no new analytical leverage for a query already about departments. Worse, the produced values (e.g. 'Sales' for a RAM component line) are not derivable from the shown source text and appear fabricated or copied without grounding."
+      }
+    ],
+    "analytical_usefulness": 0.38,
+    "source_groundedness": 0.5,
+    "rationale": "The query is about WHY expenses get declined and how that varies by department. Asset-type categorisation gives some grouping value, and travel/brand flags add minor axes, but none directly capture decline reasons and several are only loosely tied to the analysis. department_requesting is essentially a redundant restatement of an existing column. Groundedness is mixed: brand and asset-type extractions are reasonable readings of the text, but acquisition_context and department_requesting assert specifics the visible source text does not support, indicating hallucination on several rows."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

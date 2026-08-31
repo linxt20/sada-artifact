@@ -1,0 +1,81 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "problem_nature",
+    "affected_system_type",
+    "self_resolved",
+    "cross_assignment",
+    "recurrent_caller",
+    "opened_hour_of_day"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6857,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.6571,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.6714,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Categorizes incidents by domain (database, email, vpn, etc.), giving a strong grouping axis for triage. Values align well with short_description text in samples (WiFi->network_connectivity, VPN->vpn, database->database, printing->hardware)."
+      },
+      {
+        "name": "problem_nature",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Captures the failure mode (connectivity_failure, access_denied, outage), a distinct and useful analytical axis complementary to category. Values are sound readings; silent 'printing issues' correctly maps to Unknown/NULL rather than inventing a specific."
+      },
+      {
+        "name": "affected_system_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Adds an infrastructure-layer grouping (server, network_infrastructure, client_application, endpoint_device). Partly correlated with incident_category but still a distinct axis. Mostly warranted inferences, though mappings like 'online database'->server are reasonable but somewhat interpretive."
+      },
+      {
+        "name": "self_resolved",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.35,
+        "rationale": "A resolution flag could be useful for spotting incidents needing attention, but the source text shown (short_description, closed_by, opened_at) provides no evidence of self-resolution. The true/false values appear asserted without grounding; 'Cannot connect to WiFi' marked self_resolved=True is unsupported."
+      },
+      {
+        "name": "cross_assignment",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.35,
+        "rationale": "Whether an incident crossed assignment groups could be relevant, but nothing in the provided source fields supports the boolean; it looks derived from unseen fields at best or invented. Not grounded in the evidence samples."
+      },
+      {
+        "name": "recurrent_caller",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.2,
+        "rationale": "Largely redundant with the existing caller_id column and appears to just restate a caller name rather than a computed recurrence flag. Sample values don't tie to any recurrence signal in the source text, and a name is not a meaningful 'recurrent' indicator."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 1.0,
+        "rationale": "Directly and correctly extracted from opened_at (8:50->8, 18:14->18, etc.). Fully grounded. Useful for temporal patterns but nearly uniform distribution limits leverage for 'what's worth attention.'"
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.6,
+    "rationale": "The strongest columns (incident_category, problem_nature, affected_system_type, opened_hour_of_day) give genuine, well-grounded axes for understanding and grouping the incidents. However, self_resolved and cross_assignment assert booleans with no support in the visible source text, and recurrent_caller is largely redundant with caller_id and weakly grounded. Overall the set offers real analytical leverage but is dragged down by several ungrounded or redundant additions."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

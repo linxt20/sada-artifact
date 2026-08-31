@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "cabin_service_complaint_type",
+    "crew_attitude_quality",
+    "crew_responsiveness",
+    "food_quality_judgment",
+    "cabin_cleanliness_issue",
+    "complaint_severity",
+    "cabin_complaint_is_sole_driver",
+    "cabin_class_expectation_gap",
+    "flight_haul_type",
+    "covid_cost_cutting_attributed"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.67,
+    "analytical_usefulness__table_level": 0.71,
+    "source_groundedness": 0.692,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.681,
+    "hallucination_rate": 0.3
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_service_complaint_type",
+        "analytical_usefulness": 0.96,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "This is the central column for the query: it explicitly identifies and buckets the cabin-service complaint per review (crew_responsiveness, crew_attitude, food_quality, seat_hardware, etc.), which is exactly what 'most common cabin-service complaints' requires, and enables grouping by complaint type to compare Overall Rating. Values in the samples are sound: 'seat_hardware' for the seats-are-dreadful review, 'no_complaint' for the wholly positive reviews. Well grounded."
+      },
+      {
+        "name": "crew_attitude_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A genuine cabin-service axis (rude/indifferent vs friendly) directly relevant to isolating crew-related complaints. Groundedness is weaker: NULL appears only 350 times, implying near-universal assignment even where crew is not discussed. In the seats/IFE-only review the text is silent on crew yet 'adequate_neutral' is assigned; this is a soft default rather than an invented strong claim, but it still over-attributes to silent rows."
+      },
+      {
+        "name": "crew_responsiveness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.48,
+        "hallucination_observed": true,
+        "rationale": "Conceptually useful (inattentive/absent vs proactive) and directly tied to the top complaint category. However groundedness is a real problem: for the seats-and-IFE-only review, which says nothing about crew, it confidently produces 'inattentive_absent' — a specific negative the source does not support. With NULL only 353 times, the column appears to force a responsiveness verdict onto silent rows, which is exactly the invented-specific pattern to penalise."
+      },
+      {
+        "name": "food_quality_judgment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Food is a legitimate cabin-service dimension useful for the query, and the column does use NULL for ~46% of rows (good silent handling). But sample values are unsound: the seats/IFE review (no food mention) is labelled 'poor', and the crew/seat/movies review (no food mention) is labelled 'acceptable'. These are confident food verdicts where the text is silent — hallucinated values that should have been NULL."
+      },
+      {
+        "name": "cabin_cleanliness_issue",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (98% false) and cleanliness is a marginal complaint category (only 29 in the type column), so it offers little analytical leverage for comparing rating impact. It is, however, well grounded: 'bathroom always kept clean' correctly maps to False (no issue), and the flag is conservative."
+      },
+      {
+        "name": "complaint_severity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.58,
+        "hallucination_observed": true,
+        "rationale": "An ordinal severity is a useful way to weight how much removing a complaint might lift the rating. But grounding is inconsistent: two wholly positive 'no_complaint' reviews receive severity '1.0' while another equally positive review is left NULL — assigning a complaint-severity score to reviews that contain no complaint is not well supported by the source and is applied inconsistently."
+      },
+      {
+        "name": "cabin_complaint_is_sole_driver",
+        "analytical_usefulness": 0.52,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Conceptually relevant to the counterfactual (isolating whether the cabin complaint alone drove a low rating), but at 99% false it is near-constant and gives little grouping leverage. It is a hard causal inference; the samples are conservatively False for positive reviews, so no clear invention is observed, though the true/false judgement is only loosely derivable from text."
+      },
+      {
+        "name": "cabin_class_expectation_gap",
+        "analytical_usefulness": 0.66,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Provides a real grouping axis (whether the cabin met the expectation for its class), which can help segment the rating-improvement analysis. Values look reasonable: economy seat-discomfort review → below_expectation_economy, glowing reviews → exceeds_expectation. It leans on the existing Class column plus sentiment, a warranted inference, though somewhat tangential to the specific complaint-elimination question."
+      },
+      {
+        "name": "flight_haul_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derivable from Route and correct in samples (Jakarta–Singapore/Phuket–Singapore → short_haul, Singapore–London → long_haul), so groundedness is strong. Analytically it is a segmentation axis rather than a cabin-service complaint measure, so its leverage for THIS specific query is moderate."
+      },
+      {
+        "name": "covid_cost_cutting_attributed",
+        "analytical_usefulness": 0.36,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (97% false) and tangential to 'most common cabin-service complaints', giving little analytical leverage for the query. It is a speculative attribution but applied conservatively (rarely true), and the sampled False values are consistent with texts that do not mention cost-cutting, so no clear hallucination is seen."
+      }
+    ],
+    "analytical_usefulness": 0.71,
+    "source_groundedness": 0.63,
+    "rationale": "The set is well-aimed at the query: cabin_service_complaint_type directly delivers the 'most common complaint' axis, and crew_attitude, crew_responsiveness, food_quality and complaint_severity give complementary dimensions to model rating impact — strong analytical leverage. A few columns dilute this (cabin_cleanliness_issue, cabin_complaint_is_sole_driver, covid_cost_cutting_attributed are near-constant, and flight_haul_type is tangential). Groundedness is the weaker dimension: several service dimensions over-attribute to silent rows. The clearest evidence is the seats/IFE-only review, which mentions neither crew nor food yet was assigned crew_responsiveness='inattentive_absent' and food_quality_judgment='poor' — confident negatives the text does not support — and complaint_severity assigns non-null scores to no-complaint positive reviews inconsistently. The core categorisation and route-derived haul type are, by contrast, well grounded. (Per instructions, no penalty applied for any missing columns or decomposition choices.)"
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "whatif_service_complaints",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 10
+}

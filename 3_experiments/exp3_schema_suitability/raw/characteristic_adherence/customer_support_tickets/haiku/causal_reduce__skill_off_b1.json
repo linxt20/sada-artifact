@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can support teams reduce ticket resolution time?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "issue_category",
+    "technical_complexity",
+    "resolution_efficiency_index"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8667,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.7133,
+    "source_groundedness__table_level": 0.71,
+    "b1_overall": 0.79,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.97,
+        "hallucination_observed": false,
+        "rationale": "Categorizing free-text issues (Billing, Technical, Feature Request) gives a strong new grouping axis to compare resolution times across issue types, directly serving the query. All sampled categorizations are sound readings of the source text."
+      },
+      {
+        "name": "technical_complexity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Complexity is a genuinely useful modeling axis for explaining resolution time and identifying where effort concentrates. Ratings are defensible inferences from described symptoms (e.g., production 502 outage=High, invoice duplicate=Low), though complexity is a judgment call the text only partially supports, so groundedness is slightly reduced."
+      },
+      {
+        "name": "resolution_efficiency_index",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "An efficiency index normalizing resolution time is analytically relevant to the query. However, the specific decimal values are not derivable from the row source text shown (only issue_description/ticket_id/agent_id are exposed); it presumably combines resolution_minutes with an implicit expectation, but the produced precise numbers assert a computed baseline not evidenced in the table, so values read as invented specifics."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.71,
+    "rationale": "The added columns provide meaningful new axes (category, complexity, efficiency) that genuinely help analyze what drives resolution time, so usefulness is high across the board. Groundedness is strong for issue_category and reasonable for technical_complexity as warranted inference, but resolution_efficiency_index outputs precise numeric values whose derivation is not supported by the visible source text, lowering overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

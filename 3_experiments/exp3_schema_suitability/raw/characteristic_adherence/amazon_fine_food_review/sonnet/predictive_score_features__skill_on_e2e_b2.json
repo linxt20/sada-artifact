@@ -1,0 +1,150 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "focus_variable": "review_score",
+  "concept": null,
+  "n_added_columns": 16,
+  "added_columns": [
+    "overall_sentiment_polarity",
+    "review_tone_extremity",
+    "repurchase_intent",
+    "taste_flavor_satisfaction",
+    "flavor_strength_perception",
+    "bitterness_presence",
+    "texture_satisfaction",
+    "product_quality_judgment",
+    "product_efficacy",
+    "ease_of_use",
+    "product_category",
+    "usage_context",
+    "expectation_match",
+    "novelty_value",
+    "reviewer_expertise_signal",
+    "review_specificity_level"
+  ],
+  "metrics": {
+    "n_added_columns": 16,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.1687,
+    "predictor_fraction": 0.5625,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "predictive_utility": 0.3,
+    "leakage_rate": 0.4375
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "review_score",
+    "per_column": [
+      {
+        "name": "overall_sentiment_polarity",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Overall sentiment of the review is effectively a near-deterministic restatement of the star score; positive/negative polarity is what the score encodes. Predicting score from overall sentiment is circular leakage."
+      },
+      {
+        "name": "review_tone_extremity",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Strongly_positive vs strongly_negative tone maps almost directly onto 5 vs 1 stars; it is a graded restatement of the score's affect and leaks the outcome."
+      },
+      {
+        "name": "repurchase_intent",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Repurchase intent is correlated with satisfaction but is a distinct downstream disposition, not a restatement of the star value; it can carry residual signal while lying outside the score itself. Borderline but defensible as a predictor."
+      },
+      {
+        "name": "taste_flavor_satisfaction",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Satisfaction with the product is the very sentiment the score expresses; highly_satisfied/dissatisfied is essentially the score under another name for food items."
+      },
+      {
+        "name": "flavor_strength_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether flavor is balanced/too_weak/too_strong is a specific attribute perception, not directly the overall score; it can carry signal without being a restatement of satisfaction."
+      },
+      {
+        "name": "bitterness_presence",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of a specific attribute (bitterness) is an objective-ish feature that only weakly and indirectly relates to score; it is a legitimate outside predictor, though low-variance (2.4% true)."
+      },
+      {
+        "name": "texture_satisfaction",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Framed as satisfaction (positive/negative/mixed), this restates the evaluative sentiment the score captures, just scoped to texture; it leaks the outcome affect."
+      },
+      {
+        "name": "product_quality_judgment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Exceeds/meets/below expectations is an overall evaluative judgment nearly isomorphic to the star rating; it restates the score."
+      },
+      {
+        "name": "product_efficacy",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Positive_effect/negative_effect/no_effect is an evaluative satisfaction judgment about whether the product worked, which maps onto the score; it leaks the outcome."
+      },
+      {
+        "name": "ease_of_use",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Easy/moderate/difficult is a specific usability attribute distinct from the overall rating; it can plausibly influence score without restating it."
+      },
+      {
+        "name": "product_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Category (coffee, snack, pet food, etc.) is an objective covariate outside the score that can carry weak predictive signal via category-level rating tendencies; not leakage."
+      },
+      {
+        "name": "usage_context",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Context of use (gift, pet, cooking) is an objective circumstance independent of the rating value; a legitimate outside feature with plausible signal."
+      },
+      {
+        "name": "expectation_match",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Exceeded/met/not_met is an overall evaluative outcome essentially equivalent to the star rating; it restates the score and leaks."
+      },
+      {
+        "name": "novelty_value",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the product is perceived as novel is a descriptive attribute distinct from satisfaction; can carry weak signal without restating the score."
+      },
+      {
+        "name": "reviewer_expertise_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Reviewer type (expert/first-time/regular) is a covariate about the author, outside the outcome, and can carry predictive signal about rating behavior."
+      },
+      {
+        "name": "review_specificity_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Detail/specificity of the text is a stylistic feature independent of the score's polarity; a legitimate outside predictor, albeit weak."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.3,
+    "rationale": "Many of the strongest-looking columns (overall_sentiment_polarity, review_tone_extremity, taste_flavor_satisfaction, texture_satisfaction, product_quality_judgment, product_efficacy, expectation_match) are evaluative satisfaction/sentiment judgments that essentially restate the star score and constitute leakage — a model using them would trivially recover the outcome rather than genuinely predict it. The legitimate outside predictors (category, usage_context, reviewer_expertise, specificity, ease_of_use, flavor_strength, bitterness, novelty, repurchase_intent) are real covariates but individually carry only weak signal about score and several are dominated by 'not_applicable'. As a set they provide modest genuine predictive leverage beyond the original columns, heavily contaminated by leakage-prone features."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 16
+}

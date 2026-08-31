@@ -1,0 +1,109 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some agents have longer resolution times?",
+  "focus_variable": "agent_resolution_discrepancy",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "priority_numeric",
+    "category_type",
+    "is_critical",
+    "assigned_to_experience",
+    "category_incident_count"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.65,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.65,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_hours",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "The quantitative resolution time -- the outcome the query asks about (why some agents have longer resolution times)."
+      },
+      {
+        "name": "priority_numeric",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Priority plausibly affects both which agent handles a ticket (assignment) and how long resolution takes; a genuine common cause not named in the query."
+      },
+      {
+        "name": "category_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category (Infrastructure/Software) can influence both agent assignment (specialization) and resolution difficulty/time. Common cause, not in query."
+      },
+      {
+        "name": "is_critical",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Criticality (derived from priority) plausibly drives both routing to certain agents and resolution duration; largely redundant with priority but a common cause."
+      },
+      {
+        "name": "assigned_to_experience",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Agent experience is the candidate cause of resolution-time differences across agents -- the treatment whose effect is being attributed."
+      },
+      {
+        "name": "category_incident_count",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Volume/load within a category can affect both which agents get assigned and how long tickets take; a plausible common cause not named in the query. Somewhat ambiguous with mediation but treated as workload confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "assigned_to_experience"
+    ],
+    "confounders": [
+      {
+        "name": "priority_numeric",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "category_type",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "is_critical",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "category_incident_count",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.65,
+    "rationale": "The query asks why some agents have longer resolution times, framing the agent as the unit and resolution time as the outcome. The system supplied a plausible treatment (assigned_to_experience) as the agent-level candidate cause, and several confounders surfaced from the data (priority, category, criticality, category load) that plausibly drive both agent assignment and resolution time. None of these confounders were named in the query, so they demonstrate the capability under test. Quality is moderate: priority and category are strong common causes, but is_critical is largely redundant with priority and category_incident_count risks being a mediator/collider of workload rather than a clean pre-treatment confounder. Overall the columns do set up a causal estimation with a real treatment and genuinely surfaced confounders."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

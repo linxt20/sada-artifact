@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "sentiment_polarity",
+    "product_quality_assessment",
+    "taste_flavor_experience",
+    "sensory_assessment",
+    "repeat_purchase_intent",
+    "price_value_assessment",
+    "product_defect_or_issue",
+    "expectation_fit",
+    "comparison_to_alternatives",
+    "health_dietary_concern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.715,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.805,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.76,
+    "hallucination_rate": 0.1
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "sentiment_polarity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Sentiment is the strongest predictor of review score and directly derivable from text. Samples align well with source tone (positive for praise, negative for the medicinal/mislabeled reviews)."
+      },
+      {
+        "name": "product_quality_assessment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A quality axis distinct enough from raw sentiment to add modeling leverage. Values are reasonable readings, though 'acceptable' for the negative medicinal review is a slightly generous inference."
+      },
+      {
+        "name": "taste_flavor_experience",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Taste is central to food reviews and strongly predictive of score; NULLs correctly used for silent rows. Dog-food row lacks explicit human-taste evidence, so 'good_taste' is mildly speculative but defensible."
+      },
+      {
+        "name": "sensory_assessment",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Largely overlaps taste/quality axes, offering limited new leverage. Values track sentiment closely, and 'pleasant/unpleasant' assignments are broadly warranted though partly redundant."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Repurchase intent is a meaningful behavioral signal correlated with score. However, most rows do not explicitly state intent (e.g., taffy 'deal' and dog-food reviews imply but do not state repurchase), so some values are inferred beyond text."
+      },
+      {
+        "name": "price_value_assessment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Value perception is a distinct predictive axis, with correct Unknown/NULL for silent rows (peanut, cough-medicine). Where price is mentioned (taffy 'great price') the value is well grounded."
+      },
+      {
+        "name": "product_defect_or_issue",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A defect flag is useful and generally correlates with low scores. Mislabeled peanuts correctly flagged True; others False. Somewhat overlaps quality but adds a clean binary signal."
+      },
+      {
+        "name": "expectation_fit",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Expectation gap maps closely to satisfaction and score. 'Not as Advertised' correctly unmet. Some rows (dog food 'met', taffy 'met') infer a baseline expectation not explicitly stated, a minor stretch."
+      },
+      {
+        "name": "comparison_to_alternatives",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Weaker predictor and dominated by 'no_comparison_made', but well grounded—correctly abstains when no competitor is mentioned, giving a modest additional axis."
+      },
+      {
+        "name": "health_dietary_concern",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Plausible auxiliary axis, but the dog-food sample is flagged True with no health/dietary content in the source, an unsupported assertion that lowers groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns provide multiple genuine, non-trivial axes (sentiment, quality, taste, value, defect, expectation fit) that give real leverage for predicting review score, going well beyond bare token counts or a single sentiment flag. A few columns (sensory_assessment) are partly redundant with sentiment/taste, modestly reducing usefulness. Groundedness is generally strong: values are sound readings of the source text and NULL/Unknown is correctly used for silent rows. The main weakness is occasional over-confident inference where the text is silent—most clearly health_dietary_concern=True on the dog-food review—alongside milder stretches in repeat_purchase_intent and expectation_fit."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

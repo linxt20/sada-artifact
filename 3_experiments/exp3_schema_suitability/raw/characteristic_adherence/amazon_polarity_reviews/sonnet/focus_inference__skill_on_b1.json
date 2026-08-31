@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "product_category",
+    "functional_performance_verdict",
+    "content_quality_dimension",
+    "comparison_reference_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8625,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.86,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.8613,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Categorising the purchased item gives a strong, genuine axis to group what reviewers discuss across product types. Values are well grounded: toy doll, book, music, skin cream, and film are all correctly inferred from the source text. Some fine-grained sub-categories (e.g. exact retail category) require light inference but are sound readings."
+      },
+      {
+        "name": "functional_performance_verdict",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the 'does it work' aspect of purchases, a real analytical axis distinct from category. Sensible use of 'not_present' for reviews about media/content where functionality is irrelevant. Sample values (works_as_advertised for the cream; not_present for the doll-availability complaint) are well warranted by the text."
+      },
+      {
+        "name": "content_quality_dimension",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Captures the media-content aspect (plot, acting, writing) that is a distinct discussion theme, complementary to functional verdict. Mostly grounded, though the Bicycle Thieves review is labelled 'narrative_plot' when the text focuses more on packaging/thematic value, and the Lamott book review (about political vs. faith writing) is 'narrative_plot' rather than writing_style — mild misreadings but defensible."
+      },
+      {
+        "name": "comparison_reference_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Whether and how a reviewer benchmarks the item is a legitimate new axis. Grounding is mostly sound (Eamon review does invoke a genre/peer comparison; Bicycle Thieves compares to contemporary films). The 'compared_to_genre_standard' for Eamon is a slightly loose reading (self-comparison rather than genre standard), but overall reasonable."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.86,
+    "rationale": "The four added columns each open a distinct, non-redundant axis (item type, functional verdict, content-quality facet, comparison behaviour) that directly serves the query about which aspects of a purchase reviewers discuss. None is near-constant or a mere restatement of another, and none reduces to a bare sentiment/length flag. Values are largely sound readings of the source text with appropriate 'not_present'/'no_comparison' handling for silent rows; only a few content-quality and comparison labels involve slightly loose inference, but no confident invented facts are observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

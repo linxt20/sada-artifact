@@ -1,0 +1,98 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a travel expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "asset_category",
+    "expense_origin_method",
+    "asset_action_type",
+    "source_id_present",
+    "processing_lag_bucket",
+    "submitting_department",
+    "vendor_brand",
+    "description_specificity",
+    "is_non_standard_item",
+    "hardware_asset_subtype"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.1
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "role": "predictor",
+        "rationale": "Category of the expense item is knowable at submission and plausibly correlates with decline likelihood (e.g., travel vs hardware); external to the outcome."
+      },
+      {
+        "name": "expense_origin_method",
+        "role": "predictor",
+        "rationale": "How the expense was created (manual/automated/procurement) is a pre-decision attribute that can carry signal about scrutiny and decline risk."
+      },
+      {
+        "name": "asset_action_type",
+        "role": "predictor",
+        "rationale": "The nature of the action (acquisition, maintenance, travel procurement) is available before adjudication and plausibly relates to approval outcomes."
+      },
+      {
+        "name": "source_id_present",
+        "role": "predictor",
+        "rationale": "Presence of a source_id (missing metadata) is a legitimate pre-outcome feature; missing provenance could predict declines."
+      },
+      {
+        "name": "processing_lag_bucket",
+        "role": "leakage",
+        "rationale": "Derived from processed_date; 'not_processed' and processing lag are only known at/after adjudication and correlate structurally with the state itself, leaking the outcome."
+      },
+      {
+        "name": "submitting_department",
+        "role": "predictor",
+        "rationale": "The originating department is known at submission and can carry predictive signal about approval/decline patterns; external to the focus."
+      },
+      {
+        "name": "vendor_brand",
+        "role": "predictor",
+        "rationale": "Vendor/brand is a pre-decision attribute plausibly linked to policy compliance and decline likelihood."
+      },
+      {
+        "name": "description_specificity",
+        "role": "predictor",
+        "rationale": "Quality/specificity of the description is knowable at submission and plausibly predicts scrutiny and declines; not a restatement of the outcome."
+      },
+      {
+        "name": "is_non_standard_item",
+        "role": "predictor",
+        "rationale": "Non-standard items plausibly face higher decline rates; this flag is derivable from the item itself pre-decision, a legitimate predictor."
+      },
+      {
+        "name": "hardware_asset_subtype",
+        "role": "predictor",
+        "rationale": "Subtype of the item is a pre-decision attribute that can carry signal; external to the outcome variable."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.6,
+    "rationale": "Nine of ten added columns are legitimate pre-decision attributes (item category/subtype, origin method, department, vendor, description quality, metadata presence, non-standard flag) that plausibly carry signal about whether a travel expense is declined and lie outside the focus variable. Only 'processing_lag_bucket' leaks, since it is derived from processed_date and its 'not_processed' level is confounded with the adjudication state itself. As a set they provide moderate, genuine predictive leverage, though many are correlated proxies for the item type and thus partly redundant with the original 'category'/'short_description' columns."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 10
+}

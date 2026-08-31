@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "performance_category",
+    "achievement_gap",
+    "target_alignment",
+    "improvement_potential"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.6375,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.5,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.5687,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "performance_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A performance tier is directly the axis the query needs (identifying 'top performers' vs others), giving strong grouping leverage. Groundedness is mixed: the category should derive from percent_complete/target_percentage, which exist. But sample 1 is labeled 'Strong Performer' while its achievement_gap is -27 (implying it exceeded), and sample 2 'Top Performer' with gap 0 — the mapping is inconsistent and not clearly warranted, suggesting some values are not soundly read from the underlying performance figures."
+      },
+      {
+        "name": "achievement_gap",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A numeric gap between target and actual is highly useful for quantifying how much achievement could improve — the core of the query. However values appear inconsistent with the categories (e.g. an 'Underperformer' with gap 61/63, a 'Strong Performer' with -27). The gap is in principle derivable from target_percentage minus percent_complete, but the produced magnitudes are not clearly reconciled with the stated categories, indicating some fabricated or mis-computed values."
+      },
+      {
+        "name": "target_alignment",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Alignment vs target overlaps heavily with performance_category and achievement_gap (same underlying signal restated as a coarser bucket), reducing its added leverage. Derivable in principle from target/percent_complete, but 'Exceeded' on sample 2 with gap 0 is questionable, showing the categorization is not always a sound reading."
+      },
+      {
+        "name": "improvement_potential",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "Values are a deterministic 1:1 function of performance_category (At Risk→22, Underperformer→25, Strong→15, Top→10, On Track→18), making it a trivial restatement/lookup of another added column with no independent information. The specific numeric 'improvement' figures are not grounded in any source text — they are invented constants assigned per category, directly asserting quantities the table does not support."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.5,
+    "rationale": "The added columns target the query well in principle: a performance tier and an achievement gap give genuine axes to identify top performers and quantify improvement. However improvement_potential is a trivial per-category constant that merely restates performance_category and fabricates specific improvement numbers unsupported by the text, and target_alignment largely duplicates the performance/gap signal. Groundedness is moderate: category and gap are derivable from existing target/percent_complete columns, but the sampled values show internal inconsistencies (e.g. 'Strong Performer' with a -27 gap, 'Underperformer' with a 61+ gap) and the invented improvement constants, indicating several values are not sound readings of the source."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

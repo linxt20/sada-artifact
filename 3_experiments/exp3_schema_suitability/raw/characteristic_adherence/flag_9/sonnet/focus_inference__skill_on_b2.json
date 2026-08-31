@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "hardware_scope",
+    "intermittent_failure",
+    "requires_hardware_replacement"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.738,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Characterization of hardware problems/failures in incidents (nature, scope, and remediation of hardware faults)",
+    "per_column": [
+      {
+        "name": "hardware_scope",
+        "supports_focus": true,
+        "rationale": "Captures the breadth/locus of the hardware problem (single workstation vs. server infrastructure vs. site-wide), a key facet of distinguishing kinds of hardware issues."
+      },
+      {
+        "name": "intermittent_failure",
+        "supports_focus": true,
+        "rationale": "Encodes failure mode (intermittent vs. persistent), a meaningful diagnostic dimension of hardware problem type."
+      },
+      {
+        "name": "requires_hardware_replacement",
+        "supports_focus": true,
+        "rationale": "Captures severity/remediation of the hardware fault (replace vs. repair), a coherent facet tied to hardware problem nature."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.85,
+    "rationale": "All three columns clearly centre on one inferable focus: the nature of hardware problems in incidents. They form a differentiated facet set spanning scope (where/how broad), failure mode (intermittent vs. steady), and remediation (replacement needed), which is a sound analytical structure rather than a single restatement or generic noise. The focus is actionable: an analyst can segment incidents by scope, isolate intermittent faults, and quantify replacement demand for capacity/asset planning. Minor deduction on structure because the set is somewhat thin and slightly remediation/scope-oriented rather than fully typifying problem CATEGORIES (e.g., disk/memory/network/power component type), which the query's 'different kinds' framing would benefit from; the large NULL rate in hardware_scope also weakens coverage."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

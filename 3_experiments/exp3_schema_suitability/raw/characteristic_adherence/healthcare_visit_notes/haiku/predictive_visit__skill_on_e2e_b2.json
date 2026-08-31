@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit reasons point to different departments?",
+  "focus_variable": "department",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "life_threat_status",
+    "organ_system_focus",
+    "presenting_symptom_type",
+    "diagnostic_or_procedural_escalation"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.75,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "department",
+    "per_column": [
+      {
+        "name": "life_threat_status",
+        "role": "predictor",
+        "rationale": "Encodes acuity/severity derived from the visit reason. It lies outside the department itself, is known at presentation (not a post-outcome label), and severity plausibly shifts routing (e.g., hemodynamically_unstable toward emergency/cardiology). Partially overlaps with existing urgency but adds finer gradation, so it carries genuine predictive signal about department."
+      },
+      {
+        "name": "organ_system_focus",
+        "role": "predictor",
+        "rationale": "Organ system implicated by the presenting reason is a strong, non-circular predictor of department (cardiovascular->cardiology, dermatological->dermatology, etc.). It is derivable from reason_for_visit at intake and is not a restatement or deterministic function of department, so it is a legitimate predictive feature."
+      },
+      {
+        "name": "presenting_symptom_type",
+        "role": "predictor",
+        "rationale": "Symptom categorization (chest pain, skin lesion, joint pain, developmental) is available at presentation and maps plausibly but non-deterministically onto departments. Distinct from department, no leakage, strong signal."
+      },
+      {
+        "name": "diagnostic_or_procedural_escalation",
+        "role": "predictor",
+        "rationale": "Anticipated diagnostic/procedural pathway inferred from the reason. This is a plausible intake-time expectation rather than a realized post-outcome result, and different escalation profiles (surgical, imaging, medication) plausibly correlate with department. Some leakage risk if interpreted as an actual downstream outcome, but as an inferred feature it carries predictive signal without restating department."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.75,
+    "rationale": "All four columns are semantic decompositions of the visit reason into clinically meaningful axes (severity, organ system, symptom type, expected escalation). None restates or is a deterministic function of the focus variable 'department', and all are knowable at presentation, so there is no clear leakage. organ_system_focus and presenting_symptom_type in particular carry substantial, near-orthogonal predictive leverage for department beyond the raw reason_for_visit text; life_threat_status overlaps somewhat with existing urgency, and diagnostic_or_procedural_escalation carries mild leakage risk depending on interpretation. As a set they provide strong, largely non-redundant predictive signal."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

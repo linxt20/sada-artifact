@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "focus_variable": "declined_expense_reasons",
+  "concept": "declined_expense_reasons",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "asset_hardware_subtype",
+    "entry_origin",
+    "source_id_present",
+    "vendor_brand",
+    "is_premium_or_luxury_item",
+    "is_travel_category_hardware_mismatch",
+    "ci_name_quality"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0216,
+    "facet_fraction": 0.125,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.1,
+    "mece": 0.1732,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "declined_expense_reasons",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes what kind of asset the expense concerns, not a reason or compliance risk category for the decline. It is an attribute of the expense item, a potential correlate of decline, not a facet of the decline reason itself."
+      },
+      {
+        "name": "asset_hardware_subtype",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Finer-grained asset taxonomy; an attribute of the purchased item, not an aspect of why the expense was declined."
+      },
+      {
+        "name": "entry_origin",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Manual vs auto entry is a provenance attribute that may predict data-quality issues, but it is not itself a constitutive facet of the decline reason."
+      },
+      {
+        "name": "source_id_present",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Presence of a source id is a completeness/data-quality signal that may correlate with a decline, not an aspect of the reason for decline."
+      },
+      {
+        "name": "vendor_brand",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Vendor identity is an attribute of the expense, not a component of the decline reason."
+      },
+      {
+        "name": "is_premium_or_luxury_item",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A flag that could be a policy-violation trigger, but it characterizes the item, not a facet decomposing the decline-reason concept."
+      },
+      {
+        "name": "is_travel_category_hardware_mismatch",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "This directly encodes a specific compliance-risk/reason type (category mismatch) that is genuinely an aspect of why an expense might be declined, so it partially realizes the concept."
+      },
+      {
+        "name": "ci_name_quality",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A data-quality attribute of the CI naming; a possible correlate of declines, not a constitutive facet of the decline reason itself."
+      }
+    ],
+    "facet_columns": [
+      "is_travel_category_hardware_mismatch"
+    ],
+    "non_facet_columns": [
+      "asset_category_type",
+      "asset_hardware_subtype",
+      "entry_origin",
+      "source_id_present",
+      "vendor_brand",
+      "is_premium_or_luxury_item",
+      "ci_name_quality"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.1,
+    "rationale": "The concept to decompose is the set of REASONS / compliance risks behind declined expenses. Almost all added columns describe attributes of the expense item (asset type, subtype, vendor, luxury flag) or data-provenance/quality signals (entry origin, source_id presence, ci name quality). These are external predictors or correlates of a decline, not constitutive parts of the decline-reason concept itself. Only is_travel_category_hardware_mismatch encodes an actual reason/compliance-risk type and thus qualifies as a genuine facet. With just one facet present, the set fails to cover the main reason categories (policy violation, budget/amount limits, missing documentation, duplicate, unauthorized approver, etc.), giving very low exhaustiveness. Mutual exclusivity is low-to-moderate because several non-facet columns redundantly capture overlapping data-quality/provenance signals; among the facets there is effectively only one, so overlap is trivially limited but the overall carve is poor."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "staff_attitude",
+    "service_consistency_pattern",
+    "food_quality_signal",
+    "hard_product_condition",
+    "flight_disruption_type",
+    "disruption_handling_quality",
+    "overbooking_seat_assignment_issue",
+    "customer_service_resolution_quality",
+    "value_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5511,
+    "predictor_fraction": 0.8889,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.62,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "staff_attitude",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A text-derived characterization of staff behaviour (warm/indifferent/rude/professional). This is an experiential driver antecedent to the overall rating, not a restatement of it. It plausibly carries strong predictive signal for satisfaction and is not deterministically implied by the rating itself, so it is a legitimate feature (partially overlapping the existing Staff Service score but adding qualitative nuance)."
+      },
+      {
+        "name": "service_consistency_pattern",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Describes whether service was consistently high/poor, mixed, or declining. This is a service-quality attribute, a driver of satisfaction rather than a synonym for it. The valence embedded (consistently_high vs consistently_poor) makes it correlated with the outcome, but it still refers to a specific aspect (service consistency) that lies outside the focus, so it qualifies as a predictor, albeit a valence-heavy and somewhat redundant one."
+      },
+      {
+        "name": "food_quality_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Aspect-level assessment of food/meal experience (excellent/adequate/poor/failure). This is a distinct dimension of the trip experience that drives, but does not restate, overall satisfaction. Legitimate predictor (overlaps the existing Food & Beverages rating but adds failure-mode granularity)."
+      },
+      {
+        "name": "hard_product_condition",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Physical condition of the seat/cabin (new_clean/worn_dated/broken_faulty). An objective-ish attribute of the product experienced, external to the rating and plausibly predictive of it. Legitimate feature."
+      },
+      {
+        "name": "flight_disruption_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Objective operational event (delay/cancellation/missed connection/overbooking/none). This is an exogenous antecedent event, clearly outside the focus and not captured by any original numeric aspect rating, so it provides genuinely new and strong predictive signal for satisfaction."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How any disruption was handled (proactive/adequate/poor/NA). A recovery-experience driver that lies outside the overall rating and adds signal not present in the original ratings. Valenced but aspect-specific, so a legitimate predictor."
+      },
+      {
+        "name": "overbooking_seat_assignment_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Boolean flag for an objective adverse event. Exogenous to the rating, not a restatement, and plausibly predictive of dissatisfaction. Legitimate feature (partially redundant with the overbooking category in flight_disruption_type)."
+      },
+      {
+        "name": "customer_service_resolution_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Quality/outcome of interacting with customer service (unresolved, rude, resolved, etc.). A service-recovery driver that is distinct from the overall rating and not present in original columns, so it adds predictive signal. Legitimate predictor."
+      },
+      {
+        "name": "value_perception",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "poor/fair/good_value is a global evaluative judgment that is nearly synonymous with overall satisfaction and directly duplicates the existing 'Value For Money' column. It is a summary valence judgment rather than an independent driver, so it largely restates/leaks the focus and offers little exogenous predictive leverage."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.62,
+    "rationale": "The set is semantically rich rather than mechanical: it consists mostly of aspect-level experiential drivers and objective operational events extracted from review text. The disruption-related and service-recovery features (flight_disruption_type, disruption_handling_quality, overbooking_seat_assignment_issue, customer_service_resolution_quality) are the strongest contributors because they are exogenous events not represented in the original numeric ratings, providing genuinely additive signal for predicting overall rating. The qualitative aspect descriptors (staff_attitude, food_quality_signal, hard_product_condition, service_consistency_pattern) are legitimate predictors but overlap substantially with the existing Staff Service / Food & Beverages / Seat Comfort ratings, reducing their marginal lift. value_perception is a near-synonym of overall satisfaction and duplicates Value For Money, so it is treated as a restatement/leakage rather than an independent predictor. Overall, 8 of 9 columns are valid predictors with meaningful but partly redundant marginal value beyond the original columns."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

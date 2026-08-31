@@ -1,0 +1,136 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "n_added_columns": 13,
+  "added_columns": [
+    "cabin_service_complaint_type",
+    "crew_attitude_issue",
+    "service_responsiveness",
+    "complaint_severity",
+    "complaint_resolution_quality",
+    "service_failure_co_occurrence",
+    "positive_service_signal",
+    "ground_service_complaint",
+    "cabin_class_service_gap",
+    "flight_haul_type",
+    "aircraft_type_confounder",
+    "service_decline_perception",
+    "service_consistency"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 13,
+    "n_judged_columns": 13,
+    "analytical_usefulness": 0.6262,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.6946,
+    "source_groundedness__table_level": 0.66,
+    "b1_overall": 0.6604,
+    "hallucination_rate": 0.3077
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_service_complaint_type",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is the pivotal column for the query: it names the specific cabin-service complaint per review, enabling ranking of 'most common complaints' and grouping Overall Rating by complaint type. Samples are well read (amazing flight -> no_complaint; dreadful narrow seats -> seat_comfort). Provides the primary analytical axis."
+      },
+      {
+        "name": "crew_attitude_issue",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Distinct, meaningful axis for cabin service that can be crossed with Overall Rating. Positive sample (welcoming crew -> friendly_professional) is sound. For the seats-only review with no crew mention it defaults to neutral_adequate, which is a defensible neutral rather than an invented negative, so groundedness is only mildly discounted."
+      },
+      {
+        "name": "service_responsiveness",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Useful responsiveness axis directly tied to cabin service, only lightly redundant with a value inside cabin_service_complaint_type. However the seats-only review (which never mentions service timing) is labelled slow_or_absent, asserting a responsiveness failure the text does not support. This over-assertion on silent rows lowers groundedness."
+      },
+      {
+        "name": "complaint_severity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "An ordinal severity is directly useful for estimating how much rating would move if complaints were removed. Sample assignments track tone reasonably (no complaint -> 1, dreadful seats -> 4). Somewhat subjective calibration, but broadly warranted from the text."
+      },
+      {
+        "name": "complaint_resolution_quality",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Resolution handling is tangentially useful but not the crux of the query. Groundedness is the concern: the seats complaint mentions no request or resolution attempt yet is coded unresolved_no_response, and the very large unresolved_no_response bucket implies a resolution narrative most reviews never describe."
+      },
+      {
+        "name": "service_failure_co_occurrence",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Counting how many failures co-occur is a reasonable secondary axis for isolating the rating impact of stacked complaints. Samples are defensible (seats + entertainment both bad -> multiple_failures; amazing flight -> no_failure), though the very high multiple_failures share suggests some over-labelling."
+      },
+      {
+        "name": "positive_service_signal",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A bare positive sentiment boolean that the rubric flags as low-leverage; it largely restates crew_attitude_issue/service_responsiveness and the existing Staff Service rating, adding little new axis for this query. Values themselves are correctly derived from the reviews."
+      },
+      {
+        "name": "ground_service_complaint",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Ground service is outside the 'cabin-service' scope of the query but is a legitimate confounder to fence off before attributing rating changes to cabin complaints. Sample rows do not mention ground service and are correctly labelled false, so groundedness is solid."
+      },
+      {
+        "name": "cabin_class_service_gap",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Relating delivered service to class expectation is a genuine axis that could sharpen the rating-impact estimate. Sample reads are plausible (economy dreadful seats -> below_class_expectations; superb flight -> exceeded). Inferential but generally warranted."
+      },
+      {
+        "name": "flight_haul_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A segmentation/confounder derivable straight from Route; only indirectly tied to cabin complaints, so moderate usefulness. Groundedness is high (Jakarta-Singapore -> short_haul, Singapore-London -> long_haul are correct route-based derivations)."
+      },
+      {
+        "name": "aircraft_type_confounder",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "As a confounder it is marginally useful and is ~half NULL. Groundedness is uneven: it correctly returns Unknown when type is unstated (sample 3), but assigns standard_widebody to the Jakarta-Singapore review that gives no aircraft information, inventing a specific where the text is silent."
+      },
+      {
+        "name": "service_decline_perception",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (86% false) and niche to the query about eliminating current complaints, so limited analytical leverage. Where used it is not obviously contradicted, and false on silent rows is acceptable, so groundedness is moderate."
+      },
+      {
+        "name": "service_consistency",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Marginal for the query. Categories like inconsistent_across_sectors / consistent_negative / consistent_positive presuppose multi-sector experience that single-flight reviews rarely describe, so a large share of these labels assert cross-sector information not present in the text."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.66,
+    "rationale": "The set is anchored by strong, query-relevant columns: cabin_service_complaint_type is exactly what the query needs, and crew_attitude_issue, service_responsiveness, complaint_severity, service_failure_co_occurrence and cabin_class_service_gap give real axes to rank complaints and model their effect on Overall Rating. Usefulness is dragged down by a tail of low-leverage columns (positive_service_signal as a bare sentiment flag, near-constant service_decline_perception, marginal service_consistency, and a half-null aircraft confounder). Groundedness is generally sound on explicit rows but repeatedly over-asserts on silent rows: service_responsiveness labels an untold review slow_or_absent, complaint_resolution_quality invents an unresolved-complaint narrative, aircraft_type_confounder fabricates a widebody where no type is stated, and service_consistency implies multi-sector information reviews do not contain. No completeness penalties applied; scores reflect only usefulness and groundedness of the columns present."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "whatif_service_complaints",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 13
+}

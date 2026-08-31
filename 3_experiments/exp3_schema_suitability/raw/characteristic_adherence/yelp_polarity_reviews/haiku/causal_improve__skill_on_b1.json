@@ -1,0 +1,40 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "n_added_columns": 1,
+  "added_columns": [
+    "staff_behavior_issue"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 1,
+    "n_judged_columns": 1,
+    "analytical_usefulness": 0.9,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.875,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "staff_behavior_issue",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "For a query about improving Yelp user satisfaction, categorizing the specific type of staff behavior problem gives a genuine actionable axis to group and prioritize service improvements (training, attentiveness, professionalism). It is not a bare sentiment flag; it decomposes negative experiences into targetable causes. Values are well-grounded in the samples: YLP-0002's repeated forgetting maps soundly to 'inattentive_forgetful', YLP-0005's discriminatory/dismissive treatment maps reasonably to 'rude_dismissive', and the positive/neutral reviews correctly get 'not_present'. The categories like 'inconsistent_training' or 'unprofessional_appearance' are inferential but plausible readings; slight risk of over-specific inference lowers groundedness marginally."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.85,
+    "rationale": "The single added column provides a meaningful, non-trivial categorization of staff-related service failures that directly serves the query on improving user satisfaction, offering a new grouping dimension beyond the existing binary sentiment label. The row-evidence samples show sound extractions and correct 'not_present' handling for silent/positive rows, with no observed hallucination, though some finer-grained categories rely on warranted-but-specific inference."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 1
+}

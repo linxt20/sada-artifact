@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "resolution_hours",
+    "hours_to_last_update",
+    "assignee_changed",
+    "is_high_priority",
+    "inefficiency_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.7,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Resolution duration is a core measure of resolution efficiency and gives a genuine continuous axis to model on. Derivable from opened_at/closed_at timestamps present in the table; sample values are plausible durations."
+      },
+      {
+        "name": "hours_to_last_update",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Derivable from timestamps, but its value distribution is identical to resolution_hours (same top-value multiset, and in samples closed_at equals sys_updated_on so both equal the same number). It is effectively a duplicate of resolution_hours here, adding little new leverage."
+      },
+      {
+        "name": "assignee_changed",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is a strong, non-trivial signal of inefficient resolution. However the table has only a single assigned_to snapshot with no history, so a per-row 'assignee changed' flag cannot be soundly derived; the 1/0 values appear inferred without supporting evidence."
+      },
+      {
+        "name": "is_high_priority",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binary derived from the existing priority column; grounded and warranted. Somewhat redundant with the original priority field and near-constant (421/79), which limits added leverage, but priority is a plausible efficiency signal."
+      },
+      {
+        "name": "inefficiency_score",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A composite index directly targeting the query is analytically useful for ranking/grouping. But it inherits the ungrounded assignee_changed input and its weighting is opaque; the scores partly rest on unsupported components, weakening groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.72,
+    "rationale": "The set provides genuinely useful efficiency axes (duration, priority flag, composite score) for the query. Weaknesses: hours_to_last_update duplicates resolution_hours, and assignee_changed (plus the inefficiency_score that depends on it) asserts a reassignment signal the single-snapshot table cannot support, indicating hallucinated per-row values. Grounded columns (durations, priority) are sound readings of present timestamp/priority data."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "clinical_category",
+    "visit_purpose",
+    "problem_acuity",
+    "chronicity",
+    "care_action_type",
+    "body_system",
+    "symptom_mechanism",
+    "referral_or_escalation",
+    "preventive_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.663,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The clinical nature of the patient's presenting concern (what kind of medical problem prompted the visit), characterised by its clinical category, body system, acuity/chronicity, and the care response it triggers",
+    "per_column": [
+      {
+        "name": "clinical_category",
+        "supports_focus": true,
+        "rationale": "Directly typologises the presenting concern by medical domain -- the core of 'main types of concerns'."
+      },
+      {
+        "name": "visit_purpose",
+        "supports_focus": true,
+        "rationale": "Frames why the patient came (acute vs chronic vs wellness), a key facet of concern type."
+      },
+      {
+        "name": "problem_acuity",
+        "supports_focus": true,
+        "rationale": "Ordinal severity of the concern; a coherent attribute of the presenting problem."
+      },
+      {
+        "name": "chronicity",
+        "supports_focus": true,
+        "rationale": "New vs chronic vs exacerbation -- a temporal facet of the concern."
+      },
+      {
+        "name": "care_action_type",
+        "supports_focus": true,
+        "rationale": "Downstream response; somewhat orthogonal to concern-type but coheres as a consequence facet."
+      },
+      {
+        "name": "body_system",
+        "supports_focus": true,
+        "rationale": "Anatomical categorisation of the concern; overlaps heavily with clinical_category but at a slightly different granularity."
+      },
+      {
+        "name": "symptom_mechanism",
+        "supports_focus": true,
+        "rationale": "Pathophysiologic mechanism behind the concern -- a genuine explanatory facet."
+      },
+      {
+        "name": "referral_or_escalation",
+        "supports_focus": true,
+        "rationale": "Escalation outcome; a downstream facet, more about disposition than concern type."
+      },
+      {
+        "name": "preventive_flag",
+        "supports_focus": true,
+        "rationale": "Flags preventive dimension of the visit; ties to concern typology but is a narrow secondary axis."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "rationale": "The columns collectively centre on one coherent, data-inferable focus: the clinical characterisation of the patient's presenting concern. clinical_category, body_system, symptom_mechanism, problem_acuity, chronicity, and visit_purpose form a well-differentiated multi-facet structure (domain, anatomy, mechanism, severity, time course, purpose) that directly serves 'main types of concerns' at a useful granularity -- not a single restatement nor generic noise. Coherence is strong though slightly diluted by clinical_category and body_system being near-duplicate axes, and by care_action_type / referral_or_escalation / preventive_flag drifting toward downstream disposition rather than the concern itself. Still, these read as coherent consequence facets rather than a grab-bag. The implied focus is highly actionable: an analyst can cluster and rank concern types, cross-tabulate against department/urgency/age_group, and investigate care patterns. Structure_quality is docked modestly for the categorical redundancy between the two taxonomy columns."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

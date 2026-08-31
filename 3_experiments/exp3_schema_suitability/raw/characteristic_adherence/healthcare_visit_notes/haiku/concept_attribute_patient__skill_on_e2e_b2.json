@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What patient needs appear in visit notes?",
+  "focus_variable": "patient_needs",
+  "concept": "patient_needs",
+  "n_added_columns": 5,
+  "added_columns": [
+    "clinical_domain",
+    "presenting_problem_family",
+    "intervention_scope",
+    "care_continuity_type",
+    "severity_or_acuity_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.5185,
+    "facet_fraction": 0.8,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.7,
+    "mece": 0.6481,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "patient_needs",
+    "per_column": [
+      {
+        "name": "clinical_domain",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Clinical domain (Specialty_Surgical, Pediatric, Mental_Health, etc.) categorizes the medical service area or specialty context of the visit, not an aspect of the patient's need itself. It is a contextual/classificatory attribute of where care occurs rather than a constitutive part of what the patient needs."
+      },
+      {
+        "name": "presenting_problem_family",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The nature of the presenting problem (symptom evaluation, chronic condition management, injury, infection) is a genuine aspect of what the patient needs -- the clinical concern driving the need is constitutive of the need itself."
+      },
+      {
+        "name": "intervention_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "What intervention is required (medication adjustment, procedure, counseling, monitoring) is a core facet of a patient's need -- the type of care/action needed is directly part-of the concept of patient needs."
+      },
+      {
+        "name": "care_continuity_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the need is a new problem, routine follow-up, acute exacerbation, or transition planning describes the continuity/temporal-relational aspect of the need, an aspect of the need itself rather than an external predictor."
+      },
+      {
+        "name": "severity_or_acuity_signal",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Severity/acuity (stable, symptomatic, critical, acute-unstable) is a legitimate facet of a patient's need -- how urgent/intense the need is is an aspect of the need."
+      }
+    ],
+    "facet_columns": [
+      "presenting_problem_family",
+      "intervention_scope",
+      "care_continuity_type",
+      "severity_or_acuity_signal"
+    ],
+    "non_facet_columns": [
+      "clinical_domain"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.7,
+    "rationale": "Four of five columns are constitutive facets of patient_needs, carving it into problem type, required intervention, continuity, and acuity. clinical_domain is an external/contextual classifier of the care setting rather than a part-of the need. Mutual exclusivity is moderate: presenting_problem_family, clinical_domain, and severity_or_acuity_signal partially overlap (e.g., Mental_Health / Acute_Care values recur across columns, and problem family vs. acuity both encode the clinical condition's state), causing aspect leakage. Exhaustiveness is fairly good for the constitutive dimensions (what problem, what care, when/continuity, how severe), though a psychosocial/access or informational-need facet is missing, so it does not fully cover the concept's main aspects."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

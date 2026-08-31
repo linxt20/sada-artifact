@@ -1,0 +1,134 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 12,
+  "added_columns": [
+    "theme_tech_issues",
+    "theme_engagement",
+    "theme_disengagement",
+    "theme_hands_on_need",
+    "theme_teacher_quality",
+    "theme_equity_concern",
+    "theme_flexible_learning",
+    "theme_social_connection",
+    "theme_new_opportunity",
+    "theme_outcomes_positive",
+    "theme_outcomes_negative",
+    "open_response_sentiment"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.78,
+    "predictor_fraction": 1.0,
+    "n_predictors": 12,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.78,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "theme_tech_issues",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary presence flag for a nameable theme; can be grouped and compared against satisfaction. Somewhat rare (14/250) but still yields a meaningful segment."
+      },
+      {
+        "name": "theme_engagement",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable theme flag with well-balanced 76/174 split, ideal for comparing satisfaction across presence/absence."
+      },
+      {
+        "name": "theme_disengagement",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear semantic theme, 26 positives; supports interpretable segmentation against the focus."
+      },
+      {
+        "name": "theme_hands_on_need",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Balanced 91/159 split, nameable theme; strong for exploratory grouping vs satisfaction."
+      },
+      {
+        "name": "theme_teacher_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable theme flag with usable segment size (26)."
+      },
+      {
+        "name": "theme_equity_concern",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Meaningful theme; rare (11) so estimates are noisier, but still an interpretable segment."
+      },
+      {
+        "name": "theme_flexible_learning",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Nameable theme, 19 positives; interpretable and groupable against satisfaction."
+      },
+      {
+        "name": "theme_social_connection",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-balanced 92/158 split; excellent for discovering relationships with satisfaction."
+      },
+      {
+        "name": "theme_new_opportunity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable theme flag, 19 positives; supports segmentation."
+      },
+      {
+        "name": "theme_outcomes_positive",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear valenced theme; groupable and interpretable against the focus."
+      },
+      {
+        "name": "theme_outcomes_negative",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear valenced theme; complements outcomes_positive for exploratory comparison."
+      },
+      {
+        "name": "open_response_sentiment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categorical variable, but nearly constant (227/250 neutral) and largely a coarse restatement of satisfaction; weak, near-degenerate segmentation."
+      }
+    ],
+    "n_predictors": 12,
+    "relationship_informativeness": 0.78,
+    "rationale": "The added columns directly realise the exploratory intent: they decompose the free-text open_response into a set of named, human-interpretable themes as binary presence flags that can each be grouped and cross-tabulated against satisfaction, and further sliced by role, grade, and subject. The themes are semantically distinct (tech issues, engagement, teacher quality, equity, social connection, outcomes valence) and several have well-balanced splits (engagement 76/174, hands_on 91/159, social_connection 92/158) supporting robust comparison. Weaknesses: a few themes are quite rare (equity 11, tech 14), making segment estimates noisy, and open_response_sentiment is near-constant (91% neutral) while largely restating the satisfaction signal, so it contributes little interpretive lift. Overall this is a genuine, interpretable relationship-opening set rather than opaque scores, so it substantially satisfies the claim."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 12
+}

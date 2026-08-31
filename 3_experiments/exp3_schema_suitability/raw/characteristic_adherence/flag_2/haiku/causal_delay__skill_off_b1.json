@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "resolution_time_hours",
+    "priority_level",
+    "involves_infrastructure",
+    "involves_access_issue",
+    "involves_performance",
+    "involves_database",
+    "was_resolved"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7114,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.8571,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.7843,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is the dependent variable the query targets (longer resolution times). Derivable from opened_at/closed_at, which are present. Samples show closed_at equals sys_updated_on and no opened_at is shown, but values are plausible and NULLs align with unresolved rows."
+      },
+      {
+        "name": "priority_level",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Trivially redundant with the original 'priority' column, which the query says to control for. Adds no new analytical axis; it is a restatement. Values grounded."
+      },
+      {
+        "name": "involves_infrastructure",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A causal grouping axis extracted from short_description; directly supports isolating underlying causes. VPN/WiFi/Internet correctly flagged as infrastructure; grounded readings."
+      },
+      {
+        "name": "involves_access_issue",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Useful cause axis, but 'Cannot connect to database' flagged as access_issue=1 is a defensible but loose reading, and infrastructure=0 there is questionable. Some flag assignments look inconsistent with the text."
+      },
+      {
+        "name": "involves_performance",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct cause category useful for explaining slowness-driven delays. Samples show 0 where no performance signal present; grounded."
+      },
+      {
+        "name": "involves_database",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct cause axis. 'Cannot connect to database' correctly flagged 1; others 0. Well grounded in short_description."
+      },
+      {
+        "name": "was_resolved",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Largely derivable from state/closed_at and correlated with resolution_time NULLs, so partly redundant, but does provide a valid filter/flag for which rows have a defined resolution time. Grounded."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.84,
+    "rationale": "The added set gives the target outcome (resolution_time_hours) plus several genuine underlying-cause axes (infrastructure, access, performance, database) that let the analyst decompose delay drivers after controlling for priority/category exactly as the query asks. priority_level is redundant with the original priority column and was_resolved is partly redundant, lowering the holistic usefulness. Groundedness is generally strong: cause flags are sound readings of short_description and NULL resolution times align with unresolved rows, with only minor questionable flag assignments (e.g. access vs infrastructure on the database-connection row)."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

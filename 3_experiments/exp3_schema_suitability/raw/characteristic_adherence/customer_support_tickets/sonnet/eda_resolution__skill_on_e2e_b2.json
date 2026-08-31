@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_theme",
+    "ticket_class",
+    "operational_impact",
+    "scope_of_impact",
+    "root_cause_class",
+    "requires_escalation"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly realizes the 'issue themes' dimension of the query. Interpretable, well-separated semantic categories that can be grouped and compared against resolution time. Some tail categories are small but the head is well-populated."
+      },
+      {
+        "name": "ticket_class",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Coarser, well-separated typology (bug, feature_request, outage, etc.) with good cell sizes. Meaningful segmentation likely to show strong resolution-time differences; distinct enough from issue_theme to add value."
+      },
+      {
+        "name": "operational_impact",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable severity/impact scale (minor_friction to compliance_deadline) with populated categories. Highly plausible associate of resolution time and easy to group on."
+      },
+      {
+        "name": "scope_of_impact",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear breadth categories (single_user to cross_tenant) with adequate cell sizes for comparison, though 'not_stated' is large. Interpretable external segmentation associated with resolution effort."
+      },
+      {
+        "name": "root_cause_class",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable causal categories usable for segmentation. 'not_identified' is large but remaining categories are well-separated and plausibly associated with resolution time."
+      },
+      {
+        "name": "requires_escalation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary with balanced-enough cells (53 vs 197). Escalation is a strongly interpretable associate of longer resolution times; ideal for a two-group comparison."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.85,
+    "rationale": "The set consists entirely of external, interpretable categorical variables with well-separated categories and generally adequate cell sizes, directly supporting grouped comparison against resolution_minutes. It covers the query's 'issue theme' dimension (issue_theme, ticket_class) and adds interpretable severity/scope/cause/escalation segmentations. None merely restate the focus or produce opaque scores. Minor weaknesses: some tail categories are sparse and a few columns carry large 'not_stated'/'not_identified' buckets, slightly limiting comparison quality; issue_theme and ticket_class overlap somewhat. Overall a strong EDA augmentation."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do goal achievement rates differ across departments?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "goal_outcome_type",
+    "outcome_measurement_mechanism",
+    "metric_misalignment",
+    "intervention_complexity",
+    "target_realism_assessment",
+    "resource_dependency_scope"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.725,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.7167,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7208,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_outcome_type",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derived from category/description and gives a real axis for grouping goals by type. However it largely restates the existing 'category' column, limiting its added leverage for explaining cross-department differences."
+      },
+      {
+        "name": "outcome_measurement_mechanism",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Characterizes how outcomes are measured (financial/survey/operational), a genuine new axis relevant to why achievement varies. Values are reasonable readings of the metric/description text, though occasional mismatched metrics (e.g., 'Expense Ratio' for satisfaction) make the mapping slightly interpretive."
+      },
+      {
+        "name": "metric_misalignment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Flagging whether the assigned metric fits the goal is highly relevant to achievement rates, and the samples (satisfaction goal with Expense Ratio, revenue goal with Survey Score) show genuine misalignment. But the overwhelming 418:132 skew to 'misaligned' raises concern the classifier over-asserts misalignment, weakening groundedness."
+      },
+      {
+        "name": "intervention_complexity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Number/coordination of interventions is a plausible driver of achievement differences. Single vs multiple is often warranted by the description (e.g., 'improved after-sales support and personalized interactions'), but the distinction is inferential and some rows with sparse text likely receive a confident label the source only weakly supports."
+      },
+      {
+        "name": "target_realism_assessment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Whether targets are aggressive vs incremental is directly relevant to achievement rates and a strong analytical axis. However, labeling a 20% target as 'aggressive_stretch' in one row and a 20%/12-point jump as 'moderate_improvement' in another shows inconsistent, partly invented calibration not grounded in stated baselines or benchmarks."
+      },
+      {
+        "name": "resource_dependency_scope",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Resource/dependency scope is a reasonable driver of achievement. Some values are warranted ('across functions' -> cross_functional), but others appear asserted beyond the text: a premium-subscription revenue goal labeled 'cross_functional' and a satisfaction survey goal labeled 'cross_functional' lack clear textual support, indicating confident inference where the source is silent."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns collectively supply several genuinely useful axes (metric alignment, target realism, intervention complexity, resource scope) that go beyond the original fields and directly bear on why achievement rates differ across departments; goal_outcome_type is the weakest, largely echoing 'category'. Groundedness is moderate: type and measurement-mechanism are sound readings, but target_realism, resource_dependency, and the heavily skewed metric_misalignment show confident, sometimes inconsistent inferences that outrun what the source text states."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

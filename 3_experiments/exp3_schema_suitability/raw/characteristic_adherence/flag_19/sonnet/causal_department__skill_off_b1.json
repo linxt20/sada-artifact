@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do expense decline rates differ across departments?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_declined",
+    "has_source_id",
+    "dept_total_count",
+    "dept_declined_count",
+    "dept_decline_rate",
+    "processing_days"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7583,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.9833,
+    "source_groundedness__table_level": 0.98,
+    "b1_overall": 0.8708,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_declined",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "The decline flag is the core dependent variable for a query about decline rates; derivable directly from the state column."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "A bare presence flag on an existing column; largely trivial/redundant and only weakly connected to explaining decline-rate differences."
+      },
+      {
+        "name": "dept_total_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Department volume is a legitimate axis for interpreting and weighting decline rates; grounded as a count over the department column."
+      },
+      {
+        "name": "dept_declined_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Numerator behind the rate; useful context for judging significance of departmental differences, correctly aggregated from state and department."
+      },
+      {
+        "name": "dept_decline_rate",
+        "analytical_usefulness": 1.0,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Directly the metric the query asks about, enabling cross-department comparison; a sound ratio of declined to total counts."
+      },
+      {
+        "name": "processing_days",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Processing latency is a plausible driver of decline behavior and a new modeling axis; derived from opened_at/processed_date with correct NULLs for missing dates."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.98,
+    "rationale": "The added columns are well targeted at the query: they construct the decline metric, its numerator/denominator, department volume, and a candidate explanatory latency variable, all soundly derivable from the source columns. Only has_source_id is weak, being a near-trivial presence flag with limited leverage for explaining decline-rate differences. No hallucinations observed; silent rows correctly yield NULL processing_days."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

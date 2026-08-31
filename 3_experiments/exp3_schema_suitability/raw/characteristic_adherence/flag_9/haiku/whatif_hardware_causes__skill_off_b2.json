@@ -1,0 +1,69 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "focus_variable": "hardware_incident_rate",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "is_hardware_incident",
+    "hardware_failure_category",
+    "addressable_by_top_causes"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "hardware_incident_rate",
+    "per_column": [
+      {
+        "name": "is_hardware_incident",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Flags whether a ticket is a hardware incident; this constitutes the outcome/event indicator used to compute the hardware incident rate, not a treatment or confounder."
+      },
+      {
+        "name": "hardware_failure_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Identifies the failure cause (Printer, Monitor, etc.). The query is about addressing the 'most common hardware failure causes', so this is the lever being intervened on. It is at least partly intervenable (an org could remediate specific failure categories), but it is directly named/implied by the query."
+      },
+      {
+        "name": "addressable_by_top_causes",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "Marks whether an incident falls under the top causes being addressed; this simply operationalizes the intervention's scope (a definitional partition of the outcome), not a common cause of treatment and outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "hardware_failure_category"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns identify the outcome (is_hardware_incident), a treatment/lever (hardware_failure_category), and a scope indicator (addressable_by_top_causes). While a plausible intervenable treatment is present, the schema contains NO confounders at all -- no common causes of both which failures occur and the incident rate (e.g., hardware age/fleet composition, vendor/model, environment, usage load, maintenance regime, device inventory size). Every added column is either the outcome itself or a definitional restatement of the treatment scope, all directly implied by the query. Because the decisive test requires confounders (ideally not merely named in the query) to be adjusted for before a counterfactual effect can be read off, and none are supplied, the interventional claim is not realized."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

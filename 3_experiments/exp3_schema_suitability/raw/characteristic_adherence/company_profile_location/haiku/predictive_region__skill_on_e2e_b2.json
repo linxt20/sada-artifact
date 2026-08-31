@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "industry_vertical",
+    "tech_stack_focus",
+    "stage_signals",
+    "market_reach",
+    "service_model"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.55,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Industry vertical extracted from the business description is external to the regional cluster and plausibly correlates with it (e.g., semiconductors/enterprise software concentrate in Silicon Valley), giving genuine predictive signal."
+      },
+      {
+        "name": "tech_stack_focus",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Technology focus (AI/ML, biotech, hardware, cloud) is a description-derived attribute distinct from geography, and different tech specialties cluster regionally, so it carries predictive signal for the region."
+      },
+      {
+        "name": "stage_signals",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Company maturity/funding stage is not a component of regional_cluster and can correlate with geography (VC-heavy early-stage ecosystems vs. established hubs), so it is a legitimate predictor."
+      },
+      {
+        "name": "market_reach",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Market orientation (B2B, global, consumer, local) is external to the region label yet varies across regional ecosystems, providing plausible predictive leverage; note the 'local_silicon_valley' value hints at mild geographic contamination but is largely regional-signal rather than a restatement."
+      },
+      {
+        "name": "service_model",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Business/service model (SaaS, hardware, consulting, VC) is a description-derived variable distinct from geography and can differ by regional cluster, so it plausibly carries predictive signal."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.55,
+    "rationale": "All five columns are legitimate description-derived features that lie outside the regional_cluster focus and are not deterministic functions of it or leakage. Each plausibly correlates with region, and as a set they form a coherent, non-mechanical feature space (industry, technology, stage, market reach, service model). Predictive leverage is moderate rather than high: these attributes correlate imperfectly with region, some values are highly imbalanced/degenerate, and one value ('local_silicon_valley') edges toward geographic self-reference, capping the genuine incremental signal."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

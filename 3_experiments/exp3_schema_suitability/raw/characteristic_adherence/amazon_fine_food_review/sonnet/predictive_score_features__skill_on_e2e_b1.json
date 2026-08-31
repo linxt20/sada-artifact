@@ -1,0 +1,160 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "n_added_columns": 16,
+  "added_columns": [
+    "overall_sentiment_polarity",
+    "review_tone_extremity",
+    "repurchase_intent",
+    "taste_flavor_satisfaction",
+    "flavor_strength_perception",
+    "bitterness_presence",
+    "texture_satisfaction",
+    "product_quality_judgment",
+    "product_efficacy",
+    "ease_of_use",
+    "product_category",
+    "usage_context",
+    "expectation_match",
+    "novelty_value",
+    "reviewer_expertise_signal",
+    "review_specificity_level"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 16,
+    "n_judged_columns": 16,
+    "analytical_usefulness": 0.6406,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.8344,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.7375,
+    "hallucination_rate": 0.1875
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "overall_sentiment_polarity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "rationale": "Sentiment is a strong, well-grounded predictor of a numeric review score; values match the source texts.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "review_tone_extremity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Adds a graded intensity axis beyond binary polarity, useful for regressing on score. Slight redundancy with polarity but distinct granularity; readings are sound.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "repurchase_intent",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "rationale": "Repurchase intent correlates with satisfaction. But 'False' is asserted for rows where the text is simply silent (e.g. dog food, taffy) rather than 'unknown', conflating absence-of-signal with negative intent, weakening groundedness.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "taste_flavor_satisfaction",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Taste satisfaction is a meaningful score driver with a not_applicable escape; sample values are well supported.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "flavor_strength_perception",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "rationale": "Useful niche axis. However labeling silent rows 'balanced' (e.g. dog food, taffy) over-asserts a specific perception the text does not state; better handled as not_applicable/unknown.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "bitterness_presence",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "rationale": "Highly imbalanced (97.6% false), near-constant, so weak analytical leverage for this query. Values are defensibly grounded/negative-by-default.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "texture_satisfaction",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "rationale": "Reasonable secondary quality axis with proper not_applicable handling; sample values well grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "product_quality_judgment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Quality judgment strongly tracks star rating and is a good predictor; readings are sound though somewhat correlated with expectation_match.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "product_efficacy",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.7,
+        "rationale": "Useful for supplements/pet products. But applying 'mild_positive_effect' to a plain dog-food quality review stretches an efficacy frame the text does not invoke.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "ease_of_use",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "rationale": "Mostly not_applicable (79%), limited leverage for food-review score prediction, but grounded with proper NA handling.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "rationale": "Category enables grouping and controls for product-type effects on score; extractions from text are sound.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "usage_context",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "rationale": "Context (gift, pet, baby) is a genuine grouping axis; values reasonably inferred, though 'personal_use' is a heavy default that may over-assert on silent rows.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "expectation_match",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "rationale": "Meaningful driver of score but substantially redundant with product_quality_judgment; values are well grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "novelty_value",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.75,
+        "rationale": "Plausible minor feature. 'True' for the confection/root-beer rows is a soft inference; borderline but acceptable, though somewhat speculative.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "reviewer_expertise_signal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "rationale": "Expertise proxy is a plausible feature. Labeling the detailed confection review 'expert_enthusiast' is a defensible inference from richness of text.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "review_specificity_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "rationale": "Detail level is a reasonable style feature (borders on a length proxy, limiting novelty for score prediction) but is well grounded in the observable text.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns provide multiple genuine axes (sentiment, tone extremity, quality judgment, taste satisfaction, category, usage context) that would meaningfully help model a review's score, satisfying analytical usefulness overall despite some redundancy (polarity/extremity, quality/expectation_match) and a few weak near-constant columns (bitterness_presence, ease_of_use). Groundedness is generally strong and sample values track the source texts, with appropriate not_applicable/unknown handling in several columns. The main weakness is a tendency to assert confident defaults (repurchase_intent=false, flavor_strength=balanced, product_efficacy applied to non-efficacy products) on rows where the text is silent, which introduces mild hallucination rather than using an unknown value."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 16
+}

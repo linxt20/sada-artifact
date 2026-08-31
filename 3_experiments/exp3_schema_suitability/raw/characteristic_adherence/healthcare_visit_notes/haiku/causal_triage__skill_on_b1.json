@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can clinics improve triage and scheduling?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_problem_category",
+    "clinical_acuity_signal",
+    "intervention_intensity",
+    "comorbidity_or_complexity_flag",
+    "scheduling_action_recommendation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.85,
+    "analytical_usefulness__table_level": 0.86,
+    "source_groundedness": 0.77,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.81,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_problem_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Gives a strong new axis for grouping visits by clinical problem type, directly useful for triage/scheduling analysis beyond the raw reason_for_visit text. Categorizations are mostly sound readings of source text (preventive_screening for annual exam, acute_infection for viral URI, chronic_management for MI follow-up). The dermatology acne case labeled 'procedural_intervention' is a stretch since it was medication management, a minor grounding slip."
+      },
+      {
+        "name": "clinical_acuity_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "An acuity score is a genuine analytical lever for triage; it is not merely redundant with the existing urgency field since it offers finer graduation. However values are somewhat compressed (heavy on '2') and the mapping to source is inferential; the trauma/urgent knee injury and viral fever both scored '2' where differentiation would be expected, so groundedness is moderate but defensible."
+      },
+      {
+        "name": "intervention_intensity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Captures resource/effort intensity, a distinct and useful dimension for scheduling slot allocation. Values track the text reasonably (simple exam=1, MRI ordered=2). Some overlap in signal with acuity, but it is a warranted separate inference from procedures/tests mentioned."
+      },
+      {
+        "name": "comorbidity_or_complexity_flag",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Complexity flag is analytically valuable for identifying visits needing longer slots or continuity. Grounding is weaker: the annual-exam row labeled 'single_chronic_condition' is unsupported (no chronic diagnosis stated, only mild fatigue), and the post-MI follow-up labeled 'acute_on_chronic_exacerbation' contradicts the text which explicitly says no angina and stable/tolerating well. These are unwarranted assertions."
+      },
+      {
+        "name": "scheduling_action_recommendation",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query's scheduling focus by mapping each visit to a concrete slot/action; highly actionable grouping axis. Recommendations are well-justified readings of the source (emergency for high acuity, longitudinal slot for chronic follow-up, same-day for acute URI). Reasonable and consistent with the text."
+      }
+    ],
+    "analytical_usefulness": 0.86,
+    "source_groundedness": 0.77,
+    "rationale": "The added columns collectively provide several genuinely distinct and actionable axes (problem category, acuity, intervention intensity, complexity, and scheduling action) that directly serve a triage-and-scheduling analysis rather than restating the originals. Usefulness is high across the board. Groundedness is generally sound as categorizations and warranted inferences, but the comorbidity_or_complexity_flag exhibits real hallucination: it invents a chronic condition for a clean annual exam and asserts an 'acute_on_chronic_exacerbation' for a patient the text describes as stable, contradicting the source. This drags overall groundedness to good-but-imperfect."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

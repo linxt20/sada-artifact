@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "focus_variable": "food_quality",
+  "concept": "food_quality",
+  "n_added_columns": 9,
+  "added_columns": [
+    "facet_taste",
+    "facet_texture",
+    "facet_freshness",
+    "facet_smell_aroma",
+    "facet_appearance",
+    "facet_ingredients_nutrition",
+    "facet_packaging_quantity",
+    "facet_consistency_brand",
+    "primary_quality_facet"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.4422,
+    "facet_fraction": 0.6667,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.8,
+    "mece": 0.6633,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "food_quality",
+    "per_column": [
+      {
+        "name": "facet_taste",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Taste/flavor is a core sensory aspect OF food quality; a genuine constitutive facet."
+      },
+      {
+        "name": "facet_texture",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Texture/mouthfeel is an intrinsic sensory dimension of food quality."
+      },
+      {
+        "name": "facet_freshness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Freshness is a constitutive attribute of food quality."
+      },
+      {
+        "name": "facet_smell_aroma",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Aroma is a distinct sensory aspect of food quality, non-overlapping with taste in principle."
+      },
+      {
+        "name": "facet_appearance",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Visual appearance is a recognized quality dimension of food."
+      },
+      {
+        "name": "facet_ingredients_nutrition",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Ingredient/nutritional composition is an intrinsic aspect of food quality."
+      },
+      {
+        "name": "facet_packaging_quantity",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Packaging and quantity are attributes of the product/delivery, not constitutive aspects OF the food's quality itself; also conflates two unrelated notions (packaging vs. amount)."
+      },
+      {
+        "name": "facet_consistency_brand",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Brand is an external identifier/reputation predictor, not a facet of food quality; bundling 'consistency' with 'brand' further muddies the aspect."
+      },
+      {
+        "name": "primary_quality_facet",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is a roll-up/argmax over the other facet columns, restating the whole rather than adding a distinct constitutive aspect; it also overlaps entirely with the individual facet flags."
+      }
+    ],
+    "facet_columns": [
+      "facet_taste",
+      "facet_texture",
+      "facet_freshness",
+      "facet_smell_aroma",
+      "facet_appearance",
+      "facet_ingredients_nutrition"
+    ],
+    "non_facet_columns": [
+      "facet_packaging_quantity",
+      "facet_consistency_brand",
+      "primary_quality_facet"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.8,
+    "rationale": "Most columns are genuine constitutive facets of food quality (taste, texture, freshness, aroma, appearance, ingredients/nutrition), covering the main sensory and compositional aspects fairly well. However exclusivity is weakened by conceptual overlaps (taste vs. smell_aroma vs. freshness co-vary; 'consistency' overlaps with texture) and by bundled columns ('packaging_quantity', 'consistency_brand') mixing two ideas each. packaging_quantity and consistency_brand fail the meronymy test: packaging/quantity/brand are external product attributes or reputation predictors, not aspects OF the food's intrinsic quality. primary_quality_facet is a restatement/aggregate of the whole rather than a distinct part. These non-facet inclusions and overlaps lower the MECE quality despite good coverage of the true facets."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

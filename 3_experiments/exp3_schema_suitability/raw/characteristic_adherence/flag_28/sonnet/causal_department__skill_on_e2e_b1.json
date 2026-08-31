@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do goal achievement rates differ across departments?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "primary_lever",
+    "goal_mechanism",
+    "goal_specificity",
+    "initiative_complexity",
+    "time_horizon",
+    "measurement_mechanism",
+    "metric_goal_alignment",
+    "scope_breadth"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8337,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8169,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_lever",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the strategic approach behind each goal, giving a strong new grouping axis to compare achievement rates across lever types. Values align well with descriptions (cost_optimization, customer_service, people_programs, marketing_sales all warranted)."
+      },
+      {
+        "name": "goal_mechanism",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.93,
+        "hallucination_observed": false,
+        "rationale": "Captures the outcome mechanism (satisfaction/revenue/efficiency/cost). Somewhat correlated with primary_lever but distinct enough to be useful. Values are sound readings of the source text."
+      },
+      {
+        "name": "goal_specificity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Whether a goal is quantified and has a baseline is a plausible driver of achievement and a genuine new axis. Samples correctly distinguish 'from 78% to 90%' (with baseline) vs 'by 20%' (no baseline)."
+      },
+      {
+        "name": "initiative_complexity",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Multi vs single action vs program-level is a reasonable complexity axis that could explain differing achievement. Sample readings are defensible (multiple stated actions -> multi_action; 'comprehensive Program' -> program_level)."
+      },
+      {
+        "name": "time_horizon",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Deadline horizon is a strong explanatory variable for achievement rates. Extractions match text ('by end of Q4', 'next fiscal year', 'last quarter'). NULLs for silent rows are acceptable."
+      },
+      {
+        "name": "measurement_mechanism",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Useful axis, but appears partly inferred from goal type rather than the actual metric column, which is often mismatched (e.g. metric 'Expense Ratio' on a customer-satisfaction goal was tagged survey_based). This inference is reasonable but occasionally overrides stated metric, introducing mild groundedness risk."
+      },
+      {
+        "name": "metric_goal_alignment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether the tracked metric fits the goal is directly relevant to why achievement differs and is well-grounded given metric vs description (e.g. Survey Score metric on a revenue goal -> false; Expense Ratio on cost reduction -> true)."
+      },
+      {
+        "name": "scope_breadth",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Conceptually useful, but heavily skewed to company_wide (428/550) and the sample labels several clearly department/team-scoped goals (satisfaction ratings, premium subscriptions) as company_wide. This suggests a default overreach not warranted by the text."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns supply several genuinely distinct, analytically valuable axes (lever, mechanism, specificity, complexity, time horizon, metric alignment) directly relevant to explaining cross-department achievement differences, with little trivial redundancy. Most values are sound readings of the source text. Groundedness is dragged down modestly by scope_breadth's over-assignment to company_wide and measurement_mechanism occasionally inferring from goal type over the stated metric, but reasonable NULL handling and generally faithful extractions keep overall quality high."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "causal_department",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

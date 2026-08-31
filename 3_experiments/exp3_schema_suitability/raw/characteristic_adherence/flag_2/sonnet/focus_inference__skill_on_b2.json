@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "affected_system_component",
+    "failure_symptom",
+    "recurrence_signal",
+    "ticket_resolved",
+    "assignment_status"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.504,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/type of the underlying problem in each incident ticket (categorizing recurring problem types by category, affected component, and failure symptom)",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "supports_focus": true,
+        "rationale": "Directly captures the type of problem (email, database, vpn), the core axis for identifying recurring problem types."
+      },
+      {
+        "name": "affected_system_component",
+        "supports_focus": true,
+        "rationale": "Adds a finer-grained facet of the problem (which specific component fails), differentiating within categories."
+      },
+      {
+        "name": "failure_symptom",
+        "supports_focus": true,
+        "rationale": "Captures the manifestation of the problem (cannot_connect, access_denied), a coherent third facet enabling problem-type clustering."
+      },
+      {
+        "name": "recurrence_signal",
+        "supports_focus": false,
+        "rationale": "Constant 'true' for all 500 rows -- zero variance, no analytical value; a vacuous restatement of the query rather than a real signal."
+      },
+      {
+        "name": "ticket_resolved",
+        "supports_focus": false,
+        "rationale": "Resolution status is a lifecycle/outcome attribute, not part of characterizing the problem type; peripheral to the focus."
+      },
+      {
+        "name": "assignment_status",
+        "supports_focus": false,
+        "rationale": "Whether a ticket is assigned is a workflow attribute unrelated to identifying recurring problem types."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.85,
+    "rationale": "The first three columns (category, component, symptom) form a genuinely coherent, well-structured decomposition of 'problem type' at a useful granularity, enabling an analyst to cluster and rank recurring problem patterns -- clearly actionable. However, coherence is diluted by a grab-bag of three off-focus columns: recurrence_signal is a degenerate constant (true for all 500) adding no information, while ticket_resolved and assignment_status are workflow/lifecycle attributes rather than problem-characterizing facets. The strong core keeps the implied focus recognizable and inferable, but the extraneous columns prevent this from being a tight, single-focus structure."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

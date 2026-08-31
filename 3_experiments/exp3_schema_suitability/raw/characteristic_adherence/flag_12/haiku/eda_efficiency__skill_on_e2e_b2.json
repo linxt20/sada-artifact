@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "primary_asset_type",
+    "specific_failure_mechanism",
+    "issue_complexity_signal",
+    "resolution_scope",
+    "issue_severity_signal",
+    "issue_frequency_pattern",
+    "assignment_hand_off_evidence",
+    "requester_type"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.63,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "primary_asset_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean, well-separated categorical (printer, monitor, software, etc.) that is external to resolution efficiency and can be segmented on to compare resolution times across asset classes."
+      },
+      {
+        "name": "specific_failure_mechanism",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable failure-type categories (hardware_malfunction, paper_jam, disk_failure) that are associational to how quickly incidents resolve; some low-count tails but overall meaningful."
+      },
+      {
+        "name": "issue_complexity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Complexity buckets (requires_replacement vs simple_functional_issue) are interpretable and plausibly drive efficiency, but this borders on restating resolution effort; still segmentable and external enough to be informative."
+      },
+      {
+        "name": "resolution_scope",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Describes the nature of the resolution itself (repair_required, equipment_replacement). This is largely a restatement of the resolution outcome rather than an independent explanatory variable, so its correlation with efficiency is somewhat tautological."
+      },
+      {
+        "name": "issue_severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Severity levels (single_failure, critical_system_outage, performance_degradation) are interpretable and classically associated with resolution efficiency; dominant single category but with meaningful contrasting tails."
+      },
+      {
+        "name": "issue_frequency_pattern",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary isolated vs recurring split is clean, external, and offers a clear comparison axis for efficiency."
+      },
+      {
+        "name": "assignment_hand_off_evidence",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Whether assigned and closing person differ is an interpretable operational binary plausibly linked to resolution efficiency (hand-offs add delay); good segmentation variable."
+      },
+      {
+        "name": "requester_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Standard vs system_integration user is a clean binary segmentation external to the focus; its 390/110 split mirrors the hand-off column exactly, hinting at possible redundancy, but semantically distinct and interpretable."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.72,
+    "rationale": "As a set, these columns provide multiple interpretable, well-separated categorical segmentations (asset type, failure mechanism, severity, frequency, hand-off, requester type) that a human can group on and compare against resolution efficiency, satisfying the EDA claim. They are associational rather than opaque model scores and avoid pure text-length/token mechanics. Weaknesses: 'resolution_scope' and partly 'issue_complexity_signal' restate the resolution outcome itself, making any correlation with efficiency near-tautological; and the identical 390/110 distribution shared by 'assignment_hand_off_evidence' and 'requester_type' suggests possible redundancy/derivation. Overall a strong, mostly interpretable set with a couple of restatement-leaning columns."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

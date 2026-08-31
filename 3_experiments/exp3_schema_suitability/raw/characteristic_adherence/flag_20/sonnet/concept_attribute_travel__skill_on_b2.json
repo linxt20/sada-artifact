@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "focus_variable": "travel_policy_risk",
+  "concept": "travel_policy_risk",
+  "n_added_columns": 8,
+  "added_columns": [
+    "expense_type_label",
+    "travel_item_hardware_mismatch",
+    "personal_vs_business_ambiguity",
+    "ci_name_anomaly",
+    "source_id_present",
+    "processing_lag_risk",
+    "entry_method",
+    "department_travel_alignment"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1719,
+    "facet_fraction": 0.375,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.35,
+    "mece": 0.4583,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "travel_policy_risk",
+    "per_column": [
+      {
+        "name": "expense_type_label",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Classifies the expense into categories (asset registration, travel, etc.). This is a descriptive attribute of the expense that may correlate with risk, but it is not itself an aspect/part OF travel policy risk. A travel expense is not a facet of the risk concept."
+      },
+      {
+        "name": "travel_item_hardware_mismatch",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether an item claimed under travel does not match travel context (e.g., hardware billed as travel) is a genuine constitutive dimension of policy risk -- a misclassification/mismatch aspect of the violation itself."
+      },
+      {
+        "name": "personal_vs_business_ambiguity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Ambiguity over whether an expense is personal or business is a core sub-aspect of travel policy risk (personal-use violations), representing a distinct part of the risk concept."
+      },
+      {
+        "name": "ci_name_anomaly",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "An anomaly in the configuration-item name is a generic data-quality/anomaly signal. It may hint at irregularity but is not an aspect that constitutes travel policy risk specifically."
+      },
+      {
+        "name": "source_id_present",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Mere presence of a source_id is a metadata completeness flag, not a constitutive aspect of travel policy risk."
+      },
+      {
+        "name": "processing_lag_risk",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Processing latency is an operational/workflow attribute. It is a possible external indicator of control weakness but not a part-of travel policy risk itself."
+      },
+      {
+        "name": "entry_method",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "How an entry was created (manual/auto) is a provenance attribute that may predict error, not a constitutive facet of the risk concept."
+      },
+      {
+        "name": "department_travel_alignment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether a travel expense aligns with the department's expected travel profile captures an unauthorized/unexpected-travel aspect, a genuine sub-dimension of travel policy risk."
+      }
+    ],
+    "facet_columns": [
+      "travel_item_hardware_mismatch",
+      "personal_vs_business_ambiguity",
+      "department_travel_alignment"
+    ],
+    "non_facet_columns": [
+      "expense_type_label",
+      "ci_name_anomaly",
+      "source_id_present",
+      "processing_lag_risk",
+      "entry_method"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.35,
+    "rationale": "Only three of eight added columns are true constitutive facets of travel_policy_risk (item/hardware mismatch, personal-vs-business ambiguity, department-travel alignment). The remainder are external predictors, provenance, or metadata-completeness flags (expense_type_label, entry_method, processing_lag_risk, source_id_present, ci_name_anomaly) that describe the expense or workflow rather than parts of the risk concept. Among the genuine facets, mismatch and personal/business ambiguity partly overlap in the 'misclassified/unauthorized spend' space, and department alignment is somewhat distinct, giving moderate mutual exclusivity. Exhaustiveness is low: key constitutive aspects of travel policy risk such as spending-limit/cap violations, missing-receipt/documentation compliance, disallowed expense categories, and duplicate/reimbursement fraud are not covered by any facet."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

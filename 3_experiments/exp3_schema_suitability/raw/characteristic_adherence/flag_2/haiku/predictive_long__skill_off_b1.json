@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an incident will take longer to resolve?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "resolution_hours",
+    "resolution_hours.1",
+    "priority_level",
+    "is_critical_high",
+    "category_complexity",
+    "same_assignee_caller",
+    "updater_is_system",
+    "status_risk",
+    "time_risk",
+    "description_complexity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.422,
+    "analytical_usefulness__table_level": 0.45,
+    "source_groundedness": 0.715,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.5685,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is the target/outcome measure derived from opened_at and closed_at timestamps, directly capturing how long an incident takes to resolve. Central to the query. Values are consistent with the timestamp fields present. NULLs for unclosed incidents are correct behaviour."
+      },
+      {
+        "name": "resolution_hours.1",
+        "analytical_usefulness": 0.02,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "An exact duplicate of resolution_hours (identical value distribution). Adds no new analytical axis; trivially redundant. Grounding is fine but usefulness is near zero as a restatement."
+      },
+      {
+        "name": "priority_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Priority is a plausible signal for resolution time, but this is essentially a numeric restatement of the existing 'priority' original column, offering limited new leverage. Values appear grounded in the priority field."
+      },
+      {
+        "name": "is_critical_high",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A binary flag derived from priority. Grounded, but largely redundant with priority_level and heavily skewed (459 vs 41), giving weak discriminating power. A bare threshold flag over an existing field."
+      },
+      {
+        "name": "category_complexity",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Mapping category to an ordinal complexity score gives a genuine new axis relevant to resolution time. However the complexity ranking is an imposed heuristic not directly stated by the text; the assignment (e.g. database=3, VPN/WiFi=2) is a warranted but partly subjective inference."
+      },
+      {
+        "name": "same_assignee_caller",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Constant value 0 across all 500 rows. Near-constant columns provide no analytical leverage. Grounded but useless for grouping or modelling."
+      },
+      {
+        "name": "updater_is_system",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Whether the updater is a system account is a plausible, non-trivial signal derivable from sys_updated_by. Reasonable split (336/164). Grounding depends on correctly recognising system accounts, a warranted inference."
+      },
+      {
+        "name": "status_risk",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "An ordinal risk derived from state gives some analytical leverage for resolution likelihood/time. However the mapping from state to a risk score is an imposed heuristic and somewhat redundant with the existing state column."
+      },
+      {
+        "name": "time_risk",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Appears to be a bucketing of resolution time / elapsed time into a risk band. If derived from resolution_hours it is circular with the outcome and leaks the target, reducing usefulness. Mapping basis is not clearly warranted from source; samples show inconsistent relation to resolution_hours."
+      },
+      {
+        "name": "description_complexity",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A complexity proxy from short_description; risks being a mere text-length/token-count restatement (binary 1/2 split resembles a length threshold), which the rubric flags as low-leverage. Grounded as a reading of the text but weak analytical value."
+      }
+    ],
+    "analytical_usefulness": 0.45,
+    "source_groundedness": 0.72,
+    "rationale": "The set contains one strongly useful, well-grounded outcome measure (resolution_hours) plus several plausible signals (category_complexity, updater_is_system, priority_level, status_risk) that give some new axes for analysing resolution time. However usefulness is dragged down by an exact duplicate (resolution_hours.1), a fully constant column (same_assignee_caller), redundant priority restatements, and generic length-like proxies (description_complexity). time_risk risks leaking the target. Grounding is generally acceptable: values are sound readings of timestamp, priority, state, category and updater fields, with correct NULLs for unresolved incidents; some columns rely on imposed heuristic mappings that are warranted but subjective. No clear hallucinated facts observed."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

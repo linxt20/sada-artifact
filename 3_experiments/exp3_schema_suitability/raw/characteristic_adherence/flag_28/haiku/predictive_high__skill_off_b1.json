@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "achievement_score",
+    "status_is_completed",
+    "priority_is_high",
+    "completion_rate_high",
+    "time_spent_ratio"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.52,
+    "analytical_usefulness__table_level": 0.52,
+    "source_groundedness": 0.55,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.535,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "achievement_score",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A continuous achievement measure is directly relevant to the query and gives a modelable target axis. However, the values appear largely derivable from percent_complete/target_percentage (an existing column), and the row samples show scores that are not clearly grounded in the source text alone (e.g. 0.871, 0.099) with no visible basis in the shown description/metric/category. The metric field also seems mismatched to descriptions, casting doubt on grounding."
+      },
+      {
+        "name": "status_is_completed",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A completion flag is a reasonable grouping axis for the query and is plausibly a direct binarization of the original 'state' column. It borders on redundant with existing state/percent_complete but still provides a clean categorical split. Values appear consistent with achievement levels in the samples, so grounding is acceptable."
+      },
+      {
+        "name": "priority_is_high",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "High-priority flag is a legitimate new axis to compare achievement against and is directly derivable from the existing 'priority' column. Somewhat redundant with priority but offers a clean binary for grouping. Grounding is sound as a straightforward binarization."
+      },
+      {
+        "name": "completion_rate_high",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "This largely restates achievement_score/percent_complete as a threshold flag, adding little independent leverage and being near-collinear with status_is_completed and achievement_score. Its values are only as grounded as the underlying achievement figures, which are weakly supported by the shown source text."
+      },
+      {
+        "name": "time_spent_ratio",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Time-elapsed ratio could be a useful signal for pacing versus achievement. But the source text contains no explicit dates in the samples, and the produced ratios (e.g. 1.0 for a low-achievement revenue row, 0.79/0.97 elsewhere) track achievement more than any stated time information, suggesting the values are invented or conflated rather than derived from start/end dates."
+      }
+    ],
+    "analytical_usefulness": 0.52,
+    "source_groundedness": 0.5,
+    "rationale": "The added columns offer relevant axes (achievement magnitude, completion, priority, pacing) for a query about signals of high goal achievement, but several are near-redundant restatements of each other and of existing columns (achievement_score vs completion_rate_high vs status_is_completed). Grounding is the bigger concern: achievement_score and especially time_spent_ratio show values not clearly supported by the shown source text and appear to co-vary with achievement rather than reflect independent evidence, indicating likely invented specifics. The simple binarizations of state and priority are the most defensible on both dimensions."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

@@ -1,0 +1,40 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "n_added_columns": 1,
+  "added_columns": [
+    "problem_scope"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 1,
+    "n_judged_columns": 1,
+    "analytical_usefulness": 0.78,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.55,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.665,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_scope",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Usefulness: scope of impact (single device vs server vs network-wide) is a genuine new axis that plausibly correlates with hardware vs non-hardware problems, giving the analyst something real to group and compare on for this query. It is not constant nor a mere restatement of an existing column. Groundedness: the categorisation is a warranted read when the text explicitly names infrastructure (e.g. 'MySQL server' -> server_infrastructure). However, several samples show 'software installation' / 'installing new software' / 'unable to install update' being confidently labeled 'single_device' when the source text says nothing about how many devices are affected -- the scope is inferred, not stated. This is a confident specific where the text is silent, and the very large 'single_device' bucket (398) suggests this over-assertion is systematic rather than a warranted default."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.55,
+    "rationale": "The single added column gives a legitimate analytical axis (impact scope) relevant to distinguishing hardware from software/other incidents, so usefulness is fairly high. Groundedness is only moderate: values are well-supported when the text names a server/network, but the dominant 'single_device' assignments are frequently inferred from descriptions that do not actually specify device count, asserting specifics the source is silent about."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 1
+}

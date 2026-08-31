@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "teacher_responsiveness",
+    "instructional_mode_quality",
+    "student_engagement_signal",
+    "subject_format_fit",
+    "peer_interaction_loss"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.87,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.816,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.843,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "teacher_responsiveness",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "Teacher responsiveness is a strong candidate signal for learning satisfaction, offering a clean grouping axis. Values are mostly grounded (ED-0003 'teacher can't tell when she's lost' -> slow/infrequent is reasonable), but some are stretched: ED-0004 has no evidence of any feedback yet is labeled 'responsive_with_rich_feedback', and ED-0002 gives no signal of feedback to students. These infer specifics the text is silent on."
+      },
+      {
+        "name": "instructional_mode_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Categorises delivery mode, a plausible driver of satisfaction. Labels largely align with text (ED-0004 pausable recorded lectures -> lecture_video_rewindable; ED-0002 creative adapted labs -> interactive_adaptive). 'mixed' is a safe default for silent rows and not overreaching."
+      },
+      {
+        "name": "student_engagement_signal",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Engagement is a central, directly relevant axis for satisfaction analysis. Values track evidence well (ED-0005 cameras off/muted -> disengaged_cameras_off; ED-0001 avoidance -> disengaged_avoidance_behavior). ED-0001 'disengaged_avoidance_behavior' is a slight stretch from technical frustration but defensible."
+      },
+      {
+        "name": "subject_format_fit",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Whether a subject adapts to online format is a genuine analytical lever and interacts with the 'subject' column. Labels are well warranted (ED-0002 kitchen-chemistry works -> well_adapted; ED-0001 algebra whiteboard fails -> poorly_adapted)."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": true,
+        "rationale": "Peer-interaction loss is a meaningful, distinct satisfaction signal with graded categories. Mostly grounded (ED-0003 'zero peer interaction' -> severe; 'not_present' for silent rows is correct). ED-0005 labeled 'severe_loss_community_absent' overreads a teacher's complaint about silent students into a community-loss claim not clearly stated."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.82,
+    "rationale": "All five added columns provide distinct, non-redundant categorical axes (responsiveness, mode, engagement, subject fit, peer loss) that are each directly relevant to predicting low learning satisfaction, giving strong grouping/modeling leverage for the query. None are near-constant or trivial restatements. Groundedness is generally solid: most values are sound readings of the source text and silent rows default to reasonable 'not_present' labels. The main weaknesses are occasional over-specific inferences—teacher_responsiveness asserting 'rich feedback' where the text is silent, and peer_interaction_loss escalating to 'severe' on thin evidence—but these are localized rather than systemic."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

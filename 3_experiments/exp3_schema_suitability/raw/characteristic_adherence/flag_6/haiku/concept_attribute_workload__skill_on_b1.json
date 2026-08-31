@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_category",
+    "ticket_scope",
+    "recurrence_pattern",
+    "self_closure_vs_handoff"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8625,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.6625,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.7625,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing tickets by issue type gives a strong axis to group and compare agent workload. The category values are sound readings of the short_description (e.g. 'Unable to access the database' -> database_access, 'VPN issue' -> vpn_connectivity), so values are well grounded."
+      },
+      {
+        "name": "ticket_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Scope (system-wide vs user-specific) is a genuinely useful dimension for workload analysis. However the short_description rarely states scope: 'Unable to access the database' or 'Software update issue' being labeled 'system_wide' is an unwarranted confident inference. The heavy 400/512 skew toward system_wide suggests invented specificity not supported by the text."
+      },
+      {
+        "name": "recurrence_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Recurrence is a plausibly useful workload driver. Some values are grounded ('frequent disconnection' -> recurring). But 'Unable to access the database' and 'Unable to access the company's intranet' labeled recurring_same_component is not supported by the source text, indicating inference beyond evidence in many rows."
+      },
+      {
+        "name": "self_closure_vs_handoff",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Whether the assigned agent closed the ticket or it was handed off is directly relevant to agent workload and derivable by comparing assigned_to and closed_by original columns. NULLs for missing data are appropriate. Well grounded in table structure."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.65,
+    "rationale": "All four columns provide genuine new axes for analyzing what drives agent workload (issue type, scope, recurrence, handoff), so analytical usefulness is high across the board. Groundedness is mixed: issue_category and self_closure_vs_handoff are soundly derivable from short_description and the assigned_to/closed_by columns respectively, while ticket_scope and recurrence_pattern frequently assert scope/recurrence that the terse short_description does not support (e.g. labeling simple access-failure descriptions as system_wide and recurring), pulling the overall groundedness down."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

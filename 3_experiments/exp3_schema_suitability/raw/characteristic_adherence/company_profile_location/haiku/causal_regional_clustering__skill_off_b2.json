@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "Industry",
+    "Region_Cluster",
+    "Is_VC_Firm",
+    "Global_Presence"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.2,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.2,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "Industry",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Industry is a plausible candidate cause of regional location: firms cluster geographically by sector (e.g., semiconductors in South Bay). It functions as the treatment whose effect on region is being attributed. Not named in the query."
+      },
+      {
+        "name": "Region_Cluster",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the focus/outcome variable itself (regional_cluster), directly named in the query as the thing to be explained."
+      },
+      {
+        "name": "Is_VC_Firm",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Being a VC firm could plausibly influence both the type of activity (a proxy for the treatment) and the region chosen (VCs cluster on Sand Hill Road / Peninsula). However it is largely a subset/attribute of Industry (VC/Investment appears as an industry value), so it partly overlaps the treatment rather than being a clean common cause. Weak confounder."
+      },
+      {
+        "name": "Global_Presence",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Global presence is more plausibly a downstream consequence of a firm's industry and size and possibly its location, not a common cause of both industry and region. It looks like an outcome/collider, so treating it as a confounder would be an error."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "Industry"
+    ],
+    "confounders": [
+      {
+        "name": "Is_VC_Firm",
+        "named_in_query": false,
+        "plausibility": 0.3
+      }
+    ],
+    "confounder_quality": 0.2,
+    "rationale": "The set does supply a plausible treatment (Industry) and re-adds the outcome (Region_Cluster). However it lacks genuine confounders: variables that cause BOTH industry AND region and must be adjusted to avoid bias. Is_VC_Firm overlaps with the treatment (it is essentially an industry indicator) rather than being an independent common cause, and Global_Presence is a downstream collider/outcome, not a confounder. No firm-founding-era, founder-origin, firm-size, funding-stage, or historical/agglomeration variables were surfaced from the text to control for common causes of both locating decisions and sector. So while a treatment is present, the causal-attribution claim -- surfacing non-obvious confounders that are common causes of treatment and outcome -- is essentially not realised."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

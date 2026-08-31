@@ -1,0 +1,76 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "is_food_service_complaint",
+    "predicted_overall_rating",
+    "predicted_overall_rating_no_food_complaint",
+    "food_complaint_rating_lift"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "is_food_service_complaint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Binary indicator (0/1) for whether the review contains a food/cabin-service complaint. This is the treatment lever the query proposes to intervene on ('eliminated the most common cabin-service complaints'); food & beverage complaints are a subset of cabin-service complaints, so it is explicitly implied by the query text."
+      },
+      {
+        "name": "predicted_overall_rating",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Model prediction of the focus outcome (Overall Rating) under the factual scenario. It is the outcome, not a confounder; the outcome variable is named directly in the query."
+      },
+      {
+        "name": "predicted_overall_rating_no_food_complaint",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Counterfactual prediction of the outcome under the intervention 'complaint removed'. This is the outcome under the do-operation, again derived from the named focus variable; not a confounder or covariate."
+      },
+      {
+        "name": "food_complaint_rating_lift",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "Difference between the counterfactual and factual predicted ratings — i.e., the estimated per-row treatment effect / lift. It is the effect quantity the query asks for ('how much would the average Overall Rating improve'), a derived effect estimate, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "is_food_service_complaint"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The operator correctly identifies an intervenable treatment (presence of a food/cabin-service complaint, which airlines can 'eliminate' per the query framing) and constructs the interventional machinery: a factual predicted rating, a counterfactual predicted rating with the complaint removed, and the resulting lift that directly answers the magnitude question. So the treatment side of the what-if is realised. However, the decisive test concerns CONFOUNDERS — common causes of both experiencing a food-service complaint and the overall rating that must be adjusted for before a counterfactual effect can be read off. NONE were added. Obvious confounders such as Type of Traveller, Class, Route/Airline, or overall service quality (all of which drive both the likelihood of complaining about food and the overall rating) are absent, and the query does not name any of them either. The lift is computed as a raw model difference with no adjustment set, so the counterfactual is not identified. Because there are zero confounders of any kind, the capability under test is not demonstrated: confounder_quality = 0.0."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "whatif_service_complaints",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

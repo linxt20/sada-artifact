@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "overall_verdict_tone",
+    "recommendation_stance",
+    "emotional_impact_on_reviewer",
+    "acting_quality_assessment",
+    "directing_technical_quality",
+    "primary_praise_target",
+    "primary_criticism_target",
+    "comparison_reference_valence"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6813,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.87,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.7756,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "overall_verdict_tone",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "A graded tone axis adds resolution beyond the binary label_pos, enabling comparison of intensity and mixed cases. Somewhat redundant with the existing label and with emotional_impact, but the mixed/mild distinctions give modest new leverage. Sample values track the source text well."
+      },
+      {
+        "name": "recommendation_stance",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Explicit vs implicit recommend/discourage is a genuine thematic axis distinct from raw sentiment and useful for contrasting positive/negative reviews. Values are well grounded (e.g. 'A must see' -> explicit_recommend). The explicit/implicit split is somewhat inferential but defensible."
+      },
+      {
+        "name": "emotional_impact_on_reviewer",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Largely a restatement of overall_verdict_tone/sentiment intensity, offering little new analytical axis for a theme-comparison query. Values are sound readings of the text, but the redundancy limits usefulness."
+      },
+      {
+        "name": "acting_quality_assessment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Aspect-level praised/criticised on acting directly supports comparing themes across sentiment, with appropriate NULLs when acting is unmentioned. Sample readings are accurate (row 4 praised, row 3 criticised)."
+      },
+      {
+        "name": "directing_technical_quality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "A distinct aspect axis useful for the query with correct NULL handling. Slightly weaker grounding: row 4 marked 'praised' rests on 'well-made', reasonable but thin; row 1 'criticised' for directing is a looser inference from a writing-focused review."
+      },
+      {
+        "name": "primary_praise_target",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorising what a review praises is exactly the kind of theme axis the query needs, with rich, non-trivial categories and 'not_present' for silence. Sample values well grounded (row 4 -> specific_actor)."
+      },
+      {
+        "name": "primary_criticism_target",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Symmetric criticism-target categorisation gives strong grouping leverage for contrasting negative-review themes. Values match source (row 1/2 -> writing_script, row 3 -> acting)."
+      },
+      {
+        "name": "comparison_reference_valence",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether a review invokes favourable/unfavourable comparisons is a genuine distinct theme axis. Well grounded (row 1 references Star Trek/Voyager unfavourably; row 4 no_comparison). Slightly sparser signal than aspect columns."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.87,
+    "rationale": "The added columns provide several genuinely distinct thematic axes -- recommendation stance, aspect-level praise/criticism, praise/criticism targets, and comparison valence -- that give strong grouping and contrast leverage for a positive-vs-negative theme analysis. A couple of columns (emotional_impact_on_reviewer, and to a lesser degree overall_verdict_tone) largely restate sentiment intensity and add little new. Values across the row samples are sound readings of the source text, with appropriate NULL/not_present handling for silent rows and only minor over-inference in the directing aspect. No clear hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

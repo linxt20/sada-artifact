@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_days",
+    "issue_type",
+    "assignee_avg_resolution_days",
+    "is_high_priority",
+    "issue_type_frequency",
+    "inefficiency_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.7667,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7084,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_days",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A duration metric is the core axis for a resolution-inefficiency query, giving strong grouping/modeling leverage. However, groundedness is questionable: in the samples opened_at is not shown, and sys_updated_on equals closed_at exactly, yet nonzero values like 6, 16, 10 are produced. The derivation of these day counts is not clearly supported by the visible source text, suggesting reliance on an unseen opened_at (plausible) but unverifiable from evidence."
+      },
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing tickets by device/issue type is a genuinely useful axis for identifying recurring problem drivers. Values are well-grounded readings of short_description (printer->Printer, database->Database, connectivity->Network)."
+      },
+      {
+        "name": "assignee_avg_resolution_days",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Per-assignee average resolution time is a strong analytical axis for locating slow resolvers driving inefficiency. Groundedness inherits the uncertainty of resolution_days (an aggregate of it) but is a legitimate derived computation from assigned_to plus durations."
+      },
+      {
+        "name": "is_high_priority",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binary flag derived from the existing priority column is largely redundant with an original column and near-constant here (421 vs 79), offering limited new leverage. Values are soundly grounded in priority."
+      },
+      {
+        "name": "issue_type_frequency",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is essentially a restatement of issue_type via its count; it adds little independent analytical value beyond grouping on issue_type itself. Values are correctly derived aggregates."
+      },
+      {
+        "name": "inefficiency_pattern",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "It attempts to directly flag inefficiency patterns, which is on-topic, but it is largely a composite restatement of is_high_priority, category, and resolution_days rather than a new axis, and is dominated by a couple of values. 'Delayed_Critical' assignments (e.g. 16 vs 6 days) rest on a threshold not evident from source, and it inherits the shaky resolution_days basis."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.72,
+    "rationale": "The set offers strong core axes (issue_type, resolution_days, assignee averages) directly relevant to diagnosing recurring drivers of resolution inefficiency. However, several columns (is_high_priority, issue_type_frequency, inefficiency_pattern) are redundant with or restatements of other original/added columns, weakening holistic usefulness. Groundedness is generally good for categorical extractions from short_description, but the duration-based columns are only partially verifiable from the evidence: samples show sys_updated_on equal to closed_at with no visible opened_at, yet nonzero day counts and threshold-based 'Delayed_Critical' labels appear, indicating some unverifiable or assumption-driven values."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

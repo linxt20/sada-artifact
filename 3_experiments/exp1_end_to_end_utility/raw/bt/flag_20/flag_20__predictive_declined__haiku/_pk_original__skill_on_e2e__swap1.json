@@ -1,0 +1,106 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.6,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "Travel-related... declined at a rate of 42.4%",
+        "why": "quantified decline rate"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Travel + Processing Delay (both True)... 51.4%",
+        "why": "interaction analysis"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Declined expenses: 84 (16.8%)... Travel-related... 144 (28.8%)",
+        "why": "conflicts with B's 146 travel and internal category count 61/144"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "coherence",
+        "quote": "processed_date... reflects workflow status rather than a pre-decision signal",
+        "why": "guards against leakage, consistent reasoning"
+      },
+      {
+        "dimension": "depth",
+        "quote": "highest band is not the most decline-prone",
+        "why": "nuanced non-monotonic amount analysis"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "61 of 84 declined rows (73%)",
+        "why": "numeric grounding"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B reasons carefully about leakage and non-monotonic effects with consistent numbers, while A is richer but treats leakage-like flags as predictors and shows count inconsistencies.",
+  "validation_warnings": [
+    "winner_conflicts_with_dimension_sum"
+  ],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

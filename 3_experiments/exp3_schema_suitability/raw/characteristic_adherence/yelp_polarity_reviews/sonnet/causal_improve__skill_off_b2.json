@@ -1,0 +1,100 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "focus_variable": "user_satisfaction",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "service_sentiment",
+    "food_sentiment",
+    "value_sentiment",
+    "ambiance_sentiment",
+    "primary_complaint",
+    "top_positive_driver",
+    "satisfaction_driver"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "user_satisfaction",
+    "per_column": [
+      {
+        "name": "service_sentiment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Service quality is an intervenable lever a business can actually improve; its measured sentiment stands in as the treatment on the service dimension."
+      },
+      {
+        "name": "food_sentiment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Food quality is a configurable operational property a business can change; treated here as an intervenable treatment dimension."
+      },
+      {
+        "name": "value_sentiment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Pricing/value is a settable business decision, hence an intervenable treatment lever."
+      },
+      {
+        "name": "ambiance_sentiment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Ambiance is something a business can deliberately alter (decor, lighting, layout); an intervenable lever."
+      },
+      {
+        "name": "primary_complaint",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A summary of what drove dissatisfaction; it is downstream of the underlying dimensions and reflects the outcome perception rather than a common cause of treatment and outcome."
+      },
+      {
+        "name": "top_positive_driver",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A derived attribution of which dimension produced positive perception; sits on the causal path to satisfaction, not an adjusting confounder."
+      },
+      {
+        "name": "satisfaction_driver",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Combines strength/weakness attribution; a summary along the path to satisfaction, not a common cause of the levers and the outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "service_sentiment",
+      "food_sentiment",
+      "value_sentiment",
+      "ambiance_sentiment"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply plausible intervenable treatment dimensions (service, food, value, ambiance) that a business could actually set or change, satisfying part (a) of the claim. However, the schema contains NO confounders: nothing adjusts for common causes of both a dimension's quality and overall satisfaction (e.g., customer expectations, price tier/segment, location, cuisine type, time/occasion, reviewer strictness). The remaining aspect/driver columns are attribution mediators along the causal path, not confounders, and cannot be used to identify a counterfactual effect. Because part (b) is entirely unmet, the interventional (what-if) claim is not realized."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

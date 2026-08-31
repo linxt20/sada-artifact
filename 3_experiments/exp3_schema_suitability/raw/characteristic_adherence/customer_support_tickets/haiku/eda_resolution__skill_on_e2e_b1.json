@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "issue_theme",
+    "urgency_and_blocker_status",
+    "issue_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8033,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.89,
+    "source_groundedness__table_level": 0.89,
+    "b1_overall": 0.8467,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Directly provides the 'issue theme' axis the query requires for grouping resolution time. Categorizations are well-grounded in source text (billing, SSO/auth, performance outage, feature request). Minor imprecision: CS-0003 labeled 'performance' when it is more an outage, but still a defensible reading."
+      },
+      {
+        "name": "urgency_and_blocker_status",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Adds a blocker/urgency axis distinct from the original 'priority' column, offering a genuine new dimension to model resolution time against. Values are soundly inferred from text (outage, revenue risk, enhancement-only, user friction). Partially overlaps conceptually with priority but is derived from description content, not redundant."
+      },
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a finer taxonomy (bug vs feature vs outage vs billing error) that partially overlaps with issue_theme but adds a bug/request/error distinction useful for analysis. Grounded well, though CS-0002 labeled 'bug_functionality' when it is arguably an auth/session issue, a slight categorisation mismatch. Some redundancy with issue_theme lowers usefulness modestly."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.89,
+    "rationale": "All three columns supply grounded, query-relevant axes (theme, urgency/blocker, type) for analyzing resolution time. issue_theme is the strongest; issue_type overlaps somewhat with issue_theme but still adds a bug/request/error lens. Values across the row samples are sound readings of the source text with only minor debatable categorisations and no invented facts."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 3
+}

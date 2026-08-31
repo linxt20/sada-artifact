@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "ticket_category",
+    "issue_mechanism_type",
+    "affected_resource_type",
+    "scope_breadth",
+    "reassignment_indicator",
+    "resolution_lag_bucket"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7917,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.7208,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "ticket_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean categorization of ticket type is the central grouping axis for the query about which ticket types drive workload. Values map soundly from short_description (database->database, VPN->vpn). Partially overlaps with the existing 'category' column but adds a normalized text-derived taxonomy."
+      },
+      {
+        "name": "issue_mechanism_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides an orthogonal axis (failure mechanism) useful for correlating with resolution effort. Values are reasonable readings (frequent disconnection->unstable_intermittent, unable to access->access_denied). Some are inferences but generally warranted; 'access_denied' for an intranet-access issue is a defensible reading."
+      },
+      {
+        "name": "affected_resource_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Grounded in the description, but largely redundant with ticket_category (email->email_server, vpn->vpn_gateway, database->database_server is nearly a 1:1 mapping), reducing its independent analytical leverage."
+      },
+      {
+        "name": "scope_breadth",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A genuinely useful new dimension (single-user vs infra-wide) relevant to workload magnitude. However groundedness is weak: the short descriptions rarely state scope. 'Internet connection unstable' -> infrastructure_wide and most others -> individual_user appear to be confident guesses the text does not support."
+      },
+      {
+        "name": "reassignment_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is directly relevant to agent workload, a good axis. But the source samples provide no field indicating reassignment (no work_notes or assignment history), yet confident True/False values are produced per row, indicating fabrication."
+      },
+      {
+        "name": "resolution_lag_bucket",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Bucketed resolution time is the core outcome variable for the query. However the samples show opened_at is not provided and closed_at equals sys_updated_on, so a duration cannot be computed from the shown evidence; buckets like 'within_1_week'/'within_2_weeks' appear unsupported. If opened_at (an original column) is actually available the grounding would be strong, but the evidence does not demonstrate it."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.62,
+    "rationale": "The added columns collectively give strong analytical leverage for the query: ticket_category and issue_mechanism_type supply grouping axes for workload, and resolution_lag_bucket is the outcome variable, while reassignment_indicator and scope_breadth relate to workload intensity. affected_resource_type is largely redundant with ticket_category. Groundedness is mixed: the categorical description-derived columns (ticket_category, affected_resource_type, issue_mechanism_type) are well supported by the source text, but scope_breadth, reassignment_indicator, and resolution_lag_bucket assert specifics the shown evidence does not support (scope and reassignment are not stated; duration is not computable from the sampled fields), indicating likely fabrication."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

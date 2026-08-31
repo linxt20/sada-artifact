@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals indicate a hardware incident is in the anomaly window?",
+  "focus_variable": "is_hardware_anomaly_window",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "hardware_component_type",
+    "failure_symptom_pattern",
+    "incident_scope",
+    "recurrence_flag",
+    "concurrent_incident_clustering",
+    "escalation_or_rework_indicator"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4583,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.1667
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "is_hardware_anomaly_window",
+    "per_column": [
+      {
+        "name": "hardware_component_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorizes the hardware involved (server, network, storage, etc.), which is external to whether the incident falls in an anomaly window yet plausibly correlates with anomalous hardware events. Legitimate predictor."
+      },
+      {
+        "name": "failure_symptom_pattern",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Describes the observed symptom (failure, not_responding, performance_degradation). This is a characteristic of the incident distinct from the anomaly-window label and carries signal about whether it reflects an anomaly. Predictor."
+      },
+      {
+        "name": "incident_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope (individual_device vs infrastructure vs shared_resource) is an independent attribute; broad infrastructure scope may correlate with anomaly windows without restating the label. Predictor."
+      },
+      {
+        "name": "recurrence_flag",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the issue recurs is a separate signal that can precede/indicate anomalous periods without being a component of the focus label. Plausible predictor, though somewhat proximate."
+      },
+      {
+        "name": "concurrent_incident_clustering",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Clustering of concurrent incidents is essentially how an anomaly window is defined/detected. A spike of simultaneous incidents is near-tantamount to being in an anomaly window, so this largely restates the outcome rather than predicting it independently."
+      },
+      {
+        "name": "escalation_or_rework_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Escalation/rework is derived from incident handling and is external to the anomaly-window definition; it can correlate with anomalies. Some post-hoc risk, but generally a usable predictor."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.55,
+    "rationale": "Most added columns are legitimate, independent attributes of the incident (component type, symptom, scope, recurrence, escalation) that plausibly carry signal about whether it falls in a hardware anomaly window without deterministically restating the label. concurrent_incident_clustering is effectively a near-definition of an anomaly window and constitutes leakage. As a set the features offer moderate genuine predictive leverage beyond the original columns, tempered by the leakage column and the fact that several signals are correlational proxies rather than strong drivers."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "predictive_hardware",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

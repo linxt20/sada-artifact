@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest high urgency?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "acute_symptom_timeline",
+    "urgent_diagnostic_or_intervention_trigger",
+    "treatment_intensity_or_escalation",
+    "department_disposition"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.75
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "acute_symptom_timeline",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Symptom onset timing is a genuine, well-motivated axis for urgency analysis. Samples are soundly read: 'x3 days'->three_plus_days, 'yesterday'->hours_to_one_day, and silent rows correctly 'not_specified'. Heavily dominated by not_specified (188) which limits leverage somewhat but does not undermine groundedness."
+      },
+      {
+        "name": "urgent_diagnostic_or_intervention_trigger",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Concept is highly relevant to urgency. However groundedness is weak in samples: a routine annual physical with lipid/HbA1c ordered is tagged 'lab_findings_critical' (no critical findings stated), and topical acne treatment is tagged 'procedural_intervention_same_visit' with no procedure in text. The knee MRI->imaging_ordered_urgently is well grounded, but multiple confident overstatements pull the score down."
+      },
+      {
+        "name": "treatment_intensity_or_escalation",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Escalation intensity is a strong urgency proxy and a good grouping axis. Most samples are reasonable (routine follow-ups->routine, adapalene/doxycycline->medication change). But the knee case labeled 'multiple_specialist_consults_acute' is unsupported—only a single ortho MRI order is described, no multiple consults."
+      },
+      {
+        "name": "department_disposition",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Largely a restatement of the existing 'department' column with an acuity tag appended, so limited new analytical leverage. The acuity tags are also sometimes wrong: a routine post-MI stable follow-up is tagged 'cardiology_with_acute_issue' and a mild viral URI 'pediatrics_with_concern', contradicting the benign source text."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.6,
+    "rationale": "The added columns target urgency-relevant axes (symptom timeline, diagnostic triggers, treatment escalation) that give real grouping/modeling leverage, though department_disposition largely duplicates an existing column. Groundedness is uneven: acute_symptom_timeline reads the text well, but the trigger, escalation, and disposition columns show several confident overstatements not supported by the source text (critical labs and procedures on routine visits, 'acute'/'with concern' tags on explicitly benign cases), indicating a tendency to over-assert urgency."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 4
+}

@@ -1,0 +1,128 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "n_added_columns": 12,
+  "added_columns": [
+    "negative_sentiment_words",
+    "positive_sentiment_words",
+    "allcaps_word_count",
+    "exclamation_mark_count",
+    "question_mark_count",
+    "repeated_punctuation_count",
+    "title_word_count",
+    "content_word_count",
+    "comparative_language_count",
+    "investment_complaint_words",
+    "product_failure_words",
+    "durability_complaint_words"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 12,
+    "n_judged_columns": 12,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.8458,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.7229,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "negative_sentiment_words",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A count of negative sentiment terms directly targets the negative-satisfaction query and gives a genuine modeling axis. Values are broadly grounded, though the lexicon appears crude (AMZ-0003 with clearly negative content scored 0), suggesting some miss/mismatch but no invented facts."
+      },
+      {
+        "name": "positive_sentiment_words",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Complementary contrast signal useful for predicting satisfaction. Grounded in text but the lexicon is imperfect (AMZ-0004, a glowing review, scored 0 positives), indicating undercounting rather than fabrication."
+      },
+      {
+        "name": "allcaps_word_count",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Emphasis/shouting is a plausible stylistic predictor of strong (often negative) affect. Values are mechanically derivable from text and samples look consistent, though acronyms like 'DVD' may inflate counts."
+      },
+      {
+        "name": "exclamation_mark_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Punctuation-intensity feature offering some analytical leverage on affect intensity. Trivially and reliably derivable from source text."
+      },
+      {
+        "name": "question_mark_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Rhetorical questioning can correlate with frustration/complaint, giving modest leverage. Fully derivable from text; samples match."
+      },
+      {
+        "name": "repeated_punctuation_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Repeated punctuation (e.g. '...', '!!!') captures emotional intensity, a reasonable predictor. Directly countable from text; sample values plausible."
+      },
+      {
+        "name": "title_word_count",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "A bare length/token-count feature with weak, generic link to satisfaction; low analytical leverage for this query. Values are exactly derivable and correct."
+      },
+      {
+        "name": "content_word_count",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Raw length is a generic feature with limited but nonzero value (review length can weakly relate to sentiment). Perfectly grounded token count."
+      },
+      {
+        "name": "comparative_language_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Comparative phrasing ('worse than', 'only one') is a meaningful evaluative signal. Reasonably grounded, though the lexicon is sparse (mostly zeros) and hard to fully verify from samples."
+      },
+      {
+        "name": "investment_complaint_words",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Price/value complaint terms are a relevant satisfaction axis. But AMZ-0005 ('costs more...but well worth it') scored 1, catching a price mention that is actually POSITIVE, showing the feature detects topic not complaint polarity, weakening groundedness of the 'complaint' framing."
+      },
+      {
+        "name": "product_failure_words",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Failure/defect terms are strong predictors of negative satisfaction and a genuine grouping axis. Mostly zero and plausibly grounded, though verification is limited by sparse positive samples."
+      },
+      {
+        "name": "durability_complaint_words",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Durability complaints are a specific, useful negative-satisfaction signal. Values are keyword-derivable and appear grounded, with no observed contradictions in samples."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.83,
+    "rationale": "Most columns provide genuine, distinct axes (sentiment counts, emphasis/punctuation intensity, complaint-topic detectors) directly relevant to predicting negative satisfaction. A few (title_word_count, content_word_count) are generic length features with weak leverage. Values are largely mechanically or lexically derivable from the source text with no invented facts; groundedness is dented only by imperfect lexicons that mis-detect polarity (e.g., investment_complaint firing on a positive price mention, sentiment lexicons missing clearly affective rows). No confident fabrication observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 12
+}

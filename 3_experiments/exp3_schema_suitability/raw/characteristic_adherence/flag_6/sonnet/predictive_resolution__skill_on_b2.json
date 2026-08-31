@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary by agent and issue type?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_type",
+    "issue_symptom",
+    "assigned_agent",
+    "resolver_agent",
+    "reassigned"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "issue_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly the 'issue type' dimension in the query; well-separated, interpretable categories (email_server, vpn_connectivity, etc.) that resolution_time can be grouped and compared across."
+      },
+      {
+        "name": "issue_symptom",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A complementary associational categorization (connection_failure, no_access, down_outage) with clean, human-readable buckets; segmenting resolution_time by symptom yields informative relationships beyond issue_type."
+      },
+      {
+        "name": "assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Realizes the 'agent' dimension explicitly named in the query; a handful of named agents form clear groups to compare resolution_time against."
+      },
+      {
+        "name": "resolver_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct from assigner: the agent who actually closed the ticket. Interpretable named categories and a meaningful alternative agent grouping for resolution_time comparison."
+      },
+      {
+        "name": "reassigned",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary, well-separated flag; reassignment is a plausible driver of longer resolution_time and offers a clean segmentation for exploratory comparison."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.85,
+    "rationale": "All five added columns are external, associational, and interpretable, directly serving the query's two named dimensions (agent, issue type) and adding sensible related segmentations (symptom, resolver vs. assignee, reassignment). Categories are well-separated and human-readable rather than opaque scores, and none merely restates resolution_time. The assigned/resolver agent pair is somewhat overlapping, but their divergence is itself informative, so the set strongly supports discovering interpretable relationships with the focus."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

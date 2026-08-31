@@ -1,0 +1,81 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "focus_variable": "high_goal_achievement",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "completion_gap",
+    "progress_ratio",
+    "priority_score",
+    "duration_days",
+    "is_on_track",
+    "high_achievement_score"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.05,
+    "predictor_fraction": 0.3333,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "predictive_utility": 0.15,
+    "leakage_rate": 0.5
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "high_goal_achievement",
+    "per_column": [
+      {
+        "name": "completion_gap",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Gap between percent_complete and target_percentage is a direct arithmetic function of the achievement outcome; it essentially encodes whether the goal was met, so it leaks the focus rather than predicting it independently."
+      },
+      {
+        "name": "progress_ratio",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A ratio of progress to target (percent_complete/target_percentage) is a deterministic transform of the completion state, which is the outcome itself. High ratio ≈ high achievement, so this is a restatement/leakage."
+      },
+      {
+        "name": "priority_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Numeric encoding of priority is an ex-ante attribute lying outside the outcome and could plausibly correlate with achievement (e.g., high-priority goals get more resources). Legitimate predictor, though it mostly re-encodes the existing priority column so adds little new signal."
+      },
+      {
+        "name": "duration_days",
+        "description": "",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Planned span between start_date and end_date is known ex-ante and independent of the outcome; goal timeframe can plausibly carry signal about achievement likelihood. Legitimate predictor."
+      },
+      {
+        "name": "is_on_track",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Being 'on track' is a mid/late-flight status derived from progress vs. plan; it is essentially a proxy for the achievement outcome and only knowable as the goal unfolds, so it leaks the focus."
+      },
+      {
+        "name": "high_achievement_score",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "A score explicitly built around 'high achievement' is a direct restatement of the focus variable itself, not an external predictor."
+      }
+    ],
+    "n_predictors": 2,
+    "predictive_utility": 0.15,
+    "rationale": "Four of six added columns (completion_gap, progress_ratio, is_on_track, high_achievement_score) are deterministic functions or proxies of the completion/achievement outcome and constitute leakage or restatement of the focus variable. Only priority_score and duration_days are legitimate ex-ante predictors, and both largely re-encode information already present in the original columns (priority, start_date/end_date), so they add little genuine incremental predictive leverage. As a set, the augmentation is dominated by leakage and offers weak independent signal."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

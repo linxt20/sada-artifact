@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "has_technical_issue",
+    "is_customer_blocked",
+    "needs_investigation",
+    "has_external_integration",
+    "affects_multiple_users"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.82,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.71,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "has_technical_issue",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "A technical vs non-technical split is a genuinely useful axis for predicting resolution time. However the values contradict the source: CS-0002 (session-drop bug) and CS-0005 (BOM export bug) are plainly technical yet labelled 0, undermining groundedness."
+      },
+      {
+        "name": "is_customer_blocked",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether the customer is blocked is a strong signal for urgency/effort. Labels are mostly defensible (CS-0003 outage blocking a presentation = 1), though CS-0002/CS-0005 as 'blocked' is a stretch (they have workarounds), a mild overreach."
+      },
+      {
+        "name": "needs_investigation",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Whether a ticket requires investigation/RCA is a plausible driver of longer resolution. CS-0003 (RCA requested) correctly 1; CS-0002 (suspected SSO push needing confirmation) and CS-0005 (diagnosing BOM cause) arguably warrant investigation but are 0, a somewhat conservative but not clearly wrong read."
+      },
+      {
+        "name": "has_external_integration",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "External integration (SSO, Snowflake pipeline) adds coordination complexity, a reasonable signal. Values are well grounded: CS-0002 (SSO) and CS-0005 (Snowflake) correctly 1, CS-0001 billing correctly 0."
+      },
+      {
+        "name": "affects_multiple_users",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Scope of impact is a solid axis for resolution effort, but grounding is weak: CS-0004 (single power-user enhancement) marked 1 with no support, while CS-0002 (single user) is 0 as expected. The high 1-rate (115) plus the CS-0004 error suggest over-assertion."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.6,
+    "rationale": "All five columns give binary complexity/impact signals that are genuinely relevant to predicting longer resolution times, offering distinct axes (technical nature, blocking, investigation, integration, scope) rather than restatements—so analytical usefulness is high. Groundedness is mixed: has_external_integration and needs_investigation are well-read from the text, but has_technical_issue mislabels obvious technical bugs as non-technical, and affects_multiple_users asserts multi-user impact for a clearly single-user enhancement request, both indicating hallucinated values that a strict evaluator must penalise."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

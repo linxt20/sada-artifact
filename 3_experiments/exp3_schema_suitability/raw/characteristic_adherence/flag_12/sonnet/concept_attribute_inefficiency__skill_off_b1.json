@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "issue_type",
+    "is_repeat_issue",
+    "above_avg_resolution"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7875,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.5875,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6875,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Resolution time is the core efficiency metric for this query, directly enabling grouping and comparison. However, the produced values are not grounded: in every evidence sample sys_updated_on equals closed_at, and opened_at is not shown, yet specific values like 161.13 or 384.32 are asserted. These cannot be derived from the equal timestamps shown, so the values appear invented/unverifiable. High usefulness, weak groundedness."
+      },
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing tickets into issue types (printer, network, database, etc.) gives a strong new axis to identify recurring issues driving inefficiency. Values are well-grounded in short_description text across all samples (printer->printer, database->database, connectivity->network)."
+      },
+      {
+        "name": "is_repeat_issue",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A repeat-issue flag is highly relevant to 'recurring issues.' But groundedness is questionable: near-duplicate printer descriptions ('Printer not working properly', 'The office printer is not functioning', 'Printer is not working properly') are all flagged 0, which is inconsistent with a recurrence signal and suggests the flag is not reliably derived from the visible text."
+      },
+      {
+        "name": "above_avg_resolution",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "This is a binary threshold restatement of resolution_time_hours, adding limited independent analytical leverage. Its groundedness inherits the shaky derivation of resolution_time_hours, though the flag values are consistent with the (unverified) hour values."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.55,
+    "rationale": "The added columns target the query well: issue_type and is_repeat_issue provide genuine axes for identifying recurring problems, and resolution_time_hours provides the efficiency metric. However, the time-based columns are poorly grounded in the visible evidence (sys_updated_on equals closed_at with no opened_at shown, yet specific hour values are asserted), and is_repeat_issue contradicts the presence of near-duplicate descriptions flagged as non-repeats. above_avg_resolution is largely a restatement of the time column. Overall solidly useful but with meaningful groundedness concerns."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

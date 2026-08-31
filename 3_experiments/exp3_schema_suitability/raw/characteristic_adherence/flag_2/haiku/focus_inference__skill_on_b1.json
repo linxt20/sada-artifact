@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "problem_category",
+    "system_component",
+    "symptom_severity",
+    "scope_dimension",
+    "time_to_resolution",
+    "assigned_to_completion_match",
+    "recurrence_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7771,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.7114,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7443,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_category",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query about recurring problem types; provides a clean grouping axis. Values (connectivity, database, email) are sound readings of the short_description text in all samples."
+      },
+      {
+        "name": "system_component",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.93,
+        "hallucination_observed": false,
+        "rationale": "Adds a finer-grained axis (vpn, wifi, email_server) that complements problem_category for spotting recurring components. Values are well-grounded in the descriptions; occasional inference (email 'system' -> email_server) is reasonable."
+      },
+      {
+        "name": "symptom_severity",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful for characterizing problem nature/impact. However some mappings are inferential beyond the text: 'Email system not working properly' -> partial_degradation and terse 'VPN connection issue' -> connection_error are plausible but the granular severity is not clearly warranted by such sparse descriptions."
+      },
+      {
+        "name": "scope_dimension",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A genuinely useful grouping axis (individual vs department vs company-wide). But groundedness is shaky: 'Cannot connect to database' -> production_environment and 'VPN connection issue' -> individual_user assert scope the terse text does not state. Some values are invented specifics."
+      },
+      {
+        "name": "time_to_resolution",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Resolution time is analytically valuable. But opened_at is not shown in samples, and closed_at equals sys_updated_on with no distinct open timestamp visible; the small integer bucket values (1-5) appear to be an unexplained/possibly invented derivation rather than a clear computation from present timestamps."
+      },
+      {
+        "name": "assigned_to_completion_match",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A near-boolean flag with unclear meaning for the 'recurring problem types' query; adds little grouping leverage. Derivable in principle from assigned_to/closed_by comparison, but its basis and value are weakly supported by the shown evidence."
+      },
+      {
+        "name": "recurrence_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Highly relevant to a query explicitly about recurrence. However it requires cross-row aggregation; per-row labels like 'first_occurrence' on rows whose components clearly repeat elsewhere are questionable, and the derivation logic is not evidently grounded in the samples shown."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns are well-targeted to the query: problem_category, system_component, and recurrence_pattern give strong, distinct axes for identifying recurring incident types, and symptom_severity/scope add characterization value. assigned_to_completion_match is the weakest, offering little analytical leverage for this query. Groundedness is generally good for the extraction-style columns (problem_category, system_component) which are clean readings of short_description, but degrades for inference-heavy columns (scope_dimension, symptom_severity) that assert specifics the terse text does not state, and for derived columns (time_to_resolution, recurrence_pattern) whose computation basis is not clearly supported by the visible source fields."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

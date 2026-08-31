@@ -1,0 +1,71 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do expense decline rates differ across departments?",
+  "focus_variable": "departmental_declined_rate_variation",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "department_decline_rate",
+    "department_avg_amount",
+    "is_declined"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.2,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "department_decline_rate (departmental_declined_rate_variation)",
+    "per_column": [
+      {
+        "name": "department_decline_rate",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the per-department decline rate itself -- the focus outcome whose variation across departments is being explained. It restates the target, not a cause."
+      },
+      {
+        "name": "department_avg_amount",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Average expense amount per department could plausibly influence both scrutiny/approval behaviour (a candidate treatment) and the decline rate (higher-value expenses more likely questioned). Not named in the query, so it is a surfaced common-cause candidate. However, no explicit treatment exists for it to confound, weakening its role."
+      },
+      {
+        "name": "is_declined",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Row-level declined indicator is the raw form of the outcome (decline event), not a treatment or confounder."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [
+      {
+        "name": "department_avg_amount",
+        "named_in_query": false,
+        "plausibility": 0.35
+      }
+    ],
+    "confounder_quality": 0.2,
+    "rationale": "The added columns fail the causal-attribution test. Two of the three (department_decline_rate, is_declined) are simply the outcome restated at department and row level -- they add no cause. No TREATMENT (candidate cause whose effect on decline rate is being attributed) is supplied at all, so requirement (a) is unmet. Only department_avg_amount is a plausible non-query variable, but with no treatment present it has nothing to confound, and it is at best a weak common-cause candidate rather than part of an articulated identification strategy. There is no set-up for causal estimation: no treatment/confounder pairing that would let the department differences be attributed to an adjusted cause."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

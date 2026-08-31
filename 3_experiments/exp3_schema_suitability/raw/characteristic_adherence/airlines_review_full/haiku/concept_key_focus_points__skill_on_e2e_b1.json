@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "operational_reliability",
+    "seat_comfort_configuration",
+    "customer_service_responsiveness",
+    "ground_service_quality"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.69,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.518,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.604,
+    "hallucination_rate": 0.8
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Buckets crew service into meaningful qualitative tiers (exceptional/professional/indifferent/rude), a useful grouping axis for a 'key points' review analysis, though it partly overlaps the existing numeric Staff Service rating. Groundedness is mixed: welcoming/caring-crew rows map correctly (samples 1,4,5) and a hospitality mention maps to professional_standard (sample 3), but sample 2 — a review purely about dreadful seats that says nothing about the crew — is labelled 'indifferent_minimal'. With only 11 NULLs, silent rows are being forced into a category, i.e. inferred negatives not supported by text."
+      },
+      {
+        "name": "operational_reliability",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.32,
+        "hallucination_observed": true,
+        "rationale": "Delay/cancellation status is a genuinely new analytical axis absent from the original columns and valuable for spotting operational pain points. However groundedness is weak: 'on_time_smooth' is assigned to 5619 rows and, in every provided sample (1–5), none of the reviews mention timing at all yet all are stamped 'on_time_smooth'. Treating silence as a confident on-time assertion is an invented fact; the correct behaviour would be NULL/unknown for those rows."
+      },
+      {
+        "name": "seat_comfort_configuration",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a qualitative seat descriptor (spacious/adequate/narrow/hard-broken) that complements the numeric Seat Comfort rating; useful though partially redundant. Groundedness is strong: it leaves 3494 rows NULL, correctly abstains on silent rows (sample 3 → Unknown), and the labelled samples are sound readings — narrow/poor-padding → narrow_cramped (2), spacious/comfortable → spacious_comfortable (1,4,5)."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.52,
+        "hallucination_observed": true,
+        "rationale": "In principle a distinct axis (query/complaint handling) but it risks conflation with onboard crew and only partially adds leverage beyond cabin_crew_service_quality. Groundedness is uneven: samples 2–4 correctly return Unknown, but with just 255 NULLs across the table the category is over-applied, and samples 1/5 derive 'responsive_proactive' from friendly onboard crew rather than any actual customer-service interaction — an unwarranted extrapolation."
+      },
+      {
+        "name": "ground_service_quality",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Check-in/boarding/baggage handling is a legitimate new axis for the analysis. But groundedness is poor: only 300 NULLs, and all four applicable samples (1–4) discuss purely inflight experience yet are assigned ground-service verdicts (efficient_courteous_smooth / standard_transactional). These values are fabricated from text that is silent on ground handling."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.5,
+    "rationale": "As a set the added columns open several new axes relevant to 'what should I concentrate on' — operational reliability, ground service, seat configuration and two service-quality lenses — going beyond the original numeric ratings and giving real grouping/comparison leverage (there is some overlap with existing Staff Service / Seat Comfort ratings and between the two service columns, but each still adds an angle). The main weakness is source groundedness: operational_reliability and ground_service_quality (and to a lesser degree cabin_crew and customer_service) assert confident categories on rows whose text is silent, evidenced by tiny NULL counts and samples where inflight-only reviews are stamped 'on_time_smooth' and given ground-service verdicts. seat_comfort_configuration is the model behaviour — it abstains with NULL when the text is silent. Overall usefulness is solid; groundedness is dragged down by systematic default-value hallucination on unmentioned aspects."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

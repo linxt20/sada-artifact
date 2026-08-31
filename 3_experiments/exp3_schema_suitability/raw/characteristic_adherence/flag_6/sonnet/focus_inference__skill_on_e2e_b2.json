@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "affected_component",
+    "symptom_type",
+    "scope_indicator",
+    "self_resolved",
+    "recurrence_signal",
+    "remote_access_context"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.656,
+    "focus_coherence": 0.82,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/characterization of the incident (what failed, how it manifested, its scope, and whether it resolved itself) -- i.e., an incident-anatomy profile aimed at understanding drivers of incident volume and severity.",
+    "per_column": [
+      {
+        "name": "affected_component",
+        "supports_focus": true,
+        "rationale": "Identifies the IT component involved, a core facet of characterizing what an incident is about."
+      },
+      {
+        "name": "symptom_type",
+        "supports_focus": true,
+        "rationale": "Captures how the incident manifested, a coherent facet of incident anatomy."
+      },
+      {
+        "name": "scope_indicator",
+        "supports_focus": true,
+        "rationale": "Describes breadth of impact (individual vs infrastructure-wide), a meaningful severity/scope facet."
+      },
+      {
+        "name": "self_resolved",
+        "supports_focus": true,
+        "rationale": "Resolution behavior facet; relevant to distinguishing noise from actionable incidents."
+      },
+      {
+        "name": "recurrence_signal",
+        "supports_focus": true,
+        "rationale": "Whether the incident is recurring, a strong analytical hook for root-cause work."
+      },
+      {
+        "name": "remote_access_context",
+        "supports_focus": true,
+        "rationale": "Contextual attribute (remote-related) tying into connectivity/VPN patterns visible in the data."
+      }
+    ],
+    "focus_coherence": 0.82,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The added columns cohere around a single inferable focus: characterizing the anatomy of an incident to surface what is worth analyzing. They form differentiated facets -- what component failed (affected_component), how it presented (symptom_type), how widely it hit (scope_indicator), whether it self-resolved (self_resolved), whether it recurs (recurrence_signal), and remote-access context. These are non-trivial, data-inferable from short_description/category, and give an analyst concrete levers (recurring email/VPN/DB failures, infrastructure-wide connectivity outages) to investigate. Structure is sound at a useful granularity rather than a single restatement or generic text metrics. Minor deductions: remote_access_context overlaps with connectivity symptoms and affected_component, and recurrence_signal is heavily skewed (472/28), which weakens its discriminating value and hints at somewhat loose definition; but the set is clearly a coherent focus rather than a grab-bag."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

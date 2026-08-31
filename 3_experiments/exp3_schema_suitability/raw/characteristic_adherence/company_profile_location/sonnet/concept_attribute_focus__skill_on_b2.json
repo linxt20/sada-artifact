@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What market-expansion focus should analysts study?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "industry_vertical",
+    "company_stage",
+    "business_model",
+    "technology_domain",
+    "customer_segment",
+    "growth_lever"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.68,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Company market-expansion profile: characterizing firms by their industry, stage, model, and growth mechanics to identify market-expansion opportunities",
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "supports_focus": true,
+        "rationale": "Segments companies by market sector, a core dimension for scoping where expansion focus should lie."
+      },
+      {
+        "name": "company_stage",
+        "supports_focus": true,
+        "rationale": "Maturity stage is a strong predictor of expansion readiness/appetite, directly relevant to the expansion focus."
+      },
+      {
+        "name": "business_model",
+        "supports_focus": true,
+        "rationale": "Business model shapes scalability and expansion mechanics; coherent facet of the focus."
+      },
+      {
+        "name": "technology_domain",
+        "supports_focus": true,
+        "rationale": "Adds a technology facet distinguishing capabilities relevant to expansion, though 'not_present' dominates (113), weakening its discriminative value."
+      },
+      {
+        "name": "customer_segment",
+        "supports_focus": true,
+        "rationale": "Target customer type is central to market-expansion analysis (new segments, TAM), a coherent facet."
+      },
+      {
+        "name": "growth_lever",
+        "supports_focus": true,
+        "rationale": "Directly names the expansion mechanism (PLG, network effects, channel), the most on-target facet for market-expansion focus."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.8,
+    "rationale": "The columns collectively centre on one coherent focus: profiling companies for market-expansion potential. Facets (vertical, stage, model, tech, customer segment, growth lever) are differentiated and non-redundant, forming a sound multi-attribute analytical structure at useful granularity rather than a restatement or noise. Growth_lever and customer_segment tie directly to the expansion theme, giving strong actionability -- an analyst could cross-tabulate stage/segment against growth levers to prioritise expansion targets. Minor weakness: technology_domain is heavily 'not_present' (113/data-inferable rows), reducing its contribution, and the focus is inferred rather than sharply named, but the set is far from a generic/mechanical grab-bag."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "product_category",
+    "functional_performance_issue",
+    "content_creative_quality"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8667,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.83,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8483,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Categorizing reviews by product type gives a strong axis to group and compare what aspects reviewers discuss, directly serving the query. Sample values are well-grounded: doll->physical_product, Lamott book->media_book, Eamon->media_music, skin cream->physical_product, Bicycle Thieves->media_video are all sound readings of the source text."
+      },
+      {
+        "name": "functional_performance_issue",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A meaningful axis distinguishing whether reviewers discuss product functionality, useful for the query. 'not_present' for non-functional media reviews is correct silent behavior. The skin cream marked 'exceeds_expectations' is a reasonable reading ('keeps my skin clear...gets its job done'), though the review also notes a negative formulation change; the value is warranted but slightly lossy. Overall well-grounded."
+      },
+      {
+        "name": "content_creative_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Captures which creative dimension media reviewers discuss, a genuine new axis for the query. Most samples are sound (Eamon->musical_quality, Bicycle Thieves->plot_or_story). However the Lamott review is labeled 'pacing' when the text critiques content balance/political commentary, not pacing—a mismatch not supported by the source, lowering groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.83,
+    "rationale": "All three columns provide genuine, non-redundant axes for grouping and comparing which aspects Amazon reviewers discuss, directly addressing the query. Product category enables segmentation, while the two aspect-facet columns surface functional vs. creative concerns. Values are largely well-grounded extractions/categorizations, with correct 'not_present' handling for silent rows. One observed mismatch (Lamott review labeled 'pacing') indicates occasional unwarranted specificity in content_creative_quality, modestly reducing groundedness there."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

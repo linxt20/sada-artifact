@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_declined",
+    "amount_bucket",
+    "dept_decline_rate",
+    "category_decline_rate",
+    "dept_category_decline_rate",
+    "high_decline_risk"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.0333,
+    "predictor_fraction": 0.1667,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.2,
+    "interpretable_fraction": 0.1667
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "is_declined",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Binary re-encoding of the focus variable state_declined; grouping on it against the focus is circular and adds no external relationship."
+      },
+      {
+        "name": "amount_bucket",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "External associational variable with clean, well-separated categories (low/medium/high) that a human can segment on and compare decline rates against; exactly the kind of interpretable dimension EDA wants."
+      },
+      {
+        "name": "dept_decline_rate",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is the aggregate of the focus itself computed per department (a target-encoding leak). It restates the answer rather than providing an independent variable to compare against, and its fine-grained numeric values are opaque scores, not interpretable segments."
+      },
+      {
+        "name": "category_decline_rate",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Group-level decline rate by category = focus aggregated onto category. Circular restatement of the outcome; opaque continuous score rather than an interpretable segmentation."
+      },
+      {
+        "name": "dept_category_decline_rate",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Cross-tab of the focus by department x category expressed as a rate; it IS the answer to the query rather than an external variable, and its many fine-grained values are opaque."
+      },
+      {
+        "name": "high_decline_risk",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Thresholded flag derived from the decline-rate leak; mirrors the focus (45 ones ~ 46 declines) and is an opaque derived score, not an independent interpretable dimension."
+      }
+    ],
+    "n_predictors": 1,
+    "relationship_informativeness": 0.2,
+    "rationale": "The query asks what kinds of expenses get declined and whether it varies by department. Only amount_bucket supplies a genuine external, interpretable segmentation to compare against the focus. Department and category are already present in the original table and could have been paired with clean segmentations, but instead the operator emitted target-encoded decline rates (dept_decline_rate, category_decline_rate, dept_category_decline_rate) and derived flags (is_declined, high_decline_risk) that restate the focus outcome itself. These are opaque continuous scores that leak the answer rather than open up interpretable relationships, so as a set they largely fail the EDA claim."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

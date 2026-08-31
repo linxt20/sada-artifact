@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "resolution_hours",
+    "duration_band",
+    "duration_vs_category_median",
+    "duration_vs_priority_median",
+    "duration_z_score"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.05,
+    "interpretable_fraction": 0.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is simply the focus variable itself expressed in hours. It is not an external associational variable; it restates resolution_duration and cannot be compared against the focus."
+      },
+      {
+        "name": "duration_band",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Short/medium/long bands are a discretization of the focus variable, not an external segmenting variable. Interpretable categories, but grouping the focus by itself yields no informative relationship."
+      },
+      {
+        "name": "duration_vs_category_median",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A deviation of the focus from its own category median. This is a transform of the focus, not an independent variable to segment on. Values are fine-grained near-continuous residuals with no interpretable categories."
+      },
+      {
+        "name": "duration_vs_priority_median",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Same issue: a residual of the focus against its priority-group median. It is a re-expression of the focus, and its continuous values do not form well-separated, comparable categories."
+      },
+      {
+        "name": "duration_z_score",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A standardized version of the focus variable itself. Opaque continuous score that restates the focus rather than opening a relationship with an external dimension."
+      }
+    ],
+    "n_predictors": 0,
+    "relationship_informativeness": 0.05,
+    "rationale": "Every added column is a transformation, rescaling, binning, or residual of resolution_duration itself. None introduces an external, associational variable that a human could segment on and compare against the focus (the actual segmenting dimensions category and priority already exist in the original table). Several columns are fine-grained continuous residuals/z-scores that offer no interpretable, well-separated categories. As a set they fail the exploratory-analysis claim: they restate the focus rather than exposing informative relationships around it."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

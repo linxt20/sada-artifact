@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some incidents take longer to resolve?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_type",
+    "incident_recurrence",
+    "incident_scope",
+    "description_clarity",
+    "assigned_technician",
+    "closure_status"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.6333,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.6166,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents by type gives a strong grouping axis to compare resolution times across problem classes. Values are soundly derived from short_description ('VPN'->connectivity, 'database'->database, 'Email'->email)."
+      },
+      {
+        "name": "incident_recurrence",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Whether an incident is recurring could plausibly correlate with resolution time, so it has analytical leverage. But the source text (a single short_description) does not support a recurrence determination; every sampled row is labeled 'True' with no textual basis, indicating invented values."
+      },
+      {
+        "name": "incident_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Scope (individual vs department vs infrastructure-wide) is a meaningful axis for explaining resolution effort. Some values are grounded ('sales department'->department_wide), but 'individual_user' for 'VPN connection issue' and 'infrastructure_wide' as dominant value are often inferred beyond what silent descriptions state; still mostly a warranted reading."
+      },
+      {
+        "name": "description_clarity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Clarity of the ticket description plausibly affects triage/resolution time, a reasonable new axis. The generic/specific/vague categorization is a defensible reading of the description text, though somewhat subjective."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Assignee could matter for resolution time, but this is essentially redundant with the existing 'assigned_to'/'closed_by' columns. Moreover the row samples contain no technician information in the source text, so specific names appear invented/unsupported."
+      },
+      {
+        "name": "closure_status",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A boolean closed/not-closed flag is largely redundant with the existing 'state'/'closed_at' columns and near-constant (421 true), offering little analytical leverage for this query. Values are well grounded in closed_at presence."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.63,
+    "rationale": "The set offers several genuinely useful new axes (incident_type, incident_scope, description_clarity) for explaining resolution-time variation. However incident_recurrence and assigned_technician show unsupported/invented values not derivable from the single-line descriptions, and assigned_technician/closure_status are largely redundant with existing original columns. Overall moderately useful with notable groundedness concerns on two columns."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

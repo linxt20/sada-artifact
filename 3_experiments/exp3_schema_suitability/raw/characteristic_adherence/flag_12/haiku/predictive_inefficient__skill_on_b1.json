@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "incident_type",
+    "description_clarity",
+    "upstream_dependency",
+    "problem_recurrence"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7375,
+    "source_groundedness__table_level": 0.74,
+    "b1_overall": 0.7438,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents (printer, hardware, software, connectivity) gives a genuine grouping axis to compare resolution efficiency across types. Values are soundly extracted from short_description (e.g. 'Printer not working' -> printer, 'Internet connectivity lost' -> connectivity)."
+      },
+      {
+        "name": "description_clarity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Vague descriptions plausibly correlate with inefficient resolution, giving analytical leverage. Values are inferable from text terseness, though the boundary is somewhat subjective; 'Printer not working properly' being False is a defensible reading. Slight subjectivity lowers groundedness modestly."
+      },
+      {
+        "name": "upstream_dependency",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether an incident depends on upstream systems is a relevant efficiency signal (dependencies delay resolution). 'Unable to connect to the database' -> True is a warranted inference; most rows False is reasonable. Some inference risk but generally grounded in the description text."
+      },
+      {
+        "name": "problem_recurrence",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Recurrence is potentially useful for efficiency analysis, but the value 'recurring_device_type' appears to be assigned merely because the incident is a printer/common device type, not from evidence of actual recurrence in the source text. This conflates category with recurrence and asserts recurrence the text does not directly support, weakening groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.74,
+    "rationale": "The added columns provide meaningful new axes (type, clarity, dependency, recurrence) for analyzing resolution inefficiency, going beyond the raw ITSM fields. Most values are soundly read from short_description. The main concern is problem_recurrence, which seems to infer recurrence from device commonality rather than actual textual evidence of repeat issues, introducing mild hallucination. Overall the set meets both necessary conditions reasonably well."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 4
+}

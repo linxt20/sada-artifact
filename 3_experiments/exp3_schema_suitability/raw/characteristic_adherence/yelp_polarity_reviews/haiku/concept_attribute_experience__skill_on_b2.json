@@ -1,0 +1,106 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "focus_variable": "satisfaction_and_complaint_facets",
+  "concept": "satisfaction_and_complaint_facets",
+  "n_added_columns": 8,
+  "added_columns": [
+    "staff_professionalism_attitude",
+    "order_accuracy_timeliness",
+    "flavor_quality_rating",
+    "portion_adequacy",
+    "food_freshness_temperature",
+    "ambiance_atmosphere",
+    "pricing_value_perception",
+    "cleanliness_standard"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.8349,
+    "facet_fraction": 1.0,
+    "n_facets": 8,
+    "mutual_exclusivity": 0.82,
+    "exhaustiveness": 0.85,
+    "mece": 0.8349,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "satisfaction_and_complaint_facets",
+    "per_column": [
+      {
+        "name": "staff_professionalism_attitude",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Service/staff experience is a genuine aspect of dining satisfaction/complaints, a part-of the concept."
+      },
+      {
+        "name": "order_accuracy_timeliness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Order fulfillment (accuracy and speed) is a distinct constitutive aspect of the restaurant experience customers praise or complain about."
+      },
+      {
+        "name": "flavor_quality_rating",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Taste/flavor of food is a core aspect of satisfaction; clearly an aspect-of the concept."
+      },
+      {
+        "name": "portion_adequacy",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Portion size is a distinct food-related aspect of value/satisfaction, part-of the concept."
+      },
+      {
+        "name": "food_freshness_temperature",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Freshness/temperature is a distinct quality dimension of food, separate from flavor; a constitutive facet."
+      },
+      {
+        "name": "ambiance_atmosphere",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Atmosphere/environment is a recognized aspect of the dining experience contributing to satisfaction or complaint."
+      },
+      {
+        "name": "pricing_value_perception",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Price/value is a standard facet customers evaluate; an aspect-of overall satisfaction."
+      },
+      {
+        "name": "cleanliness_standard",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Cleanliness/hygiene is a distinct constitutive aspect of the venue experience, part-of the concept."
+      }
+    ],
+    "facet_columns": [
+      "staff_professionalism_attitude",
+      "order_accuracy_timeliness",
+      "flavor_quality_rating",
+      "portion_adequacy",
+      "food_freshness_temperature",
+      "ambiance_atmosphere",
+      "pricing_value_perception",
+      "cleanliness_standard"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.82,
+    "exhaustiveness": 0.85,
+    "rationale": "Every added column is a genuine constitutive facet (aspect-of) of restaurant satisfaction/complaint themes rather than an external predictor, cause, or restatement of the whole. The set is largely non-overlapping across service, food, environment, and value dimensions. Minor overlap exists within the food cluster (flavor, portion, freshness/temperature all sub-partition 'food quality' and could bleed into each other, e.g. 'quality' vs 'freshness'), slightly lowering mutual exclusivity. Coverage is strong across the major experiential aspects of a Yelp restaurant review; small gaps remain (e.g., wait/reservation experience, accessibility/location/parking, menu variety), preventing full exhaustiveness. Overall a well-constructed MECE facet decomposition."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

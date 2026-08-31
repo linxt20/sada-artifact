@@ -1,0 +1,142 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 13,
+  "added_columns": [
+    "theme_crew_service",
+    "theme_seat_comfort",
+    "theme_food_quality",
+    "theme_entertainment",
+    "theme_punctuality",
+    "theme_value_money",
+    "theme_cleanliness",
+    "theme_boarding",
+    "review_sentiment_score",
+    "review_word_count",
+    "traveller_class_segment",
+    "segment_mean_rating",
+    "rating_vs_segment_mean"
+  ],
+  "metrics": {
+    "n_added_columns": 13,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.5384,
+    "predictor_fraction": 0.7692,
+    "n_predictors": 10,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.7,
+    "interpretable_fraction": 0.6923
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "theme_crew_service",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary present/absent flag for a review theme (6930 vs 1170). This is exactly the kind of external, associational variable the query wants: reviews can be segmented by whether they mention crew service and their mean Overall Rating compared."
+      },
+      {
+        "name": "theme_seat_comfort",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag with well-balanced groups (4551 vs 3549). Cleanly groupable and directly comparable against the focus, supporting the higher/lower rating comparison."
+      },
+      {
+        "name": "theme_food_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme indicator with well-separated categories (4986 vs 3114). Meaningful segmentation axis for relating a theme to Overall Rating."
+      },
+      {
+        "name": "theme_entertainment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag (3232 present / 4868 absent). Interpretable and groupable; supports comparing rating for reviews that raise entertainment vs. those that don't."
+      },
+      {
+        "name": "theme_punctuality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary punctuality theme flag with balanced groups (3620 vs 4480). Clear associational segmentation variable for the focus."
+      },
+      {
+        "name": "theme_value_money",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag (2513 vs 5587). Both groups are large enough for a meaningful rating comparison, satisfying the EDA claim."
+      },
+      {
+        "name": "theme_cleanliness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme indicator (1449 vs 6651). Somewhat imbalanced but both cells are still populous enough to segment on and compare against Overall Rating."
+      },
+      {
+        "name": "theme_boarding",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary boarding theme flag (6290 vs 1810). Interpretable, groupable, and directly relevant to the 'which themes' question."
+      },
+      {
+        "name": "review_sentiment_score",
+        "role": "restatement",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "A bare, fine-grained sentiment polarity score. It is largely a proxy/near-restatement of Overall Rating (both measure review positivity), and its many idiosyncratic fractional values (0.3333, 0.7143, ...) are an opaque scale rather than clean interpretable categories. Weak for human-facing segmentation."
+      },
+      {
+        "name": "review_word_count",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A generic, mechanical text-length feature. As given it is spread across dozens of near-uniform integer values with no natural, interpretable breakpoints, so no meaningful comparison against the focus can be drawn without ad-hoc binning. Explicitly the kind of token/length count that does not realise the EDA claim."
+      },
+      {
+        "name": "traveller_class_segment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Concatenation of Type of Traveller and Class into well-separated, human-readable categories. It is redundant with two existing columns rather than an external variable, but it directly provides the cross-segmentation axis the query calls for ('Across Type of Traveller and Class') and is highly interpretable to group on."
+      },
+      {
+        "name": "segment_mean_rating",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is an aggregate of the focus itself (mean Overall Rating per segment). It restates/leaks the focus variable rather than supplying an independent associational variable, so it cannot open a genuine relationship for discovery."
+      },
+      {
+        "name": "rating_vs_segment_mean",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A direct arithmetic transformation of the focus (Overall Rating minus its segment mean). It is derived from and restates the focus, and its values are fine-grained deviations, offering no external variable to compare against."
+      }
+    ],
+    "n_predictors": 10,
+    "relationship_informativeness": 0.7,
+    "rationale": "The eight binary theme flags are an excellent realisation of the exploratory intent: they are interpretable, well-separated present/absent segments that let a human compare mean Overall Rating across each theme, exactly answering 'which review themes are associated with higher vs. lower rating.' The traveller_class_segment adds the requested Type-of-Traveller x Class grouping axis (though redundant with existing columns). However, the set is diluted by weak/invalid additions: review_word_count is a mechanical length feature with no interpretable breaks, review_sentiment_score is a fine-grained bare-sentiment near-restatement of the focus, and both segment_mean_rating and rating_vs_segment_mean are aggregates/transforms of Overall Rating itself (focus leakage, not associational variables). The strong theme core keeps informativeness fairly high, but the focus-derived restatements and mechanical columns prevent a top score."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 13
+}

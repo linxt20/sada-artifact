@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals indicate a hardware incident is in the anomaly window?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_symptom_type",
+    "incident_action_type",
+    "affected_system_scope",
+    "incident_volume_burst",
+    "recurrence_signal",
+    "software_trigger_present",
+    "caller_repeat_reporter"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7562,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7188,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7375,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents (hardware, database, etc.) is central to identifying hardware incidents for the query. Values map soundly from short_description across samples."
+      },
+      {
+        "name": "failure_symptom_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Symptom types (no_power, overheating, malfunction) are exactly the kind of signals that indicate hardware incidents. Samples show reasonable readings, with 'other' used for silent rows, which is acceptable."
+      },
+      {
+        "name": "incident_action_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Break_fix vs installation/update gives a useful axis to distinguish reactive hardware failures from requests. Mostly grounded, though 'Issue installing new software' labeled break_fix is a slightly loose reading."
+      },
+      {
+        "name": "affected_system_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Scope (single_device, peripheral, server_infra) helps characterize hardware impact. Groundedness is moderate; scope is often inferred from category rather than explicit in terse descriptions, but inferences are plausible."
+      },
+      {
+        "name": "incident_volume_burst",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A volume-burst flag is directly relevant to an 'anomaly window' query. However it cannot be derived from a single row's text; it requires aggregating timestamps, so per-row groundedness is uncertain and only weakly evidenced."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Recurrence is a meaningful anomaly signal, but not derivable from a single short_description; it depends on cross-row analysis not visible in samples, lowering groundedness confidence."
+      },
+      {
+        "name": "software_trigger_present",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Whether a software trigger accompanies an incident is somewhat useful for isolating hardware vs software causes, though it partly restates incident_category. Samples are consistent with text."
+      },
+      {
+        "name": "caller_repeat_reporter",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "A repeat-reporter flag could add a behavioral signal, but it is near-constant (505 true / 95 false) and derives from caller_id aggregation not shown in row text; the overwhelmingly 'true' distribution and non-obvious derivation reduce both usefulness and groundedness confidence."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.72,
+    "rationale": "Most added columns give genuine analytical axes for identifying hardware incidents and anomaly-window signals (category, symptom, scope, burst, recurrence). Text-derivable categorical columns are well grounded in the samples. The aggregate/behavioral flags (volume_burst, recurrence, repeat_reporter) are query-relevant but rely on cross-row computation not evidenced in single-row source text, and caller_repeat_reporter is near-constant, modestly lowering the holistic scores. No outright hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "predictive_hardware",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "avg_dimension_rating",
+    "rating_variance",
+    "service_focus_score",
+    "comfort_focus_score",
+    "value_alignment"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.3,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.3,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "avg_dimension_rating",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The value set (1.2–5.0 in 0.2 steps) is consistent with the mean of the five 1–5 sub-dimension ratings (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment, Value For Money). It is a function of OTHER columns, not of overall_rating itself, so it is not a restatement or deterministic function of the focus, and it is knowable concurrently (no leakage). It is in fact the single strongest predictor of overall satisfaction. Caveat: it is a linear aggregate of columns already present, so it adds little NEW signal beyond the originals for any non-trivial model."
+      },
+      {
+        "name": "rating_variance",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Dispersion across the sub-dimension ratings (values ~0.2–3.2). Derived from the component ratings, not from overall_rating, so not leakage/restatement. Consistency vs. mixed experiences plausibly carries predictive signal, and as a nonlinear feature it can add a bit of incremental information beyond the raw sub-ratings a linear model would already use."
+      },
+      {
+        "name": "service_focus_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Aggregate weighting service-oriented sub-dimensions (Staff Service, Food & Beverages, possibly Inflight Entertainment); 1–5 in 0.5 steps. Lies outside the focus (built from other columns) and plausibly predicts overall satisfaction. Predictive but largely a re-aggregation of already-present columns, so limited new leverage."
+      },
+      {
+        "name": "comfort_focus_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Aggregate of comfort-oriented sub-dimensions (e.g., Seat Comfort); 0.5–5 in 0.5 steps. Not a restatement/function of overall_rating and concurrently observable (no leakage). Legitimate predictor, but again derived from existing sub-ratings so mostly redundant with the originals."
+      },
+      {
+        "name": "value_alignment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Appears to be a derived difference/alignment measure among ratings (range -4 to 9, mode at 0). Interpretation is ambiguous and its description is empty, but it does not obviously restate overall_rating and is plausibly a concurrently-observable derived feature carrying some signal. Flagged with low confidence: if it were computed using overall_rating it would be leakage, but there is no direct evidence of that here."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.3,
+    "rationale": "All five added columns are legitimate predictors in the strict sense: each is a function of the OTHER (sub-dimension) columns rather than of overall_rating itself, none is a restatement or deterministic function of the focus, and all are observable concurrently with the review (no post-outcome leakage). Individually several are strongly correlated with overall satisfaction (especially avg_dimension_rating). However, the SET provides only modest predictive leverage BEYOND the original columns, because every feature is essentially a re-aggregation or transform of the five sub-ratings that are already in the table. A model with access to the raw sub-ratings would recover the linear aggregate (avg_dimension_rating) and most of the focus scores automatically; only the nonlinear features (rating_variance, and possibly value_alignment) contribute meaningful incremental signal. Hence: valid predictors, but low incremental utility — no genuinely new external drivers (e.g., airline/route/traveller-type effects, price, delay/operational data) were engineered."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

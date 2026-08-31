@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "taste_flavor_quality",
+    "palatability_acceptance",
+    "repeat_purchase_intent",
+    "product_category",
+    "use_context"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.85,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.748,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.799,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "taste_flavor_quality",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A structured taste-quality categorization is a strong actionable axis for improving product scores (identify off-flavor/bland/too-strong clusters). Values track the source text well: 'off_flavor_artificial' for medicinal cherry soda, 'exceeds_expectation' for the raved-about taffy and delight. The peanut mislabeling row is a slight stretch (it's a labeling/accuracy issue, not really off-flavor), but overall readings are sound."
+      },
+      {
+        "name": "palatability_acceptance",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Acceptance/refusal categorization gives a distinct axis useful for diagnosing what drives low scores (refusal, picky-eater conversion). 'picky_eater_converted' for the finicky Labrador and 'high_acceptance' for the beloved treats are warranted. 'low_acceptance_refused' for the medicinal soda is a reasonable inference. Somewhat overlaps conceptually with taste_flavor_quality but retains its own signal (behavioral acceptance vs. flavor)."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Repeat-intent is a useful loyalty axis correlating with satisfaction and score. However, it is a binary flag with limited leverage, and groundedness is weaker: for the dog food ('bought several') True is supported, but for the taffy and the C.S. Lewis delight the text expresses praise/recommendation, not explicit repurchase intent, so True is an inferential leap the text does not directly state."
+      },
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Category is a highly useful grouping dimension for identifying which product lines drag scores down. Most values are sound (pet_food, candy_gum). But the cherry-soda extract labeled 'condiment_spice' is a misread (it's a flavoring/beverage extract), and the mislabeled-peanuts row as 'other_food' is defensible but loose. Categorization is inferred, occasionally imperfectly."
+      },
+      {
+        "name": "use_context",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Usage context is a genuine segmentation axis (kids/family, baking, medical) that can reveal where products underperform. Values are mostly reasonable: 'pet_feeding' for dog food, 'personal_daily_use' as a sensible default. The dominant 'personal_daily_use' bucket is somewhat generic/near-default for many rows, slightly limiting leverage, but the readings are grounded."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns collectively provide several genuinely useful analytical axes (taste quality, acceptance, category, use context, repeat intent) that let an analyst group and correlate against Score to find improvement actions. They are non-trivial and not mere restatements of original columns. Groundedness is generally good and 'not_applicable'/NULL handling is appropriate, but there are occasional overreaches: repeat_purchase_intent asserts intent the text does not explicitly state, and a few product_category values misread the source (extract as condiment). No systematic fabrication, but enough inferential confidence to note some hallucination."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "seat_product_received",
+    "inflight_service_quality",
+    "service_consistency_across_sectors"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome (Recommended = no)",
+    "per_column": [
+      {
+        "name": "seat_product_received",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Encodes the physical hard-product actually delivered on the flight (Qsuite, standard lie-flat, angled flat, recliner, economy-or-below). This is a candidate CAUSE whose effect on (non-)recommendation is being attributed — a treatment/driver. The query only says 'Business-Class'; the concrete seat product is surfaced from the data. It is NOT a common cause of the other service variables and the outcome, so it does not function as a confounder."
+      },
+      {
+        "name": "inflight_service_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "An ordinal assessment of delivered service (excellent/good/inconsistent/poor). This is another candidate driver of the recommendation decision, i.e. a parallel treatment. It sits on the causal path to the outcome rather than upstream of both a treatment and the outcome, so it is not a confounder; if anything it risks being a mediator of the seat-product effect."
+      },
+      {
+        "name": "service_consistency_across_sectors",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Captures whether service was consistent, variable, or consistently poor across sectors. This largely restates/decomposes the 'inconsistent' facet already present in inflight_service_quality and lies on the causal path from service delivery to the recommendation. It is a mediator/driver, not a common cause of a treatment and the outcome — adjusting for it would not block a backdoor path."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "seat_product_received",
+      "inflight_service_quality"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply plausible candidate CAUSES of non-recommendation (the delivered seat product and the level/consistency of inflight service), so a treatment is present. However, the technical claim requires BOTH a treatment AND confounders — variables that plausibly cause the treatment AND the outcome and must be adjusted for to avoid biased attribution. None of the three columns play this role. They are a set of parallel drivers/mediators of the outcome (a factor-decomposition of the review), not upstream common causes. Genuine confounders here would be things like route/sector (long-haul vs short-haul), aircraft/cabin generation, traveller type, or ticket-fare context — variables that jointly influence which seat product/service a passenger gets AND their propensity to recommend. Notably, plausible confounders such as Route and Type of Traveller already exist in the original table and were not surfaced or engineered as adjustment variables. Because no confounders were surfaced, the causal-estimation backdoor is left open and the confounder-quality is 0."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

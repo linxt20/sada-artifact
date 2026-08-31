@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "defect_or_failure",
+    "strong_negative_language",
+    "regret_sentiment",
+    "unmet_expectation",
+    "value_concern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.77,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.76,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "defect_or_failure",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Presence of a product defect/failure is a strong, genuinely predictive axis for negative satisfaction. Sample values are sound: none of the shown rows describe a physical defect and all are correctly 'not_present'. Distribution is non-degenerate."
+      },
+      {
+        "name": "strong_negative_language",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Emphatic vs casual negative intensity is a reasonable predictive signal beyond a bare sentiment flag. Readings are largely warranted (AMZ-0001 emphatic, AMZ-0003 emphatic profanity, AMZ-0004/0005 not_present). Some subjectivity in the casual/emphatic split, but grounded in tone."
+      },
+      {
+        "name": "regret_sentiment",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Regret/would-not-recommend is a useful axis. However groundedness is weak: AMZ-0001 is labeled 'waste_of_money' though the text is about doll availability with no purchase/money regret expressed, and AMZ-0003 'regret_or_remorse' is a stretch for a mocking rant. AMZ-0002 'would_not_recommend' is well supported. Mixed extraction quality with an unsupported specific."
+      },
+      {
+        "name": "unmet_expectation",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Unmet expectation is a strong predictor of dissatisfaction and offers real grouping leverage. But AMZ-0001 'not_as_described' is not supported (the complaint is that no such product exists, not misrepresentation), and AMZ-0003 'expected_better' is a loose fit. AMZ-0002 'expected_better' is reasonable."
+      },
+      {
+        "name": "value_concern",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Perceived value/price concern is a distinct and useful predictive axis. Shown rows are all correctly 'not_present' since none discuss price/worth negatively; AMZ-0005 explicitly says 'well worth it' and is not flagged. Grounded and non-degenerate."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns provide several genuinely distinct axes (defect, language intensity, regret, unmet expectation, value concern) that are all plausibly predictive of negative satisfaction, matching the query well, with non-degenerate distributions and low redundancy. Groundedness is solid for defect_or_failure, strong_negative_language, and value_concern, but regret_sentiment and unmet_expectation show over-eager readings on some rows (e.g., AMZ-0001 tagged 'waste_of_money' and 'not_as_described' without textual support), pulling table-level groundedness down."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

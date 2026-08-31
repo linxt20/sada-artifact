@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "hardware_failure_mode",
+    "affected_device_scope",
+    "hardware_problem_involves_replacement"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7167,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.7733,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.745,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_failure_mode",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Directly answers the query by categorizing the kind of hardware problem, giving a strong axis to group and compare incidents. Most values are sound: software-install rows correctly map to Unknown/NULL. However 'connectivity_failure' for 'Unable to establish connection to MySQL server' is a debatable inference -- a DB connection failure is often a software/network-config issue, not necessarily a hardware failure mode, so some values risk over-asserting hardware causation from silent text."
+      },
+      {
+        "name": "affected_device_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A distinct, useful axis (device class) for grouping hardware problems, complementary to failure mode. Sampled values behave reasonably: silent/software rows are Unknown. The large number of specific device classes across the corpus cannot be fully verified from samples, but the ones shown are conservative and grounded; specific classifications like 'network_infrastructure' or 'shared_peripheral' are plausible readings of descriptive text."
+      },
+      {
+        "name": "hardware_problem_involves_replacement",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Near-constant boolean (597 false / 3 true), providing almost no discriminating leverage for the query about kinds of hardware problems. Values are well-grounded -- defaulting to false when text does not mention replacement is correct behaviour -- but the extreme skew gives little analytical value."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.77,
+    "rationale": "The failure-mode and device-scope columns give genuinely useful, distinct axes that directly serve the query of characterizing hardware problem types. The replacement flag is near-constant and adds little. Groundedness is generally sound with conservative Unknowns for silent rows, but some hardware-cause inferences (e.g. treating a MySQL connection failure as a hardware connectivity_failure) risk asserting hardware causation the text does not clearly support."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

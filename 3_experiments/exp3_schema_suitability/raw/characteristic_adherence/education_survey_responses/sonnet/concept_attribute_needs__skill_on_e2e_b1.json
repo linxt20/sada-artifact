@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "instructional_delivery_quality",
+    "engagement_barrier",
+    "hands_on_deficit_severity",
+    "positive_adaptation_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.6925,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7338,
+    "hallucination_rate": 0.75
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "instructional_delivery_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A well-distributed categorical axis for delivery quality that directly supports analysis of teaching-related pain points. Mostly grounded, but some readings are questionable: ED-0001 (student describing broken screen-share, missing three problems, frustration) is labeled 'adequate', and ED-0003 (teacher can't tell child is lost, zero interaction) as 'passive_or_minimal' rather than something more negative, suggesting inconsistent thresholds. Generally a sound reading though."
+      },
+      {
+        "name": "engagement_barrier",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Directly names engagement pain points, a central axis for the query, with useful discrimination (silent class, dropout, low motivation). ED-0005 'cameras_off_silent_class' is precisely grounded. However ED-0003 labeled 'low_motivation' is a misread: the source describes technical logouts and lack of peer interaction, with a child crying (distress, not motivation deficit), an unwarranted inference."
+      },
+      {
+        "name": "hands_on_deficit_severity",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "An ordinal severity of hands-on/practical deficit could add analytical leverage, but the values appear poorly grounded and arbitrary. ED-0001 (algebra, no hands-on element mentioned) gets 2.0; ED-0002 (labs successfully adapted to kitchen-chemistry, a POSITIVE case) gets 1.0 rather than null/none; the numeric scale has no anchor in the text and reads as invented specificity for many rows. The large NULL share for silent rows is appropriate, but the non-null scores are frequently unsupported."
+      },
+      {
+        "name": "positive_adaptation_type",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures the flip side—what is working—which is legitimately useful for contextualizing needs and identifying successful mitigations. Values are well grounded: ED-0002 innovative_teacher_practice, ED-0004 asynchronous_flexibility_benefit (pause/self-pace) are accurate readings, and 'not_present' is correctly used for negative rows."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.68,
+    "rationale": "Three of the four columns provide genuine, distinct analytical axes (delivery quality, engagement barriers, positive adaptations) that directly serve the query about learner needs and pain points, and none are near-constant or trivially redundant. Groundedness is mixed: the categorical columns are mostly sound but contain occasional misreads/over-confident inferences (e.g., 'low_motivation' for a technical/distress case, 'adequate' for clearly frustrated responses). The hands_on_deficit_severity column is the weakest—its numeric scale appears largely invented with no textual anchor and even contradicts a positive-case row. Overall useful set with moderate grounding concerns."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

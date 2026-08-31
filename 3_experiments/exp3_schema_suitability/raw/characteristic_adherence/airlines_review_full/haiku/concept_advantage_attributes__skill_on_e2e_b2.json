@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "focus_variable": "airline_competitive_advantage",
+  "concept": "airline_competitive_advantage",
+  "n_added_columns": 5,
+  "added_columns": [
+    "crew_friendliness_warmth",
+    "crew_attentiveness_responsiveness",
+    "seat_comfort_legroom",
+    "food_beverage_quality",
+    "ground_staff_service"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6633,
+    "facet_fraction": 1.0,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.8,
+    "exhaustiveness": 0.55,
+    "mece": 0.6633,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_competitive_advantage",
+    "per_column": [
+      {
+        "name": "crew_friendliness_warmth",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The warmth/friendliness of cabin crew is a genuine sub-aspect OF an airline's service offering, which is itself a pillar of competitive advantage. It is an attribute of the concept, not an external driver of it."
+      },
+      {
+        "name": "crew_attentiveness_responsiveness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Attentiveness/responsiveness of crew is a distinct in-flight service dimension and thus a constitutive aspect of competitive advantage. It overlaps somewhat with crew_friendliness (both are 'cabin crew service'), but captures a different behavioural axis (helpfulness/speed vs. warmth)."
+      },
+      {
+        "name": "seat_comfort_legroom",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Seat comfort and legroom is a hard-product/cabin dimension along which airlines compete, i.e. an aspect OF the competitive advantage, not a predictor of it."
+      },
+      {
+        "name": "food_beverage_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Catering quality is a recognised service/product dimension that partly constitutes an airline's advantage; it is a part-of aspect of the concept."
+      },
+      {
+        "name": "ground_staff_service",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Ground service (check-in, gate, handling) is a distinct service touchpoint and a legitimate constitutive facet of the overall competitive advantage, non-overlapping with in-flight crew touchpoints."
+      }
+    ],
+    "facet_columns": [
+      "crew_friendliness_warmth",
+      "crew_attentiveness_responsiveness",
+      "seat_comfort_legroom",
+      "food_beverage_quality",
+      "ground_staff_service"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.8,
+    "exhaustiveness": 0.55,
+    "rationale": "All five added columns are genuine part-of aspects of an airline's competitive advantage (service warmth, service responsiveness, seat/hardware comfort, catering, ground service) rather than external predictors, causes, or restatements, so the part-of/meronymy claim is satisfied. Mutual exclusivity is high but not perfect: the two crew columns (friendliness vs. attentiveness) both live under the 'cabin crew service' aspect and can co-vary, and crew vs. ground staff both fall under the broader 'service' banner, creating mild redundancy risk. Exhaustiveness is only moderate: the set carves the 'service + comfort + food' portion of competitive advantage well, but omits several major constitutive facets of airline competitive advantage such as price/value-for-money, inflight entertainment, on-time performance/reliability, network/route connectivity, baggage handling, and boarding/check-in efficiency. Because it covers roughly half of the concept's constitutive dimensions, exhaustiveness is scored around 0.55."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

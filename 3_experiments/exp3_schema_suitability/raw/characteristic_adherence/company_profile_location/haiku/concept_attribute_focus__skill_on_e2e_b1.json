@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What market-expansion focus should analysts study?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "industry_vertical",
+    "business_model_type",
+    "customer_segment_primary",
+    "company_stage",
+    "technology_capability_class"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.806,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.76,
+    "source_groundedness__table_level": 0.76,
+    "b1_overall": 0.783,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A strong grouping axis for market-expansion analysis with good spread across verticals. Mostly well-grounded (consumer_tech for 23andme, fintech for Addepar, life_sciences for 5AM Ventures). However the Accel row is labeled 'life_sciences' despite a generic 'exceptional founders' description with no sector signal, showing some unwarranted specificity."
+      },
+      {
+        "name": "business_model_type",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes SaaS, B2B, B2C, hardware, investor, consulting etc.—a genuine axis to segment expansion opportunities. Sampled values are sound readings (consulting for 280 Group, venture_investor for the VC firms, B2C for 23andme)."
+      },
+      {
+        "name": "customer_segment_primary",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Enterprise vs consumer vs developer segmentation is directly relevant to market-expansion targeting. Sampled values are defensible, though VC firms labeled 'enterprise' is a loose fit; still a reasonable categorization and not contradicted."
+      },
+      {
+        "name": "company_stage",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Stage is a useful lens for expansion readiness, but the source descriptions rarely state stage. Labels like 'established_scale' for 23andme and 'growth_stage' for 280 Group appear inferred from outside knowledge rather than derivable from the given text, so groundedness is weak."
+      },
+      {
+        "name": "technology_capability_class",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a useful technical-capability axis, though 'not_present' dominates (114), reducing leverage for the majority of rows. Where values are assigned they are well-grounded (data_management for Addepar, bioscience for 5AM Ventures), and 'not_present' for silent rows is correct behaviour."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.76,
+    "rationale": "The added columns collectively provide several genuine, non-redundant axes (industry, business model, customer segment, stage, tech capability) that are directly relevant to studying market-expansion focus, giving analysts real grouping and comparison power. Groundedness is generally solid for industry/business-model/customer/tech columns, which read soundly from the descriptions. The main weakness is company_stage, which is frequently inferred beyond what the source text supports, and occasional over-specific vertical labels (e.g., Accel as life_sciences from a generic description)."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

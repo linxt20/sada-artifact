@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "subject_format_alignment",
+    "hands_on_requirement",
+    "peer_interaction_impact",
+    "teacher_instructional_adaptation",
+    "family_support_availability",
+    "student_prior_engagement"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8083,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.675,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.7417,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "subject_format_alignment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures whether the subject fits the online format, a genuine driver axis for satisfaction. Row readings are sound: algebra freezing = misaligned, recorded history lectures = well_aligned, discussion class = misaligned all align with text."
+      },
+      {
+        "name": "hands_on_requirement",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Useful axis distinguishing subjects needing physical/lab work. But some values overreach: labeling algebra (ED-0001) and reading (ED-0003) as 'critical_for_subject' hands-on is not supported by those texts, while chemistry labs (ED-0002) as merely 'beneficial_not_critical' is arguably understated. Mixed grounding."
+      },
+      {
+        "name": "peer_interaction_impact",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Peer interaction is a plausible engagement driver relevant to the query. Readings track text well: 'zero peer interaction' and silent-discussion rows flagged as critical, solo-notetaking history as not_present."
+      },
+      {
+        "name": "teacher_instructional_adaptation",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Instructional adaptation is a genuine explanatory factor. Most readings reasonable (documentary clips, kitchen-chemistry as adapted). Some student-perspective rows infer teacher adaptation that the text only weakly supports, but no clear contradiction."
+      },
+      {
+        "name": "family_support_availability",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Family capacity could help explain satisfaction differences and NULLs for silent rows are correct. However values are largely invented: ED-0003 parents doing worksheets after dinner implies HIGH involvement yet is labeled 'low_capacity', and satisfaction/negativity appears conflated with family capacity. Several confident assignments the text does not support."
+      },
+      {
+        "name": "student_prior_engagement",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Baseline motivation is a legitimate driver. But the column appears to mirror current satisfaction rather than PRIOR engagement, and applies to teacher/parent respondents where no student baseline is stated (e.g. ED-0005 teacher row labeled 'low_baseline_engagement'). Some readings are warranted, others asserted beyond evidence."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.65,
+    "rationale": "All six columns provide distinct, non-redundant driver axes directly relevant to explaining low satisfaction, so analytical usefulness is consistently high. Groundedness is uneven: format/peer/adaptation columns read the source text soundly, but hands_on_requirement, family_support_availability, and student_prior_engagement include values inferred beyond what the text supports or conflated with sentiment/satisfaction, with a clear contradiction in ED-0003's family_support label."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

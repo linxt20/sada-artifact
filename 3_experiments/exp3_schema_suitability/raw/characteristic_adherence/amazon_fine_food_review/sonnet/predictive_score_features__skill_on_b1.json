@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "overall_sentiment",
+    "expectation_match",
+    "taste_texture_quality",
+    "product_effectiveness",
+    "description_accuracy",
+    "product_category",
+    "health_dietary_mention",
+    "use_case_context",
+    "review_specificity",
+    "comparison_to_alternative"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.845,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.7975,
+    "hallucination_rate": 0.1
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "overall_sentiment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Sentiment is a strong, well-established predictor of review score and offers a clear grouping axis. Samples are correctly categorised (positive for praise, negative for mislabeled peanuts). Grounded in text."
+      },
+      {
+        "name": "expectation_match",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Whether a product met/exceeded/fell below expectations is a meaningful new axis correlated with score, not redundant with raw sentiment. Sample readings are warranted (exceeded for 'heaven', below for mislabeled product)."
+      },
+      {
+        "name": "taste_texture_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Domain-specific sentiment on taste/texture is useful for food reviews and gives finer leverage than overall sentiment. Well-grounded; not_applicable used sensibly. Partly correlated with overall_sentiment but distinct enough."
+      },
+      {
+        "name": "product_effectiveness",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "'Does it work as claimed' is a reasonable axis. However mapping the mislabeled-peanuts review to 'does_not_work' overreaches: the text describes misrepresentation, not functional failure. Large not_applicable share reflects appropriate abstention, but the effectiveness framing is a slight stretch for pure food items."
+      },
+      {
+        "name": "description_accuracy",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether product matched its description is predictive of low scores and offers a distinct axis. 'not_evaluated' used correctly for silent rows; 'inaccurate' correctly assigned to the mislabeled peanuts case."
+      },
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A categorical grouping variable useful for stratifying score models. Sample categorisations are accurate (dog food, candy). Well-grounded readings of the text."
+      },
+      {
+        "name": "health_dietary_mention",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binary flag with reasonable analytical value as a segmentation feature, though bare and lower-leverage than richer columns. Grounded; false correctly assigned to samples lacking dietary discussion."
+      },
+      {
+        "name": "use_case_context",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Usage context adds a grouping axis. Grounded where explicit (pet_use). However 'personal_daily_use' is heavily defaulted and often not warranted by text (e.g. taffy, cherry soda), making some values weakly supported inferences."
+      },
+      {
+        "name": "review_specificity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Specificity/detail level is a plausible predictor of score reliability and is not a bare token count, giving modest analytical leverage. Sample assignments are reasonable readings of review detail."
+      },
+      {
+        "name": "comparison_to_alternative",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether the review compares to alternatives is a distinct feature. Grounded: 'True' for the Robitussin/other extract mention, 'False' elsewhere are defensible readings."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.85,
+    "rationale": "The added columns collectively give multiple genuine, distinct axes (sentiment, expectation match, domain sentiment, category, description accuracy, specificity, comparison) that are all plausible predictors of review score and go well beyond trivial token/length features. Most values are sound extractions or warranted categorisations, with appropriate abstention labels (not_applicable, not_stated, not_evaluated). The main groundedness weaknesses are the over-eager 'personal_daily_use' default in use_case_context and the strained 'does_not_work' effectiveness label for a misrepresentation (not a functional failure) case. Overall a strong, well-grounded, analytically useful set."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

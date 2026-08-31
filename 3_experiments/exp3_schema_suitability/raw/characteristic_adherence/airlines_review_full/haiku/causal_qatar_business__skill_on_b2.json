@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "crew_service_inconsistency",
+    "price_value_perception",
+    "traveler_type_expectation_mismatch"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.04,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.1,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome",
+    "per_column": [
+      {
+        "name": "crew_service_inconsistency",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Encodes whether/how cabin-crew service failed (poor attentiveness, rude, disorganized, inconsistent). This is a candidate cause whose effect on non-recommendation is being attributed, i.e. a treatment. Not a common cause of another treatment and the outcome, so not a confounder."
+      },
+      {
+        "name": "price_value_perception",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Encodes value/price judgments (price high for decline, unjustified for product, premium for old aircraft). Another candidate driver of the recommendation decision, i.e. a treatment. It is a perception on the way to the outcome, not a background common cause adjusted to de-bias another treatment."
+      },
+      {
+        "name": "traveler_type_expectation_mismatch",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Although the label evokes a pre-treatment trait (traveler type), all realized values are dissatisfaction/friction/mismatch expressions (operational friction, coordination issue, separation complaint) that lie on the path from experience to non-recommendation. Adjusting for this would block part of the causal effect, so it functions as a mediator, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "crew_service_inconsistency",
+      "price_value_perception"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.1,
+    "rationale": "The operator supplies several candidate causes of non-recommendation (crew service failures, price/value perception) and one mediating dissatisfaction channel, but it does NOT supply any genuine confounder — a variable that jointly causes one of the treatments AND the outcome and must be adjusted to remove attribution bias (e.g., aircraft age/configuration, route or load, fare class/price paid, seasonality). The added columns form a parallel multi-cause / mediator decomposition rather than a confounder-controlled causal-estimation design. Because the decisive test asks whether real common causes were surfaced from the data/text, and none were, the causal-attribution claim is not satisfied."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

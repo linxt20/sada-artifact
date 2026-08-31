@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some incidents take longer to resolve?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "incident_complexity",
+    "incident_scope",
+    "assigned_technician",
+    "same_technician_closure"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.78,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.62,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.8
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean thematic categorization derived from short_description gives a genuine grouping axis to compare resolution times across incident types. Values (connectivity, database, email) are sound readings of the source text. Somewhat overlaps with the original 'category' column but the observed values suggest a more descriptive re-derivation."
+      },
+      {
+        "name": "incident_complexity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Complexity is highly relevant to why some incidents take longer, offering a strong new axis. However groundedness is weaker: labels like 'service_degradation' vs 'simple_connectivity' vs 'system_failure' are inferred from terse descriptions with limited evidence. 'Cannot connect to database' labeled 'service_degradation' and 'Email system not working' as 'service_degradation' are plausible but not firmly warranted by the text alone."
+      },
+      {
+        "name": "incident_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual vs departmental vs system-wide) is a useful lever for resolution-time analysis. Departmental/location tags are well grounded when the text names a department (e.g. sales, Marketing). But 'system_wide' for 'Email system not working properly' and 'individual_access' for a bare VPN issue are inferences the text does not clearly support, so some values overreach."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A per-technician axis could help attribute delays, but this largely restates the existing 'assigned_to' original column, reducing added leverage. Groundedness is questionable: the samples show only date/description source text with no visible name field, yet specific technicians are asserted, suggesting invented or unverifiable specifics."
+      },
+      {
+        "name": "same_technician_closure",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Whether the opener/assignee also closed the ticket is a plausible predictor of handoff-related delays, a legitimate new axis derivable from assigned_to vs closed_by. However the provided source samples do not expose those name fields, so the true/false values cannot be verified from the shown evidence and appear partly asserted."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.6,
+    "rationale": "The added columns collectively provide several genuine new axes (category, complexity, scope, technician continuity) directly relevant to explaining resolution-time variance, so analytical usefulness is high overall. Groundedness is mixed: the categorical labels derived from short_description are mostly sound, but complexity/scope include some over-confident inferences, and the technician-related columns assert specifics not visible in the provided source evidence and partly duplicate existing original columns."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

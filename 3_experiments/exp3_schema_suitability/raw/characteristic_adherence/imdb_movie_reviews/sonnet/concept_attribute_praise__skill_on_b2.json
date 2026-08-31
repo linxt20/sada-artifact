@@ -1,0 +1,123 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "focus_variable": "audience_praise_and_complaints",
+  "concept": "audience_praise_and_complaints",
+  "n_added_columns": 10,
+  "added_columns": [
+    "overall_stance",
+    "acting_assessment",
+    "writing_script_assessment",
+    "directing_assessment",
+    "technical_production_assessment",
+    "story_plot_assessment",
+    "pacing_engagement_assessment",
+    "specific_praised_element",
+    "specific_complained_element",
+    "audience_recommendation"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.398,
+    "facet_fraction": 0.6,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.8,
+    "mece": 0.6633,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "audience_praise_and_complaints",
+    "per_column": [
+      {
+        "name": "overall_stance",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Positive/negative/mixed overall valence is a summary of the whole praise-and-complaints concept, not a constitutive aspect of it. It restates the target rather than decomposing it."
+      },
+      {
+        "name": "acting_assessment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Acting is a specific film aspect that reviews praise or criticise, i.e., a genuine part of what audience praise/complaints are about."
+      },
+      {
+        "name": "writing_script_assessment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Writing/script is a distinct evaluable aspect that reviewers praise or complain about."
+      },
+      {
+        "name": "directing_assessment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Directing is a distinct constitutive aspect of the praise/complaint content."
+      },
+      {
+        "name": "technical_production_assessment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Technical/production quality is a legitimate distinct facet audiences praise or criticise."
+      },
+      {
+        "name": "story_plot_assessment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Story/plot is a core aspect of praise and complaints in film reviews."
+      },
+      {
+        "name": "pacing_engagement_assessment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Pacing/engagement is a distinct aspect of the viewing experience that is praised or criticised."
+      },
+      {
+        "name": "specific_praised_element",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This aggregates the single most-praised element across categories (performance, visuals, premise, etc.), overlapping heavily with the per-aspect assessment facets. It re-summarises praise rather than adding a non-overlapping constitutive aspect."
+      },
+      {
+        "name": "specific_complained_element",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Mirror of the above for complaints; its values (script, acting, plot logic, pacing, production) duplicate the dedicated per-aspect facets, adding overlap rather than a new aspect."
+      },
+      {
+        "name": "audience_recommendation",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the reviewer recommends the film is a downstream conclusion/consequence of praise and complaints, not itself an aspect of what is praised or complained about."
+      }
+    ],
+    "facet_columns": [
+      "acting_assessment",
+      "writing_script_assessment",
+      "directing_assessment",
+      "technical_production_assessment",
+      "story_plot_assessment",
+      "pacing_engagement_assessment"
+    ],
+    "non_facet_columns": [
+      "overall_stance",
+      "specific_praised_element",
+      "specific_complained_element",
+      "audience_recommendation"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.8,
+    "rationale": "Six columns are true meronymic facets, carving the praise/complaints concept into distinct evaluable film aspects (acting, writing, directing, technical/production, story, pacing) that together cover most of the concept's constitutive dimensions. However mutual exclusivity is weakened: specific_praised_element and specific_complained_element collapse the same aspects (performance, script, plot, pacing, production) into aggregate columns, materially overlapping the dedicated per-aspect facets. overall_stance is a restatement of the whole, and audience_recommendation is a downstream consequence rather than a facet. Exhaustiveness of the genuine facet set is fairly high but not complete (e.g., no explicit facet for emotional impact or genre/tone beyond the aggregates)."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 10
+}

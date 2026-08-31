@@ -1,0 +1,132 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "primary_cabin_service_complaint",
+    "complaint_recurrence_signal",
+    "service_gap_category",
+    "traveler_segment_susceptibility",
+    "class_quality_gap",
+    "positive_offset_factor",
+    "expectation_gap",
+    "service_inconsistency",
+    "class_of_service_quality_gap"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.5,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "primary_cabin_service_complaint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query explicitly targets eliminating the most common cabin-service complaints; this column identifies that intervenable treatment (an airline can change service to remove a complaint category)."
+      },
+      {
+        "name": "complaint_recurrence_signal",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether a complaint recurs is downstream of the complaint itself and lies on the path to the rating, not a common cause of treatment and outcome."
+      },
+      {
+        "name": "service_gap_category",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "This is essentially a re-grouping/abstraction of the complaint type (the treatment), not a distinct common cause; it functions as a treatment recode rather than a confounder."
+      },
+      {
+        "name": "traveler_segment_susceptibility",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Traveler segment plausibly affects both which complaints are raised and baseline overall rating, and is not named in the query (though Type of Traveller exists in the original table)."
+      },
+      {
+        "name": "class_quality_gap",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Service class shapes both the complaints experienced and the overall rating; a class-based quality gap is a common cause not named in the query, though Class is an existing original column."
+      },
+      {
+        "name": "positive_offset_factor",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Positive aspects that offset the rating are competing causes of the outcome but not common causes of the complaint treatment; better treated as covariates than confounders."
+      },
+      {
+        "name": "expectation_gap",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Prior expectations can drive both the likelihood of registering complaints and the rating given; a plausible unnamed common cause."
+      },
+      {
+        "name": "service_inconsistency",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Variability in service delivery is part of the mechanism producing complaints and the rating, sitting on the causal path rather than being an antecedent common cause."
+      },
+      {
+        "name": "class_of_service_quality_gap",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A duplicate-style class quality gap indicator; class differences confound complaint incidence and overall rating and are not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_cabin_service_complaint"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "traveler_segment_susceptibility",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "class_quality_gap",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "expectation_gap",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "class_of_service_quality_gap",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "The set correctly establishes an intervenable treatment: the most common cabin-service complaint is something an airline can act to eliminate, matching the what-if intent. It also supplies several genuine, unnamed common causes (traveler segment, class-based quality gaps, expectation gap) that would need adjustment to read off the counterfactual rating improvement. However, quality is diluted by (a) redundant treatment recodings (service_gap_category) and near-duplicate class-gap columns, and (b) several columns that are mediators/competing outcome causes (complaint_recurrence_signal, service_inconsistency, positive_offset_factor) rather than confounders. The treatment and a handful of valid confounders are present, but the confounder layer is partly mechanical and overlapping, yielding moderate quality."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

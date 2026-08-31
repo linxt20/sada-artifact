@@ -1,0 +1,85 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "focus_variable": "regional_fit",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "Current_Business_Model_Type",
+    "Service_Orientation_Score",
+    "Localization_Potential_Score",
+    "Regional_Fit_Impact_If_Service_Localized",
+    "Recommended_Region_Type_After_Shift"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "regional_fit",
+    "per_column": [
+      {
+        "name": "Current_Business_Model_Type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The business model is the described lever the query proposes to shift; this captures its baseline state, an intervenable/configurable property."
+      },
+      {
+        "name": "Service_Orientation_Score",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Directly operationalizes the 'more service-oriented' arm of the intervention -- a settable characteristic of the business model."
+      },
+      {
+        "name": "Localization_Potential_Score",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Operationalizes the 'localized model' arm of the intervention; the localization lever the actor could change."
+      },
+      {
+        "name": "Regional_Fit_Impact_If_Service_Localized",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the counterfactual outcome (change in regional fit) itself, not a confounder."
+      },
+      {
+        "name": "Recommended_Region_Type_After_Shift",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A downstream recommendation/action derived from the post-intervention state; it is a consequence, not a common cause of treatment and outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "Current_Business_Model_Type",
+      "Service_Orientation_Score",
+      "Localization_Potential_Score"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The treatment side is well-realized and genuinely intervenable: the business model type and the service/localization scores capture the exact lever the query proposes to shift, and these are configurable, settable properties. However, the decisive test for the what-if subtype is the presence of CONFOUNDERS -- common causes of both the model-shift treatment and regional fit that must be adjusted to read off the counterfactual effect. NONE of the added columns serve this role. Plausible confounders (e.g., industry sector, company size/maturity, existing geographic footprint, market competition, capital/funding available to actually execute the shift) are absent. The remaining columns are the counterfactual outcome itself and a downstream recommendation, neither of which is a confounder. Because no confounders -- named or unnamed -- are supplied, the counterfactual effect is not identifiable, and the operator fails the technical claim for the interventional subtype."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

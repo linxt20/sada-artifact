@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review facets differ by sentiment label?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "product_performance_state",
+    "defect_or_failure_present",
+    "expectation_met_or_exceeded",
+    "primary_attribute_type"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "product_performance_state",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean ordinal-like categories (works_as_intended / partially_works / does_not_work) that are external to the sentiment label and can be cross-tabulated against label_pos to reveal how functional outcomes relate to positive vs negative sentiment."
+      },
+      {
+        "name": "defect_or_failure_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated interpretable categories describing failure modes, dominated by 'not_present' but with meaningful defect subtypes. Segmentable and comparable against sentiment; an associational variable, not a restatement."
+      },
+      {
+        "name": "expectation_met_or_exceeded",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories capturing expectation fulfilment. While closely coupled with sentiment, it adds a distinct explanatory dimension (e.g. misled_by_advertising vs simple disappointment) and supports meaningful grouping against the focus."
+      },
+      {
+        "name": "primary_attribute_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Facet taxonomy (functionality, quality, ease_of_use, price_or_value, etc.) that is exactly the 'review facet' dimension the query targets. Interpretable categories, though a few (comfort_or_fit, performance_speed) are near-empty and weaken some cells."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.82,
+    "rationale": "All four added columns are external, interpretable categorical variables with well-separated categories that can be segmented and cross-tabulated against label_pos, directly serving the query about how review facets differ by sentiment. None merely restate the label as an opaque score. Minor weaknesses: expectation_met_or_exceeded is somewhat semantically entangled with sentiment (borderline near-restatement of valence), and primary_attribute_type has a long tail of near-constant categories that yield thin comparison cells. Overall a strong, informative set for exploratory analysis."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

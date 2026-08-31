@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "problem_nature",
+    "affected_system",
+    "scope_indicator",
+    "long_running_ticket",
+    "cross_agent_resolution",
+    "recurrence_signal",
+    "ticket_open_unresolved"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7812,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.715,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.7481,
+    "hallucination_rate": 0.375
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Categorising tickets by type gives a strong grouping axis for comparing workload across kinds. Values are sound readings of short_description (e.g. 'Unable to access the database' -> database_access)."
+      },
+      {
+        "name": "problem_nature",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Nature of the problem is a genuine second axis to correlate with workload. Mostly well-grounded, though 'access_denied' for 'Unable to access the intranet' is a reasonable but slightly inferential reading; acceptable."
+      },
+      {
+        "name": "affected_system",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Adds a system-level grouping, though it largely tracks incident_category (partial redundancy). Values are well-supported by the description text."
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual vs system-wide) is highly relevant to workload. However short_description rarely states scope; assigning 'system_wide' to 'Internet connection unstable' or 'individual_user' to a database access ticket is often an unwarranted confident specific where the text is silent."
+      },
+      {
+        "name": "long_running_ticket",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Duration is a direct proxy for agent effort, highly useful. Derivable from opened_at/closed_at timestamps present in the table, so grounded."
+      },
+      {
+        "name": "cross_agent_resolution",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Whether multiple agents handled a ticket is workload-relevant, but the table only exposes assigned_to/closed_by; the sampled rows have identical timestamps and no reassignment evidence, yet 'True' dominates (378), suggesting largely invented values."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Recurrence relates to workload, but 'True' is assigned to nearly every row (383/500) including one-off descriptions like 'Unable to access the database' with no recurrence language, indicating an unsupported near-blanket assertion."
+      },
+      {
+        "name": "ticket_open_unresolved",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Derivable from state/closed_at, so grounded, but it is largely redundant with the existing 'state' column and near-constant (478 false), giving limited new analytical leverage."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.65,
+    "rationale": "The categorical axes (incident_category, problem_nature, affected_system) and the timing-based long_running_ticket give genuine, well-grounded leverage for analysing which ticket kinds drive workload. However several boolean columns (cross_agent_resolution, recurrence_signal) assert 'True' for the overwhelming majority of rows without textual support, and scope_indicator often invents scope the source text does not state; ticket_open_unresolved is grounded but redundant with 'state'. Overall useful set with notable groundedness weaknesses in the inferred boolean flags."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

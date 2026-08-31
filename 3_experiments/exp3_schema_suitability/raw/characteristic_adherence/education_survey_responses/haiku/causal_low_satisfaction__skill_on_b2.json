@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "interaction_modality_type",
+    "hands_on_lab_access",
+    "teacher_pacing_fit",
+    "peer_interaction_presence",
+    "teacher_pedagogical_innovation",
+    "subject_medium_alignment",
+    "developmental_stage_impact"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.14,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "interaction_modality_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The mode of interaction (sync/async, live vs recorded) is a candidate cause whose effect on satisfaction can be attributed."
+      },
+      {
+        "name": "hands_on_lab_access",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Access to hands-on materials is a plausible driver of satisfaction, a candidate cause factor."
+      },
+      {
+        "name": "teacher_pacing_fit",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Pacing alignment is a candidate cause of satisfaction, a driver factor."
+      },
+      {
+        "name": "peer_interaction_presence",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Presence of peer interaction/community is a candidate cause of satisfaction."
+      },
+      {
+        "name": "teacher_pedagogical_innovation",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Teacher adaptation/innovation is a candidate cause of satisfaction."
+      },
+      {
+        "name": "subject_medium_alignment",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Fit between subject and delivery medium plausibly influences BOTH what modality/lab access is used (treatment) AND satisfaction. Subject is already named in the original table and implied by the query's grouping of factors, so it is essentially query/data-derived; the alignment construct is a common cause. Marked named_in_query=true because 'subject' is an existing column."
+      },
+      {
+        "name": "developmental_stage_impact",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Developmental stage / grade level plausibly causes BOTH the instructional format chosen (treatment) AND satisfaction; younger students need more dependence/structure. However grade_level is an existing column and the query's 'certain groups' clearly implies group-level factors like age/grade, so it is largely copied rather than surfaced."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "interaction_modality_type",
+      "hands_on_lab_access",
+      "teacher_pacing_fit",
+      "peer_interaction_presence",
+      "teacher_pedagogical_innovation"
+    ],
+    "confounders": [
+      {
+        "name": "subject_medium_alignment",
+        "named_in_query": true,
+        "plausibility": 0.6
+      },
+      {
+        "name": "developmental_stage_impact",
+        "named_in_query": true,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The schema is rich in candidate CAUSES (treatments) of satisfaction, so requirement (a) is well satisfied. Requirement (b) is weaker: the two plausible common causes identified (subject_medium_alignment, developmental_stage_impact) both derive from variables already present in the original table (subject, grade_level) and implied by the query's 'certain groups'/'which factors' framing, so they are essentially copied rather than surfaced from data/text. No confounder demonstrating genuine causal reasoning (named_in_query=false) was introduced; most added columns are parallel candidate treatments rather than adjustment variables. Thus the operator sets up factor-screening but does not build an unbiased causal estimation via surfaced confounders."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

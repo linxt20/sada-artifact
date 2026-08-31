@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "industry_sector",
+    "company_stage",
+    "core_technology_focus",
+    "market_orientation",
+    "talent_ecosystem_dependency",
+    "physical_infrastructure_dependency",
+    "regulatory_compliance_domain"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7643,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.7357,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.75,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A clear categorical axis that plausibly correlates with regional clustering (e.g. biotech vs VC vs SaaS), directly useful for explaining location choice. Sample values are sound readings of descriptions (23andMe->life science, 5AM Ventures->VC, 280 Group->consulting)."
+      },
+      {
+        "name": "company_stage",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Stage can matter for location (startups near incubators/talent hubs), so analytically useful. But descriptions rarely state stage; labels like 'established_enterprise' for 23andMe or 'growth_stage' for Addepar/280 Group are inferred from prior knowledge, not the text, which is a confident specific where the source is largely silent."
+      },
+      {
+        "name": "core_technology_focus",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Technology focus is a strong axis for location (deep-tech near research clusters). Uses an explicit 'not_present' for silent rows, which is correct behaviour. Some inference (Addepar->cloud_data_infrastructure) is reasonable; genomics for 5AM Ventures is warranted by 'life science' text."
+      },
+      {
+        "name": "market_orientation",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "B2B/B2C is a coarse axis with weaker connection to regional siting, and is somewhat generic. Values are mostly reasonable readings, though B2B/B2C is often inferred rather than explicitly stated."
+      },
+      {
+        "name": "talent_ecosystem_dependency",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Highly relevant to the query: talent pools are a primary driver of location choice. However values are heavily inferred; e.g. Accel labelled 'software_engineering' has no textual support (the description mentions founders, not engineering talent), an unwarranted specific."
+      },
+      {
+        "name": "physical_infrastructure_dependency",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Directly tied to why a firm locates somewhere (fabs, labs, data centers vs digital-only). Uses 'none_digital_only' for silent rows appropriately; lab/fab inferences for biotech and hardware are well warranted by the text."
+      },
+      {
+        "name": "regulatory_compliance_domain",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Regulatory environment can influence siting (govtech, HIPAA, fintech). Uses 'none_unregulated' for silent rows correctly; healthcare/fintech tags for 23andMe and Addepar are reasonable inferences from described activity."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.73,
+    "rationale": "The added columns provide several genuinely useful axes for explaining regional siting -- especially talent dependency, physical infrastructure, technology focus, and industry sector, which are classic drivers of agglomeration. Market_orientation is comparatively weak/generic. Groundedness is generally solid where the text is descriptive, and silent-row handling ('not_present', 'none_digital_only', 'none_unregulated') is correct. The main weakness is over-confident inference on columns like company_stage and talent_ecosystem_dependency, where labels (e.g. Accel->software_engineering, Addepar->growth_stage) are asserted beyond what the source text supports."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

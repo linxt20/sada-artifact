@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "affected_asset_type",
+    "failure_symptom_type",
+    "self_resolved_by_assignee",
+    "software_trigger_present",
+    "requires_replacement"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.4917,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.6583,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.575,
+    "hallucination_rate": 0.1667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides a finer semantic categorisation of incidents derived from short_description, giving a new axis to group resolution efficiency beyond the coarse original 'category'. Values are sound readings of the source text. Slightly overlaps with the existing category column but is more granular."
+      },
+      {
+        "name": "affected_asset_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Asset-type dimension is a genuine new grouping axis for efficiency analysis and largely well grounded (printer, monitor, network_device match descriptions). Mapping 'database' to software_application is a defensible inference; NULLs for silent rows are acceptable."
+      },
+      {
+        "name": "failure_symptom_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Symptom taxonomy adds a useful axis for correlating failure modes with resolution time. Extractions like connectivity_failure are well warranted, but 'malfunction_general' (310 rows) is a large catch-all that risks near-constant behaviour and some symptoms are inferred from terse text ('not working properly' -> malfunction_general is reasonable)."
+      },
+      {
+        "name": "self_resolved_by_assignee",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "The short_description text gives no basis for whether the assignee self-resolved; this is not derivable from the provided source fields. The 'True' for a connectivity incident with only a description is an unsupported assertion. Marginal usefulness and weak grounding."
+      },
+      {
+        "name": "software_trigger_present",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A binary flag that is heavily skewed (446 false) and somewhat generic. Where descriptions mention software it is derivable, but for most terse hardware descriptions the false default is a reasonable 'not stated' behaviour. Limited analytical leverage for this efficiency query."
+      },
+      {
+        "name": "requires_replacement",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (486 false / 14 true), reducing analytical leverage. Values are rarely stated in short descriptions, so 'false' is often an assumption rather than a grounded reading, though it aligns with a plausible 'not stated' default. Weak but not clearly contradicted."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.65,
+    "rationale": "The categorical columns (incident_category, affected_asset_type, failure_symptom_type) give genuine new grouping axes that directly support analysing resolution efficiency across category-like dimensions and are mostly well grounded in the short_description text. The three boolean flags are weaker: self_resolved_by_assignee is not derivable from the provided text and appears fabricated on at least one sample, while software_trigger_present and requires_replacement are highly skewed/near-constant with values that are often assumed rather than grounded. Scored on the two necessary conditions only, without penalising for any missing columns."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

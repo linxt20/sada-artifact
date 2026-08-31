@@ -1,0 +1,128 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "n_added_columns": 12,
+  "added_columns": [
+    "seat_comfort_mentioned",
+    "staff_service_mentioned",
+    "food_mentioned",
+    "entertainment_mentioned",
+    "value_mentioned",
+    "punctuality_mentioned",
+    "cleanliness_mentioned",
+    "review_length",
+    "detailed_negative_review",
+    "detailed_positive_review",
+    "dominant_theme",
+    "theme_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 12,
+    "n_judged_columns": 12,
+    "analytical_usefulness": 0.7067,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7725,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7396,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "seat_comfort_mentioned",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "rationale": "Binary theme flag gives a groupable axis for the query; values match source (seat mentions correctly flagged in samples).",
+        "hallucination_observed": false
+      },
+      {
+        "name": "staff_service_mentioned",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "rationale": "Useful theme axis; sample rows correctly flag crew/service mentions.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "food_mentioned",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.92,
+        "rationale": "Relevant theme flag; consistently correct across samples.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "entertainment_mentioned",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "rationale": "Good theme axis, but row 4 flagged 1 with no entertainment mention in text (food/crew/lighting only) — an unsupported assertion.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "value_mentioned",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.85,
+        "rationale": "Distinct theme; samples correctly 0 where value/price not discussed.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "punctuality_mentioned",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.7,
+        "rationale": "Useful theme; row 1 flagged 1 though text only says short flight, no punctuality claim — weak support.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "cleanliness_mentioned",
+        "analytical_usefulness": 0.76,
+        "source_groundedness": 0.9,
+        "rationale": "New theme axis; sample flags align with 'sanitized/clean' mentions.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "review_length",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.55,
+        "rationale": "Raw character count is generic and adds little leverage for theme-vs-rating; also values are inconsistent (e.g. 467 vs 991 vs 196 don't cleanly match text lengths, some mismatch).",
+        "hallucination_observed": false
+      },
+      {
+        "name": "detailed_negative_review",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "rationale": "Sentiment+detail flag has some value but is near a bare negative-sentiment flag; row 2 clearly negative yet flagged 0, weakening reliability.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "detailed_positive_review",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "rationale": "Positive-detail flag useful as a coarse axis; sample values reasonable.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "dominant_theme",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "rationale": "Single dominant theme is a strong grouping axis, but assignment is questionable: food-centric rows 3 and 4 both labelled staff_service, not clearly warranted.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "theme_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "rationale": "Breadth-of-review measure gives a modelling axis; counts roughly track the flags, minor inconsistencies.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.78,
+    "rationale": "The per-theme mention flags and dominant_theme/theme_count give genuine new axes directly aligned with the query about themes vs Overall Rating across Traveller/Class, so table-level usefulness is solid (review_length is a weak generic exception). Groundedness is generally sound extraction, but several samples show unsupported or mis-assigned values (entertainment flagged where absent, dominant_theme labelling food-heavy reviews as staff_service, punctuality flagged without support), pulling groundedness below the usefulness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 12
+}

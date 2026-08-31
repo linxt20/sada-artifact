@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "issue_type_or_category",
+    "assigned_agent_or_resolver",
+    "issue_scope_or_impact_scale",
+    "root_cause_mechanism_or_failure_pattern",
+    "is_recurring_or_duplicate_issue",
+    "single_agent_ownership_or_no_reassignment",
+    "extended_time_to_final_closure_or_last_update_lag",
+    "infrastructure_dependency"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6562,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.5875,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6219,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_type_or_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Categorizing tickets by issue type gives a strong grouping axis to compare resolution times across issue classes. Values are soundly derived from short_description (database access, VPN, network, software).",
+        "hallucination_observed": false
+      },
+      {
+        "name": "assigned_agent_or_resolver",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.75,
+        "rationale": "Agent identity is central to the per-agent query, but this largely duplicates the existing assigned_to/closed_by original columns, reducing incremental value. Groundedness is plausible from those fields though the source samples shown don't include them, so it's a reasonable read.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "issue_scope_or_impact_scale",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.45,
+        "rationale": "Scope/impact is a useful axis potentially correlated with resolution time. However groundedness is weak: short_descriptions like 'Unable to access the database' or 'VPN issue' do not state whether the impact is single_user vs system_wide; these labels are largely inferred beyond textual support.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "root_cause_mechanism_or_failure_pattern",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "rationale": "Failure-pattern grouping is analytically useful. Some values are defensible (connectivity fault for VPN), but others overreach: 'Unable to access the database' and 'Unable to access the intranet' labeled 'server_unavailable_or_crash' assert a specific mechanism the text does not support.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "is_recurring_or_duplicate_issue",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.3,
+        "rationale": "Recurrence could plausibly relate to resolution time, but the column is near-constant (421 true / 79 false) reducing leverage, and the flag is largely unsupported: 'Unable to access the database' or 'Software update issue' give no evidence of recurrence, yet they are marked true.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "single_agent_ownership_or_no_reassignment",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "rationale": "Reassignment/handoff is a genuinely plausible signal for longer resolution, giving real analytical leverage. Groundedness is uncertain since the table has no reassignment history field shown; the value appears inferred rather than clearly warranted.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "extended_time_to_final_closure_or_last_update_lag",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.4,
+        "rationale": "A lag flag is directly relevant to resolution duration. But in the samples closed_at equals sys_updated_on exactly, so there is no observable lag, yet some rows are marked true; the flag appears not derivable from the available timestamps and risks circularity with the target.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "infrastructure_dependency",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "rationale": "This is almost a one-to-one restatement of issue_type_or_category (email->email_infrastructure, vpn->vpn_gateway), adding little new analytical axis. Values are well grounded in the descriptions.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.55,
+    "rationale": "The column set provides several genuine grouping axes (issue type, scope, root cause, ownership/reassignment, closure lag) relevant to why an agent's tickets take longer, so table-level usefulness is moderately high. However, some columns dilute this: infrastructure_dependency largely restates issue_type, and assigned_agent duplicates existing original columns. Groundedness is mixed: type and infrastructure labels read soundly from short_description, but scope/impact, root-cause mechanism, recurrence, and the closure-lag flag frequently assert specifics the terse descriptions and equal-timestamp evidence do not support, indicating several confident inventions."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

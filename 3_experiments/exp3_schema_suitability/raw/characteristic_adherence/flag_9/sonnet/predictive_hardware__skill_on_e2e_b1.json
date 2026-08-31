@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals indicate a hardware incident is in the anomaly window?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "symptom_severity_signal",
+    "resolution_lag_band",
+    "affected_scope",
+    "opener_to_closer_match",
+    "software_update_related"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.5929,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.66,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.6264,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorising incidents (software/hardware/etc.) is directly relevant to isolating hardware incidents, giving a clean grouping axis. Values are well-grounded in short_description (e.g. 'MySQL server'->database, 'software installation'->software). Slight redundancy risk with the existing 'category' column caps usefulness, but it still enables the hardware filter the query needs."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Failure mode (connection_failure, crash, overheating, not_turning_on) is a strong signal axis for characterising hardware incidents and is exactly the kind of new dimension the query asks about. Values track the source text well (connection to MySQL -> connection_failure) and NULL for silent rows is acceptable behaviour."
+      },
+      {
+        "name": "symptom_severity_signal",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "A symptom/severity axis can help profile anomaly-window signals. However values partly overlap with failure_mode (malfunction/crash/performance_degradation) making it a partial restatement, and some labels like 'malfunction_unresponsive' on a plain 'software installation' request are not clearly warranted by the source text, indicating occasional over-assertion."
+      },
+      {
+        "name": "resolution_lag_band",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Resolution lag is highly relevant to detecting anomaly windows and gives a real modelling axis. But groundedness is weak: in every evidence sample sys_updated_on equals closed_at and no opened_at is shown, so a 'same_day' outcome is implied, yet the produced bands (four_to_seven_days, eight_to_fourteen_days) contradict the visible timestamps, suggesting values not supported by the shown text."
+      },
+      {
+        "name": "affected_scope",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual_device, server_room, building) is a genuinely useful blast-radius axis for anomaly analysis. Some values are warranted (MySQL server -> shared_resource), but assigning 'individual_device' to a bare 'software installation' request is a confident specific the text does not support."
+      },
+      {
+        "name": "opener_to_closer_match",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A boolean comparing opener vs closer is derivable from existing caller_id/closed_by fields and offers only weak leverage for a hardware-anomaly query; it is largely a mechanical restatement of original columns rather than a new analytical axis."
+      },
+      {
+        "name": "software_update_related",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A software-update flag is reasonably grounded ('Unable to install new update' -> True) but is essentially a narrow sub-slice of incident_category and, being software-focused, offers limited leverage for the hardware-incident query; a bare boolean flag adds modest analytical value."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.62,
+    "rationale": "The set provides several genuinely useful new axes for characterising hardware incidents and anomaly windows (failure_mode, resolution_lag_band, affected_scope, incident_category), which is the core of the query. Weaknesses: symptom_severity_signal partly restates failure_mode, and the two booleans add limited leverage. Groundedness is mixed: category and failure-mode readings track the source text, but resolution_lag_band contradicts the visible identical timestamps, and affected_scope/severity sometimes assert specifics the text does not support, indicating occasional over-confident inference."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "predictive_hardware",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_complaint_category",
+    "complaint_intensity_level",
+    "plot_quality_deficit"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7833,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7667,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_complaint_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly operationalizes 'most common audience complaints' with a categorical axis to group and quantify complaint frequency, which is the core of the query. Values are well-grounded: 'writing_dialogue' for the insipid-writing review, 'tone_misalignment' for the housewife-movie tone review, and 'not_present' for the positive sexploitation review are all sound readings. The positive IMDB-0005 mapped to 'plot_story' is a slightly weak read (the film is praised, not complained about), a minor grounding lapse."
+      },
+      {
+        "name": "complaint_intensity_level",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "An ordinal severity axis adds leverage: addressing high-intensity complaints could plausibly shift sentiment more, supporting the counterfactual reasoning. NULL for the silent positive row is correct behavior. Groundedness is moderate because specific numeric levels (3 vs 4) are subjective and not clearly warranted by explicit textual cues, and the '2' assigned to the largely-positive IMDB-0005 asserts a complaint the text does not really register."
+      },
+      {
+        "name": "plot_quality_deficit",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Provides a finer breakdown of plot-related complaints, giving a genuine additional grouping axis, though it partially overlaps with primary_complaint_category (redundant when that column already says 'plot_story'). Grounding is mixed: 'predictable_cliche' for the predictable-premise review is sound, but 'weak_premise' assigned to IMDB-0001 (whose criticism is about writing/dialogue, not premise) and to IMDB-0002 (a cats-strung-up horror premise, no premise-weakness stated) are confident specifics the text does not clearly support."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.77,
+    "rationale": "The added columns collectively build a real analytical scaffold for the counterfactual query: a complaint taxonomy to find the 'most common' complaints, an intensity axis to weight them, and a plot-specific deficit breakdown. All three offer genuine grouping/modeling leverage rather than trivial restatements, though plot_quality_deficit partly overlaps with primary_complaint_category. Grounding is generally sound with correct 'not_present'/NULL handling on silent positive rows, but there are some over-confident specifics (deficit sub-types and numeric intensities) that outrun the textual evidence, warranting a modest deduction."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

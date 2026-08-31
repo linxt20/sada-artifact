@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "writing_quality_issue",
+    "plot_originality_rating",
+    "character_development_quality"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8333,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.7167,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "writing_quality_issue",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the query on why audiences are dissatisfied by categorizing writing-related complaints, giving a strong grouping axis. Values are well grounded: 'stilted_dialogue' matches IMDB-0001 explicitly, 'weak_screenplay' fits IMDB-0002, and 'not_present' correctly used for positive reviews. IMDB-0003 labels 'stilted_dialogue' where 'wooden performances/clichéd premise' might fit better, a minor stretch but defensible."
+      },
+      {
+        "name": "plot_originality_rating",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "An ordinal originality score gives a genuine axis to correlate with dissatisfaction. Nulling out reviews that don't discuss plot (e.g. IMDB-0004) is correct behavior. However, precise 1-5 integers imply a specificity the text rarely supports; ratings like '2.0' for IMDB-0001/0003 are plausible but somewhat invented precision, lowering groundedness moderately."
+      },
+      {
+        "name": "character_development_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A distinct axis from plot/writing, useful for modeling dissatisfaction drivers. But IMDB-0005 produces '2.0' though the source discusses a man's stubbornness and journey, not character development quality as an axis—an unwarranted specific. Numeric precision is again asserted where texts are largely silent, so several values are weakly grounded."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.72,
+    "rationale": "All three columns provide genuine, non-redundant axes (writing issue type, plot originality, character development) that directly serve the query about sources of IMDb dissatisfaction. The categorical 'writing_quality_issue' is the strongest and best grounded, correctly using 'not_present' for positive reviews. The two numeric ratings are useful but assert integer-precise scores that the source texts often do not clearly warrant, and one row (IMDB-0005) shows a character rating with no textual basis, indicating some ungrounded specificity."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 3
+}

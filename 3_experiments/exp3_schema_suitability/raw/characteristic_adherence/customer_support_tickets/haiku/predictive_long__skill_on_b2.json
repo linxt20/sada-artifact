@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "technical_depth",
+    "scope_span",
+    "outage_scale",
+    "requires_engineering",
+    "is_feature_request",
+    "diagnostics_provided",
+    "ambiguity_level"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.72,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "technical_depth",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures the diagnostic complexity implied by the issue (simple fix vs root-cause analysis). This is derivable from the description at intake and plausibly drives resolution time without restating it."
+      },
+      {
+        "name": "scope_span",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Breadth of impact (single account vs multiple tenants/regions) is a legitimate intake-time signal correlated with longer resolution, distinct from the duration itself."
+      },
+      {
+        "name": "outage_scale",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Severity of the outage (active production outage vs single broken workflow) is a plausible predictor of effort/time and is knowable at ticket creation, not a restatement of minutes."
+      },
+      {
+        "name": "requires_engineering",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a code/deployment change or architecture review is needed strongly affects resolution time and is an assessment separate from the elapsed duration. Mild leakage risk since it may only be fully known during resolution, but it is a reasonable intake triage attribute."
+      },
+      {
+        "name": "is_feature_request",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Classifying the ticket type (feature request vs bug/support) is knowable early and feature requests plausibly resolve differently; a legitimate predictor outside the focus."
+      },
+      {
+        "name": "diagnostics_provided",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Quality of supplied diagnostics (logs, repro steps) is a genuine input signal available at intake and plausibly shortens or lengthens resolution; not a component of the duration."
+      },
+      {
+        "name": "ambiguity_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Clarity of the request is an intake-time textual property that plausibly correlates with time-to-resolve and does not restate or leak the outcome."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.72,
+    "rationale": "All seven columns are semantically distinct intake-time attributes derived from the issue description, each plausibly carrying signal about resolution time without restating or being a deterministic function of resolution_minutes. They form a coherent, non-mechanical feature set spanning complexity, scope, severity, effort type, ticket type, evidence quality, and clarity. The only caveats are partial redundancy among the complexity/effort dimensions (technical_depth, requires_engineering, outage_scale overlap somewhat) and mild leakage risk on requires_engineering, since the true engineering requirement may only be established during resolution. Overall the set offers strong genuine predictive leverage beyond the original columns."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

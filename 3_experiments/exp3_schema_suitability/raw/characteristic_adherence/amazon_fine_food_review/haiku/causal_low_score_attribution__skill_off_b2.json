@@ -1,0 +1,114 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What factors explain low review scores?",
+  "focus_variable": "low_review_score",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "summary_length",
+    "text_length",
+    "has_negative_words",
+    "has_positive_words",
+    "helpfulness_ratio",
+    "has_complaint_markers",
+    "uppercase_ratio",
+    "exclamation_count",
+    "question_count",
+    "is_low_score"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 4,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "is_low_score (low_review_score)",
+    "per_column": [
+      {
+        "name": "summary_length",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Generic surface feature of the text; not a candidate cause of low scores nor a common cause of any treatment and the outcome. Descriptive noise."
+      },
+      {
+        "name": "text_length",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Mechanical length metric with no clear causal relation to satisfaction; not a treatment or confounder."
+      },
+      {
+        "name": "has_negative_words",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Negative wording is an expression of the (dis)satisfaction that also produces the low score; it lies on the path from the underlying experience to the outcome rather than being an exogenous cause. Effectively a proxy/mediator of the outcome, not a confounder."
+      },
+      {
+        "name": "has_positive_words",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Same reasoning: positive wording reflects the same latent sentiment that drives the score. Adjusting for it conflates outcome with predictor."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Helpfulness votes are determined AFTER and partly BY the review content and score; it is a downstream consequence, so conditioning on it risks collider bias, not confounding."
+      },
+      {
+        "name": "has_complaint_markers",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Complaint language is a manifestation of dissatisfaction that co-occurs with the low score; on the causal path from experience to outcome, not a common cause."
+      },
+      {
+        "name": "uppercase_ratio",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Stylistic emphasis feature; at best a weak proxy of emotional tone (thus mediator-like), not an independent common cause of a treatment and the outcome."
+      },
+      {
+        "name": "exclamation_count",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Punctuation/emphasis proxy for affect; reflects sentiment rather than causing the score. Not a genuine confounder."
+      },
+      {
+        "name": "question_count",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Surface punctuation feature; no clear common-cause relationship to any treatment and the outcome."
+      },
+      {
+        "name": "is_low_score",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the focus outcome itself, derived from Score; not a covariate."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns are mechanical text features (lengths, punctuation counts, uppercase ratio) plus lexical sentiment proxies (has_negative/positive_words, complaint_markers) and one downstream helpfulness measure. None of these is a well-defined TREATMENT whose effect on low scores is being attributed, nor a genuine CONFOUNDER that is a common cause of both a treatment and the outcome. The sentiment/complaint columns are expressions of the same latent (dis)satisfaction that produces the score (mediators/outcome proxies), and helpfulness_ratio is a post-outcome collider. No exogenous common cause (e.g., product quality/category, price, delivery/shipping issue, reviewer harshness, product age) was surfaced. The set fails the causal-estimation test: no treatment identified and no genuine confounders adjusted for."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

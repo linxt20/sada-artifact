@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_domain",
+    "problem_category",
+    "incident_scope",
+    "service_availability_status",
+    "resolution_pathway_type",
+    "expertise_alignment",
+    "recurrent_burden_concentration"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7786,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.5857,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.6822,
+    "hallucination_rate": 0.7143
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_domain",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents by domain gives a strong grouping axis to identify the most common operational burdens. Values map cleanly from short_description (WiFi/VPN->connectivity, database->database, printing->printing)."
+      },
+      {
+        "name": "problem_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A finer-grained categorization than incident_domain; partially overlapping but adds resolution granularity useful for isolating specific burdens. Values are well-grounded in short_description text."
+      },
+      {
+        "name": "incident_scope",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Scope (enterprise-wide vs individual) is a genuinely useful axis for impact analysis. However the source text rarely states scope; e.g. 'Unable to connect to the office VPN' is labeled enterprise_wide while a near-identical 'Cannot connect to office VPN' is labeled individual/enterprise inconsistently, indicating inference beyond what the short_description supports."
+      },
+      {
+        "name": "service_availability_status",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Distinguishing outage/degraded/block is analytically useful for the burden query. But statuses like 'complete_outage' vs 'degraded_performance' are often not stated in the terse descriptions and appear inferred; a connect problem labeled 'connectivity_block' is reasonable, but the finer distinctions are weakly grounded."
+      },
+      {
+        "name": "resolution_pathway_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Directly relevant to the query since resolution pathway ties to duration. However these values are largely invented: the source text describes only the problem, not how it was resolved. Labeling a WiFi/VPN/database issue 'access_credential_reset' asserts a resolution not present in the table."
+      },
+      {
+        "name": "expertise_alignment",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Whether staff were specialists vs generalists could inform burden analysis, but the table has no data on expertise levels. Every sampled row is 'cross_trained' regardless of assignee, indicating a fabricated/near-constant assignment not derivable from source text."
+      },
+      {
+        "name": "recurrent_burden_concentration",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Recurrence concentration is highly relevant to identifying the 'most common' burdens. It is partly derivable by aggregating repeated domains, but as a per-row label it presupposes a corpus-level count and is heavily skewed (383 high), and its exact tiers are not directly stated per row."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.5,
+    "rationale": "The added columns collectively provide strong analytical axes for the query: domain/category/recurrence support identifying the most common burdens, and scope/resolution/status relate to duration impact. The main weakness is groundedness: several columns assert facts absent from the terse short_description source, notably resolution_pathway_type (invents the fix), expertise_alignment (no data source, near-constant/fabricated), and to a lesser degree incident_scope and service_availability_status (over-confident specifics on silent rows). Domain and problem_category are well-grounded extractions."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 7
+}

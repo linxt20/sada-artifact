@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "aspects_discussed",
+    "num_aspects"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.7125,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "aspects_discussed",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "This column directly answers the query -- categorizing which film aspects (acting, cinematography, plot, music, effects, overall_quality) each reviewer focuses on gives a strong axis to group and compare. However, groundedness is shaky. Row IMDB-0001 focuses on writing/dialogue and general badness, yet 'cinematography' is asserted with no visual-craft mention. IMDB-0002 tags 'cinematography' from a passing 'camera pans' line -- weak but arguably defensible. IMDB-0004 tags 'cinematography' where the text says 'atmospheric and well-made' (borderline warranted). There is a recurring pattern of over-attributing 'cinematography', suggesting the extraction inflates that aspect beyond what the text supports."
+      },
+      {
+        "name": "num_aspects",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A simple count derived from aspects_discussed. It offers a modest new axis (breadth of review focus) and is not merely a restatement since it enables aggregation on review scope. Groundedness inherits from the parent column: when aspects are over-attributed, the count inflates (e.g., IMDB-0001 counts 4 including an unsupported aspect). The '0' for the silent IMDB-0005 row is correct behavior."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.6,
+    "rationale": "Both columns are well-targeted to the query 'what aspects are reviewers focusing on' -- aspects_discussed provides the core categorical decomposition and num_aspects a useful breadth measure. The main weakness is groundedness: 'cinematography' in particular is repeatedly asserted for rows whose text discusses writing, plot, or general quality without any visual-craft content (notably IMDB-0001), and num_aspects propagates that inflation. Silent rows are handled correctly with none/0, which is appropriate and not penalized."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 2
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What customer issues create the most support burden?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "customer_urgency_signal",
+    "system_criticality",
+    "user_impact_scale",
+    "issue_category",
+    "blocking_or_workaround_status",
+    "escalation_requirement",
+    "remediation_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7243,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.6914,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7079,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "customer_urgency_signal",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Urgency/severity is a meaningful axis for support burden, but the values largely mirror the existing 'priority' column (p0-p3 scheme), making it substantially redundant. Values are reasonable readings of the text (immediate outage = p0, enhancement = not_urgent), though the p0/p1 labeling is an imposed severity mapping not literally in the text."
+      },
+      {
+        "name": "system_criticality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "A useful topical/criticality axis to group burden by. Mostly grounded, but conflates criticality with topic (e.g. 'payment', 'feature_request'), and misfires on CS-0005: a BOM export request with a manual workaround is labeled 'production_outage', which the text does not support."
+      },
+      {
+        "name": "user_impact_scale",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Blast-radius is a strong, genuinely new axis for weighing support burden. Well grounded where text is explicit (entire_tenant for the 502 affecting all Acme members; single_user for one invoice). However CS-0002 session-drop with no stated scope is confidently labeled single_user, and CS-0005 is 'small_team' though the text says only 'they', suggesting some unwarranted specifics on silent rows."
+      },
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "A sound categorical grouping axis, but it overlaps heavily with system_criticality (both carry feature_request, performance, billing/payment), reducing marginal leverage. Categorisations are mostly defensible readings, though calling the outage a generic 'bug_defect' is coarse."
+      },
+      {
+        "name": "blocking_or_workaround_status",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Strong, distinct axis directly relevant to burden: whether users are blocked or have a workaround. Well grounded — CS-0005 explicitly mentions a manual sed workaround (degraded_workaround_exists), CS-0004 is an enhancement. CS-0001 'fully_blocking' is slightly debatable (invoice correction) but reasonable given the Friday deadline."
+      },
+      {
+        "name": "escalation_requirement",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "Which team/escalation path is needed is highly relevant to burden and offers a new operational axis. But values are frequently inferred beyond the text: CS-0005 'platform_engineering' and CS-0003 'p1_bridge_required' are plausible, yet the specific routing (legal_compliance, database_recovery) implies determinations the source text often does not explicitly state."
+      },
+      {
+        "name": "remediation_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Type of fix is a useful axis for effort/burden. However groundedness suffers from over-confident specifics: CS-0005, an account-level toggle request with a workaround, is labeled 'configuration_change' fine, but the dominant 'urgent_hotfix_rollback' (135 rows) suggests aggressive labeling, and CS-0001 'refund_credit_reversal' when the customer only wants a corrected invoice (not a refund) is a slight overreach."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns collectively give several genuinely useful axes for analysing support burden — blast radius (user_impact_scale), blocking/workaround status, escalation path, and remediation type are the strongest and most distinct. Weakening the set: customer_urgency_signal largely duplicates the original 'priority' column, and issue_category overlaps considerably with system_criticality, so a few columns add limited marginal leverage. Groundedness is generally acceptable — silent-row inferences are mostly warranted — but there are observable over-reaches: the BOM/export ticket labeled 'production_outage', the invoice-correction ticket labeled 'refund_credit_reversal', and confident impact/escalation specifics on rows where the text is silent. These are imposed inferences rather than sound readings, pulling groundedness down modestly."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 7
+}

@@ -1,0 +1,120 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "n_added_columns": 11,
+  "added_columns": [
+    "flavor_taste_quality",
+    "flavor_intensity_match",
+    "product_quality_consistency",
+    "expectation_mismatch",
+    "product_defect_mention",
+    "product_efficacy",
+    "adverse_health_reaction",
+    "repeat_purchase_intent",
+    "product_category",
+    "use_case_fit",
+    "convenience_availability"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 11,
+    "n_judged_columns": 11,
+    "analytical_usefulness": 0.8018,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8227,
+    "source_groundedness__table_level": 0.81,
+    "b1_overall": 0.8122,
+    "hallucination_rate": 0.2727
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "flavor_taste_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "A core product attribute directly relevant to satisfaction; groups reviews on taste sentiment. Sample readings are sound (positive for good dog food, negative for medicinal soda)."
+      },
+      {
+        "name": "flavor_intensity_match",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful distinct axis (too weak/strong vs just right). But 'too_weak' for the mislabeled peanuts row is not warranted by the text, which concerns size/salting, not flavor intensity; some values are inferred where text is silent."
+      },
+      {
+        "name": "product_quality_consistency",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Batch/consistency distinction is a meaningful attribute for satisfaction. Readings are defensible; 'consistent_quality' for the multi-purchase dog food and 'batch_defect' for the mislabeled order are reasonable, and Unknown for silent rows is correct."
+      },
+      {
+        "name": "expectation_mismatch",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Strong predictor of dissatisfaction; 'as advertised' failures map well. Sample values align with source (True for 'Not as Advertised')."
+      },
+      {
+        "name": "product_defect_mention",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Boolean but analytically meaningful for satisfaction; grounded in text (defect flagged for mislabeled peanuts)."
+      },
+      {
+        "name": "product_efficacy",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "Efficacy is a relevant attribute. However mapping the medicinal-taste soda to 'ineffective' conflates taste dislike with efficacy, a strained reading; other samples are reasonable."
+      },
+      {
+        "name": "adverse_health_reaction",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Rare-but-strong signal for low scores; grounded (False across samples, none mention reactions)."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Useful proxy correlated with satisfaction. Some values are inferred (True for taffy/dog food) rather than explicit, but are warranted inferences from recommendation language."
+      },
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Excellent grouping axis to compare satisfaction across product types. Mostly sound; 'other' for mislabeled peanuts (a snack/nut) is a slightly weak categorisation but not a hallucination."
+      },
+      {
+        "name": "use_case_fit",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "Reasonable segmentation axis. But 'daily_staple' for a rare confection treat and 'baking_cooking_ingredient' for cherry soda are not supported by the text; several values over-assert."
+      },
+      {
+        "name": "convenience_availability",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A distinct but weaker axis (mostly False, near-constant). Grounded readings; the taffy delivery mention could arguably be True but False is defensible."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.81,
+    "rationale": "The added columns give multiple genuine, non-redundant axes (taste quality, expectation mismatch, defects, efficacy, category, repeat intent) that directly support analysing which product attributes drive higher satisfaction scores. Most values are sound readings of the source text, with reasonable Unknown handling for silent rows. Groundedness is dragged down modestly by a few over-asserted inferences—flavor_intensity_match and use_case_fit occasionally invent specifics the text does not support, and product_efficacy conflates taste with efficacy in one case."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 11
+}

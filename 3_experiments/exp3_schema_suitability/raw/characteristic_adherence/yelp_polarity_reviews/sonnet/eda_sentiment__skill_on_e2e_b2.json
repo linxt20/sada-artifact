@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "service_staff_conduct",
+    "food_quality_signal",
+    "food_praised_highlight",
+    "atmosphere_ambiance_signal",
+    "return_recommend_intent"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "service_staff_conduct",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated interpretable categories (friendly, rude, indifferent, unprofessional) capturing a distinct review theme that can be segmented and compared against sentiment."
+      },
+      {
+        "name": "food_quality_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal, human-readable quality scale (excellent to inedible) representing an external thematic dimension well-suited to cross-tabulation with label_pos."
+      },
+      {
+        "name": "food_praised_highlight",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable categories of what food aspect is praised; a bit skewed toward not_present but still offers meaningful positive-theme segmentation."
+      },
+      {
+        "name": "atmosphere_ambiance_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct ambiance theme with interpretable polarity categories; heavily dominated by not_present (197) which weakens comparison power but categories remain meaningful."
+      },
+      {
+        "name": "return_recommend_intent",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Behavioral-intent categories (return yes/no, warn others) that are highly interpretable and strongly relatable to sentiment differences."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.85,
+    "rationale": "All five columns are external, thematic, associational variables with well-separated, human-interpretable categories that directly enable grouping and comparison against positive/negative sentiment, exactly matching the query about review themes. None merely restate the label, and none are opaque scores. The main weakness is that several columns are dominated by a 'not_present' value (especially atmosphere and food_praised_highlight), which thins the comparison base for some categories, but the remaining categories are still informative and well-defined."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

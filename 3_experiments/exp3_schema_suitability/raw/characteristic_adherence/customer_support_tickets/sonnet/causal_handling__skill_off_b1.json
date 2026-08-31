@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do handling times differ by channel and priority?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_type",
+    "is_async_channel",
+    "priority_numeric",
+    "expected_resolution_minutes",
+    "resolution_deviation_pct"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.77,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.3,
+    "source_groundedness__table_level": 0.28,
+    "b1_overall": 0.535,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A categorical issue taxonomy gives a genuine new grouping axis for explaining handling-time variation. However groundedness is weak: CS-0003 (a clear 502 outage) is labelled 'billing', and CS-0005 (a BOM export bug/feature question) is labelled 'outage'. Several samples are miscategorised, showing the extraction is unreliable."
+      },
+      {
+        "name": "is_async_channel",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Classifying channel as async vs sync is directly relevant to why handling times differ by channel. But the channel column is not shown in the source samples, and the values look arbitrary: an active production outage blocking a board presentation (CS-0003) is marked synchronous while a billing invoice request is marked async without any textual channel evidence. Values are not derivable from the provided text."
+      },
+      {
+        "name": "priority_numeric",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A numeric encoding of the existing priority column is useful for modelling/correlation, but it is largely redundant with the original 'priority'. Values also appear inconsistent with text severity (immediate outage CS-0003=4 but session-drop=2, low-severity feature=1), and cannot be verified since priority text is not shown; the encoding may not faithfully map the original."
+      },
+      {
+        "name": "expected_resolution_minutes",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "A baseline expected handling time is highly useful for explaining deviations by channel/priority. However these specific numeric expectations are not derivable from the source text; they are model-fabricated point estimates presented as confident specifics with no grounding in the row content."
+      },
+      {
+        "name": "resolution_deviation_pct",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Deviation of actual vs expected is exactly the kind of derived metric that helps diagnose handling-time differences. But it inherits the ungrounded expected_resolution_minutes baseline, and resolution_minutes is not shown in the samples, so the computed deviations (e.g. 138.1) cannot be verified from the presented text and rest on an invented baseline."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.28,
+    "rationale": "The added columns are collectively well-aimed at the query: an issue taxonomy, channel sync/async flag, priority encoding, and an expected-vs-actual deviation pair all give real axes to group and model handling-time differences. The serious weakness is groundedness. Several categorical values contradict the source text (outage tickets labelled billing, bug/feature labelled outage), the channel-derived flag has no visible channel evidence and looks arbitrary, and the expected_resolution_minutes / deviation pair are confident numeric fabrications not derivable from the provided text. Usefulness is high but the values are frequently unsupported or wrong."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

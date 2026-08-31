@@ -1,0 +1,240 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What company traits explain regional clustering?",
+  "n_added_columns": 26,
+  "added_columns": [
+    "industry_ai_ml",
+    "industry_cybersecurity",
+    "industry_cloud_infrastructure",
+    "industry_healthcare_biotech",
+    "industry_fintech_payments",
+    "industry_data_analytics",
+    "industry_enterprise_software",
+    "industry_semiconductors",
+    "industry_consumer_media",
+    "industry_venture_capital",
+    "geographic_region",
+    "region_industry_concentration",
+    "regional_industry_penetration",
+    "industry_ai_ml.1",
+    "industry_cybersecurity.1",
+    "industry_cloud_infrastructure.1",
+    "industry_healthcare_biotech.1",
+    "industry_fintech_payments.1",
+    "industry_data_analytics.1",
+    "industry_enterprise_software.1",
+    "industry_semiconductors.1",
+    "industry_consumer_media.1",
+    "industry_venture_capital.1",
+    "geographic_region.1",
+    "region_industry_concentration.1",
+    "regional_industry_penetration.1"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 26,
+    "n_judged_columns": 26,
+    "analytical_usefulness": 0.325,
+    "analytical_usefulness__table_level": 0.35,
+    "source_groundedness": 0.5769,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.4509,
+    "hallucination_rate": 0.2308
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_ai_ml",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.25,
+        "rationale": "An industry flag is a useful axis for explaining clustering. But grounding is poor: 23andMe (ancestry/health) and 280 Group (product management training) both got ai_ml=1 with no textual support, indicating invented labels.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "industry_cybersecurity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "rationale": "Relevant grouping axis. All sampled rows are 0, which is consistent with the source texts; no contradiction observed in samples, though overall reliability is uncertain given sister-column errors.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_cloud_infrastructure",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.4,
+        "rationale": "Useful axis, but Addepar (a reporting platform) is flagged cloud_infrastructure=1 without clear textual warrant, suggesting over-eager labeling.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "industry_healthcare_biotech",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Useful trait. 23andMe correctly flagged (health/ancestry); other sampled rows correctly 0. Well grounded on samples.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_fintech_payments",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.5,
+        "rationale": "Reasonable axis but near-constant (4 positives). Addepar, a financial reporting platform, is arguably fintech yet flagged 0; labeling appears inconsistent.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_data_analytics",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "rationale": "Useful axis. Addepar (insights/reporting) plausibly grounded, but Accel (generic VC blurb) flagged data_analytics=1 without support.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "industry_enterprise_software",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "rationale": "Relevant grouping axis; sampled rows all 0, consistent with texts. No sample contradiction.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_semiconductors",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.6,
+        "rationale": "Useful but near-constant (6 positives). Sampled 0s are consistent.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_consumer_media",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.6,
+        "rationale": "Reasonable axis; sampled rows 0, consistent with sources.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_venture_capital",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Strong axis for Sand Hill Road clustering. 5AM Ventures and Accel correctly flagged VC; well grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "geographic_region",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "rationale": "Directly derivable from address/city/lat-long and central to the clustering query. However it largely restates existing City/coordinate columns, limiting new analytical leverage. Sampled assignments are plausible.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "region_industry_concentration",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "rationale": "Appears to be a per-region count of companies (82=palo_alto, 68=redwood, etc.), fully determined by geographic_region and thus largely redundant; not a per-company trait. Values are internally consistent but add little independent signal.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "regional_industry_penetration",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.4,
+        "rationale": "A derived numeric of unclear definition (fractional values like 10.5, 14.25). Potentially a useful region-industry density measure but opaque and not directly verifiable from the source text; grounding uncertain.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_ai_ml.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.25,
+        "rationale": "Exact duplicate of industry_ai_ml; a mere restatement adding zero analytical leverage, and inherits the same mislabeling.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "industry_cybersecurity.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.6,
+        "rationale": "Duplicate of industry_cybersecurity; redundant restatement.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_cloud_infrastructure.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.4,
+        "rationale": "Duplicate; redundant, same grounding issues.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "industry_healthcare_biotech.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.85,
+        "rationale": "Duplicate of healthcare_biotech; no new leverage.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_fintech_payments.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.5,
+        "rationale": "Duplicate; redundant.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_data_analytics.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.5,
+        "rationale": "Duplicate; redundant, same over-labeling.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "industry_enterprise_software.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.6,
+        "rationale": "Duplicate; redundant.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_semiconductors.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.6,
+        "rationale": "Duplicate; redundant.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_consumer_media.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.6,
+        "rationale": "Duplicate; redundant.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "industry_venture_capital.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.85,
+        "rationale": "Duplicate of venture_capital; no new leverage.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "geographic_region.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.85,
+        "rationale": "Exact duplicate of geographic_region.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "region_industry_concentration.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.5,
+        "rationale": "Exact duplicate; redundant.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "regional_industry_penetration.1",
+        "analytical_usefulness": 0.0,
+        "source_groundedness": 0.4,
+        "rationale": "Exact duplicate of an already opaque column.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.35,
+    "source_groundedness": 0.55,
+    "rationale": "The core design (per-company industry one-hot flags plus a geographic_region field) is genuinely well-matched to the query 'what company traits explain regional clustering' — it enables cross-tabulating industry against region. However, half of all columns are literal duplicates (the .1 set), contributing zero analytical value and dragging the holistic usefulness down substantially. Several industry flags also hallucinate labels not supported by the source text (23andMe and 280 Group tagged ai_ml; Accel tagged data_analytics; Addepar tagged cloud_infrastructure), while a few (healthcare_biotech, venture_capital, geographic_region) are soundly grounded. The concentration/penetration columns are largely derivable-but-redundant aggregates of region, and the penetration metric's fractional values are opaque and hard to verify against source text. Groundedness is mixed rather than broken."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_regional",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 26
+}

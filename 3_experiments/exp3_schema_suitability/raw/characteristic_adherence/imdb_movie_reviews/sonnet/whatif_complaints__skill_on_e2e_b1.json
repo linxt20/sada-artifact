@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "writing_script_complaint",
+    "complaint_severity",
+    "genre_expectation_mismatch"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7833,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.7416,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "writing_script_complaint",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly categorizes the type of writing complaint, which is a core axis for the query about addressing common complaints. Values are well-grounded: 'bad_dialogue' matches IMDB-0001's 'stilted dialogue', 'weak_screenplay' fits IMDB-0003's wooden/poignant complaints. 'not_present' correctly used for silent rows. Minor risk of subjective categorization but readings are sound."
+      },
+      {
+        "name": "complaint_severity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A severity scale gives a weighting axis useful for estimating sentiment impact, adding leverage beyond the binary label. However the 1-5 values are somewhat subjective and only loosely warranted by text; e.g. assigning '5' vs '4' is not clearly derivable, introducing imprecision though not outright contradiction."
+      },
+      {
+        "name": "genre_expectation_mismatch",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Genre is a reasonable grouping axis for the query. However the column conflates simple genre identification with 'expectation mismatch': IMDB-0002 is tagged 'horror' and IMDB-0004 'horror' merely from horror content, and IMDB-0004 is a POSITIVE review with no expectation mismatch at all, so labeling it 'horror' as a mismatch is not supported. The values often reflect genre presence rather than a genuine expectation mismatch, weakening groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.7,
+    "rationale": "All three columns provide genuine new axes (complaint type, severity, genre) that support grouping and modeling sentiment uplift for the query, so usefulness is solid and non-redundant with the existing label/text columns. Groundedness is generally reasonable: complaint types and genres map to source text and silent rows are correctly marked 'not_present'. It is pulled down by the severity scale's subjective precision and by genre_expectation_mismatch, which sometimes labels genre presence (even on a positive review) rather than an actual mismatch, an inference the text does not always support."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

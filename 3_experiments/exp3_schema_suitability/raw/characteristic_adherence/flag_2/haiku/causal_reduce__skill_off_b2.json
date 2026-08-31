@@ -1,0 +1,85 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce incident resolution time?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "priority_level",
+    "incident_type",
+    "is_resolved"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is a restatement of the focus/outcome (resolution time in hours), not a treatment or confounder."
+      },
+      {
+        "name": "priority_level",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Priority is a common cause: it influences how quickly incidents are worked (treatment/effort) and directly affects resolution time. Not an intervenable lever for reducing time per se, and not named in the query."
+      },
+      {
+        "name": "incident_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category/type of incident affects both the resources/handling assigned and the intrinsic difficulty and hence resolution time. It is an intrinsic characteristic of the incident, not a settable lever, and not named in the query."
+      },
+      {
+        "name": "is_resolved",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether the incident is resolved is downstream of resolution progress; resolution_time is only defined for resolved cases, so conditioning on it is a selection/collider issue, not a confounder."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "treatment_intervenable": false,
+    "confounders": [
+      {
+        "name": "priority_level",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "incident_type",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The query asks a what-if / interventional question about reducing resolution time, which requires an intervenable treatment (e.g. staffing, assignment policy, automation, SLA rules, routing decisions) plus confounders to adjust for its effect. The added columns contain NO settable treatment lever: resolution_time_hours restates the outcome, is_resolved is a downstream collider, and priority_level and incident_type are intrinsic incident attributes that are not things an actor decides to reduce resolution time. They can serve as confounders/controls, but with no intervenable treatment present the core interventional claim is not satisfied. The two plausible confounders are not named in the query, which is the only aspect that partially demonstrates the capability."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

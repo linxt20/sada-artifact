@@ -1,0 +1,67 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What praise and complaints appear in IMDb reviews?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "praise_count",
+    "complaint_count",
+    "praised_aspects",
+    "complained_aspects",
+    "review_sentiment_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.84,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.76,
+    "source_groundedness__table_level": 0.74,
+    "b1_overall": 0.8,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "praise_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "A count of praise statements gives a genuine axis to quantify positivity across reviews, directly supporting the query on praise. Values track the source well (0 for the harshly negative reviews, 4 for the enthusiastic sexploitation review). Minor concern: neutral review IDMB-0005 has some implicit description but scoring 0 is defensible."
+      },
+      {
+        "name": "complaint_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Parallel to praise_count and equally useful for measuring negativity intensity. Values are well grounded: 2 complaints for the 'pile of crap' review, 0 for the praise review. Reasonable readings of source text."
+      },
+      {
+        "name": "praised_aspects",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.65,
+        "rationale": "Categorizing WHICH aspects are praised (acting, plot, direction) is exactly the analytical leverage the query asks for. However groundedness is shakier: IMDB-0004 explicitly praises acting ('The acting is pretty good') and visuals/atmosphere, yet the column labels it 'direction' rather than acting, a debatable/partly unsupported mapping. Silent rows correctly NULL/none."
+      },
+      {
+        "name": "complained_aspects",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "rationale": "Aspect-level breakdown of complaints strongly serves the query. Groundedness is mostly sound but inconsistent: IMDB-0001 complains about dialogue/writing ('stilted dialogue', 'insipid writing') and gets 'dialogue|plot', which is reasonable, yet IMDB-0002 and IMDB-0003 register a complaint_count>0 but 'none' aspects despite clear targets (movie quality, wooden performances/acting), suggesting extraction misses. Not hallucinated, but imperfect."
+      },
+      {
+        "name": "review_sentiment_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "rationale": "A four-way praise/complaint/mixed/neutral classification adds a useful grouping axis beyond a bare binary sentiment flag. Mostly grounded, but IMDB-0005 is a clearly critical ('frustrating', 'scumbags') review labeled 'neutral', and IMDB-0001 as 'mixed' is defensible. Somewhat overlaps with the count columns but retains distinct categorical value."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.74,
+    "rationale": "The added columns collectively give strong analytical leverage for 'what praise and complaints appear': counts quantify intensity, aspect columns decompose into groupable topics, and the sentiment_type offers a categorical lens. All are non-trivial and non-redundant. Groundedness is generally acceptable with correct NULL handling for silent rows, but several samples show questionable aspect mappings (IMDB-0004 acting-vs-direction) and misses where a count is nonzero yet aspects are 'none', plus a mislabeled 'neutral' on a critical review. No egregious invented facts, so hallucination is limited but reading fidelity is imperfect."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

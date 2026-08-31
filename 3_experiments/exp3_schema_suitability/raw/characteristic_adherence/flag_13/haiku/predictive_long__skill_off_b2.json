@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals are linked to longer resolution duration values?",
+  "focus_variable": "duration_like_resolution_value",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "duration_category",
+    "is_critical",
+    "duration_minutes",
+    "has_db_issue"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.15,
+    "predictor_fraction": 0.5,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "predictive_utility": 0.3,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "duration_like_resolution_value",
+    "per_column": [
+      {
+        "name": "duration_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Binning the resolution duration into short/medium/long is a direct discretization of the focus variable itself, not an external predictor."
+      },
+      {
+        "name": "is_critical",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A criticality/priority flag is an independent attribute known at ticket intake and plausibly correlates with resolution duration without restating it."
+      },
+      {
+        "name": "duration_minutes",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is the resolution duration expressed in minutes -- a deterministic unit transform of the focus variable, hence a restatement/leakage of the outcome."
+      },
+      {
+        "name": "has_db_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A flag derived from the ticket's short_description indicating a database-related problem is an external descriptive signal that could plausibly predict longer resolution times."
+      }
+    ],
+    "n_predictors": 2,
+    "predictive_utility": 0.3,
+    "rationale": "Only two of the four added columns are legitimate external predictors (is_critical, has_db_issue); the other two (duration_category, duration_minutes) are direct restatements/transforms of the focus variable and constitute leakage. The valid predictors carry modest signal -- criticality is largely available from the existing priority column, so the incremental leverage beyond the original table is limited, with has_db_issue offering the most genuinely new signal derived from text."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

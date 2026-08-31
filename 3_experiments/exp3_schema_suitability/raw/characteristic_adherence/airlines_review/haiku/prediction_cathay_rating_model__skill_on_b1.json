@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_service_complaint_category",
+    "customer_service_responsiveness",
+    "ground_service_failure_signal",
+    "service_quality_trend_signal",
+    "cabin_class_expectation_gap",
+    "traveler_type_satisfaction_variance"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7417,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.6833,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.7125,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_service_complaint_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Gives a strong grouping axis for identifying which service failure areas drive low ratings, directly serving route/service optimization. Categories are well-grounded in review text (ground_service, operational_disruption, crew_service all match samples). One mismatch: a praise-only review labeled 'crew_service' as complaint is questionable but the crew is the dominant topic, so tolerable."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A useful behavioral axis distinct from complaint category; captures responsiveness pattern that maps to actionable service fixes. Values are sound readings of text (unresponsive_post_incident, proactive_attentive, staff_rushing_no_downtime all warranted by samples)."
+      },
+      {
+        "name": "ground_service_failure_signal",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean flag that is largely redundant with primary_service_complaint_category's ground_service value, reducing its independent analytical leverage. However values are well-grounded and correctly extracted from text."
+      },
+      {
+        "name": "service_quality_trend_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "The concept (trend/root-cause signal) would help strategic optimization, but several produced values are unsupported inferences. 'cost_cutting_visible' for a diversion/no-help incident, 'understaffing' for a gate-change delay, 'pre_covid_premium_lost' and 'infrastructure_aging' for positive reviews with no temporal or cost cues are invented specifics the text does not support."
+      },
+      {
+        "name": "cabin_class_expectation_gap",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Class-vs-expectation gap is a genuine axis for service optimization by cabin. Values track the Class column and text reasonably (economy_meets_baseline, business_class_food_gap warranted; 'Unknown' correctly used for silent rows). Mild risk of asserting gaps beyond text but samples are defensible."
+      },
+      {
+        "name": "traveler_type_satisfaction_variance",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Segmenting satisfaction by traveler type is useful and 'Type of Traveller' exists in source, but the produced values are frequently ungrounded: 'business_high_expectations' and 'family_young_kids_challenge' assigned to reviews with no stated traveler type, kids, or business context. These are invented specifics that likely contradict or overreach the source."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.62,
+    "rationale": "The added columns collectively offer several genuine new axes (complaint category, responsiveness, class expectation gap) that directly support building a route/service optimization model targeting Overall Rating > 7. Groundedness is uneven: extraction-oriented columns are sound, but the inference-heavy columns (service_quality_trend_signal, traveler_type_satisfaction_variance) fabricate confident specifics—understaffing, cost-cutting, business/family traveler labels—not supported by the sampled source text, dragging overall groundedness down."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

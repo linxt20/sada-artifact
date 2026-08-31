@@ -1,0 +1,100 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "food_quality_issue_type",
+    "special_meal_service_failure",
+    "service_amenity_reduction",
+    "cabin_class_value_gap",
+    "service_consistency_decline",
+    "loyalty_program_friction"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "overall_rating_recommendation",
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause: quality of cabin crew service plausibly drives overall rating and recommendation. It is a manipulable factor SIA could improve, functioning as the treatment/driver being attributed."
+      },
+      {
+        "name": "food_quality_issue_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Type of food-related failure is a candidate cause of dissatisfaction and non-recommendation; another driver rather than a common cause of another treatment."
+      },
+      {
+        "name": "special_meal_service_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A specific service failure that plausibly lowers rating; a candidate cause, not a common cause of both a treatment and the outcome."
+      },
+      {
+        "name": "service_amenity_reduction",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Reduction of amenities is a candidate driver of lower ratings; a treatment-type factor."
+      },
+      {
+        "name": "cabin_class_value_gap",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Perceived value gap sits on the causal path between service/product delivery and overall rating; it is a perception outcome largely determined by the other service factors, so adjusting for it as a confounder would be an error."
+      },
+      {
+        "name": "service_consistency_decline",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Decline in consistency is a candidate cause of lower ratings; a driver, not a common cause of another treatment and the outcome."
+      },
+      {
+        "name": "loyalty_program_friction",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Friction in loyalty program is a candidate driver of dissatisfaction; a treatment-type factor."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "cabin_crew_service_quality",
+      "food_quality_issue_type",
+      "special_meal_service_failure",
+      "service_amenity_reduction",
+      "service_consistency_decline",
+      "loyalty_program_friction"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply many candidate CAUSES (treatments/drivers) of the outcome, but they do NOT supply any CONFOUNDERS -- variables that plausibly cause BOTH a treatment and the outcome and must be adjusted for to avoid biased attribution. Genuine confounders here would be things like traveller type, cabin class, route/region, or time period (many of which already exist in the original table but were not surfaced as adjustment variables). One column (cabin_class_value_gap) is a mediator on the causal path and would be an error to treat as a confounder. Because the technical claim requires (a) a treatment AND (b) surfaced confounders, and only (a) is satisfied, the causal-attribution setup is incomplete: effects estimated from these columns would be unadjusted and potentially biased."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

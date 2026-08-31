@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_warmth",
+    "cabin_service_frequency",
+    "food_quality_signal",
+    "seat_comfort_issue_type",
+    "cabin_class_value_gap",
+    "special_needs_handling",
+    "service_consistency_vs_pre_covid"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5314,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.62,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "cabin_crew_warmth",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A qualitative descriptor of crew demeanor extracted from review text. It is distinct from the overall rating and plausibly drives it without being a deterministic component of it, so it carries genuine predictive signal."
+      },
+      {
+        "name": "cabin_service_frequency",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Describes proactiveness/frequency of service, an operational service attribute outside the focus variable. Legitimate predictor of satisfaction that management can also act on."
+      },
+      {
+        "name": "food_quality_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures food quality from text. Although the original table has a 'Food & Beverages' score, this is a semantically richer categorical signal rather than a restatement of the overall rating itself, so it remains a valid predictor of the focus."
+      },
+      {
+        "name": "seat_comfort_issue_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Typed seat/comfort problem categories are an attribute of the flight experience lying outside the overall rating; plausibly predictive and actionable, not a deterministic function of the focus."
+      },
+      {
+        "name": "cabin_class_value_gap",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "'Shortfall/meets/exceeds expectations for class' is essentially a global satisfaction judgment paraphrasing overall evaluation and Value For Money. It largely restates the outcome (a good overall rating is nearly synonymous with 'meets/exceeds expectations'), risking leakage rather than adding independent predictive signal."
+      },
+      {
+        "name": "special_needs_handling",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A specific operational handling flag outside the focus. Predictive in principle, though its extreme imbalance (11 true) makes its practical leverage weak."
+      },
+      {
+        "name": "service_consistency_vs_pre_covid",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Reviewer's comparative perception of service trend is an experiential factor separate from the overall rating and can plausibly influence it; legitimate predictor, not a deterministic component."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.62,
+    "rationale": "Most added columns are richer categorical service/experience attributes derived from review text that lie outside the overall-rating focus and plausibly carry actionable predictive signal (crew warmth, service frequency, food quality, seat issues, special-needs handling, service trend). These are genuine features rather than mechanical text statistics. One column, cabin_class_value_gap, essentially paraphrases an overall satisfaction/value judgment and largely restates the outcome, introducing leakage risk and reducing net incremental leverage. Several features also overlap conceptually with existing sub-scores (seat, food, staff), so the beyond-original marginal gain is moderate rather than large."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

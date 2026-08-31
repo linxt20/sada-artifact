@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Why do some incidents take longer to resolve?",
+  "focus_variable": "incident_delay_reasons",
+  "concept": "incident_delay_reasons",
+  "n_added_columns": 9,
+  "added_columns": [
+    "open_to_close_days_bucket",
+    "incident_category",
+    "failure_mode",
+    "affected_component",
+    "scope_indicator",
+    "assigned_at_open",
+    "resolver_match",
+    "assignee_id",
+    "caller_id_group"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.233,
+    "facet_fraction": 0.4444,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.55,
+    "mece": 0.5244,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_delay_reasons",
+    "per_column": [
+      {
+        "name": "open_to_close_days_bucket",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is the resolution-duration outcome itself (how long incidents took), i.e. the very thing to be explained, not a constitutive aspect of the REASONS for delay."
+      },
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The type of incident (email, database, vpn) is a legitimate aspect of characterizing why classes of incidents differ in delay; it is a facet of the delay-reason taxonomy (nature of the problem)."
+      },
+      {
+        "name": "failure_mode",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The kind of failure (outage, authentication_failure, crash) is a constitutive aspect of what goes wrong and thus of the reason an incident is hard/slow to resolve."
+      },
+      {
+        "name": "affected_component",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Which component is affected (server_side, network_infrastructure, client_application) is an aspect of the problem's nature, a facet of the delay-reason characterization."
+      },
+      {
+        "name": "scope_indicator",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Scope/blast radius (system_wide, individual_user) is a constitutive aspect of an incident's difficulty and a plausible facet of delay reasons."
+      },
+      {
+        "name": "assigned_at_open",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether assignment happened at open is a process/workflow attribute that may predict delay but is not itself an aspect OF the delay reason concept."
+      },
+      {
+        "name": "resolver_match",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether resolver matched is an operational/routing predictor of delay, not a constitutive part of the delay-reason concept."
+      },
+      {
+        "name": "assignee_id",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The identity of the assignee is an external actor attribute that may correlate with delay but is not a facet of the reason itself."
+      },
+      {
+        "name": "caller_id_group",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Caller identity is an external entity attribute, not a constitutive aspect of why resolution is delayed."
+      }
+    ],
+    "facet_columns": [
+      "incident_category",
+      "failure_mode",
+      "affected_component",
+      "scope_indicator"
+    ],
+    "non_facet_columns": [
+      "open_to_close_days_bucket",
+      "assigned_at_open",
+      "resolver_match",
+      "assignee_id",
+      "caller_id_group"
+    ],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.55,
+    "rationale": "Only four of nine columns are genuine facets of the delay-reason concept: incident_category, failure_mode, affected_component, and scope_indicator all describe the intrinsic nature of the problem. The remaining columns fail the meronymy test: open_to_close_days_bucket restates the outcome (duration) being explained; assigned_at_open, resolver_match, assignee_id, and caller_id_group are external process/actor predictors, not constitutive parts of the reason. Among the true facets, mutual exclusivity is weakened because incident_category, failure_mode, and affected_component substantially overlap (e.g., 'vpn'/'network_connectivity' category, 'connection_failure' mode, and 'network_infrastructure' component often encode the same underlying situation), so they do not cleanly carve non-overlapping aspects. Exhaustiveness is moderate: the facets cover problem-type, failure-kind, component, and scope, but omit key delay-driving aspects such as diagnostic complexity, dependency/vendor involvement, information/resource availability, and required remediation effort."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "service_consistency_issue",
+    "seating_comfort_problem",
+    "food_quality_decline",
+    "operational_reliability_disruption",
+    "ground_service_reliability",
+    "value_perception_mismatch",
+    "crew_engagement_level",
+    "route_distance_category",
+    "traveller_segment"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.7,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "service_consistency_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A qualitative characterization of service consistency (consistent_positive vs. inconsistent/deteriorating). It is not the overall rating nor a deterministic function of it, and service consistency is a plausible driver of overall satisfaction. Somewhat soft/sentiment-flavoured (the 'consistent_positive' bucket leans toward general positive tone), but it lies outside the focus and can carry signal. Predictor (weak)."
+      },
+      {
+        "name": "seating_comfort_problem",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Boolean flag for a seat-comfort problem. Comfort is a genuine experiential driver of the overall rating, not a restatement or deterministic component of it. Largely overlaps with the existing 'Seat Comfort' column so it adds limited new leverage, but it is a legitimate predictor known at flight time (no leakage)."
+      },
+      {
+        "name": "food_quality_decline",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Boolean flag on food quality. A plausible driver of overall satisfaction, external to the focus variable. Redundant with the existing 'Food & Beverages' rating but still a valid predictor, not leakage or a restatement of the outcome."
+      },
+      {
+        "name": "operational_reliability_disruption",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorises on-time vs. minor/major delays vs. cancellations. This is an actionable operational driver NOT captured in the original columns, is knowable at the time of the flight, and strongly plausibly predicts overall rating. Strong, independent predictor."
+      },
+      {
+        "name": "ground_service_reliability",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Ground/airport service quality (efficient vs. rude/slow/absent). A genuine, actionable service driver absent from the original schema, lying outside the focus and carrying real predictive signal. Strong predictor."
+      },
+      {
+        "name": "value_perception_mismatch",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Boolean on whether perceived value mismatched expectations. It is closely tied to the existing 'Value For Money' dimension and correlates very tightly with overall dissatisfaction, making it the most near-restatement/redundant of the set, but it is still a distinct dimension rather than a deterministic function of overall_rating. Predictor (weakest / borderline)."
+      },
+      {
+        "name": "crew_engagement_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Cabin-crew engagement (attentive vs. cold/disengaged/rushed). An actionable service driver of overall satisfaction, external to the focus and knowable at flight time. Overlaps partly with 'Staff Service' but is a legitimate predictor."
+      },
+      {
+        "name": "route_distance_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derives haul length from Route. Fully independent of reviewer sentiment, actionable for route optimisation (the stated goal), and plausibly related to satisfaction (long-haul comfort/fatigue). Strong, clean predictor with no leakage."
+      },
+      {
+        "name": "traveller_segment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Segments travellers (solo leisure, business, family, couple). Different segments systematically rate differently, so it carries signal. Largely redundant with the existing 'Type of Traveller' column, but it is external to the focus and a valid predictor (no leakage)."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.7,
+    "rationale": "All nine added columns are legitimate predictors: each describes an experiential/operational attribute or traveller/route characteristic that lies outside the focus (overall_rating_gt7), none is the outcome restated or a deterministic function of it, and none is post-outcome leakage (all are knowable at flight time). As a SET the incremental leverage beyond the original columns is meaningful but not maximal: operational_reliability_disruption, ground_service_reliability, crew_engagement_level, and route_distance_category inject genuinely new, actionable signal not present in the original schema, whereas seating_comfort_problem, food_quality_decline, and value_perception_mismatch largely duplicate existing component-rating columns (Seat Comfort, Food & Beverages, Value For Money) and value_perception_mismatch sits closest to simply restating dissatisfaction. Net: strong, mostly actionable feature set with some redundancy → ~0.7."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

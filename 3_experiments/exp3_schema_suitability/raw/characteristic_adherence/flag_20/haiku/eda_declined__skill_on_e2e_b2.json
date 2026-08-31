@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_type_category",
+    "expense_mechanism",
+    "travel_relevance",
+    "purchase_intent_signal",
+    "department_requestor",
+    "source_system_tracking",
+    "asset_specificity",
+    "hardware_device_class"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.45,
+    "predictor_fraction": 0.75,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.6,
+    "interpretable_fraction": 0.875
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable categories (hardware, travel_service, software) that a human can segment on and compare decline rates across. Associational, not a restatement of decline state."
+      },
+      {
+        "name": "expense_mechanism",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "How the expense was created (automated vs manual vs procurement) is a plausible, interpretable driver of approval outcome and gives clean segments to compare against declines."
+      },
+      {
+        "name": "travel_relevance",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary split (travel vs not) directly relevant to a travel-expense decline query; easy to group and compare, though coarse."
+      },
+      {
+        "name": "purchase_intent_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable action categories (new_acquisition, registration, upgrade) that could plausibly associate with decline likelihood and support segmentation."
+      },
+      {
+        "name": "department_requestor",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable and segmentable, but the original table already contains 'department'; this largely duplicates existing information rather than opening a new relationship."
+      },
+      {
+        "name": "source_system_tracking",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Opaque boolean flag with unclear meaning; near-binary but its semantic link to decline is not interpretable, offering little explanatory grouping value."
+      },
+      {
+        "name": "asset_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Specific_model vs generic_placeholder is an interpretable data-quality signal that plausibly relates to declines (vague descriptions rejected); good segmentation."
+      },
+      {
+        "name": "hardware_device_class",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable device categories, though heavily NULL for non-hardware rows and partially overlapping asset_type_category; still allows meaningful comparison within hardware."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.6,
+    "rationale": "Most columns are interpretable, well-separated categorical variables that a human can segment on and compare against decline rates, satisfying the EDA claim. asset_type_category, expense_mechanism, travel_relevance, purchase_intent_signal, and asset_specificity are the strongest, offering distinct, meaningful groupings. Weaknesses: department_requestor duplicates the existing 'department' column (restatement), source_system_tracking is an opaque flag with unclear semantics, and there is notable redundancy among the asset-oriented columns (asset_type_category, hardware_device_class, purchase_intent_signal). The set skews toward asset/procurement framing rather than travel-expense-description signals implied by the query, capping overall informativeness at moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

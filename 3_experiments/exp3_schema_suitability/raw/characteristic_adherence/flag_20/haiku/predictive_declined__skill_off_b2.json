@@ -1,0 +1,59 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a travel expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "has_processed_date",
+    "is_customer_support_travel",
+    "is_sales_travel"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.2333,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "predictive_utility": 0.35,
+    "leakage_rate": 0.3333
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "has_processed_date",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether a processed_date exists is a post-outcome artifact of the expense being processed/adjudicated. A declined expense's processing status is tied to reaching a terminal state, so this indicator is knowable only after (or as part of) the outcome and leaks the resolution rather than predicting it ex ante."
+      },
+      {
+        "name": "is_customer_support_travel",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from department/context, this flags a specific requesting group. Department is a legitimate ex-ante attribute known at submission and can plausibly carry signal about approval/decline rates, lying outside the focus variable."
+      },
+      {
+        "name": "is_sales_travel",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Same as above: a pre-outcome categorical indicator of the submitting group/travel type. Known before adjudication and plausibly correlated with decline likelihood without restating or leaking the outcome."
+      }
+    ],
+    "n_predictors": 2,
+    "predictive_utility": 0.35,
+    "rationale": "Two of the three columns (department/travel-type indicators) are legitimate ex-ante predictors, though they are one-hot restatements of the already-present 'department'/'category' fields and thus add limited leverage beyond the original table. The has_processed_date flag leaks the outcome since processing status is a post-adjudication artifact. As a set, modest genuine predictive signal, discounted for redundancy with existing columns and one leaking feature."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

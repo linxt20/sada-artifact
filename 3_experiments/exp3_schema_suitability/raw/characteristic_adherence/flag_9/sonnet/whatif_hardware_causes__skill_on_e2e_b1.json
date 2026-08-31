@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "is_hardware_incident",
+    "incident_category_group",
+    "root_cause_hint",
+    "recurrence_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7625,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_hardware_incident",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly identifies the hardware subset the query centers on, enabling incident-rate computation. Values track short_description soundly (software install -> False)."
+      },
+      {
+        "name": "incident_category_group",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorization gives a genuine grouping axis and largely overlaps with is_hardware_incident but adds finer granularity (software/database/network). Categories are reasonable readings of the descriptions; note slight redundancy with the boolean but still useful."
+      },
+      {
+        "name": "root_cause_hint",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "This is the single most query-relevant column: identifying common failure causes is exactly what the analysis needs. However some specific causes (fan_failure, gpu_overload, driver_outdated, overheating) are highly specific inferences that terse short_descriptions likely do not warrant; NULL for silent rows is fine, but the confident specifics risk over-reading."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Recurrence could inform which causes recur, offering some leverage. But groundedness is questionable: the sampled rows expose only short_description and timestamps, and a true/false recurrence flag needs cross-row or caller/config linkage not clearly derivable from a single row's text."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.75,
+    "rationale": "The columns collectively map well onto the query: hardware identification (is_hardware_incident/incident_category_group) plus root_cause_hint enable estimating how addressing top causes lowers the hardware incident rate. Groundedness is generally sound for categorization from short_description, but root_cause_hint's specific mechanical causes and the recurrence_signal flag exceed what terse single-row text reliably supports, indicating some over-confident inference."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

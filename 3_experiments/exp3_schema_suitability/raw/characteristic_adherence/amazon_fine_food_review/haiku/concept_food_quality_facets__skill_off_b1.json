@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "facet_taste_flavor",
+    "facet_texture",
+    "facet_freshness",
+    "facet_packaging",
+    "facet_value_price",
+    "facet_health_nutrition",
+    "facet_product_variety",
+    "facet_consistency_reliability",
+    "facet_comparison_brand",
+    "facet_delivery_service"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.845,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7975,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "facet_taste_flavor",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Taste/flavor is the central axis of food-quality reviews and directly answers the query about distinct aspects. Values are well-grounded: flagged for the flavorful taffy, medicinal soda, and 'very flavorful' confection; correctly 0 for the peanut mislabeling row. Dog-food row could arguably be 1 ('smells better') but the omission is defensible."
+      },
+      {
+        "name": "facet_texture",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Texture is a distinct, non-redundant quality facet. Correctly flagged for the 'light, pillowy... not too chewy' confection and 0 elsewhere, matching source text well."
+      },
+      {
+        "name": "facet_freshness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Freshness is a legitimate distinct axis, but the flag on the dog-food row ('good quality... stew... smells better') is a weak/unwarranted reading of freshness, suggesting some noise in the mapping."
+      },
+      {
+        "name": "facet_packaging",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Packaging is a valid separate aspect. No samples flag it, which is a reasonable (silent) reading for these rows; not penalized for absence."
+      },
+      {
+        "name": "facet_value_price",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Value/price is a genuine analytical axis. Correctly flagged only for the taffy 'great price... deal' row; sound grounding."
+      },
+      {
+        "name": "facet_health_nutrition",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A distinct facet, but flagging the medicinal cherry-soda row as health/nutrition is a stretch — 'medicinal' flavor is not a nutrition comment, indicating some misclassification."
+      },
+      {
+        "name": "facet_product_variety",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis. Correctly flagged for taffy's 'wide assortment.' Reasonable grounding."
+      },
+      {
+        "name": "facet_consistency_reliability",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A legitimate but somewhat overlapping facet (borders on freshness/consistency of product). No sample flags it; grounded and non-hallucinated in the shown rows."
+      },
+      {
+        "name": "facet_comparison_brand",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Comparison/brand is a valid axis, but flagging the dog-food row ('better than most') is borderline, and no clear brand comparison is present, suggesting loose triggering."
+      },
+      {
+        "name": "facet_delivery_service",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Delivery is a distinct axis and correctly flagged for the 'delivery was very quick' taffy row. However, it is spuriously flagged on the mislabeled-peanuts row and the cherry-soda row where no delivery comment exists, indicating notable grounding errors."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns form a coherent multi-facet decomposition that directly serves the query about distinct aspects of food quality — each facet offers a genuine grouping/comparison axis with little redundancy, so analytical usefulness is high. Groundedness is generally reasonable for the strongly-worded facets (taste, texture, value, variety, delivery-when-mentioned), but several rows show over-eager flag firing not supported by the source text (delivery on peanuts and soda rows, health on the 'medicinal' row, freshness/comparison on the dog-food row), lowering overall groundedness to good-but-imperfect."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 10
+}

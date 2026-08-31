@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "review_text_length",
+    "summary_length",
+    "exclamation_count",
+    "positive_words_count",
+    "negative_words_count",
+    "helpfulness_ratio",
+    "sentiment_score",
+    "review_quality",
+    "high_satisfaction"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.3944,
+    "analytical_usefulness__table_level": 0.38,
+    "source_groundedness": 0.7667,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.5806,
+    "hallucination_rate": 0.4444
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "review_text_length",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw character length is a generic surface feature with weak analytical leverage for identifying product attributes tied to satisfaction. Values are correctly derived from Text (e.g. 263, 190, 509 match sample lengths closely)."
+      },
+      {
+        "name": "summary_length",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Summary length is a trivial surface metric offering little for a product-attribute analysis. Values align with the source summaries reasonably. Low usefulness, sound grounding."
+      },
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A generic punctuation count with weak connection to product attributes; more a tone proxy than an attribute axis. Values (0 in all samples) are correctly extracted from text."
+      },
+      {
+        "name": "positive_words_count",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Sentiment word counting is a mild tone axis, only loosely tied to product attributes. Grounding is shaky: the dog-food and confection reviews are clearly laudatory ('good quality', 'heaven', 'highly recommend') yet score 0 positive words, suggesting a narrow/unreliable lexicon."
+      },
+      {
+        "name": "negative_words_count",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Negative sentiment count is a modest tone signal. The 'Not as Advertised' complaint scores 0 negative words, and the medicinal review scores 0, indicating the lexicon misses clearly negative content in these rows."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A clean numeric derivation from HelpfulnessNumerator/Denominator giving a real new axis. However it restates existing original columns rather than reading review text, so leverage for a product-attribute query is moderate. Values are correctly computed."
+      },
+      {
+        "name": "sentiment_score",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Sentiment provides some analytical axis but here it is merely positive minus negative counts, largely redundant with those columns. Grounding suffers the same lexicon gaps: strongly positive reviews score 0."
+      },
+      {
+        "name": "review_quality",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "An opaque composite whose meaning is unclear; the values (0.67, 0.34, 1.0) are not obviously warranted by the source text (e.g. the negative peanut review scores 0.34 while a positive one scores 0.67, no clear mapping). Low transparency and questionable grounding."
+      },
+      {
+        "name": "high_satisfaction",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binarised satisfaction flag is almost entirely redundant with the original Score column and is essentially the target rather than an explanatory attribute. Values appear consistent with a Score threshold. Grounded but low added leverage."
+      }
+    ],
+    "analytical_usefulness": 0.38,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns are dominated by generic surface-text metrics (character/summary lengths, exclamation and sentiment-word counts) that give little leverage for identifying PRODUCT ATTRIBUTES associated with higher satisfaction; none capture actual product characteristics (category, flavor, packaging, price complaints, etc.). Several are mutually redundant (sentiment_score = positive - negative) and high_satisfaction merely restates the target Score. Grounding is generally acceptable for the mechanical counts and the helpfulness_ratio derivation, but the sentiment lexicon columns visibly miss clearly positive/negative content in multiple sampled rows, and review_quality is an opaque composite with no clear warrant from the source text. Overall modest usefulness and mixed groundedness."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

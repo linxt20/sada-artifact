@@ -1,0 +1,104 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.68,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Duration spans 10.9 to 3,597.2 minutes",
+        "why": "concrete magnitudes and ranges"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Charlie Whitherspoon's median (2,030 min) is 26% higher than Howard Johnson's (1,609 min)",
+        "why": "numeric comparisons across groups"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "closed_at column (format MM:SS.s, interpreted as total minutes)",
+        "why": "misreads MM:SS as minutes, inflating durations 60x, undermining consistency"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "coherence",
+        "quote": "closed_at ... exactly matches sys_updated_on on every row, formatted like MM:SS.s",
+        "why": "flags that the field may not be true duration"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Database connection issue averages 40.9 min (n=8) ... Unable to access database 18.8 min (n=12)",
+        "why": "numeric subgroup contrasts"
+      },
+      {
+        "dimension": "depth",
+        "quote": "predictive check using all visible columns still did not explain duration well out of sample",
+        "why": "adds causal/limits reasoning"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "A is richer but rests on a likely wrong MM:SS-as-minutes interpretation, while B interprets the field more soundly and is internally consistent.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

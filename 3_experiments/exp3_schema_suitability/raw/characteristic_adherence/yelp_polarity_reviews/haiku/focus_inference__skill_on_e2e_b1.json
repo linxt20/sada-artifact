@@ -1,0 +1,67 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "service_sentiment",
+    "service_failure_type",
+    "food_product_sentiment",
+    "product_quality_dimension",
+    "value_pricing_sentiment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.88,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.83,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.855,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_sentiment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Directly captures a key experiential aspect (service) with sentiment, giving a strong axis to group and compare reviews. Values match the samples well: positive for Oliveo/Michelle, negative for the forgotten-party and cabana reviews."
+      },
+      {
+        "name": "service_failure_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "Categorizes specific service failures, a genuinely useful sub-axis for understanding negative experiences. 'forgotten_by_staff' for YLP-0002 is well grounded; YLP-0005 (gave away cabana, refused entry) is arguably a failure but marked not_present, a minor miss but not a hallucination."
+      },
+      {
+        "name": "food_product_sentiment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "rationale": "Captures food/product sentiment, a core aspect distinct from service. Mostly grounded. YLP-0005 marks food negative from 'Drinks sucked' (reasonable). YLP-0002 marks food negative though the review focuses on service and no clear food complaint appears in the excerpt—mildly under-supported."
+      },
+      {
+        "name": "product_quality_dimension",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Identifies which quality dimension is discussed (flavor, temperature, preparation, etc.), a valuable new axis. YLP-0003 as preparation_technique (wood-oven crust) is sound; YLP-0001 flavor_taste is reasonable. Grounded across samples."
+      },
+      {
+        "name": "value_pricing_sentiment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "rationale": "Value/pricing is a distinct, useful aspect. YLP-0003 mentions price ($20/single serve) so positive_value is plausible. YLP-0001 marked positive_value on 'free pita' is a stretch but warranted. Generally grounded with a few thin inferences."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns decompose the vague query 'what aspects are reviewers talking about' into concrete, non-redundant experiential dimensions (service, food, quality, value) each with sentiment and typed sub-categories—exactly the grouping/comparison leverage the analysis needs. None are near-constant or trivial. Values are largely sound readings of the source text with correct use of not_present for silent rows; only minor over-inferences (e.g., YLP-0002 food negative, YLP-0001 value from free pita) slightly reduce groundedness. No fabricated facts observed."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

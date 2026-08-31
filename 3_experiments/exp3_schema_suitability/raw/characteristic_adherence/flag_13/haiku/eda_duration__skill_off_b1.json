@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "duration_seconds",
+    "duration_minutes",
+    "priority_level",
+    "category_priority"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.925,
+    "source_groundedness__table_level": 0.92,
+    "b1_overall": 0.8125,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "duration_seconds",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Resolution duration is the core dependent variable of the query; computing it from opened_at/closed_at gives a genuine analytical axis. Values are plausible and derivable from the timestamps present, though the exact seconds imply a closed_at field that must exist in the source."
+      },
+      {
+        "name": "duration_minutes",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Same measure as duration_seconds, merely rescaled by 60; it is a trivial restatement of another added column and adds little independent leverage, though minutes may be more readable. Values are consistent and grounded."
+      },
+      {
+        "name": "priority_level",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "The query calls for grouping by priority, but an original 'priority' column already exists; this is largely redundant with it, offering only a normalized numeric restatement. Values (1-4) are soundly derived from the source priority."
+      },
+      {
+        "name": "category_priority",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Combining category and priority into a single key directly supports the query's two-way breakdown of duration across category and priority, enabling grouped comparison. Composite values match the source category and priority fields."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.92,
+    "rationale": "The added columns collectively give strong analytical leverage for the query: duration is the target measure and category_priority provides the exact grouping cross-tab needed. duration_minutes and priority_level are weaker, being restatements/redundancies of duration_seconds and the existing priority column respectively. All values are well grounded in the timestamp, category, and priority information present in the table, with no observed hallucination; silent-row behaviour is not an issue here."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does goal achievement vary across department, metric, and the management practices described?",
+  "focus_variable": "goal_achievement",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "achievement_status",
+    "completion_gap",
+    "duration_days",
+    "management_practice"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.275,
+    "predictor_fraction": 0.5,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.55,
+    "interpretable_fraction": 0.75
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "goal_achievement",
+    "per_column": [
+      {
+        "name": "achievement_status",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categories (Achieved/Missed/On Track/At Risk) are a direct labeling of goal_achievement itself, not an external associational variable. It restates the focus rather than opening a relationship against it."
+      },
+      {
+        "name": "completion_gap",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Gap between percent_complete and target is essentially a numeric encoding of achievement — a mechanical restatement of the focus. Fine-grained integer values also lack well-separated interpretable categories for segmentation."
+      },
+      {
+        "name": "duration_days",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Derived from start/end dates but is an external, interpretable scale that can be binned (short vs long goals) and compared against achievement — a genuine exploratory relationship. Negative values are a minor data-quality concern."
+      },
+      {
+        "name": "management_practice",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, human-readable categories (Customer-Focused, People-Centric, Automation-Driven, etc.) directly enabling the query's requested comparison of achievement across management practices. Strong segmentation variable."
+      }
+    ],
+    "n_predictors": 2,
+    "relationship_informativeness": 0.55,
+    "rationale": "Two of four columns (management_practice, duration_days) are genuine external, interpretable segmentation variables that support discovering relationships with goal_achievement, with management_practice directly serving the stated intent. However, achievement_status and completion_gap merely restate the focus variable rather than providing associational predictors, and completion_gap is additionally too fine-grained for meaningful grouping. As a set, the columns are moderately informative but diluted by redundant restatements of the focus."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "eda_achievement",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

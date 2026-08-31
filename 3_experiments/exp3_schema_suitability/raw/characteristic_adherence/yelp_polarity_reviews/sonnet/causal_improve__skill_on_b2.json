@@ -1,0 +1,96 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "focus_variable": "user_satisfaction",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "staff_conduct",
+    "value_perception",
+    "atmosphere_ambiance_signal",
+    "visit_context",
+    "business_category"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "user_satisfaction",
+    "per_column": [
+      {
+        "name": "staff_conduct",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Staff behavior is an intervenable lever a business can train and change; plausibly affects satisfaction."
+      },
+      {
+        "name": "value_perception",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Pricing/value is a configurable business decision that can be set or changed, and influences satisfaction."
+      },
+      {
+        "name": "atmosphere_ambiance_signal",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Ambiance (noise, decor, seating) is settable via renovation/design choices; an intervenable lever affecting satisfaction."
+      },
+      {
+        "name": "visit_context",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Visit type (special event, first-time, late night) is not chosen by the business and can affect both what the business emphasizes and baseline satisfaction; it is a common-cause context, not a lever the business sets."
+      },
+      {
+        "name": "business_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category (restaurant, hotel, salon) is a common cause: it shapes which levers (staff, pricing, ambiance) are relevant and drives baseline satisfaction. Not intervenable in a what-if for a given business."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "staff_conduct",
+      "value_perception",
+      "atmosphere_ambiance_signal"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "visit_context",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "business_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The query asks how businesses can improve satisfaction, an interventional what-if. Multiple added columns are genuine intervenable levers a business could set or change (staff conduct, pricing/value, ambiance), satisfying the treatment-intervenability requirement. Two additional columns (business_category, visit_context) are plausible confounders: common causes influencing both which levers matter and baseline satisfaction, neither of which is named or implied in the query. business_category is the stronger confounder since it drives both applicable levers and satisfaction; visit_context is somewhat weaker and borderline could act as an effect modifier, but reasonably serves as an unnamed adjustment variable. This realises the what-if claim reasonably well."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

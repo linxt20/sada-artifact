@@ -1,0 +1,99 @@
+{
+  "var_a": "skill_off",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "large",
+  "ok": true,
+  "confidence": 0.9,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 3,
+    "actionability": 2,
+    "coherence": 2
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 2,
+      "score_b": 4,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "coherence": {
+      "score_a": 2,
+      "score_b": 5,
+      "delta_a_minus_b": -3,
+      "winner": "B",
+      "margin": "large"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "500 expense records, of which 46 (9.2%) were declined",
+        "why": "concrete counts"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "100% of declined expenses have missing_processed_date = 1",
+        "why": "treats as top signal but it is a leak shared by all unresolved states"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "IT: 19 of 43 declined (44.2%)",
+        "why": "numeric per-group rates"
+      },
+      {
+        "dimension": "depth",
+        "quote": "so this field separates Processed from everything else, not Declined",
+        "why": "correctly rejects leaky signal"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "The most credible signals... 1. IT department ownership",
+        "why": "ranked decision-ready signals"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B correctly identifies processed_date as a leak and gives valid per-group numeric signals, while A elevates a spurious dominant signal.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

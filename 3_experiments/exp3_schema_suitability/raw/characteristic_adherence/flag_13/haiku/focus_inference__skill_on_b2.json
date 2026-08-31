@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "problem_domain",
+    "severity_signal",
+    "scope_context",
+    "caller_recurrence",
+    "technician_workload"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.476,
+    "focus_coherence": 0.68,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Incident triage prioritization -- inferring which incidents (and why) warrant attention based on their nature, severity, and blast radius",
+    "per_column": [
+      {
+        "name": "problem_domain",
+        "supports_focus": true,
+        "rationale": "Classifies the incident into a technical domain (database, email, vpn), a core facet of characterizing what an incident is about and where attention should go."
+      },
+      {
+        "name": "severity_signal",
+        "supports_focus": true,
+        "rationale": "Encodes impact type (outage, access_degraded, infrastructure_failure) -- directly a prioritization/attention signal derived from the description."
+      },
+      {
+        "name": "scope_context",
+        "supports_focus": true,
+        "rationale": "Captures blast radius (enterprise_system, building_wide, single_user), a key attention facet: broad-scope incidents warrant more attention."
+      },
+      {
+        "name": "caller_recurrence",
+        "supports_focus": false,
+        "rationale": "Derived from caller_id metadata rather than the description's substance; only loosely tied to 'what's worth attention' and drifts toward a caller-analytics facet."
+      },
+      {
+        "name": "technician_workload",
+        "supports_focus": false,
+        "rationale": "Describes assignee load, an operational/staffing facet orthogonal to what makes an incident description worth attention; introduces scatter."
+      }
+    ],
+    "focus_coherence": 0.68,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "rationale": "The first three columns cohere tightly around a single inferable focus -- triaging incidents by what/how-bad/how-wide -- forming a genuine multi-facet analytical structure at useful granularity (domain x severity x scope), not a restatement or noise. This focus is clearly actionable: an analyst can prioritize enterprise-wide outages in the database/vpn domains. However, the last two columns (caller_recurrence, technician_workload) pivot away from the description content toward caller/staffing analytics, diluting the single-focus centring and pulling the set partway toward a grab-bag. Hence solid but not maximal coherence and structure."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

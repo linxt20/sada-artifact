@@ -1,0 +1,110 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "subject_domain_affordance_for_remote",
+    "teacher_innovation_and_adaptation",
+    "student_interactive_participation_enabled",
+    "peer_community_and_social_learning",
+    "conceptual_depth_versus_compliance",
+    "hands_on_practical_subject_constraint",
+    "student_attention_and_focus_capacity",
+    "parent_partnership_intensity_and_burden",
+    "teacher_workload_and_emotional_toll"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 0.8889
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "subject_domain_affordance_for_remote",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated ordinal categories (naturally/moderately/poorly suited) that segment responses and can be cross-tabulated against satisfaction and subject."
+      },
+      {
+        "name": "teacher_innovation_and_adaptation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable graded theme (highly creative to minimal effort) external to satisfaction; supports meaningful grouping comparisons."
+      },
+      {
+        "name": "student_interactive_participation_enabled",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear three-level participation categories that are associational with satisfaction, not a restatement."
+      },
+      {
+        "name": "peer_community_and_social_learning",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct social-learning outcome categories with balanced counts; enables segmentation against the focus."
+      },
+      {
+        "name": "conceptual_depth_versus_compliance",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable learning-depth spectrum, external to satisfaction and comparable across roles/subjects."
+      },
+      {
+        "name": "hands_on_practical_subject_constraint",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Meaningful constraint categories that vary by subject; usable for grouped comparison though dominated by not_present."
+      },
+      {
+        "name": "student_attention_and_focus_capacity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable engagement categories associated with satisfaction; well-separated segments."
+      },
+      {
+        "name": "parent_partnership_intensity_and_burden",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Conceptually valid theme but heavily dominated by not_present (180), leaving thin, near-constant categories that weaken comparison."
+      },
+      {
+        "name": "teacher_workload_and_emotional_toll",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable workload/wellbeing categories; skewed toward not_present but retains usable distinct segments."
+      }
+    ],
+    "n_predictors": 9,
+    "relationship_informativeness": 0.82,
+    "rationale": "The added columns are open-response themes coded into interpretable, well-separated categorical scales that are external and associational to satisfaction, not restatements of the 1-5 score. They can be grouped and cross-segmented against role, grade level, and subject, directly serving correlational/exploratory analysis. Values are human-readable and not opaque scores. Minor weaknesses: several columns are skewed toward 'not_present' (notably parent_partnership and teacher_workload), which reduces comparison power in those thin cells, and some category labels overlap conceptually across columns. Overall this is a strong, purpose-built EDA set."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

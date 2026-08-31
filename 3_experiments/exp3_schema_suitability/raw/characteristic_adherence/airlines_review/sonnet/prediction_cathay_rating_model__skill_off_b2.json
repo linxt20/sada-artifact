@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "review_sentiment",
+    "weakest_attribute",
+    "service_score_gap",
+    "hub_route",
+    "rating_vs_class_avg",
+    "priority_action"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.3333
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "review_sentiment",
+        "role": "predictor",
+        "rationale": "Sentiment derived from the free-text review is an independent signal about the reviewer's experience that plausibly correlates with whether Overall Rating > 7, without being a deterministic function of the rating itself."
+      },
+      {
+        "name": "weakest_attribute",
+        "role": "predictor",
+        "rationale": "The lowest-scoring sub-attribute is derived from the component ratings (Seat Comfort, Food, etc.), which are separate from the Overall Rating focus. It carries predictive signal about overall satisfaction and is not a restatement of the target."
+      },
+      {
+        "name": "service_score_gap",
+        "role": "predictor",
+        "rationale": "A gap/spread among the individual service sub-scores is a legitimate feature built from the component ratings, distinct from the overall rating, and can plausibly predict whether the overall exceeds 7."
+      },
+      {
+        "name": "hub_route",
+        "role": "predictor",
+        "rationale": "Whether the route touches a hub is an external structural attribute of the flight, knowable before the outcome and plausibly related to satisfaction. Highly imbalanced (714 vs 30), so limited leverage, but still a valid predictor."
+      },
+      {
+        "name": "rating_vs_class_avg",
+        "role": "leakage",
+        "rationale": "This is the Overall Rating minus the class average, i.e. a direct affine transform of the focus variable. Knowing it (plus the class mean) essentially recovers the rating and thus the target; it leaks/restates the outcome."
+      },
+      {
+        "name": "priority_action",
+        "role": "leakage",
+        "rationale": "Categories like 'on_track'/'high_impact' appear to be derived from the rating relative to a threshold (the >7 goal), making them a post-hoc function of the outcome itself rather than an independent predictor."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.45,
+    "rationale": "Four columns (review_sentiment, weakest_attribute, service_score_gap, hub_route) are legitimate predictors drawn from text and component-level ratings, offering genuine signal beyond the raw columns. However, rating_vs_class_avg is an affine transform of Overall Rating and priority_action appears derived from the >7 threshold, both constituting leakage/restatement of the focus. The valid features overlap heavily with information already in the component-rating columns, and hub_route is severely imbalanced, so net additional predictive leverage is moderate."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

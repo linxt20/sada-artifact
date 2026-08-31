@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "asset_category",
+    "asset_brand",
+    "spend_type",
+    "travel_flag",
+    "asset_lifecycle_action",
+    "record_origin",
+    "processing_lag_band",
+    "has_source_id",
+    "high_volume_user_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.504,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Characterizing IT asset/spend expenses — what each expense record is buying (asset type, brand, spend category) and how it flows through the process",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "supports_focus": true,
+        "rationale": "Directly types the purchased asset, a core facet of what the spend is for."
+      },
+      {
+        "name": "asset_brand",
+        "supports_focus": true,
+        "rationale": "Vendor/brand dimension of the asset, an actionable facet for spend analysis."
+      },
+      {
+        "name": "spend_type",
+        "supports_focus": true,
+        "rationale": "Classifies the nature of the expenditure (hardware vs travel vs cloud), central to the focus."
+      },
+      {
+        "name": "travel_flag",
+        "supports_focus": true,
+        "rationale": "Redundant with spend_type's travel value but still consistent with the spend-classification focus."
+      },
+      {
+        "name": "asset_lifecycle_action",
+        "supports_focus": true,
+        "rationale": "Frames the expense within asset lifecycle, adding a coherent process facet."
+      },
+      {
+        "name": "record_origin",
+        "supports_focus": false,
+        "rationale": "Data-provenance metadata; drifts from the asset/spend focus toward data-quality."
+      },
+      {
+        "name": "processing_lag_band",
+        "supports_focus": true,
+        "rationale": "Processing-time facet that is actionable for operational analysis of expenses."
+      },
+      {
+        "name": "has_source_id",
+        "supports_focus": false,
+        "rationale": "Bare null-presence flag; a generic data-completeness check, not part of the spend focus."
+      },
+      {
+        "name": "high_volume_user_flag",
+        "supports_focus": true,
+        "rationale": "Segments spenders by volume, an actionable analytic angle on expense records."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "rationale": "The bulk of the columns cohere around a single inferable focus: characterizing what IT-asset expense records are buying (asset_category, asset_brand, spend_type, asset_lifecycle_action) plus operational/segmentation facets (processing_lag_band, high_volume_user_flag, travel_flag). This is a genuine, actionable framing an analyst could pursue for spend optimization. Structure is multi-faceted at a useful granularity rather than a single restatement. It is held back from a top score by mild redundancy (travel_flag duplicates spend_type's travel_expense) and two provenance/completeness columns (record_origin, has_source_id) that read as generic data-quality checks pulling slightly away from the spend focus. Overall a coherent, non-trivial inferred focus with minor scatter."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

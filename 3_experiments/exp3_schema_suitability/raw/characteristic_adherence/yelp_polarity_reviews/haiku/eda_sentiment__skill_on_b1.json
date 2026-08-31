@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "staff_attentiveness",
+    "food_taste_quality",
+    "food_freshness",
+    "portion_size",
+    "food_freshness_issue",
+    "portion_size_satisfaction"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.6033,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.6017,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "staff_attentiveness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "A genuine service-theme axis useful for comparing positive vs negative reviews. Values are mostly well-grounded (friendly, professional, not_present correctly applied). However YLP-0003 says 'Service was good' yet the value 'prompt' asserts a specificity not in the text, a minor unwarranted inference."
+      },
+      {
+        "name": "food_taste_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "Taste is a core theme distinguishing sentiment. But YLP-0001 mentions food items with no taste descriptor yet yields 'delicious', and YLP-0003 yields 'excellent' from 'Very good pizza' which is defensible; the 'delicious' inference is weakly grounded, indicating a tendency to project positive taste onto positive reviews without textual warrant."
+      },
+      {
+        "name": "food_freshness",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Freshness is a plausible theme, but many 'fresh' values appear invented: YLP-0001 and YLP-0003 never comment on freshness yet both are labeled 'fresh', suggesting fabricated positives correlated with sentiment rather than reading the text."
+      },
+      {
+        "name": "portion_size",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "Portion size is a distinct, useful axis. YLP-0003 'small' is well-grounded from the smallest-pie discussion. However YLP-0001 'generous' has no textual basis, an unwarranted inference."
+      },
+      {
+        "name": "food_freshness_issue",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Near-duplicate of food_freshness (nearly identical value distributions and identical per-row values in samples); adds essentially no new analytical leverage. Shares the same fabricated-'fresh' groundedness problems."
+      },
+      {
+        "name": "portion_size_satisfaction",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with portion_size, using the same value vocabulary (generous/adequate/small) rather than a distinct satisfaction judgment; a mere restatement offering little new axis. Groundedness mirrors portion_size, including the unsupported 'generous' on YLP-0001."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.6,
+    "rationale": "The columns target real theme axes (service, taste, freshness, portion) that are directly relevant to comparing positive vs negative sentiment, giving genuine grouping leverage. However two columns (food_freshness_issue, portion_size_satisfaction) are near-duplicates of earlier columns and add little. Groundedness is undermined by a systematic tendency to emit positive descriptors (delicious, fresh, generous) on positive-labeled reviews even when the source text is silent, as seen on YLP-0001 and partly YLP-0003, which is a hallucination pattern rather than correct 'not_present' behavior."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

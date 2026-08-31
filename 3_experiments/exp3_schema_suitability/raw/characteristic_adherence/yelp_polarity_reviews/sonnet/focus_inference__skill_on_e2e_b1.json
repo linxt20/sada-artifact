@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "food_quality_rating",
+    "food_item_highlight",
+    "service_quality_rating",
+    "service_issue_type",
+    "staff_behavior_tone"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.856,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.894,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.875,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "food_quality_rating",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing food quality as positive/mixed/negative/not_present gives a direct axis for the query about review aspects. Values align well with source text: Oliveo Grill praise, pizza praise, service-only reviews correctly marked not_present."
+      },
+      {
+        "name": "food_item_highlight",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Adds a distinct axis about whether specific dishes are praised/criticized, not redundant with the food rating. Grounding is sound: chicken caesar pita = specific_dish_praised, Italian Stallion pizza = multiple_items (arguably a single dish, minor slack), silent reviews = not_present."
+      },
+      {
+        "name": "service_quality_rating",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A core aspect axis for this query and well grounded: worst-service review = negative, real-estate agent praise = positive, pizza review's 'Service was good' labeled mixed is slightly off but defensible given the price complaint."
+      },
+      {
+        "name": "service_issue_type",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "A fine-grained taxonomy of service problems gives strong analytical leverage for aspect analysis. Values well supported: forgotten-twice review = ignored_forgotten, discriminatory cabana review = rude_dismissive, silent rows = not_present."
+      },
+      {
+        "name": "staff_behavior_tone",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Distinct axis (tone of staff), but partly overlaps with service_quality/issue columns. Some values overreach: the pizza review is marked 'professional_neutral' though the text says nothing about staff tone beyond 'Service was good'; assigning a specific tone where the source is silent is a mild ungrounded assertion (a NULL would be more correct). Other rows are well grounded."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.9,
+    "rationale": "The added columns collectively decompose the reviews into food and service aspects with useful granularity, directly serving the query about what reviewers discuss. Each column offers a genuine grouping axis rather than trivial restatement, and most values are sound readings of the source text with reasonable not_present handling for silent rows. The main weakness is staff_behavior_tone occasionally asserting a tone where the text is silent (e.g., professional_neutral for a review lacking staff-tone cues), modestly lowering groundedness."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

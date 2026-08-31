@@ -1,0 +1,138 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce incident resolution time?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "affected_system_tier",
+    "recurrence_signal",
+    "is_assigned",
+    "resolved_by_assignee",
+    "is_open_incident",
+    "assigned_agent",
+    "caller_id_group"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident (email, database, vpn) is not intervenable — you cannot decide to make an incident be a database issue — but it plausibly affects both how incidents are routed/handled and the resolution time, so it acts as a common-cause confounder."
+      },
+      {
+        "name": "failure_mode",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The nature of the failure (connection failure, crash, access denied) is an immutable characteristic of the incident that jointly influences handling decisions and resolution time; a confounder, not a settable lever."
+      },
+      {
+        "name": "affected_system_tier",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Which tier is affected is a structural property of the incident, not something an actor sets to reduce resolution time; it can influence both assignment and duration."
+      },
+      {
+        "name": "recurrence_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the incident recurs is an observed property that may correlate with both prioritization/handling and resolution time; not intervenable, so treated as a confounder."
+      },
+      {
+        "name": "is_assigned",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether an incident is assigned is an intervenable operational lever — management can decide to assign incidents — and plausibly affects resolution time; a valid what-if treatment."
+      },
+      {
+        "name": "resolved_by_assignee",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the assignee ultimately resolved it is downstream of assignment and reflects the resolution process itself; it lies on the causal path rather than being a common cause, so it is a mediator/collider-like variable, not a confounder."
+      },
+      {
+        "name": "is_open_incident",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "Open/closed status is essentially a reflection of whether resolution has occurred; it is definitionally entangled with the outcome, not an independent treatment or confounder."
+      },
+      {
+        "name": "assigned_agent",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Which agent is assigned is a genuinely intervenable assignment decision that can be set/changed and could affect resolution time; a valid intervenable treatment."
+      },
+      {
+        "name": "caller_id_group",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The caller is not something the service org sets, but caller characteristics may relate to both routing and resolution time; a weak common-cause confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "is_assigned",
+      "assigned_agent"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "failure_mode",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "affected_system_tier",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "recurrence_signal",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "caller_id_group",
+        "named_in_query": false,
+        "plausibility": 0.3
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The added columns do set up a genuine interventional question: 'is_assigned' and 'assigned_agent' are settable operational levers that an actor can decide, satisfying the intervenability requirement (a). Several columns (incident_category, failure_mode, affected_system_tier, recurrence_signal, caller_id_group) function as common-cause confounders that are NOT named in the query, demonstrating the capability under test for requirement (b). However, quality is only moderate: some columns are mediators (resolved_by_assignee) or outcome reflections (is_open_incident) rather than confounders, and the assignment treatments themselves lack adjustment for agent workload/skill which would be the key confounders of the assigned_agent effect. The confounder set is plausible but not tightly tailored to blocking backdoor paths for the identified treatments."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

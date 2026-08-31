@@ -1,0 +1,81 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "aircraft_product_deprecation",
+    "catering_quality_decline",
+    "product_degradation_perception",
+    "traveler_type_context"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.3,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.3,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome",
+    "per_column": [
+      {
+        "name": "aircraft_product_deprecation",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Fleet age/product deprecation (newer/older/mixed fleet) is a candidate cause of a non-recommended result. It is a plausible treatment whose effect on the outcome is being attributed, and it is not named in the query."
+      },
+      {
+        "name": "catering_quality_decline",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Declining catering quality is another candidate observed cause of non-recommendation. However, catering quality is also captured by the existing 'Food & Beverages' rating and may function as a mediator of overall dissatisfaction; treated here as a candidate treatment / possible mediator."
+      },
+      {
+        "name": "product_degradation_perception",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Perception of product degradation (decline/cutbacks) sits on the causal path between actual product changes and the recommendation decision -- it is the passenger's evaluative judgment, which directly drives (mediates) the non-recommendation rather than being an independent common cause."
+      },
+      {
+        "name": "traveler_type_context",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Traveller type (solo/couple/business/family leisure) plausibly influences both which product/fleet/service a passenger is exposed to and evaluates (treatment) and their propensity to recommend (outcome). It is a pre-treatment context variable and duplicates existing 'Type of Traveller', but here surfaced as an adjustment variable."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "aircraft_product_deprecation",
+      "catering_quality_decline"
+    ],
+    "confounders": [
+      {
+        "name": "traveler_type_context",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.3,
+    "rationale": "The columns supply candidate treatments (fleet/product deprecation, catering decline) around the non-recommendation outcome, so a treatment is present. However the causal-attribution claim is only weakly satisfied: only one column (traveler_type_context) functions as a genuine common-cause confounder, and it merely restates the existing 'Type of Traveller' field rather than surfacing a novel confounder. 'product_degradation_perception' is a mediator on the treatment->outcome path (adjusting for it would be a mistake), and 'catering_quality_decline' overlaps with an existing rating and is closer to a mediator of overall dissatisfaction. No confounder that plausibly causes BOTH treatment and outcome was surfaced beyond the query-obvious traveller type, so the decisive test for real causal reasoning is largely unmet."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

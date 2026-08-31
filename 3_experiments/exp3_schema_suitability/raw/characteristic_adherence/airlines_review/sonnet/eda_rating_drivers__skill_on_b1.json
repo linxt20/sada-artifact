@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_service_quality",
+    "food_quality",
+    "seat_cabin_hardware_condition",
+    "service_decline_signal",
+    "value_for_money_perception",
+    "disruption_handling_quality",
+    "family_child_accommodation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7386,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8614,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.8,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Strong theme axis directly relevant to grouping ratings by service quality. Samples map well to source (welcoming crew->attentive_warm). Sample 2 mentions no crew but produced inattentive_rude, a minor unwarranted inference, though NULL is used elsewhere."
+      },
+      {
+        "name": "food_quality",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct, useful theme for the query. Values track source (plentiful/tasty->excellent; sample 2 mentions no food but assigned poor, a mild overreach). NULL used appropriately for silent rows."
+      },
+      {
+        "name": "seat_cabin_hardware_condition",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Useful hardware-condition theme. Grounded well (dreadful narrow seats->broken_defective; well-maintained->adequate). NULL for silent rows correct."
+      },
+      {
+        "name": "service_decline_signal",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Binary flag capturing 'used to be better' sentiment; moderately useful but somewhat overlaps crew_service_quality and is a coarse boolean. Samples all False, consistent with texts lacking decline language."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with the existing original 'Value For Money' and 'Overall Rating' columns, reducing new leverage. Also several positive reviews with no explicit value/price mention are confidently labeled exceeds_expectation, an inference not grounded in the text."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Adds a genuine axis (irregular-operations handling) distinct from routine service. Mostly not_applicable, correctly reflecting absence of disruption in sampled texts."
+      },
+      {
+        "name": "family_child_accommodation",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Boolean niche theme; useful for a subset when crossed with Type of Traveller, though sparse (48 true). Grounded: sampled rows lacking family mention correctly False."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.86,
+    "rationale": "Most added columns provide genuine, distinct thematic axes (crew, food, seat, disruption, family) that directly support grouping Overall Rating by theme across Type of Traveller and Class. value_for_money_perception is the weakest, being largely redundant with existing original Value For Money/Overall Rating columns and prone to confident inference on price-silent texts. A recurring minor groundedness issue is asserting a theme's polarity when the source is silent on that theme (e.g., food/crew judgments on reviews not mentioning them), but NULL is used appropriately in many rows, keeping overall groundedness high."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 7
+}

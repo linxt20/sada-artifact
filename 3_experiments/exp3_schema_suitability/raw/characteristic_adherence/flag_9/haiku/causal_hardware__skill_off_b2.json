@@ -1,0 +1,81 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "focus_variable": "hardware_incident_spike",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "is_in_anomaly_window",
+    "days_to_anomaly",
+    "is_critical_or_high",
+    "is_hardware_incident",
+    "is_anomaly_hardware"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "is_hardware_incident (hardware incident occurrence, aggregated as the spike in the anomaly window)",
+    "per_column": [
+      {
+        "name": "is_in_anomaly_window",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "Flags whether a record falls in the anomaly window. This is the temporal stratifier defining the spike period itself, directly named in the query ('in the anomaly window'). It is not a candidate cause of hardware incidents but rather the time-slice over which the outcome is observed."
+      },
+      {
+        "name": "days_to_anomaly",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "Signed distance in days to the anomaly window. This is a temporal offset/running variable re-expressing the same window construct from the query. It is not a substantive candidate cause of hardware incidents, only a timing coordinate."
+      },
+      {
+        "name": "is_critical_or_high",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Priority severity flag. This is a plausible candidate cause whose association with hardware incidents could be attributed (e.g., were spike incidents driven by high-priority tickets). It functions as a candidate treatment/explanatory variable derived from the priority field, not stated in the query."
+      },
+      {
+        "name": "is_hardware_incident",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Directly encodes the outcome of interest (hardware vs not), i.e. the thing being explained. Named explicitly in the query."
+      },
+      {
+        "name": "is_anomaly_hardware",
+        "causal_role": "collider",
+        "named_in_query": true,
+        "rationale": "Interaction/conjunction of being in the anomaly window AND being a hardware incident. This is a derived indicator of the outcome-within-window (essentially the spike itself), not a confounder. Conditioning on it mixes outcome and window; it is a restatement of the focus, not a common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "is_critical_or_high"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns set up a within-window vs outside-window contrast plus an outcome flag, and at most one candidate cause (priority severity). Crucially, no genuine confounder was surfaced: there is no variable that plausibly causes BOTH the candidate treatment (priority) AND the hardware-incident outcome and is not already implied by the query. The remaining columns merely re-encode the anomaly window (named in query), the outcome (named in query), and their conjunction (a collider/restatement of the spike). No common causes such as vendor/hardware model, system/CI age, change or deployment activity, environment, or load were surfaced from the data. Therefore the columns fail the decisive test for causal attribution: they do not supply confounders that must be adjusted to avoid biased attribution, so confounder_quality is 0."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

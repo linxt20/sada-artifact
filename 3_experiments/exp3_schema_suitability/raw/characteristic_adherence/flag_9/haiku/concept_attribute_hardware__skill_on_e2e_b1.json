@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "failure_mode",
+    "affected_scope",
+    "severity_indicator"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7333,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.6333,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.6833,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorizing the kind of hardware failure (connectivity, power_issue, display_issue, etc.), giving a strong axis to group and compare incidents. Sampled values are well-grounded: software-install rows correctly get Unknown, and the MySQL connection row correctly gets connectivity. A large NULL count is appropriate honest behaviour for silent/non-hardware rows."
+      },
+      {
+        "name": "affected_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Provides a genuinely useful independent axis (workstation vs server vs network vs infrastructure) for characterizing incidents. However groundedness is weaker: the software-installation rows are confidently labeled individual_workstation though the short_description gives no scope evidence, suggesting a default guess rather than a warranted reading. The MySQL row's department_server is a reasonable inference."
+      },
+      {
+        "name": "severity_indicator",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Named as a severity measure but the values (configuration_request, connectivity_issue, intermittent_failure) are largely a restatement of issue TYPE, overlapping heavily with failure_mode rather than encoding severity; only critical_outage/degraded_performance carry severity signal, reducing analytical leverage. Grounding is mixed: 'configuration_request' fits the install rows, but assigning severity-like labels where the text gives no severity cue is often unsupported."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.63,
+    "rationale": "failure_mode and affected_scope give real, distinct analytical axes squarely relevant to the hardware-issue query, while severity_indicator is mislabeled and largely redundant with failure_mode, dragging usefulness down. Grounding is solid where the source text is descriptive (connectivity/MySQL) and correctly abstains (Unknown/NULL) on ambiguous rows, but affected_scope and severity_indicator show confident category assignments on rows whose text provides no supporting evidence, indicating some unwarranted defaulting."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

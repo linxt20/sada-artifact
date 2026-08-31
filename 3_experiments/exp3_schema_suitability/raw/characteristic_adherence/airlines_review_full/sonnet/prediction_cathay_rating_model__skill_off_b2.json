@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "Haul_Type",
+    "Composite_Service_Score",
+    "Value_Gap",
+    "Route_Performance_Tier",
+    "Weakest_Dimension",
+    "Improvement_Priority",
+    "High_Rating_Potential"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.2143,
+    "predictor_fraction": 0.7143,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.3,
+    "leakage_rate": 0.1429
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "Haul_Type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from Route (Long-haul vs Short/Medium-haul), this is a genuine covariate that lies wholly outside the Overall Rating. Route/haul length plausibly influences satisfaction (jet lag, cabin, service load) and is knowable pre-outcome. It is also NEW information relative to the raw columns, since Route was free text. Clean predictor."
+      },
+      {
+        "name": "Composite_Service_Score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Values (~2-4) are an average of the 1-5 sub-ratings (Seat Comfort, Staff Service, F&B, IFE). It is a function of OTHER inputs, not of Overall Rating, so it is not leakage or a restatement of the focus, and it correlates strongly with rating. However, it is a deterministic aggregate of columns the model already has, so it adds little genuine leverage beyond the originals."
+      },
+      {
+        "name": "Value_Gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Signed difference (~ Value For Money minus mean service score) built from existing sub-ratings. Not derived from Overall Rating, so it is a legitimate concurrent predictor, but again it is a deterministic recombination of already-present features and contributes essentially no new information."
+      },
+      {
+        "name": "Route_Performance_Tier",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A route-level High/Medium/Low 'performance' bucket. 'Performance' in a rating-prediction context is almost certainly an aggregate of the very outcome being modelled (rating by route), and if the row's own outcome contributes to its route's tier this is target leakage. Flagged as leakage; only if computed purely from a target-independent metric with proper out-of-fold encoding could it be a clean predictor."
+      },
+      {
+        "name": "Weakest_Dimension",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The lowest-scoring sub-rating for the review. It is a function of the sub-ratings (not of Overall Rating), knowable at review time, and carries some signal about dissatisfaction, but only encodes WHICH dimension is worst (not the level), so its independent predictive value is weak and largely subsumed by the raw sub-ratings."
+      },
+      {
+        "name": "Improvement_Priority",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A prescriptive action label (Maintain / Price-Value Reset / dimension uplifts) recombined from Weakest_Dimension and Value_Gap. It is a downstream recommendation rather than an independent driver; it does not directly restate Overall Rating but is a redundant deterministic function of already-engineered sub-rating features, so it adds minimal new predictive signal (and the 'Maintain' class risks tracking the outcome)."
+      },
+      {
+        "name": "High_Rating_Potential",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "A Yes/No flag for whether the review is (or will be) a high rating. This is essentially the focus variable relabelled/proxied — predicting it is the same task as predicting overall_rating_gt7. Using it as an input restates/leaks the target and is not an admissible feature."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.3,
+    "rationale": "As a set, the columns give only modest incremental leverage for predicting overall_rating_gt7. Two columns are inadmissible: High_Rating_Potential is a restatement of the target, and Route_Performance_Tier is almost certainly a route-level aggregate of the outcome (leakage). Three columns (Composite_Service_Score, Value_Gap, Weakest_Dimension) are legitimate, non-leaking predictors but are deterministic recombinations of sub-ratings the model already possesses, so they add little information beyond the original schema. The one clean, genuinely new predictor is Haul_Type (engineered from free-text Route). Because the strongest-looking features are leakage and the rest are redundant with existing columns, the true added predictive utility is low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

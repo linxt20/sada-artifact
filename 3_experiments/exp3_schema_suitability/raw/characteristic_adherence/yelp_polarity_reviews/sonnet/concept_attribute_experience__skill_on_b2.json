@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "focus_variable": "satisfaction_and_complaint_facets",
+  "concept": "satisfaction_and_complaint_facets",
+  "n_added_columns": 6,
+  "added_columns": [
+    "service_quality",
+    "staff_attitude",
+    "food_taste_rating",
+    "standout_item_mention",
+    "value_perception",
+    "ambiance_atmosphere"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.6455,
+    "facet_fraction": 0.8333,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.75,
+    "exhaustiveness": 0.8,
+    "mece": 0.7746,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "satisfaction_and_complaint_facets",
+    "per_column": [
+      {
+        "name": "service_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Service quality is a core aspect of restaurant satisfaction/complaints and is a genuine part-of the experience being evaluated."
+      },
+      {
+        "name": "staff_attitude",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Staff attitude (friendly/rude/indifferent) is a distinct constitutive aspect of the dining experience driving satisfaction or complaints."
+      },
+      {
+        "name": "food_taste_rating",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Food taste/quality is a central aspect of a restaurant review and a legitimate part of the satisfaction concept."
+      },
+      {
+        "name": "standout_item_mention",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A boolean flag for whether a standout item is mentioned is a detection/indicator rather than an aspect of satisfaction; it largely overlaps with food_taste_rating and does not carve out a distinct facet of the concept."
+      },
+      {
+        "name": "value_perception",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Perceived value/price is a distinct aspect of satisfaction and a common complaint theme, a genuine part-of the concept."
+      },
+      {
+        "name": "ambiance_atmosphere",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Ambiance/atmosphere is a recognized independent facet of the dining experience contributing to satisfaction or complaints."
+      }
+    ],
+    "facet_columns": [
+      "service_quality",
+      "staff_attitude",
+      "food_taste_rating",
+      "value_perception",
+      "ambiance_atmosphere"
+    ],
+    "non_facet_columns": [
+      "standout_item_mention"
+    ],
+    "mutual_exclusivity": 0.75,
+    "exhaustiveness": 0.8,
+    "rationale": "Most columns are genuine constitutive facets of restaurant satisfaction/complaints (service, staff, food, value, ambiance), realizing a part-of decomposition well. Mutual exclusivity is lowered because service_quality and staff_attitude overlap conceptually (service delivery includes staff behavior), and standout_item_mention overlaps with food_taste_rating while functioning as a detection flag rather than a distinct aspect. Exhaustiveness is good: the set covers food, service, staff, value, and atmosphere, though it omits some common facets such as cleanliness/hygiene, wait time/speed, and portion size/quantity."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

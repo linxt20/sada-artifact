@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "dissatisfaction_category",
+    "complaint_intensity",
+    "mentions_acting_issues",
+    "mentions_writing_issues",
+    "wasted_potential"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.766,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.744,
+    "source_groundedness__table_level": 0.76,
+    "b1_overall": 0.755,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "dissatisfaction_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by giving the type of complaint, enabling grouping over reasons for dissatisfaction. Categories are well-grounded (e.g., 'bad_writing' for the insipid-writing review). One weakness: 'positive' is a catch-all for label_pos=1 reviews rather than a dissatisfaction reason, but this is a sound reading of the source and correctly separates satisfied reviews."
+      },
+      {
+        "name": "complaint_intensity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "An ordinal severity scale adds a genuine axis to measure how strong the dissatisfaction is, useful for the query. Grounded reasonably (the King review scored high, positive reviews scored 0), though intensity ratings are somewhat subjective and row IMDB-0002, clearly a vehement pan, at only 3 while IMDB-0003's harsh review scored 0 shows some inconsistency."
+      },
+      {
+        "name": "mentions_acting_issues",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A specific complaint dimension useful for quantifying prevalence of acting complaints. Mostly grounded (IMDB-0003 'performances are wooden' = 1). However IMDB-0004 is a positive review praising acting yet flagged 1, suggesting the flag captures acting mentions rather than acting *issues*, a partial mismatch to the column's intent."
+      },
+      {
+        "name": "mentions_writing_issues",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Distinct writing-complaint axis complementing the acting flag; supports prevalence analysis of a top dissatisfaction driver. Well grounded on the writing-focused reviews (IMDB-0001, IMDB-0003)."
+      },
+      {
+        "name": "wasted_potential",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A meaningful qualitative theme for dissatisfaction, but near-constant (246/4) which limits analytical leverage. The single visible positive flag on IMDB-0003 is weakly supported by the text, which laments a bad execution but does not clearly assert wasted potential."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.76,
+    "rationale": "The added columns collectively provide strong analytical leverage for 'Why are IMDb audiences dissatisfied?': a categorical reason field plus targeted binary flags and an intensity scale allow grouping, prevalence counting, and severity modeling. Values are largely sound readings of the source text with reasonable categorisation, and satisfied reviews are appropriately separated. Minor grounding issues include acting/writing flags firing on mentions rather than strictly on complaints (IMDB-0004), some subjectivity/inconsistency in intensity, and the near-constant wasted_potential column whose lone flagged sample is weakly supported. No outright hallucinations of invented facts were observed."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

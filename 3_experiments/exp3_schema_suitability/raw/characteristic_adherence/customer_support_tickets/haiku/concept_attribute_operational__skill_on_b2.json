@@ -1,0 +1,147 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What customer issues create the most support burden?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 13,
+  "added_columns": [
+    "is_outage",
+    "customer_impact_scope",
+    "issue_category",
+    "request_type",
+    "system_component",
+    "data_risk",
+    "blocker_type",
+    "technical_root_cause",
+    "is_outage_or_incident",
+    "system_component_affected",
+    "blocker_or_dependency",
+    "data_risk_or_exposure",
+    "technical_root_cause_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 13,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0881,
+    "facet_fraction": 0.3846,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.15,
+    "exhaustiveness": 0.35,
+    "mece": 0.2291,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "is_outage",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "Whether a ticket is an outage is a property of the issue that drives burden, not a constitutive aspect of the burden itself; it is a severity/cause signal external to the concept."
+      },
+      {
+        "name": "customer_impact_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The breadth of impact (single vs multiple vs whole tenant) is a genuine constitutive dimension of how much burden an issue imposes."
+      },
+      {
+        "name": "issue_category",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The type of issue is a classifier of the ticket that predicts burden, not a part-of the burden concept."
+      },
+      {
+        "name": "request_type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A near-duplicate of issue_category; it categorizes the request, an external predictor rather than a facet of burden."
+      },
+      {
+        "name": "system_component",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The affected component is an attribute of where the issue occurs, not an aspect of the burden itself."
+      },
+      {
+        "name": "data_risk",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Data risk/exposure severity is a constitutive dimension of operational burden (risk-weighted consequence)."
+      },
+      {
+        "name": "blocker_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The degree to which the issue blocks the customer's business is a genuine facet of the burden it creates."
+      },
+      {
+        "name": "technical_root_cause",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "Root cause is explicitly a cause of the issue/burden, not a constitutive part of it."
+      },
+      {
+        "name": "is_outage_or_incident",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "Restated duplicate of is_outage; a cause/severity signal external to the concept."
+      },
+      {
+        "name": "system_component_affected",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Duplicate of system_component; the affected component is external context, not a facet of burden."
+      },
+      {
+        "name": "blocker_or_dependency",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Duplicate of blocker_type; captures the business-blocking facet of burden but overlaps."
+      },
+      {
+        "name": "data_risk_or_exposure",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Duplicate of data_risk; captures the data-risk consequence facet but overlaps."
+      },
+      {
+        "name": "technical_root_cause_pattern",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "Duplicate of technical_root_cause; a cause external to the burden concept."
+      }
+    ],
+    "facet_columns": [
+      "customer_impact_scope",
+      "data_risk",
+      "blocker_type",
+      "blocker_or_dependency",
+      "data_risk_or_exposure"
+    ],
+    "non_facet_columns": [
+      "is_outage",
+      "issue_category",
+      "request_type",
+      "system_component",
+      "technical_root_cause",
+      "is_outage_or_incident",
+      "system_component_affected",
+      "technical_root_cause_pattern"
+    ],
+    "mutual_exclusivity": 0.15,
+    "exhaustiveness": 0.35,
+    "rationale": "Most added columns are external predictors or causes of burden (issue_category, request_type, system_component, technical_root_cause, is_outage), not constitutive parts of it. Only impact scope, data risk, and business-blocking severity function as true facets of operational burden. The set is heavily redundant: nearly every column appears twice under different names (is_outage/is_outage_or_incident, blocker_type/blocker_or_dependency, data_risk/data_risk_or_exposure, system_component/system_component_affected, technical_root_cause/technical_root_cause_pattern), destroying mutual exclusivity. Even among genuine facets there is overlap, and key constitutive dimensions of burden such as effort/time cost, volume/frequency, and reopen/escalation load are missing (resolution_minutes exists only in the original table, not as an added facet), so exhaustiveness is low."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 13
+}

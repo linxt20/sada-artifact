@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "is_processed",
+    "days_to_process",
+    "amount_decile"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.372,
+    "focus_coherence": 0.62,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.72,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Expense processing efficiency (how travel-expense records get processed, and their monetary magnitude)",
+    "per_column": [
+      {
+        "name": "is_processed",
+        "supports_focus": true,
+        "rationale": "Binary flag of whether a record has been processed -- a core facet of processing status/efficiency."
+      },
+      {
+        "name": "days_to_process",
+        "supports_focus": true,
+        "rationale": "Processing latency, the central quantitative facet of processing efficiency; also reveals outliers (e.g. 965, 1051 days) worth investigating."
+      },
+      {
+        "name": "amount_decile",
+        "supports_focus": false,
+        "rationale": "Buckets expense magnitude into deciles. Coherent as an analytical dimension, but it centres on spend magnitude rather than processing, so it pulls slightly away from the processing-efficiency focus."
+      }
+    ],
+    "focus_coherence": 0.62,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.72,
+    "rationale": "Two of the three added columns (is_processed, days_to_process) cohere tightly around a single, data-inferable focus: expense processing efficiency/latency, which is genuinely actionable (identify unprocessed items and extreme-latency outliers). These are not mere restatements -- days_to_process derives a meaningful metric from processed_date/opened_at and surfaces investigable anomalies. However, amount_decile introduces a second, distinct concept (spend magnitude) that is not obviously part of the same processing focus, making the set read partly as a small grab-bag rather than a unified facet decomposition around one focus. Structure is sound but thin (only a couple of coherent facets plus a stray dimension), and the deciles column is a mechanical binning rather than a targeted facet. Actionability is solid for the processing angle but diluted by the mixed framing."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

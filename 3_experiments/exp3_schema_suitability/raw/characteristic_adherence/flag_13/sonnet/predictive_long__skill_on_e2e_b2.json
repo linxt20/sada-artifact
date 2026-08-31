@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals are linked to longer resolution duration values?",
+  "focus_variable": "duration_like_resolution_value",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "affected_system_layer",
+    "failure_mode",
+    "reassigned",
+    "assigned_agent",
+    "opened_hour_of_day",
+    "caller_id_group",
+    "location_scope"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.525,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.125
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "duration_like_resolution_value",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of incident (database, email, vpn) is known at/near opening and plausibly correlates with resolution time; lies outside the duration and is not a component of it."
+      },
+      {
+        "name": "affected_system_layer",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Server-side vs network vs client-side is a structural attribute knowable up front and plausibly drives resolution effort; legitimate predictor."
+      },
+      {
+        "name": "failure_mode",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Nature of failure (outage, access_denied, degraded) is diagnosable early and carries signal about difficulty/duration; not a restatement of duration."
+      },
+      {
+        "name": "reassigned",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether an incident was reassigned is generally only known over the incident's lifecycle; reassignments accumulate during the resolution process and are strongly co-determined with longer durations, so using it to predict duration leaks outcome-time information."
+      },
+      {
+        "name": "assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Identity of the handling agent is known during the incident and agent skill/load plausibly affects resolution time; a legitimate (if potentially high-cardinality) predictor outside the focus."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Time-of-day the incident opened is known at intake and may correlate with staffing/queueing delays; a clean pre-outcome predictor."
+      },
+      {
+        "name": "caller_id_group",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Caller identity/group is known at opening and may correlate with request type or priority handling; plausible predictive signal outside the focus."
+      },
+      {
+        "name": "location_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "System-wide vs localized scope is an early-known attribute of impact breadth that plausibly influences resolution effort and duration; legitimate predictor."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.6,
+    "rationale": "Most added columns are early-known attributes of the incident (category, affected layer, failure mode, agent, caller, opening hour, location scope) that lie outside the resolution duration and plausibly carry predictive signal, offering meaningful leverage beyond the original schema. One column, 'reassigned', is problematic: reassignment status typically evolves over the incident lifecycle and is co-determined with longer durations, constituting leakage. There is also some conceptual overlap among incident_category, affected_system_layer, and failure_mode, which are partly redundant. As a set, the features provide moderate genuine predictive leverage."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit-note signals suggest high urgency?",
+  "focus_variable": "urgency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "acute_symptom_severity",
+    "vital_sign_hemodynamic_abnormality",
+    "life_threat_or_organ_failure_present",
+    "urgent_diagnostic_testing_imaging",
+    "acute_intervention_or_procedure_urgency",
+    "department_urgency_category"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.4,
+    "leakage_rate": 0.5
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "urgency",
+    "per_column": [
+      {
+        "name": "acute_symptom_severity",
+        "role": "predictor",
+        "rationale": "Severity of acute symptoms is a clinical signal observable at presentation and plausibly drives urgency without being a restatement of the urgency label itself."
+      },
+      {
+        "name": "vital_sign_hemodynamic_abnormality",
+        "role": "predictor",
+        "rationale": "Abnormal/unstable vitals are contemporaneous physiological measurements that predict urgency and lie outside the urgency variable."
+      },
+      {
+        "name": "life_threat_or_organ_failure_present",
+        "role": "leakage",
+        "rationale": "Active life threat or organ failure is essentially a definitional determinant of high urgency; categories like 'life_threat_active' are near-synonymous with the outcome, restating rather than independently predicting it."
+      },
+      {
+        "name": "urgent_diagnostic_testing_imaging",
+        "role": "leakage",
+        "rationale": "Whether STAT/emergent testing was ordered reflects the clinician's urgency judgment (a downstream consequence of the outcome), so it leaks the label rather than serving as a pre-outcome predictor."
+      },
+      {
+        "name": "acute_intervention_or_procedure_urgency",
+        "role": "leakage",
+        "rationale": "Categorizing the procedure by its own urgency ('emergency_procedure_immediate', 'urgent_within_hours') is a restatement/consequence of urgency itself, not an independent predictor; the name embeds the focus variable."
+      },
+      {
+        "name": "department_urgency_category",
+        "role": "predictor",
+        "rationale": "Department type (already present as 'department') recoded into a coarse urgency-tendency bucket; it derives from an existing predictor. It carries some signal but is largely redundant with the original department column and partly labels by urgency."
+      }
+    ],
+    "n_predictors": 3,
+    "predictive_utility": 0.4,
+    "rationale": "The set mixes genuine pre-outcome clinical predictors (symptom severity, vital-sign abnormality) with several columns that leak or restate the focus. 'life_threat_or_organ_failure' is close to definitional urgency, and both the testing/imaging and intervention-urgency columns describe clinician actions/decisions that follow from the urgency assessment (leakage). The department recode is a redundant transform of an existing column with its own urgency labeling. As a set, real added predictive leverage beyond the original table is modest and undercut by leakage-heavy features that would inflate any model unrealistically."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

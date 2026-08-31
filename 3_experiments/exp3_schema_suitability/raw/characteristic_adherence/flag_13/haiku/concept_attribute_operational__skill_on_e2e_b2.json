@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What operational burdens appear in incident descriptions?",
+  "focus_variable": "operational_burden",
+  "concept": "operational_burden",
+  "n_added_columns": 4,
+  "added_columns": [
+    "primary_impacted_system",
+    "issue_severity_indicator",
+    "scope_of_impact",
+    "resolution_complexity_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.7746,
+    "facet_fraction": 1.0,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.75,
+    "exhaustiveness": 0.8,
+    "mece": 0.7746,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "operational_burden",
+    "per_column": [
+      {
+        "name": "primary_impacted_system",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The affected system/asset is a constitutive aspect of what the operational burden is about -- it characterizes WHERE the burden falls, an intrinsic dimension of the burden itself rather than an external predictor."
+      },
+      {
+        "name": "issue_severity_indicator",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The nature/severity of the failure (access failure, service unavailable/degraded, config error) is an aspect OF the burden -- it describes what kind of disruption constitutes the burden."
+      },
+      {
+        "name": "scope_of_impact",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Breadth of impact (individual vs enterprise-wide) is a genuine constitutive dimension of operational burden: how much of the organization the burden weighs on."
+      },
+      {
+        "name": "resolution_complexity_signal",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The effort/complexity required to resolve is arguably the operational cost dimension of the burden -- an aspect of how burdensome it is to handle, thus a facet of the burden rather than an external cause."
+      }
+    ],
+    "facet_columns": [
+      "primary_impacted_system",
+      "issue_severity_indicator",
+      "scope_of_impact",
+      "resolution_complexity_signal"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.75,
+    "exhaustiveness": 0.8,
+    "rationale": "All four columns are genuine meronymic facets of operational burden: WHERE it lands (impacted system), WHAT kind of disruption (severity/failure type), HOW BROAD (scope), and HOW COSTLY to resolve (resolution complexity). These carve mostly distinct aspects. Mutual exclusivity is somewhat reduced because issue_severity_indicator and resolution_complexity_signal partially co-vary/overlap: 'service_unavailable/access_failure' severity strongly correlates with and is partly restated by 'routine_access_restore/infrastructure_intervention' resolution categories, so the failure-nature and resolution-effort facets blur together. Exhaustiveness is good but not complete: burden dimensions such as temporal duration/persistence (how long the burden lasts) and volume/frequency (recurrence) of the burden are not captured. Overall a coherent, largely MECE faceted decomposition with minor overlap and a couple of missing constitutive aspects."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

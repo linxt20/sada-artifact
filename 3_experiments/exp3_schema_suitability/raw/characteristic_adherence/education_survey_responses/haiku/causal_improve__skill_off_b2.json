@@ -1,0 +1,77 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can educators improve learning satisfaction?",
+  "focus_variable": "learning_satisfaction",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "key_satisfaction_factors",
+    "primary_barrier",
+    "innovation_present",
+    "engagement_quality"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "learning_satisfaction",
+    "per_column": [
+      {
+        "name": "key_satisfaction_factors",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Captures pedagogical practices (project-based engagement, curriculum adaptation, differentiation, feedback/portfolio use) that educators can actually choose to implement. These are intervenable levers directly tied to the 'How can educators improve' framing."
+      },
+      {
+        "name": "primary_barrier",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Barriers like disengagement or hands-on gaps sit on the causal path between teaching practices and satisfaction; they are consequences/obstacles rather than common causes of both treatment and outcome, so they function as mediators, not confounders."
+      },
+      {
+        "name": "innovation_present",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether an innovative approach was adopted is a decision educators can set (yes/partial/no). A settable intervention aligned with the improvement question."
+      },
+      {
+        "name": "engagement_quality",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Engagement is a downstream effect of instructional choices and a driver of satisfaction, placing it on the causal pathway (mediator) rather than being a common cause of both treatment and outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "innovation_present",
+      "key_satisfaction_factors"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The operator supplied genuinely intervenable treatments (innovation_present, and the practices captured in key_satisfaction_factors) that educators could set, satisfying claim (a). However, the what-if claim also requires CONFOUNDERS -- common causes of both treatment and outcome that must be adjusted for to read off a counterfactual effect. The remaining added columns (primary_barrier, engagement_quality) lie on the causal pathway and are mediators, not confounders; adjusting for them would bias the effect estimate. Plausible confounders such as grade_level, subject, or respondent_role already exist in the original table but were NOT added, and no NEW confounder was introduced. Thus the columns fail the decisive test: they set up treatment and mechanism but provide zero adjustment set, so the counterfactual effect of the intervention cannot be identified."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

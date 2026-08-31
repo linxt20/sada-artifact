@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "Avg_Sub_Rating",
+    "Satisfaction_Gap",
+    "Pain_Point_Dimension",
+    "Delight_Driver_Dimension",
+    "Sub_Rating_Variance",
+    "Service_Tier",
+    "Value_For_Money_Class_Adjusted"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.1071,
+    "predictor_fraction": 0.4286,
+    "n_predictors": 3,
+    "redundancy": 0.0,
+    "predictive_utility": 0.25,
+    "leakage_rate": 0.5714
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "Avg_Sub_Rating",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Average of the sub-rating dimensions (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment, Value For Money). These sub-ratings are essentially components/co-determinants of Overall Rating and are strongly collinear with it; averaging them yields a near-restatement of the focus with minimal independent signal."
+      },
+      {
+        "name": "Satisfaction_Gap",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Values span roughly -5 to +2.4, consistent with a difference between Overall Rating and Avg_Sub_Rating. It is computed from the focus variable itself, so it directly encodes/leaks the outcome and cannot be known independently of it."
+      },
+      {
+        "name": "Pain_Point_Dimension",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Identifies which sub-dimension is the reviewer's weakest. This is derived from sub-ratings (not the overall) and captures a qualitative pattern of dissatisfaction that plausibly carries signal about the overall rating without being a deterministic function of it. Weak/borderline but admissible as it does not restate the focus."
+      },
+      {
+        "name": "Delight_Driver_Dimension",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Identifies the strongest-performing sub-dimension. Derived from sub-ratings rather than the overall rating; conveys which aspect drives positive sentiment, offering plausible categorical signal about satisfaction without deterministically encoding the focus."
+      },
+      {
+        "name": "Sub_Rating_Variance",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Dispersion across the sub-ratings. This is orthogonal to the mean level and captures consistency of experience, which can add predictive leverage about overall satisfaction beyond the raw sub-scores. Not a restatement of the focus."
+      },
+      {
+        "name": "Service_Tier",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A coarse High/Medium/Low bucketing that appears derived from aggregated service/sub-ratings closely tied to satisfaction; it largely restates the same information already captured by Avg_Sub_Rating and offers little independent signal beyond the components of the outcome."
+      },
+      {
+        "name": "Value_For_Money_Class_Adjusted",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Value For Money is one of the sub-rating components highly collinear with Overall Rating; class-adjusting it does not remove that it is essentially a component/co-determinant of the focus, so it leaks outcome information rather than serving as an external predictor."
+      }
+    ],
+    "n_predictors": 3,
+    "predictive_utility": 0.25,
+    "rationale": "The strongest-magnitude features (Avg_Sub_Rating, Satisfaction_Gap, Service_Tier, Value_For_Money_Class_Adjusted) are built from the sub-ratings that co-determine Overall Rating, or directly from the focus itself, so they leak/restate rather than predict. The genuinely admissible features are the structural summaries of the sub-rating profile (Pain_Point_Dimension, Delight_Driver_Dimension, Sub_Rating_Variance), which describe the shape/consistency of the ratings rather than restating the mean level. These add modest, real leverage but are still derived from the same rating family and none introduce truly external drivers (e.g., route, class, traveller type, verification, price). Net predictive utility beyond the original columns is low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

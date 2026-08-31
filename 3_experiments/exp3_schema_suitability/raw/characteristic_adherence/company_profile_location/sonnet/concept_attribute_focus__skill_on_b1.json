@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What market-expansion focus should analysts study?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "industry_vertical",
+    "company_stage",
+    "business_model",
+    "technology_domain",
+    "customer_segment",
+    "growth_lever"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8717,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.8358,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a strong grouping axis for market-expansion analysis by sector. Values are sound readings of descriptions (23andMe->healthtech, 5AM Ventures->VC). Well-distributed, not near-constant."
+      },
+      {
+        "name": "company_stage",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Useful axis for prioritizing expansion targets by maturity. However stage is often not stated in descriptions (e.g. 280 Group->growth_stage, Addepar->growth_stage are somewhat speculative), so groundedness is moderate; VC firm classification is well-warranted."
+      },
+      {
+        "name": "business_model",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Distinct, high-value axis (SaaS vs hardware vs fund vs services) for market analysis. Values are well-supported by text (platform->saas, VC->investment_fund, 23andMe->direct_to_consumer)."
+      },
+      {
+        "name": "technology_domain",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Complements industry_vertical with a tech-capability axis. Uses 'not_present' appropriately for silent rows. Genomics for 23andMe grounded; 5AM Ventures->genomics_biotech is a warranted inference from 'life science companies'."
+      },
+      {
+        "name": "customer_segment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "B2B/B2C/SMB segmentation is directly relevant to which markets to expand into. Readings are reasonable, though some (VC firm->enterprise_b2b) are inferred rather than stated. Heavily skewed toward enterprise_b2b but still analytically useful."
+      },
+      {
+        "name": "growth_lever",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Most directly on-point for a 'market-expansion focus' query. Uses 'not_present' for silent rows. Some assignments are inferential (Addepar->product_led_growth) but generally defensible from the text; dominant product_led_growth value is somewhat speculative for terse descriptions."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.8,
+    "rationale": "The six added columns give genuinely distinct, non-redundant axes (sector, stage, model, tech, customer, growth lever) that together enable rich grouping and comparison for a market-expansion query. Values are well-grounded readings of the descriptions, with correct use of 'not_present'/'not_stated' for silent rows. Some columns (company_stage, growth_lever) lean on inference where short descriptions are silent, modestly lowering groundedness, but no clear hallucinations or text contradictions were observed."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

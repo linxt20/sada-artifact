@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "defect_or_failure",
+    "strong_negative_language",
+    "regret_sentiment",
+    "unmet_expectation",
+    "value_concern"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.12,
+    "predictor_fraction": 0.4,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "predictive_utility": 0.3,
+    "leakage_rate": 0.6
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "defect_or_failure",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of a described product defect is an observable content feature that lies outside the satisfaction label and plausibly drives negative satisfaction without deterministically defining it."
+      },
+      {
+        "name": "strong_negative_language",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Emphatic/casual negative language is essentially a restatement of expressed dissatisfaction; it is a direct manifestation of the sentiment/label rather than an independent antecedent signal, so it approaches leakage of label_pos."
+      },
+      {
+        "name": "regret_sentiment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Categories like 'waste_of_money', 'would_not_recommend', and 'regret_or_remorse' are expressions of dissatisfaction itself, effectively restating the negative label rather than predicting it from an external factor."
+      },
+      {
+        "name": "unmet_expectation",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Being 'not_as_described' or 'false_advertising' references a concrete product/listing attribute mismatch that is distinguishable from the satisfaction judgment and plausibly causes it, offering some predictive signal."
+      },
+      {
+        "name": "value_concern",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "'not_worth_it', 'poor_value', 'overpriced' are evaluative dissatisfaction statements that largely coincide with a negative label rather than serving as an independent predictor of it."
+      }
+    ],
+    "n_predictors": 2,
+    "predictive_utility": 0.3,
+    "rationale": "Most added columns encode expressed dissatisfaction (strong negative language, regret, value complaints), which restate or leak the satisfaction label rather than providing external predictive features; a model using them would largely be reading the outcome off its own manifestation. Only defect_or_failure and unmet_expectation reference concrete, outcome-external product/listing conditions that plausibly cause dissatisfaction and offer legitimate predictive leverage. As a set, genuine predictive value beyond the raw text is limited."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

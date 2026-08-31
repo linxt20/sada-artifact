@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different themes do students raise in these open responses?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "engagement_trajectory",
+    "subject_format_alignment",
+    "hands_on_instruction_impact",
+    "peer_interaction_loss",
+    "teacher_pedagogical_strategy",
+    "asynchronous_format_advantage",
+    "parental_involvement_demand"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.6396,
+    "focus_coherence": 0.82,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The learning/instructional experience under remote or non-traditional (e.g., online/asynchronous) delivery, as reflected in student open responses",
+    "per_column": [
+      {
+        "name": "engagement_trajectory",
+        "supports_focus": true,
+        "rationale": "Captures how student engagement evolved, a core facet of the remote-learning experience theme."
+      },
+      {
+        "name": "subject_format_alignment",
+        "supports_focus": true,
+        "rationale": "Assesses fit between subject and delivery format, directly on the instructional-experience focus."
+      },
+      {
+        "name": "hands_on_instruction_impact",
+        "supports_focus": true,
+        "rationale": "Themes the loss of practical/lab instruction under remote delivery."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "supports_focus": true,
+        "rationale": "Social/collaborative facet of the remote-learning experience."
+      },
+      {
+        "name": "teacher_pedagogical_strategy",
+        "supports_focus": true,
+        "rationale": "Instructional adaptation facet, coherent with the focus."
+      },
+      {
+        "name": "asynchronous_format_advantage",
+        "supports_focus": true,
+        "rationale": "Directly names the async delivery mode benefits, central to the inferred focus."
+      },
+      {
+        "name": "parental_involvement_demand",
+        "supports_focus": true,
+        "rationale": "Home-support facet of remote learning, though heavily not_applicable/null suggesting weak grounding."
+      }
+    ],
+    "focus_coherence": 0.82,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.8,
+    "rationale": "The columns converge coherently on a single implied focus: the student experience of remote/online (notably asynchronous) instruction, decomposed into well-differentiated thematic facets (engagement, format fit, hands-on loss, peer interaction, teacher adaptation, async advantages, parental support). This is a genuine theme extraction rather than a grab-bag, and the facets sit at a useful granularity with categorical distinctions an analyst could act on (e.g., which subjects suffer format misalignment, where hands-on loss is critical). Weaknesses: the query only asks generically about 'themes' with no signal of remote/online context, so the system has read in a fairly specific pandemic/online-learning frame that may not be data-inferable; several columns (asynchronous_format_advantage, parental_involvement_demand) are dominated by NULL/not_applicable/not_relevant values, indicating those facets are poorly grounded in the actual responses and thin the structure. Overall a strong, coherent, actionable inferred focus with moderate over-specification and some sparsely-populated facets."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

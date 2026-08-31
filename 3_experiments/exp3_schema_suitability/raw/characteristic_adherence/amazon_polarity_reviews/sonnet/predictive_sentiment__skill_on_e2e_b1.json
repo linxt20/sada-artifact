@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review facets differ by sentiment label?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "product_category",
+    "quality_dimension",
+    "complaint_severity",
+    "emotional_intensity",
+    "primary_emotion",
+    "expectation_gap_direction",
+    "defect_or_failure_type",
+    "recommendation_stance"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7937,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.875,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.8343,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.95,
+        "rationale": "Provides a genuine grouping axis (category vs sentiment) orthogonal to the query. Values are well-grounded readings (doll=physical_product, book, music, movie all correct)."
+      },
+      {
+        "name": "quality_dimension",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Directly maps to 'review facets' the query asks about; good analytical leverage. Samples are sound (book=content_quality, skin cream=performance_accuracy). AMZ-0001 'not_present' is defensible since it's about availability, not quality."
+      },
+      {
+        "name": "complaint_severity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Ordinal severity is a strong facet to compare across sentiment. NULL for silent/positive rows is correct behaviour. Values largely reasonable, though numeric severity is partly subjective."
+      },
+      {
+        "name": "emotional_intensity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Adds a distinct affective magnitude axis. Grounded in expressive text, though the near-constant clustering at 2-3 slightly limits leverage and values are inherently subjective."
+      },
+      {
+        "name": "primary_emotion",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Fine-grained emotion is a rich facet beyond the binary label, ideal for this query. Mostly sound, though AMZ-0001 labeled 'sadness' where 'disgust/disappointment' (text says 'disturbing') is arguably better — minor mismatch, not a hallucination."
+      },
+      {
+        "name": "expectation_gap_direction",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "rationale": "Useful comparative dimension. Some readings require inference (met/exceeded is not always explicit in text), but samples are defensible interpretations."
+      },
+      {
+        "name": "defect_or_failure_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "rationale": "Concrete failure taxonomy adds strong analytical value for negative reviews. 'not_present' dominance is correct for reviews without defects. AMZ-0001 'missing_content_or_features' is a reasonable read of product unavailability."
+      },
+      {
+        "name": "recommendation_stance",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Directly relevant facet; distinguishes explicit vs implicit stance beyond the label. Samples well-grounded (Skip it=warns_against, Bicycle Thieves=explicitly_recommends)."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.87,
+    "rationale": "The added columns collectively supply multiple genuine, non-redundant facets (category, quality dimension, severity, emotion, expectation gap, defect type, recommendation stance) that directly serve the query 'how do review facets differ by sentiment label.' None are near-constant restatements of the original label. Values are consistently sound readings of the source text, with appropriate NULL/not_present handling for silent rows and only minor subjective/interpretive mismatches (e.g., primary_emotion 'sadness' on AMZ-0001). No confabulated specific facts observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

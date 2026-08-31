@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "performance_vs_claim",
+    "content_quality_aspect",
+    "value_expectation_outcome",
+    "recommendation_stance",
+    "emotional_intensity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.74,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.71,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "performance_vs_claim",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A meaningful axis (product delivering on its promise) that helps explain complaints vs praise. But several rows have no explicit 'claim' yet are confidently coded: the doll review is availability-driven with no product claim, and the music review has no claim, both forced into 'below_claim'. These invent a claim frame the text does not support, weakening groundedness."
+      },
+      {
+        "name": "content_quality_aspect",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes which quality dimension drives sentiment (writing, plot, production, etc.), a strong grouping axis for this query. Mostly well grounded: writing_style for the Lamott book and 'not_present' for the skincare/doll rows are apt. The music review coded 'plot_character' is a stretch (it critiques emotional depth, not plot/character), but tolerable as loose categorisation."
+      },
+      {
+        "name": "value_expectation_outcome",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Value/expectation framing is relevant to complaints about worth. Grounded where price is discussed (Bicycle Thieves = meets_expectation). But the doll review coded 'waste_of_money' asserts a purchase/money outcome the text never mentions (item was never bought), an unsupported specific. Partial overlap with performance_vs_claim but distinct enough."
+      },
+      {
+        "name": "recommendation_stance",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Clear, high-leverage axis directly tied to praise/complaint outcomes. Values are well grounded: 'Skip it' and 'not enough to recommend it' = warns_against; explicit recommendations captured correctly. The doll review as 'explicitly_warns_against' is a mild overread but defensible given the negative framing."
+      },
+      {
+        "name": "emotional_intensity",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "An ordinal intensity scale can add a modelling axis beyond the binary label, but it is heavily concentrated at value 3 and reads as a somewhat generic affect proxy, limiting analytical leverage. Values are plausible readings of tone (strongly negative reviews scored higher), so groundedness is acceptable though inherently subjective."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns give several genuine, distinct axes (recommendation stance, quality aspect, claim performance, value outcome) that directly serve the 'what drives praise/complaints' query; only emotional_intensity is comparatively generic. Groundedness is generally sound as categorisation, but a recurring failure mode is forcing money/claim frames onto rows that lack them (notably the doll availability review coded as below_claim and waste_of_money), producing unsupported specifics. Overall the set meets both necessary conditions at a good-but-imperfect level."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

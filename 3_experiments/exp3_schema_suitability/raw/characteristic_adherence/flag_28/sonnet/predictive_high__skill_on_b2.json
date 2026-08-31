@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "focus_variable": "high_goal_achievement",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "intervention_type",
+    "action_specificity",
+    "baseline_reference_present",
+    "improvement_magnitude",
+    "time_horizon",
+    "scope_breadth",
+    "metric_category_alignment",
+    "technology_enablement",
+    "feedback_loop_present"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "predictive_utility": 0.72,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "high_goal_achievement",
+    "per_column": [
+      {
+        "name": "intervention_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The kind of intervention (automation, training, cost restructuring, etc.) is a characteristic of the goal's approach knowable in advance and plausibly correlates with whether it will be highly achieved. Legitimate exogenous predictor."
+      },
+      {
+        "name": "action_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether specific actions are named versus a general approach reflects planning quality, an antecedent trait that plausibly carries predictive signal about achievement. Does not restate or leak the outcome."
+      },
+      {
+        "name": "baseline_reference_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of a baseline reference is a plan-quality feature available before the outcome; measurable goals often perform differently. Valid predictor."
+      },
+      {
+        "name": "improvement_magnitude",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The ambition of the targeted improvement (20% vs 25-30% vs <15%) is set at goal definition, outside the achievement outcome, and plausibly affects likelihood of high achievement. Legitimate predictor, though partially related to target_percentage."
+      },
+      {
+        "name": "time_horizon",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Timeframe (quarter, fiscal year, multi-year) is known upfront and plausibly influences achievement odds. Exogenous predictor."
+      },
+      {
+        "name": "scope_breadth",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Organizational scope (company-wide vs team-level) is a structural attribute set before outcome and can correlate with achievement. Valid predictor."
+      },
+      {
+        "name": "metric_category_alignment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the stated action aligns with the metric being measured is a plan-coherence feature knowable in advance and plausibly predictive. Not a restatement of the outcome."
+      },
+      {
+        "name": "technology_enablement",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether technology enables the goal is an approach attribute available upfront that may boost achievement. Legitimate predictor."
+      },
+      {
+        "name": "feedback_loop_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Existence of a feedback/monitoring loop is a design feature knowable in advance and plausibly linked to higher achievement. Valid predictor."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.72,
+    "rationale": "All nine added columns are exogenous, plan- and approach-level attributes of a goal that are knowable before the achievement outcome is realized; none restate high_goal_achievement or leak it via a component/deterministic function. As a set they capture distinct dimensions (intervention type, specificity, measurability, ambition, timeframe, scope, alignment, tech, feedback), giving a model meaningful predictive leverage beyond the original operational columns. Utility is strong but not maximal because several are derived from the same description field and some (e.g., improvement_magnitude) overlap with existing target_percentage, limiting independent signal."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

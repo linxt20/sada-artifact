@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does goal achievement vary across department, metric, and the management practices described?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "primary_intervention_type",
+    "improvement_lever",
+    "timeframe_horizon",
+    "measurement_mechanism",
+    "has_quantified_baseline",
+    "initiative_scope",
+    "involves_technology_investment",
+    "involves_people_program",
+    "target_metric_alignment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7778,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8111,
+    "source_groundedness__table_level": 0.81,
+    "b1_overall": 0.7945,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_intervention_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "A genuine categorical axis of management practice, directly relevant to grouping goal achievement by intervention. Mostly well-grounded (resource_optimization, process_redesign, feedback_survey are sound readings), but the customer-satisfaction row labeled 'training_development' misreads a description about after-sales support/personalized interactions, showing some inference drift."
+      },
+      {
+        "name": "improvement_lever",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful grouping axis for how goals are pursued, though it overlaps conceptually with primary_intervention_type (e.g., cost_cutting appears in both). Values largely track the source text well (market_expansion, workflow_efficiency, employee_engagement)."
+      },
+      {
+        "name": "timeframe_horizon",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Temporal horizon is a strong, distinct axis and directly extractable from cues like 'next fiscal year', 'by Q4', 'compared to last quarter'. Well grounded, with reasonable NULLs for silent rows."
+      },
+      {
+        "name": "measurement_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "How achievement is measured is directly tied to the metric axis of the query and gives a useful comparison dimension. Values map sensibly to descriptions (survey_score, financial_kpi, operational_kpi)."
+      },
+      {
+        "name": "has_quantified_baseline",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derivable from presence of 'from X to Y' phrasing and directly relevant as a management-practice quality signal for goal setting. Samples are accurately labeled true/false."
+      },
+      {
+        "name": "initiative_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Scope is a plausible analytical axis, but many source texts do not explicitly state scope, so 'company_wide' vs 'department_wide' involves confident assignment where the text is often silent (e.g., the cost-reduction row 'across functions' -> company_wide is defensible, but scope labels are frequently under-specified in source)."
+      },
+      {
+        "name": "involves_technology_investment",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binary practice flag with modest analytical leverage; useful for one grouping but fairly generic. Grounded in text where technology/automation is mentioned; sampled rows correctly return false."
+      },
+      {
+        "name": "involves_people_program",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Another binary practice flag with limited standalone leverage but relevant to the management-practices dimension. Samples are soundly labeled (engagement/personalized interactions -> true)."
+      },
+      {
+        "name": "target_metric_alignment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Whether the stated metric matches the described goal is a highly relevant lever for the query. However, groundedness is shaky: the labeling appears keyed to obvious mismatches (e.g., metric 'Expense Ratio' on a customer-satisfaction goal -> misaligned) yet some assignments are questionable, and 'aligned/misaligned' is a judgment that is only partly warranted by the text, risking over-confident calls."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.81,
+    "rationale": "The added columns collectively give several genuinely distinct axes (intervention type, improvement lever, timeframe, measurement mechanism, baseline quality, scope, and target-metric alignment) that directly support grouping goal achievement by metric and management practices. Some redundancy exists between intervention_type and improvement_lever, and the two binary technology/people flags are weaker but still relevant. Groundedness is generally sound for extractive columns (timeframe, baseline, measurement), with the main risks in inference-heavy columns—initiative_scope and target_metric_alignment—where confident labels are sometimes asserted despite silent or ambiguous source text, and one intervention mislabel (training_development) was observed."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "eda_achievement",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

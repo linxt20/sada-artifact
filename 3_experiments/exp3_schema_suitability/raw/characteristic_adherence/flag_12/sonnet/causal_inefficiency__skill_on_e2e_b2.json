@@ -1,0 +1,134 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are some incidents resolved inefficiently, and which underlying issues drive it?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "issue_subtype",
+    "affected_asset_type",
+    "hardware_vs_software",
+    "reassignment_indicator",
+    "action_type",
+    "resolver_workload_proxy",
+    "urgency_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 6,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 6,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident (printer, software, network) plausibly affects both the treatment (what action/handling is applied) and resolution efficiency, since some categories are inherently harder to resolve. A common cause not named in the query."
+      },
+      {
+        "name": "issue_subtype",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The specific nature of the problem (device not responding, hardware failure) drives both what action is taken and how efficiently it can be resolved. Surfaced from the data, not named in query."
+      },
+      {
+        "name": "affected_asset_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Asset type plausibly influences both the handling approach and the difficulty/efficiency of resolution. Not named in query."
+      },
+      {
+        "name": "hardware_vs_software",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A coarser grouping of category; the same common-cause logic applies but it is largely redundant with incident_category. Still a plausible common cause, not named in query."
+      },
+      {
+        "name": "reassignment_indicator",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether an incident was reassigned is a candidate cause of inefficient resolution -- a handling event whose effect on efficiency is being attributed."
+      },
+      {
+        "name": "action_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The type of action taken (repair, investigation, replacement) is a candidate cause whose effect on resolution efficiency is under attribution."
+      },
+      {
+        "name": "resolver_workload_proxy",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "A proxy for resolver workload/handling situation; workload plausibly affects both what action is chosen and how efficiently things get resolved. However it partly overlaps reassignment_indicator and is somewhat mislabeled/noisy (values 'reassigned_resolver' vs 'sole_resolver'), weakening it."
+      },
+      {
+        "name": "urgency_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Urgency/disruption level plausibly drives both prioritization (treatment/handling) and resolution efficiency, and is not named in the query -- a genuine surfaced common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "reassignment_indicator",
+      "action_type"
+    ],
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "issue_subtype",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "affected_asset_type",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "hardware_vs_software",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "urgency_signal",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "resolver_workload_proxy",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The added columns supply both candidate treatments (reassignment_indicator, action_type) and a set of confounders that are genuine common causes of both the handling and resolution efficiency, and critically none were named or implied by the generic query ('why are incidents resolved inefficiently'), demonstrating the confounders were surfaced from the data/text. Incident category, issue subtype, asset type, and urgency are plausible common causes of both treatment choice and outcome. Some redundancy exists (hardware_vs_software with incident_category) and resolver_workload_proxy is somewhat noisy and overlaps the reassignment treatment, borderline collider/mediator, which lowers overall confounder quality. The causal estimation setup is realized reasonably well but not cleanly."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

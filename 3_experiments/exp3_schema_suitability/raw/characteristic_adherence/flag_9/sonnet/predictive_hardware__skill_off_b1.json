@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals indicate a hardware incident is in the anomaly window?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_hardware",
+    "priority_score",
+    "resolution_hours",
+    "hw_incidents_last_7d",
+    "hw_anomaly_window",
+    "hw_resolution_zscore"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8333,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.8667,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.85,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_hardware",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Classifying incidents as hardware vs not is central to the query about hardware incidents. Sample rows describing software/database issues are correctly flagged 0, consistent with short_description and category."
+      },
+      {
+        "name": "priority_score",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Largely a numeric restatement of the existing 'priority' original column, so limited new leverage, though it is a plausible signal. Values are groundable from the priority field."
+      },
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Duration between opened_at and closed_at is a genuine new numeric axis useful for anomaly detection. Derivable from timestamps present in the table; the spike at 24 suggests some imputation but broadly grounded."
+      },
+      {
+        "name": "hw_incidents_last_7d",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A rolling count of hardware incidents is a strong signal for identifying anomaly windows (volume spikes). Derivable from opened_at timestamps plus is_hardware across rows."
+      },
+      {
+        "name": "hw_anomaly_window",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by flagging rows in the anomaly window. Rare-positive but that is expected for an anomaly flag, not a defect. Derivable from the counts/z-scores; sample non-hardware rows correctly 0."
+      },
+      {
+        "name": "hw_resolution_zscore",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Standardized resolution time restricted to hardware incidents is a sensible anomaly signal. NULL for non-hardware rows is correct silent behaviour, matching the samples. Groundable from resolution_hours over the hardware subset."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.87,
+    "rationale": "The added columns collectively provide strong analytical leverage for identifying hardware incidents in an anomaly window: a hardware classifier, resolution duration, a rolling hardware volume count, a z-score, and the anomaly flag itself. Most are well grounded in table timestamps and descriptions, with correct NULL handling for non-hardware rows. The main weakness is priority_score, which largely restates the existing priority column and adds limited new value. No hallucinations observed in the provided samples."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "predictive_hardware",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

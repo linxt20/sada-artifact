@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest a goal will be highly achieved?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "completion_gap",
+    "progress_ratio",
+    "priority_score",
+    "duration_days",
+    "is_on_track",
+    "high_achievement_score"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7667,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.7833,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "completion_gap",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Gap between percent_complete and target_percentage is a direct, meaningful signal for how fully a goal is achieved; derivable from the two original percentage columns. Sign conventions look consistent with the difference of existing values."
+      },
+      {
+        "name": "progress_ratio",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Ratio of progress to target gives a normalized achievement axis, useful for comparison and modeling. Derived from percent_complete/target_percentage; values >1 (e.g. 1.5192) are plausible over-achievement, grounded in the numeric columns."
+      },
+      {
+        "name": "priority_score",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A numeric encoding of the existing priority column; largely redundant with priority but a clean numeric form is mildly helpful for modeling. Values clearly grounded in the original priority field."
+      },
+      {
+        "name": "duration_days",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Span between start_date and end_date is a genuine new axis relevant to whether goals get achieved. Mostly grounded in date columns, though negative values (-15) indicate some data issues rather than invented facts."
+      },
+      {
+        "name": "is_on_track",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Binary flag derivable from completion vs target; a useful grouping variable for the query. Somewhat redundant with completion_gap/progress_ratio but offers a clean categorical cut. Values consistent with the gap sign."
+      },
+      {
+        "name": "high_achievement_score",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "A composite score directly targeting the query is useful, but its construction is opaque and often just equals progress_ratio (rows 1,3,5), making it partly redundant; row 4 (0.862 = 2*0.431) shows an unclear weighting. Values are function of grounded columns but the aggregation logic is inconsistent."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns give several genuine analytical axes (completion gap, progress ratio, duration, on-track flag) directly relevant to what signals a highly achieved goal, all derivable from the original percentage and date fields. priority_score and high_achievement_score are partly redundant restatements, but still add mild leverage. Values are soundly grounded in the source columns; occasional anomalies (negative durations, inconsistent composite weighting) reflect data/logic quirks rather than invented facts, so no clear hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "predictive_high",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

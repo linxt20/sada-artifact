@@ -1,0 +1,106 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "skill_on",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.6,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "depth",
+        "quote": "The effect persists within the Critical priority tier (off-hours Critical: 1,154 h vs. business-hours Critical: 1,095 h)",
+        "why": "cross-segment causal check"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Match=True: 1,055 h vs. Match=False: 1,041 h — negligible 14 h difference",
+        "why": "quantified null signals"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "is_unassigned_at_open ... no variance, no predictive power",
+        "why": "honest handling of null column"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "Pearson correlation of r = 0.856 against resolution hours",
+        "why": "quantified strongest predictor"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "True (lag present) | 1,486 hours ... 197",
+        "why": "concrete magnitude and n"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "any incident that is not immediately assigned is at high risk",
+        "why": "decision-ready lever"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B surfaces a dominant quantified predictor (assignment_lag r=0.856, ~3x effect) that A misses, giving it stronger decision value.",
+  "validation_warnings": [
+    "winner_conflicts_with_dimension_sum"
+  ],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "cabin_crew_service_sentiment",
+    "aircraft_condition_status",
+    "operational_reliability",
+    "ground_staff_professionalism",
+    "price_value_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.88,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.88,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "cabin_crew_service_sentiment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A review theme extracted from free text with three well-separated, human-readable categories (indifferent_rude / professional_friendly / exceptional_attentive). These form a clean ordinal-ish segmentation that can be cross-tabbed against Overall Rating within Type of Traveller and Class. It is not a bare positive/negative score but a labelled service-quality gradient, so it supports interpretable relationship discovery. Mild conceptual overlap with the existing numeric 'Staff Service' rating, but as a text-derived thematic label it still adds a distinct, groupable axis."
+      },
+      {
+        "name": "aircraft_condition_status",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Captures a distinct review theme (fleet/aircraft condition) absent from the original numeric columns. Categories (modern_well_maintained / adequately_maintained / showing_age / outdated_worn) are clearly ordered and interpretable, allowing meaningful segmentation against Overall Rating. NULL share (~1709) is non-trivial but the populated categories are well distributed, so comparisons remain informative."
+      },
+      {
+        "name": "operational_reliability",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Encodes a punctuality/disruption theme not represented in the original schema. The categories (reliable_on_time / minor_delay_managed / significant_delay_unmanaged / cascading_disruption) are well-separated and interpretable along a severity scale, making them ideal for segment-vs-rating comparisons. This is a genuinely external, associational variable for the focus."
+      },
+      {
+        "name": "ground_staff_professionalism",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A ground-service theme distinct from in-flight staff, with four clean, interpretable categories (professional / efficient_helpful / slow_disorganized / rude_unhelpful) spanning positive to negative. Low NULL count and balanced distribution make it a strong grouping variable to compare against Overall Rating across traveller/class segments."
+      },
+      {
+        "name": "price_value_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Value-for-money theme with interpretable categories (premium_value_justified / fair_value / poor_overpriced / aggressive_cost_cutting) that segment cleanly. It conceptually overlaps with the existing numeric 'Value For Money' column, but as a categorical text-derived theme it offers a directly groupable qualitative axis aligned with the 'review themes' framing of the query, so it still functions as a usable predictor rather than a restatement of the focus."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.88,
+    "rationale": "The query asks which REVIEW THEMES relate to higher/lower Overall Rating within Type of Traveller and Class. All five added columns are text-derived thematic variables with interpretable, well-separated categorical scales (service, aircraft condition, reliability, ground staff, price/value) rather than opaque scores or mechanical text statistics. None restates the focus (Overall Rating), and each can be grouped/segmented and cross-tabbed against it, satisfying the EDA claim of opening informative, human-understandable relationships. Slight deduction because two themes (cabin crew sentiment, price/value) conceptually echo existing numeric rating columns (Staff Service, Value For Money), and a couple carry moderate NULL rates, marginally reducing independent explanatory coverage; but as a set they strongly support interpretable relationship discovery."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What business models and customers do these companies describe?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_business_model",
+    "primary_customer_segment",
+    "service_delivery_mode",
+    "industry_focus",
+    "value_proposition_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.88,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.76,
+    "b1_overall": 0.815,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_business_model",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the 'business models' part of the query and provides a clean categorical axis to group companies. Samples are well-grounded: VC firms tagged vc_investment, 280 Group tagged consulting, 23andMe as software_platform is a defensible reading of a personalized-reports product. Values follow soundly from the descriptions."
+      },
+      {
+        "name": "primary_customer_segment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Directly addresses the 'customers' part of the query and gives a genuine grouping axis. Consumer/enterprise assignments are mostly reasonable (23andMe consumer, Addepar enterprise). However VC firms labeled 'enterprise' is a somewhat loose inference since their customers/investees aren't explicitly enterprise; still defensible but not strongly supported by the text."
+      },
+      {
+        "name": "service_delivery_mode",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A useful new axis distinct from business model. But groundedness is weak in samples: both VC firms are labeled 'api_based', which the descriptions do not support at all and is essentially invented. 280 Group's training/consulting labeled 'cloud_saas' is also unwarranted. Delivery mode is often not stated in these short descriptions, yet confident specifics were produced."
+      },
+      {
+        "name": "industry_focus",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Strong analytical leverage for comparing sectors across companies. Mostly well-grounded: 5AM/life science to healthcare_biotech, Addepar to enterprise_data. 23andMe as 'consumer_marketplace' is a slightly off fit (it's more health/genomics), and 280 Group as education_training is reasonable given training/certification mention."
+      },
+      {
+        "name": "value_proposition_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Adds a distinct modeling axis on why customers buy. Addepar to analytics_insight and 23andMe to user_experience are sound readings. VC firms mapped to revenue_growth (returns to investors) is defensible. 280 Group to efficiency_automation is a weaker inference from a proven-process claim but not contradictory."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.76,
+    "rationale": "The added columns collectively give strong, non-redundant analytical leverage for a query about business models and customers: business model, customer segment, industry, value proposition, and delivery mode each offer a distinct grouping/comparison axis. Groundedness is generally good but dragged down by service_delivery_mode, which fabricates confident specifics (e.g., 'api_based' for venture capital firms) where the source text is silent. Other columns are mostly sound readings of the descriptions, with only minor loose inferences."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_business",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

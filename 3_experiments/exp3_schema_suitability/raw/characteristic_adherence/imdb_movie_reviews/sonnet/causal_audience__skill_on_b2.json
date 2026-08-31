@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "focus_variable": "audience_dissatisfaction",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "writing_quality_issue",
+    "plot_structural_issue",
+    "genre_execution_quality"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.2,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.2,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "audience_dissatisfaction",
+    "per_column": [
+      {
+        "name": "writing_quality_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Categorizes a candidate cause (poor dialogue, uninspired/cliched writing, incoherent narrative) whose effect on dissatisfaction is being attributed. This is a plausible driver of the outcome, i.e., a treatment/cause, not a confounder."
+      },
+      {
+        "name": "plot_structural_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause of dissatisfaction (plot holes, no plot, underdeveloped characters). Like writing quality, it is a proposed cause, not a common cause of another treatment and the outcome."
+      },
+      {
+        "name": "genre_execution_quality",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Genre (failed drama/horror/comedy/etc.) plausibly affects both the type of writing/plot issues that arise (treatment) and audience expectations/dissatisfaction (outcome), so it could act as a common cause. However, its 'failed_X' framing entangles it with the outcome, weakening its status as a clean confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "writing_quality_issue",
+      "plot_structural_issue"
+    ],
+    "confounders": [
+      {
+        "name": "genre_execution_quality",
+        "named_in_query": false,
+        "plausibility": 0.3
+      }
+    ],
+    "confounder_quality": 0.2,
+    "rationale": "The added columns supply candidate causes (treatments): writing_quality_issue and plot_structural_issue, both surfaced from the review text rather than the query. However, the operator fails the decisive causal-attribution test: it provides essentially NO genuine confounders -- variables that are common causes of both a treatment and the outcome and must be adjusted to avoid bias. The only candidate, genre_execution_quality, is itself framed as a failure/quality outcome ('failed_drama') and thus behaves more like another treatment or an outcome-entangled variable than a clean pre-treatment common cause; pure genre (independent of execution) would be a better confounder but was not isolated. No demographic, exposure, rating-baseline, or reviewer-level common causes are surfaced. The set therefore identifies plausible causes but does not set up an unbiased causal estimation, so confounder quality is low."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

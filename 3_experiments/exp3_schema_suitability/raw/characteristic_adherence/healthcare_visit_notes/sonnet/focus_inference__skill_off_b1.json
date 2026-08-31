@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "concern_category",
+    "chief_complaint"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.76,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.935,
+    "source_groundedness__table_level": 0.93,
+    "b1_overall": 0.8475,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "concern_category",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by grouping visits into clinical concern types, giving a strong axis to aggregate and compare. Categories are well-grounded in the reason_for_visit text (e.g. knee pain->Musculoskeletal, MI follow-up->Cardiovascular). One borderline case: an annual physical with fatigue/BP/BMI was labeled 'Endocrine / Metabolic' when it is arguably preventive/general, a defensible but slightly overconfident reading, so groundedness is not perfect."
+      },
+      {
+        "name": "chief_complaint",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.97,
+        "hallucination_observed": false,
+        "rationale": "Extracts the leading clause of reason_for_visit as a concise chief complaint. Values are faithful, near-verbatim extractions from the source. However for the query about MAIN TYPES of concerns it is largely a truncation of an existing column and highly high-cardinality (mostly singletons), so it offers limited grouping leverage beyond concern_category, though it still aids drill-down/verification."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.93,
+    "rationale": "concern_category is a genuinely useful, well-grounded categorical axis that directly serves the 'main types of concerns' query. chief_complaint is faithfully extracted but mostly a restatement/truncation of reason_for_visit with high cardinality, limiting its analytical leverage for typing concerns. Both columns are soundly derivable from the source text with no invented facts; only minor overconfident categorisation (the physical-as-Endocrine case) slightly lowers groundedness."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 2
+}

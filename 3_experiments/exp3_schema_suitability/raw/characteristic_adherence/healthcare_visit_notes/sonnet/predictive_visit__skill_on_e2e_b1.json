@@ -1,0 +1,102 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit reasons point to different departments?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "primary_clinical_domain",
+    "presenting_problem_category",
+    "body_system",
+    "visit_acuity_level",
+    "symptom_onset_pattern",
+    "encounter_type",
+    "care_phase",
+    "chronic_vs_acute",
+    "procedure_performed",
+    "specialist_referral_needed"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.705,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.875,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.79,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_clinical_domain",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Maps reason text to a clinical domain, which is exactly the axis needed to relate visit reasons to departments. Values are well-grounded in each source text (preventive, respiratory, cardiovascular, dermatology, MSK all correct)."
+      },
+      {
+        "name": "presenting_problem_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "A useful complementary grouping (chronic vs acute vs screening vs trauma). Values are sound readings, though 'chronic_disease_management' for the acne active-treatment case is arguable but defensible."
+      },
+      {
+        "name": "body_system",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "rationale": "Body system is partly redundant with primary_clinical_domain but offers a somewhat different physiological axis. Grounded values; the physical-exam row mapped to 'endocrine' (from HbA1c/lipids) is a reasonable inference, with sensible 'not_present' for silent rows."
+      },
+      {
+        "name": "visit_acuity_level",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "rationale": "Largely a refinement of the existing 'urgency' original column; adds modest leverage for a department query. Values are well-grounded readings of urgency and text."
+      },
+      {
+        "name": "symptom_onset_pattern",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "rationale": "Onset pattern is a genuine new axis for characterizing reasons. Grounded (sudden for injury/cough, asymptomatic for wellness, chronic for acne), with 'not_present' used appropriately."
+      },
+      {
+        "name": "encounter_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Distinguishes scheduled/followup/preventive/emergency visits, useful for linking reasons to departments. Grounded overall, though the acne row labeled 'acute_unscheduled' despite chronic framing is a mild inconsistency."
+      },
+      {
+        "name": "care_phase",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.85,
+        "rationale": "Adds a treatment-stage axis with some overlap with presenting_problem_category and chronic_vs_acute. Values mostly grounded; wellness row as 'monitoring_surveillance' is defensible but loose."
+      },
+      {
+        "name": "chronic_vs_acute",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "rationale": "Substantially restates presenting_problem_category and care_phase (acute/chronic/preventive split), reducing marginal analytical leverage. Values are well-grounded."
+      },
+      {
+        "name": "procedure_performed",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "rationale": "Procedures done can differentiate departments and adds a new axis. Grounding is mostly sound but the wellness row labeled 'imaging_ordered' is unsupported (only lab panels were ordered, no imaging), a mild hallucination."
+      },
+      {
+        "name": "specialist_referral_needed",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Referral pattern is a useful axis relating reasons to onward department needs. Values grounded; MRI-order case as 'subspecialty_referral' is a reasonable inference, silent rows as 'none_self_contained'."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.87,
+    "rationale": "The added columns collectively provide multiple genuine axes (clinical domain, body system, problem category, onset, encounter type, referral) that directly support relating visit reasons to departments. Some columns overlap heavily (chronic_vs_acute vs presenting_problem_category vs care_phase; visit_acuity_level vs original urgency), diluting marginal usefulness. Values are generally well-grounded readings of the reason text with appropriate 'not_present' for silent rows; the main grounding lapse is 'imaging_ordered' asserted for a row that only had labs ordered."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

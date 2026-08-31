@@ -1,0 +1,109 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do resolution duration values vary across tickets?",
+  "focus_variable": "resolution_duration_variation",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_duration_minutes",
+    "priority_level",
+    "opened_hour_of_day",
+    "opened_during_business_hours",
+    "assignee_avg_resolution_minutes",
+    "category_avg_resolution_minutes"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_duration_minutes (resolution duration variation across tickets)",
+    "per_column": [
+      {
+        "name": "resolution_duration_minutes",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is the concrete operationalization of the focus outcome -- resolution duration itself, whose variation is being explained."
+      },
+      {
+        "name": "priority_level",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Priority is a plausible candidate cause of resolution duration (higher priority worked faster). It functions as the treatment whose effect on the outcome is being attributed. Not named in the query."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Time of day plausibly affects both which tickets get which priority/handling (assignment patterns) and resolution duration (staffing at that hour). A common-cause candidate surfaced from opened_at, not the query."
+      },
+      {
+        "name": "opened_during_business_hours",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Business-hours status can influence assignment/priority handling and directly affect duration via staffing availability -- a plausible common cause. Surfaced from the data, not named in query."
+      },
+      {
+        "name": "assignee_avg_resolution_minutes",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Assignee skill/speed plausibly influences both which tickets (priorities) they are given and the resolution duration outcome. A common cause aggregated from the data. However it is partly derived from the outcome itself, weakening it toward a proxy."
+      },
+      {
+        "name": "category_avg_resolution_minutes",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Ticket category plausibly drives both assigned priority and intrinsic resolution difficulty/duration -- a genuine common cause. Surfaced from data, not the query. Being an outcome-average makes it partly a proxy."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "priority_level"
+    ],
+    "confounders": [
+      {
+        "name": "opened_hour_of_day",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "opened_during_business_hours",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "assignee_avg_resolution_minutes",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "category_avg_resolution_minutes",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The added columns do set up a causal estimation: priority_level acts as a treatment, and several plausible confounders were surfaced from the underlying data (hour of day, business-hours, assignee-level and category-level effects) rather than copied from the vague 'why does duration vary' query, which named no specific variables. This demonstrates the capability under test. Quality is moderated because two confounders (assignee_avg and category_avg) are averages of the outcome itself, making them proxies that risk mechanical construction and partial mediation rather than clean common causes, and hour/business-hours pairs are correlated. No mediators or colliders were mislabeled."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

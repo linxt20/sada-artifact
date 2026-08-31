@@ -1,0 +1,1308 @@
+[
+  {
+    "var_a": "original",
+    "var_b": "skill_off",
+    "swap": false,
+    "winner": "A",
+    "margin": "large",
+    "ok": true,
+    "confidence": 0.9,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 3,
+      "evidence": 3,
+      "depth": 3,
+      "actionability": 2,
+      "coherence": 2
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 2,
+        "delta_a_minus_b": 3,
+        "winner": "A",
+        "margin": "large"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 2,
+        "delta_a_minus_b": 3,
+        "winner": "A",
+        "margin": "large"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "IT is 44.2% (19/43)",
+          "why": "concrete segment magnitudes"
+        },
+        {
+          "dimension": "depth",
+          "quote": "IT → Assets ... 13/23 declined",
+          "why": "multi-level segmentation and causal reasoning"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Declined ... lower mean amount (3706) than Processed (4436)",
+          "why": "numeric comparison"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "processed_date is not a usable pre-submit driver",
+          "why": "correctly rejects leakage variable"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Add a mandatory pre-submit check for asset type",
+          "why": "targeted decision-ready action"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "every single declined submission (46/46) is missing its processed_date",
+          "why": "numeric but leakage artifact"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "IT department alone accounts for 41% of all declines",
+          "why": "concrete share"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "perfect correlation ... may not reflect organic business patterns",
+          "why": "undermines its own primary finding"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A gives valid segmented, causally-sound recommendations while B centers its main finding on a leakage variable it later admits is invalid.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "large",
+    "ok": true,
+    "confidence": 0.95,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 2,
+      "actionability": 2,
+      "coherence": 2
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 2,
+        "score_b": 5,
+        "delta_a_minus_b": -3,
+        "winner": "B",
+        "margin": "large"
+      },
+      "actionability": {
+        "score_a": 2,
+        "score_b": 5,
+        "delta_a_minus_b": -3,
+        "winner": "B",
+        "margin": "large"
+      },
+      "coherence": {
+        "score_a": 2,
+        "score_b": 5,
+        "delta_a_minus_b": -3,
+        "winner": "B",
+        "margin": "large"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Declined average: $3,706 (median: $3,471)",
+          "why": "numeric amount comparison"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "every single declined submission (46/46) is missing its processed_date",
+          "why": "treats an outcome field as a pre-submit driver, a logical flaw"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "IT → Assets ... 13/23 declined",
+          "why": "drills into department-category intersection"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "IT is 44.2% (19/43) and contributes 41.3% of all declines",
+          "why": "precise rates and counts"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "processed_date is not a usable pre-submit driver",
+          "why": "correctly rejects A's leakage error"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Add a pre-submit validation step for IT and travel-related requests",
+          "why": "targeted, dataset-specific action"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B avoids A's outcome-leakage flaw and provides deeper, correctly targeted, decision-ready analysis.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.82,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Assets are 56.5% declined (13/23)",
+          "why": "granular sub-segment with counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "opened_at year 2024: 25/184 declined (13.6%) vs 2023: 21/316 (6.6%)",
+          "why": "temporal comparison"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Declined mean amount 3706 vs Processed 4436",
+          "why": "rules out amount lever"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "present source_id rows still decline heavily (15/30 = 50.0%)",
+          "why": "nuanced, non-contradictory"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "IT Department: 44.2% decline rate (19 of 43)",
+          "why": "concrete counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "reduce the overall decline rate from 9.2% to approximately 5–6%",
+          "why": "quantified projection though speculative"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Customer Support: 6.0% decline rate (16 of 267)",
+          "why": "267 conflicts with A's total counts"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper segmentation, causal checks, and self-consistent numbers versus B's more generic claims.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.85,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "IT Department: 44.2% decline rate (19 of 43 submissions declined)",
+          "why": "concrete rates with counts"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Declined submissions represent 9.2% of the total (46 out of 500 records)",
+          "why": "numeric base rate"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Compliance Gaps: Travel expense submissions often lack required justifications",
+          "why": "speculative claim not tied to data weakens consistency"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "IT is 44.2% ... contributes 41.3% of all declines ... Assets are 56.5% declined",
+          "why": "layered cross-segmentation"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Declined ... lower mean amount (3706) than Processed (4436)",
+          "why": "quantified lever comparison"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "processed_date ... reflects outcome status rather than a factor available before review",
+          "why": "correctly flags leakage"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "opened_at year 2024: 25/184 declined (13.6%) vs 2023: 21/316 (6.6%)",
+          "why": "time-window comparison"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Add a pre-submit validation step for IT and travel-related requests",
+          "why": "decision-ready, targeted"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides deeper concentrated segmentation, guards against leakage, and rejects weak levers with numeric evidence.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "IT is 44.2% (19/43) and contributes 41.3% of all declines",
+          "why": "numeric claims with counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "in IT, where present source_id rows still decline heavily (15/30 = 50.0%)",
+          "why": "segmented interaction reasoning"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Some spikes are likely unstable... too small to treat as a permanent rate",
+          "why": "flags weak evidence honestly"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "custom CI identifiers (e.g., \"Desktop_30123_Dell\")",
+          "why": "concrete entity examples"
+        },
+        {
+          "dimension": "depth",
+          "quote": "IT user_initiated 6/10 60.0%; automatically_generated 10/23 43.5%",
+          "why": "cross-group segmentation"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "eliminate approximately 16 declined submissions... ~9 fewer declines",
+          "why": "contradictory impact estimates"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": [
+        {
+          "column": "submission_pattern",
+          "quote": "The augmented column submission_pattern reveals",
+          "dependent": true
+        },
+        {
+          "column": "ci_identifier_quality",
+          "quote": "augmented column ci_identifier_quality",
+          "dependent": true
+        },
+        {
+          "column": "travel_expense_flag",
+          "quote": "augmented column travel_expense_flag",
+          "dependent": true
+        },
+        {
+          "column": "expense_description_specificity",
+          "quote": "augmented column expense_description_specificity",
+          "dependent": true
+        },
+        {
+          "column": "asset_type_category",
+          "quote": "By asset type (augmented), travel equipment",
+          "dependent": true
+        }
+      ]
+    },
+    "reason": "A matches B's depth and evidence but is internally consistent, while B has contradictory decline-count totals and department figures.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "IT | 19 | 43 | 44.2%",
+          "why": "numeric department table"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "reduce total declines from 46 to approximately 29–31 (37% reduction)",
+          "why": "quantified plan"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Target: Reduce IT rate from 44.2% to 12%... Impact: ~9 fewer declines",
+          "why": "summary claimed ~16 but detail says ~9, contradiction"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "IT, Assets are 56.5% declined (13/23)",
+          "why": "drills into department×category intersection"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "opened_at year 2024: 25/184 declined (13.6%) vs 2023: 21/316 (6.6%)",
+          "why": "temporal numeric comparison"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "processed_date is not a usable pre-submit driver",
+          "why": "flags leakage, internally consistent caveats"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "user=Vernon Engelman: 7/13 declined",
+          "why": "named submitter magnitudes"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B matches A's evidence but adds temporal, submitter, and leakage-aware depth without A's summary-vs-detail contradiction.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "large",
+    "ok": true,
+    "confidence": 0.9,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "100% missing processed_date (46/46)",
+          "why": "numeric but overweighted artifact"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "single control addresses 100% of the decline pattern",
+          "why": "contradicts own data-quality caveat"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "IT Department: 44.2% decline rate (19 of 43)",
+          "why": "rates by base, real comparison"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Templated Generic Descriptions: 33.3% decline rate",
+          "why": "segmented numeric evidence"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Lack of processed_date is a marker of pre-processing rejection, not a predictor",
+          "why": "correctly avoids spurious cause"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "reduce the overall decline rate from 9.2% to approximately 5–6%",
+          "why": "quantified decision-ready target"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B uses decline rates over proper bases and multiple real segments, while A leans on a spurious processed_date artifact.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.68,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "IT Department: 44.2% decline rate (19 of 43 submissions declined)",
+          "why": "concrete counts and rates"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Review the 19 declined IT submissions",
+          "why": "decision-ready steps"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "processed_date is a marker of pre-processing rejection, not a predictor",
+          "why": "downplays signal it earlier stressed, mild inconsistency"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "every single declined submission (46/46) is missing its processed_date field",
+          "why": "clear numeric distinguishing factor"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "perfect correlation ... is unusual ... may not reflect organic business patterns",
+          "why": "honest caveat, internally consistent"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Declined average: $3,706 ... Processed average: $4,436",
+          "why": "cross-group amount comparison"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B is more internally consistent and honest about the dominant processed_date signal, while A contradicts itself on that same factor.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "large",
+    "ok": true,
+    "confidence": 0.93,
+    "scores_a": {
+      "specificity": 3,
+      "evidence": 3,
+      "depth": 2,
+      "actionability": 2,
+      "coherence": 2
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "evidence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 2,
+        "score_b": 5,
+        "delta_a_minus_b": -3,
+        "winner": "B",
+        "margin": "large"
+      },
+      "actionability": {
+        "score_a": 2,
+        "score_b": 5,
+        "delta_a_minus_b": -3,
+        "winner": "B",
+        "margin": "large"
+      },
+      "coherence": {
+        "score_a": 2,
+        "score_b": 5,
+        "delta_a_minus_b": -3,
+        "winner": "B",
+        "margin": "large"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "all 100% of declined records lack a processed_date",
+          "why": "leakage artifact, not actionable driver"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "may not reflect organic business patterns",
+          "why": "undermines its own primary finding"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "IT | 19 | 43 | 44.2%",
+          "why": "decline rate table by department"
+        },
+        {
+          "dimension": "depth",
+          "quote": "IT user-initiated submissions show the highest risk (60% decline rate, n=10)",
+          "why": "cross-segmentation with sample sizes"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "reduce total declines from 46 to approximately 29–31 (37% reduction)",
+          "why": "quantified decision-ready targets"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "custom CI identifiers ... 15.9% decline rate",
+          "why": "concrete magnitudes"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": [
+        {
+          "column": "submission_pattern",
+          "quote": "The augmented column `submission_pattern`",
+          "dependent": true
+        },
+        {
+          "column": "ci_identifier_quality",
+          "quote": "The augmented column `ci_identifier_quality`",
+          "dependent": true
+        },
+        {
+          "column": "expense_description_specificity",
+          "quote": "The augmented column `expense_description_specificity`",
+          "dependent": true
+        },
+        {
+          "column": "travel_expense_flag",
+          "quote": "The augmented column `travel_expense_flag`",
+          "dependent": true
+        }
+      ]
+    },
+    "reason": "B provides segmented, quantified, decision-ready drivers while A's core finding is a coherence-breaking data leakage artifact.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "large",
+    "ok": true,
+    "confidence": 0.9,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 3,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "IT | 19 | 43 | 44.2%",
+          "why": "concrete counts and rates by department"
+        },
+        {
+          "dimension": "depth",
+          "quote": "IT | user_initiated | 6 | 10 | 60.0%",
+          "why": "cross-segmentation of department and pattern"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "reduce total declines from 46 to approximately 29–31 (37% reduction)",
+          "why": "quantified decision-ready targets"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "every single declined submission (46/46) is missing its processed_date",
+          "why": "strong numeric claim"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "may not reflect organic business patterns",
+          "why": "acknowledges leakage undermining core finding"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper multi-factor segmentation and quantified interventions, while B leans on a likely-leaky processed_date artifact.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.85,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "IT Department: 44.2% decline rate (19 of 43 submissions declined)",
+          "why": "concrete counts and rate"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Templated Generic Descriptions: 33.3% decline rate (3 of 9)",
+          "why": "numeric backing"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "declined at 7x the company average",
+          "why": "44.2/9.2 is ~4.8x, not 7x; inconsistent"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "IT user_initiated 6 10 60.0% ... automatically_generated 10 23 43.5%",
+          "why": "cross-segmentation by dept and pattern"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "custom_identifier 10 63 15.9%",
+          "why": "table-backed CI quality"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "reduce total declines from 46 to approximately 29–31 (37% reduction)",
+          "why": "quantified per-intervention impact"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "declined submissions have a slightly lower mean amount ($3,706 vs. $4,436)",
+          "why": "concrete magnitudes"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides deeper cross-segmented, table-backed analysis with quantified per-intervention impacts, while A has a coherence error and less depth.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_on",
+    "swap": true,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.82,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 3,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "IT | user_initiated | 6 | 10 | 60.0%",
+          "why": "cross-segmentation of department x pattern"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "custom_identifier | 10 | 63 | 15.9%",
+          "why": "claims tied to tabled numbers"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "reduce total declines from 46 to approximately 29–31",
+          "why": "quantified per-intervention impact"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Desktop_30123_Dell",
+          "why": "concrete example entities cited"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "44.2% decline rate (19 of 43 submissions declined)",
+          "why": "numeric claims"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Templated Generic Descriptions: 33.3% decline rate (3 of 9)",
+          "why": "concrete magnitudes"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "declined at 7x the company average",
+          "why": "consistent framing"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper cross-segmentation, richer numeric evidence, and quantified decision-ready interventions.",
+    "validation_warnings": []
+  }
+]

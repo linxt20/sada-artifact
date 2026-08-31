@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest a longer visit?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "num_conditions",
+    "has_procedure",
+    "has_multiple_meds",
+    "note_length",
+    "is_urgent_note",
+    "has_diagnostics"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.625,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.6917,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.6583,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "num_conditions",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Clinical complexity is a strong plausible driver of visit length, giving a genuine grouping/modeling axis. However groundedness is shaky: the URI note counts '4' conditions and the knee-injury note '1' in ways not clearly supported by distinct diagnoses in the text; counts appear inflated/inconsistent."
+      },
+      {
+        "name": "has_procedure",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Whether a procedure occurred is a meaningful and non-redundant predictor of duration. Sample rows have no procedures and are correctly '0'; no positive samples to verify, but silent-row zeros are reasonable."
+      },
+      {
+        "name": "has_multiple_meds",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Medication burden is a reasonable complexity signal, though highly imbalanced (7 positives) limiting leverage. The acne row lists two medications (adapalene + doxycycline) yet is coded '0', suggesting the extraction is unreliable."
+      },
+      {
+        "name": "note_length",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Raw character/token length is explicitly named as a generic low-leverage feature; it is trivially derivable and adds little genuine analytical axis beyond the richer complexity columns. Values are directly computable from the text, so groundedness is high."
+      },
+      {
+        "name": "is_urgent_note",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A note-derived urgency flag is largely redundant with the existing 'urgency' column, reducing leverage. Groundedness is questionable: two rows explicitly marked Urgent in source are coded '0', showing the derived flag disagrees with stated urgency without clear textual basis."
+      },
+      {
+        "name": "has_diagnostics",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Presence of ordered labs/imaging is a strong, non-redundant signal for longer visits. Sample values track the text well: labs/MRI/echo notes are '1', the URI and acne notes without diagnostics are '0'."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.68,
+    "rationale": "Several columns (num_conditions, has_procedure, has_diagnostics) provide genuine complexity axes well-suited to predicting visit duration, while note_length is generic and is_urgent_note largely restates the existing urgency column. Groundedness is mixed: has_diagnostics and note_length read the text soundly, but num_conditions shows inconsistent counts, has_multiple_meds miscodes a multi-med row as 0, and is_urgent_note contradicts explicitly Urgent source rows, indicating some values assert readings the text does not support."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

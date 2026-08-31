@@ -1,0 +1,108 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "focus_variable": "review_score",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "text_length",
+    "word_count",
+    "helpfulness_ratio",
+    "summary_length",
+    "exclamation_count",
+    "question_count",
+    "uppercase_ratio",
+    "positive_keyword_count",
+    "negative_keyword_count",
+    "review_year"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5,
+    "predictor_fraction": 1.0,
+    "n_predictors": 10,
+    "redundancy": 0.0,
+    "predictive_utility": 0.5,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "review_score",
+    "per_column": [
+      {
+        "name": "text_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Character count of the review text is known before the outcome and is a weak but legitimate predictor; verbose reviews often correlate with more critical or extreme scores."
+      },
+      {
+        "name": "word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Token count of the text is a valid external feature; carries modest signal (length correlates with sentiment polarity), though largely redundant with text_length."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from HelpfulnessNumerator/Denominator, which are separate from the score. Helpfulness is community feedback that plausibly correlates with score and does not deterministically encode it; a legitimate predictor."
+      },
+      {
+        "name": "summary_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Length of the summary field is external to the score and plausibly carries weak signal similar to text length."
+      },
+      {
+        "name": "exclamation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Exclamation frequency is a genuine stylistic/affective feature outside the focus and plausibly correlates with enthusiasm and thus higher scores."
+      },
+      {
+        "name": "question_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of question marks is an external stylistic feature that can signal confusion or dissatisfaction; weak but legitimate signal."
+      },
+      {
+        "name": "uppercase_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Proportion of uppercase characters proxies emphasis/shouting, an affective signal outside the score; plausible weak predictor."
+      },
+      {
+        "name": "positive_keyword_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Lexicon-based positive term count is a sentiment feature derived from text, not from the score, and is a strong plausible predictor of higher scores."
+      },
+      {
+        "name": "negative_keyword_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Negative term count is a sentiment feature external to the focus and a strong plausible predictor of lower scores."
+      },
+      {
+        "name": "review_year",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Year derived from Time is external to the score and can capture temporal drift in rating behavior; a legitimate weak predictor."
+      }
+    ],
+    "n_predictors": 10,
+    "predictive_utility": 0.5,
+    "rationale": "All ten added columns are legitimate predictors: each is derived from text, metadata, or helpfulness signals that lie outside review_score and involve no leakage. The set is dominated by generic surface-text statistics (length, word count, summary length, punctuation, uppercase ratio) which carry only weak, partly redundant signal. The genuinely useful features are the sentiment-lexicon counts (positive/negative keyword counts), plus helpfulness_ratio and review_year. Because the strongest predictive leverage rests on a couple of crude lexicon counts while the rest is mechanical, the set provides moderate but not strong incremental predictive power beyond the original columns."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

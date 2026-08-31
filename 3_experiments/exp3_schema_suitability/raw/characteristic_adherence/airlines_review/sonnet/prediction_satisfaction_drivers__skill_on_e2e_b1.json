@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "ground_staff_service_quality",
+    "service_consistency",
+    "flight_disruption_type",
+    "disruption_handling_quality",
+    "food_quality_assessment",
+    "special_meal_handling",
+    "seat_product_downgrade",
+    "customer_service_responsiveness"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7222,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8056,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7639,
+    "hallucination_rate": 0.2222
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A categorised crew-service axis is a genuine driver dimension distinct from the numeric Staff Service rating, useful for grouping. Values track the reviews well (excellent for the faultless flight, poor for the neglectful crew). One weak case: 'good' for a review that praises the flight but is really about reservations, but overall a sound reading; NULLs for silent rows are appropriate."
+      },
+      {
+        "name": "ground_staff_service_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Separates ground/airport service from cabin service — a distinct, groupable axis. Values are grounded (negative for reseating/reservation failures, positive for orderly check-in), and 'Unknown' correctly used when text is silent. Slight ambiguity between call-center issues counted as ground staff, but defensible."
+      },
+      {
+        "name": "service_consistency",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Consistency of service is a meaningful analytical lens. However groundedness is weaker: the aircraft-change/rescheduling review labeled 'consistently_poor' is an unwarranted overreach since that text describes no in-flight service at all, and 'inconsistent_across_legs' for the round-trip review is partly supported. Some labels assert a service pattern the text does not clearly establish."
+      },
+      {
+        "name": "flight_disruption_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Disruption type is a strong, distinct categorical driver for satisfaction analysis. Values are well grounded (delay for the reschedule, aircraft_change for the SQ101 swap, no_disruption for smooth flights)."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Complements disruption_type with an actionable quality dimension. Mostly grounded, but the Phuket review is marked 'poorly_handled' when its complaint is about the reservation/payment system rather than a flight disruption, and the aircraft-change 'poorly_handled' is inferred from a proposed swap rather than stated bad handling — some overreach."
+      },
+      {
+        "name": "food_quality_assessment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A categorical food assessment adds a groupable axis; it partly overlaps the existing Food & Beverages numeric rating but offers a text-derived reading. Values reasonable (average for the fine-but-flawed meal, excellent for faultless flight), NULLs appropriate for silent rows."
+      },
+      {
+        "name": "special_meal_handling",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Heavily skewed boolean (874 false / 26 true) with very rare positives; limited leverage for explaining overall satisfaction across airlines. Values that appear are plausible and silent rows default to false correctly, so groundedness is fine, but analytical value is low."
+      },
+      {
+        "name": "seat_product_downgrade",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Near-constant boolean (23 true), limiting analytical leverage, though a downgrade is a plausible driver when present. The 'True' for the ex-MI aircraft swap is a defensible reading of a product change; values are grounded."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Responsiveness of customer service is a distinct, groupable driver. Values grounded (unresponsive for the 6-hour call ordeal, not_contacted for smooth flights)."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns supply several genuinely useful text-derived axes (crew, ground staff, disruption type/handling, food, responsiveness) that go beyond the existing numeric ratings and give real grouping/comparison leverage for explaining Overall Rating. A couple of columns (special_meal_handling, seat_product_downgrade) are near-constant booleans with weak leverage. Groundedness is generally sound with appropriate 'Unknown'/NULL for silent rows, but service_consistency and disruption_handling_quality show some overreach, labeling service or handling quality where the source text does not clearly support the assertion."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

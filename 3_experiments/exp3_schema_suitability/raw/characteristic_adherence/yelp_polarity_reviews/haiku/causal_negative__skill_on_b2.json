@@ -1,0 +1,69 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "service_quality_failure",
+    "staff_rudeness_dismissiveness",
+    "expectations_versus_reality_gap"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "service_quality_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of a negative experience (service failures like slowness, disorganization). This is a plausible driver of the outcome and is surfaced from review text, not named in the query."
+      },
+      {
+        "name": "staff_rudeness_dismissiveness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause of negativity (rudeness, dismissiveness). Like the above, it is a driver/explanatory factor rather than a common cause of another treatment."
+      },
+      {
+        "name": "expectations_versus_reality_gap",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A further candidate explanatory factor (overhype, not-as-described). Also a driver of the outcome, not a common cause of the other treatments."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "service_quality_failure",
+      "staff_rudeness_dismissiveness",
+      "expectations_versus_reality_gap"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query 'which factors best explain negative experiences' is served with three plausible candidate causes/treatments extracted from review text (service failures, staff rudeness, expectation gaps). These realise part (a) of the claim: multiple treatments/drivers of the outcome are present. However, part (b) is entirely absent. The system supplied NO confounders -- i.e., variables that plausibly cause BOTH one of these treatments AND the negative label (e.g., restaurant price tier, cuisine type, customer prior expectations, time/wait context, reviewer harshness/rating tendency, establishment type). Without such common causes, any attribution of the outcome to these factors is uncontrolled and potentially biased; the columns form a parallel list of candidate explanations rather than a causal estimation design. The decisive test for surfaced confounders cannot be passed because none exist. Confounder quality is 0."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

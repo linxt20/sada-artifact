@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "plot_coherence_logic",
+    "acting_performance_level",
+    "visual_direction_artistry",
+    "pacing_editing_flow",
+    "emotional_depth_authenticity",
+    "entertainment_fun_factor",
+    "originality_freshness"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "plot_coherence_logic",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Captures a distinct review theme (plot quality) with well-separated interpretable categories that can be cross-tabulated against sentiment."
+      },
+      {
+        "name": "acting_performance_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Acting quality is an external, associational theme with clear categories; useful for segmenting positive vs negative reviews."
+      },
+      {
+        "name": "visual_direction_artistry",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Visual/directorial quality is a separate theme with interpretable levels, groupable against the label."
+      },
+      {
+        "name": "pacing_editing_flow",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Pacing is a distinct dimension with well-populated, well-separated categories good for comparison."
+      },
+      {
+        "name": "emotional_depth_authenticity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Emotional depth is a meaningful theme; categories are clear though the polarity correlates closely with sentiment."
+      },
+      {
+        "name": "entertainment_fun_factor",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Entertainment value is an interpretable theme with balanced categories; borders on restating sentiment but still adds thematic detail."
+      },
+      {
+        "name": "originality_freshness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Originality is a valid theme, though 'not_present' dominates (166), weakening the comparison somewhat."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.82,
+    "rationale": "The added columns decompose reviews into distinct, interpretable thematic dimensions (plot, acting, visuals, pacing, emotion, entertainment, originality), each with well-separated categorical values that can be segmented and compared against the positive/negative label — directly serving the query about how themes differ by sentiment. They are external associational variables aimed at human understanding, not opaque model features. Minor weaknesses: some columns (emotional_depth, entertainment) carry evaluative polarity that partly restates sentiment rather than acting as fully independent themes, and 'originality_freshness' is skewed toward 'not_present', limiting its comparative signal. Overall a strong, informative set."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

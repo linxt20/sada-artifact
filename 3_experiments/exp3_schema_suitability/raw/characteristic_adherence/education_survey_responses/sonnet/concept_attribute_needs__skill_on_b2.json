@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "focus_variable": "learner_needs_and_pain_points",
+  "concept": "learner_needs_and_pain_points",
+  "n_added_columns": 6,
+  "added_columns": [
+    "instructional_format",
+    "teacher_responsiveness",
+    "engagement_level",
+    "peer_interaction_loss",
+    "handson_gap_type",
+    "positive_adaptation"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.4137,
+    "facet_fraction": 0.6667,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.55,
+    "mece": 0.6205,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "learner_needs_and_pain_points",
+    "per_column": [
+      {
+        "name": "instructional_format",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The mode of instruction (live, async, project-based) is a contextual attribute of the learning environment that may CAUSE or predict needs/pain points, but it is not itself an aspect OF a learner's needs or pain. It classifies the delivery format, not a facet of the concept."
+      },
+      {
+        "name": "teacher_responsiveness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Support/responsiveness from teachers is a genuine dimension of learner needs and a recognized pain point (absent_or_unresponsive). It captures the 'support/instructor availability' aspect of the concept."
+      },
+      {
+        "name": "engagement_level",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Disengagement/withdrawal is a core experiential pain point for learners; engagement is a constitutive aspect of learner experience and unmet needs (motivation/attention)."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Loss of peer interaction/community is a direct, named pain point and reflects the social/relational facet of learner needs."
+      },
+      {
+        "name": "handson_gap_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Gaps in hands-on/experiential learning (labs, studios, manipulatives) are concrete unmet needs; this is a legitimate practical/experiential facet of the concept."
+      },
+      {
+        "name": "positive_adaptation",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Positive adaptations (innovative curriculum, learner growth, community building) are successes/bright spots, the OPPOSITE of needs and pain points. They are not a part-of the pain-point concept and shift the axis away from it."
+      }
+    ],
+    "facet_columns": [
+      "teacher_responsiveness",
+      "engagement_level",
+      "peer_interaction_loss",
+      "handson_gap_type"
+    ],
+    "non_facet_columns": [
+      "instructional_format",
+      "positive_adaptation"
+    ],
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.55,
+    "rationale": "Four of six columns are true facets of learner needs/pain points, carving into support, engagement, social/peer, and hands-on/experiential aspects. These are fairly non-overlapping, though engagement and peer_interaction_loss have some conceptual bleed (disengagement often driven by social loss), modestly lowering exclusivity. instructional_format is an external context predictor and positive_adaptation is the opposite polarity (successes, not pains), so both fail the part-of test. Coverage of the pain-point concept is partial: important facets like technology/access barriers, cognitive/academic difficulty, workload/time management, and assessment/feedback needs are missing, keeping exhaustiveness moderate."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

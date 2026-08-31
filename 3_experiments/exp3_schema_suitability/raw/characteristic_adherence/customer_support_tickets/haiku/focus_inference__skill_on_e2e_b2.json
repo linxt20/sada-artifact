@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_category",
+    "primary_product_area",
+    "root_cause_mechanism",
+    "resolution_action_type"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.855,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/taxonomy of support ticket issues -- classifying what each ticket is about across its lifecycle (type of issue, where it occurs, why, and how it is resolved)",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "supports_focus": true,
+        "rationale": "Directly answers the query -- the kind of issue (bug, feature_request, outage, etc.). This is the core focus facet."
+      },
+      {
+        "name": "primary_product_area",
+        "supports_focus": true,
+        "rationale": "Locates the issue within the product surface, a coherent facet characterising WHERE an issue arises, differentiating issue kinds by domain."
+      },
+      {
+        "name": "root_cause_mechanism",
+        "supports_focus": true,
+        "rationale": "Characterises WHY the issue occurred; a coherent explanatory facet of an issue, adding analytical depth beyond bare category."
+      },
+      {
+        "name": "resolution_action_type",
+        "supports_focus": true,
+        "rationale": "Characterises HOW the issue was addressed; a coherent facet of the issue lifecycle that further distinguishes issue kinds."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.9,
+    "focus_actionability": 0.9,
+    "rationale": "All four columns centre on a single coherent, data-inferable focus: the taxonomy/characterisation of support ticket issues. They form a well-structured multi-facet decomposition (what the issue is, where it lives, why it happened, how it was resolved) at a useful, differentiated granularity -- not a single restatement nor generic noise. issue_category directly serves the query, and the other three enrich it with orthogonal but tightly related facets. The implied focus is highly actionable: an analyst can prioritise categories, spot root-cause clusters, and align resolution strategies. Minor deduction on structure because root_cause and resolution overlap somewhat in signal (e.g., 'code_hotfix_or_rollback' mirrors 'recent_deployment'), and 'not_present' dominating root_cause_mechanism suggests sparse inference for that facet, but the set remains coherent and analytically sound."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

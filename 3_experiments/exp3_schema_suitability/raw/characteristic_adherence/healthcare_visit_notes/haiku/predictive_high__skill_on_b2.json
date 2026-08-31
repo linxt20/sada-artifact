@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit-note signals suggest high urgency?",
+  "focus_variable": "urgency",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "acute_symptom_timeline",
+    "urgent_diagnostic_or_intervention_trigger",
+    "treatment_intensity_or_escalation",
+    "department_disposition"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.05,
+    "predictor_fraction": 0.25,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "predictive_utility": 0.2,
+    "leakage_rate": 0.75
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "urgency",
+    "per_column": [
+      {
+        "name": "acute_symptom_timeline",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Symptom onset speed (minutes-to-hours vs. days) is an antecedent clinical signal derivable from the presenting complaint. It plausibly precedes and predicts urgency without restating it or requiring outcome knowledge."
+      },
+      {
+        "name": "urgent_diagnostic_or_intervention_trigger",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Categories like critical lab findings, urgent imaging, protocol/alert activation, and transfer to higher acuity are near-synonymous with the visit being urgent, and are determined during/after the urgency assessment. This effectively encodes the outcome rather than predicting it."
+      },
+      {
+        "name": "treatment_intensity_or_escalation",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Treatment intensity (ICU admission, emergent IV meds, surgery, escalation) is a downstream response to urgency, knowable only after the clinical decision. Using it to predict urgency is post-outcome leakage, not an independent predictor."
+      },
+      {
+        "name": "department_disposition",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Values bake the urgency label directly into the category (e.g., 'cardiology_with_acute_issue', 'general_practice_urgent', 'dermatology_routine'). This is a restatement of urgency conditioned on department rather than an outside predictor, and partly derives from the existing 'department' column."
+      }
+    ],
+    "n_predictors": 1,
+    "predictive_utility": 0.2,
+    "rationale": "Only one column (acute_symptom_timeline) is a legitimate outside predictor of urgency. The other three encode diagnostic triggers, treatment escalation, and urgency-labeled dispositions that are downstream consequences of or synonymous with urgency, constituting leakage/restatement. As a set the added columns would inflate any model's apparent performance while offering little genuine pre-outcome predictive leverage; the timeline feature provides modest real signal."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

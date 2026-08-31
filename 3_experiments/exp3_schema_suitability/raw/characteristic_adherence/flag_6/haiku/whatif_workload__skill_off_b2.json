@@ -1,0 +1,77 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "category_ticket_volume",
+    "category_avg_resolution_hours",
+    "is_heavy_workload_category",
+    "estimated_resolution_time_hours"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "category_ticket_volume",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Volume by category operationalizes 'ticket types that create the heaviest agent workload'; ticket-type mix is an intervenable lever a manager could reduce, so this defines the treatment. It is directly implied by the query."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Average resolution time per category is just the focus outcome aggregated; it is the thing being predicted, not a confounder. Named in query as resolution time."
+      },
+      {
+        "name": "is_heavy_workload_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "A binary flag for whether a category is heavy-workload restates the treatment definition ('heaviest agent workload'). Intervenable in principle (reduce those types), but explicitly named in the query."
+      },
+      {
+        "name": "estimated_resolution_time_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A per-row estimated resolution time is a projection of the outcome under the intervention; it is all-NULL and adds no adjustment. Not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "category_ticket_volume",
+      "is_heavy_workload_category"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns identify and operationalize the treatment (heavy-workload ticket categories, an intervenable lever) and restate the outcome, but they contain NO confounders — no common causes of both which categories are heavy and resolution time (e.g., priority, assignment_group capacity/staffing, caller/agent experience, backlog/queue load, time-of-day, category complexity). Without adjusting for such confounders, the counterfactual effect of reducing heavy ticket types on resolution time cannot be identified. The set is essentially a treatment-definition plus outcome restatement, and the outcome projections are empty (all NULL). It fails the decisive test: zero confounders, and none not-already-named in the query. Confounder capability is not demonstrated."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

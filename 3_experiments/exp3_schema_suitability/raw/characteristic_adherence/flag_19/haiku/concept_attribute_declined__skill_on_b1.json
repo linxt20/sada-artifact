@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_type_category",
+    "acquisition_intent",
+    "travel_relevance_flag",
+    "departmental_spend_pattern",
+    "source_id_available_flag",
+    "asset_complexity_level",
+    "vendor_or_product_specificity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.2714,
+    "analytical_usefulness__table_level": 0.28,
+    "source_groundedness": 0.6286,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.45,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the asset described in short_description/ci, which is well-grounded in the source text. However, the query is about DECLINE REASONS and COMPLIANCE RISKS; asset type gives only weak leverage on why an expense was declined, so usefulness is limited."
+      },
+      {
+        "name": "acquisition_intent",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Infers purchasing intent (employee vs departmental vs travel) which could weakly correlate with policy violations. But intent is a soft inference from brief descriptions and does not directly capture decline reasons; several values (e.g. 'sales' departmental mappings) are loosely warranted."
+      },
+      {
+        "name": "travel_relevance_flag",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Travel-related spend is a plausible compliance-risk axis, but a bare boolean derived from description is fairly generic and largely redundant with asset_type/acquisition_intent. Groundedness is reasonable from the text."
+      },
+      {
+        "name": "departmental_spend_pattern",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "This appears to duplicate the existing 'department' column yet the sample values contradict the source: a 'Provision of Services for iPod touch' is labeled 'sales', RAM component 'sales', cloud DB service 'customer_support' with no textual basis. It is both redundant with an original column and produces unsupported department assignments."
+      },
+      {
+        "name": "source_id_available_flag",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Trivially derivable presence-of-source_id flag; well-grounded but near-mechanical and offers little analytical leverage on decline reasons or compliance risk. Could weakly signal documentation gaps but is essentially a null-check."
+      },
+      {
+        "name": "asset_complexity_level",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Largely a re-slicing of asset_type_category with added qualifiers (standard_hardware, enterprise_service). Distinctions like 'premium_workstation' vs 'standard_hardware' are inferred and only partially warranted by terse descriptions. Redundant and weakly tied to the query."
+      },
+      {
+        "name": "vendor_or_product_specificity",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Branded vs generic vs cloud distinction is derivable from ci/description in many rows, but labeling 'ISP Services' as 'cloud_provider' is a stretch. Vendor specificity is a plausible but indirect compliance-risk proxy."
+      }
+    ],
+    "analytical_usefulness": 0.28,
+    "source_groundedness": 0.6,
+    "rationale": "The added columns describe WHAT the asset is (type, complexity, vendor branding, acquisition intent) but the query asks about WHY expenses were DECLINED and what COMPLIANCE RISKS appear. None of the columns capture decline reasons, policy flags, or risk indicators, so their analytical leverage for this specific query is weak, and several columns are mutually redundant re-slicings of asset type. Groundedness is generally acceptable since most values are sound readings of short_description/ci, but departmental_spend_pattern both duplicates the existing 'department' column and asserts unsupported department labels that contradict the source text, and a few categorizations (ISP as cloud_provider) are loosely warranted."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 7
+}

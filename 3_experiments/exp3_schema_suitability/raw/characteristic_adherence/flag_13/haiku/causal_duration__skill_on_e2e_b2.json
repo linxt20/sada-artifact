@@ -1,0 +1,140 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do resolution duration values vary across tickets?",
+  "focus_variable": "resolution_duration_variation",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "incident_category",
+    "primary_system_affected",
+    "assigned_to_technician",
+    "ticket_handoff_occurred",
+    "issue_severity_signal",
+    "time_of_day_opened",
+    "scope_impact",
+    "caller_profile",
+    "recurring_issue_indicator"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 6,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 6,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_duration_variation",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident plausibly drives both which technician/system handles it (treatment assignment) and how long resolution takes (outcome). It is a common cause and not on the causal path itself."
+      },
+      {
+        "name": "primary_system_affected",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The affected system influences who is assigned and the intrinsic difficulty of resolution, plausibly causing both treatment (assignment/handoff) and duration."
+      },
+      {
+        "name": "assigned_to_technician",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The technician handling the ticket is a candidate cause whose effect on resolution duration is being attributed."
+      },
+      {
+        "name": "ticket_handoff_occurred",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Handoffs typically occur during the resolution process and lie on the causal path to longer duration; treating it as a confounder would be an error."
+      },
+      {
+        "name": "issue_severity_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Severity plausibly affects both prioritization/assignment and the effort required to resolve, so it is a common cause of treatment and outcome."
+      },
+      {
+        "name": "time_of_day_opened",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Time of opening can affect which staff are available (assignment) and how quickly work starts (duration), plausibly a common cause."
+      },
+      {
+        "name": "scope_impact",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Broader impact scope plausibly drives escalation/assignment and lengthens resolution, a common cause of both treatment and outcome."
+      },
+      {
+        "name": "caller_profile",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Caller identity may weakly relate to routing but is largely an identifier with little clear common-cause structure to resolution duration; treated as noise/other."
+      },
+      {
+        "name": "recurring_issue_indicator",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the issue recurs plausibly affects both who gets assigned (specialists) and how fast it is resolved (known playbooks), a common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "assigned_to_technician"
+    ],
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "primary_system_affected",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "issue_severity_signal",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "scope_impact",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "time_of_day_opened",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "recurring_issue_indicator",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The set establishes a genuine causal setup: assigned_to_technician acts as a treatment, and several surfaced variables (category, affected system, severity, scope, recurrence) are plausible common causes of both assignment and resolution duration. None were named in the query, which demonstrates the capability under test. ticket_handoff_occurred is a mediator on the causal path and should not be adjusted as a confounder, and caller_profile is largely an identifier with weak confounding structure. Overall solid causal reasoning with one mediator misfit."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "Is_Critical",
+    "Resolution_Speed",
+    "Is_Printer_Related"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.25,
+    "focus_coherence": 0.5,
+    "structure_quality": 0.5,
+    "focus_actionability": 0.65,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Incident resolution performance / severity-and-speed profile of tickets",
+    "per_column": [
+      {
+        "name": "Is_Critical",
+        "supports_focus": true,
+        "rationale": "Flags severity, a core facet of characterizing how urgent/important an incident is and a plausible driver of resolution performance."
+      },
+      {
+        "name": "Resolution_Speed",
+        "supports_focus": true,
+        "rationale": "Directly measures how quickly incidents are resolved; this is the strongest anchor for a resolution-performance focus."
+      },
+      {
+        "name": "Is_Printer_Related",
+        "supports_focus": false,
+        "rationale": "A narrow topical/category flag that sits somewhat apart from a severity/speed focus; it points more toward a 'what kind of issue' theme, weakening single-focus coherence."
+      }
+    ],
+    "focus_coherence": 0.5,
+    "structure_quality": 0.5,
+    "focus_actionability": 0.65,
+    "rationale": "Two of the three columns (Is_Critical, Resolution_Speed) cohere around an incident-resolution-performance focus, pairing severity with speed in a reasonable predictor/outcome structure. However, Is_Printer_Related introduces a category-specific theme that is not clearly part of that focus, making the set read partly as a grab-bag rather than a tightly centred concept. The implied focus (resolution speed by severity) is genuinely actionable for an analyst, but the mixed signal and derived-flag granularity (binary criticality, one arbitrary category flag) keep coherence and structure at moderate levels rather than strong."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

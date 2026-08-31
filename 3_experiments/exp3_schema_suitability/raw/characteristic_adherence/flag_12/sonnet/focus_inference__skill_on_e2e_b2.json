@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "failure_type",
+    "resolution_action_type",
+    "self_resolved",
+    "is_repeat_incident_type",
+    "urgency_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.7216,
+    "focus_coherence": 0.88,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature and resolution of the underlying technical failure described in each incident ticket (what broke, why, and what it takes to fix it).",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "supports_focus": true,
+        "rationale": "Identifies the affected component/system (printer, monitor, network), grounding what kind of thing failed -- a core facet of the failure focus."
+      },
+      {
+        "name": "failure_type",
+        "supports_focus": true,
+        "rationale": "Directly characterizes the mode of failure (service failure, unresponsive, physical damage), central to the implied focus."
+      },
+      {
+        "name": "resolution_action_type",
+        "supports_focus": true,
+        "rationale": "Captures what fix is required (repair, replacement, config), a natural downstream facet of failure characterization."
+      },
+      {
+        "name": "self_resolved",
+        "supports_focus": true,
+        "rationale": "Indicates whether the failure resolved without intervention, a coherent outcome facet tied to failure handling."
+      },
+      {
+        "name": "is_repeat_incident_type",
+        "supports_focus": true,
+        "rationale": "Flags recurrence of the failure type, an analytically useful attribute of the failure pattern (though the 452/48 skew is suspect)."
+      },
+      {
+        "name": "urgency_signal",
+        "supports_focus": true,
+        "rationale": "Derived urgency of the failure from the description, a reasonable severity facet, mildly redundant with existing priority."
+      }
+    ],
+    "focus_coherence": 0.88,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.85,
+    "rationale": "The six columns cohere tightly around a single inferable focus: characterizing the technical failure behind each incident and its resolution. They form a sound multi-facet structure -- affected component (incident_category), failure mode (failure_type), required fix (resolution_action_type), and outcome/severity attributes (self_resolved, is_repeat_incident_type, urgency_signal) -- all extractable from short_description rather than restating existing structured fields. This is not a grab-bag nor a single restatement, and the focus is genuinely actionable (an analyst could prioritize fixes, target recurring failure classes, or reduce repair volume). Minor deductions: urgency_signal partially overlaps existing priority, and the extreme skews on is_repeat_incident_type (90% true) and self_resolved suggest weaker/coarser inference on those facets, slightly reducing structure quality."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

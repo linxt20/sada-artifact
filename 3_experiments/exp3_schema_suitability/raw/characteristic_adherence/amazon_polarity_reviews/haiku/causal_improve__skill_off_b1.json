@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_issue_category",
+    "improvement_focus",
+    "issue_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.6333,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.6417,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_issue_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Categorizing the primary issue directly serves the query about improving satisfaction by grouping actionable problem types. However, groundedness is weakened: AMZ-0004 is labeled 'durability_issues' when the text describes a formulation change/quality complaint, not durability; and the dominant 'no_specific_issue' (170) risks conflating clearly issue-bearing reviews (e.g., availability/political-content complaints) with no-issue, though those are defensible readings for non-product-defect complaints."
+      },
+      {
+        "name": "improvement_focus",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Partially useful as it separates satisfaction_drivers from dissatisfaction, but its issue-type values (design/quality/support/etc.) substantially overlap with primary_issue_category, making it a near-restatement for those rows. The satisfaction_drivers vs general_dissatisfaction split is a defensible reading grounded in the positive/negative tone of the source text."
+      },
+      {
+        "name": "issue_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A count of distinct issues gives a genuine severity/intensity axis to model on, useful for prioritizing. Values largely track the categorization (0 when no_specific_issue, 1 for a single complaint), so it is derivable from the text, though it inherits the miscategorization seen in AMZ-0004 and is somewhat redundant with the category columns."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.63,
+    "rationale": "The columns provide reasonable analytical axes (issue type, driver/dissatisfaction split, and issue intensity) that meaningfully support the query about improving satisfaction. Weaknesses: improvement_focus substantially overlaps with primary_issue_category for issue-typed rows, and there is at least one observed miscategorization (AMZ-0004 labeled durability when the complaint is a formulation/quality change). The heavy 'no_specific_issue'/'general_dissatisfaction' concentration is largely a defensible reading of non-defect complaints rather than a hallucination. Overall the set passes the two necessary conditions with moderate confidence."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

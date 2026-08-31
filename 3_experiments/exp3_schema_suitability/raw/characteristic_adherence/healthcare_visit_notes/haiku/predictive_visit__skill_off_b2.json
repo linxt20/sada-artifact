@@ -1,0 +1,52 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit reasons point to different departments?",
+  "focus_variable": "department",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "primary_reason",
+    "condition_category"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.75,
+    "predictor_fraction": 1.0,
+    "n_predictors": 2,
+    "redundancy": 0.0,
+    "predictive_utility": 0.75,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "department",
+    "per_column": [
+      {
+        "name": "primary_reason",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "This is a normalized/extracted version of the reason_for_visit, capturing the chief complaint (e.g., 'well-child visit', 'sports physical', 'diabetes follow-up'). The visit reason lies outside the department and is precisely the signal the query targets for pointing to departments. It is knowable at intake (pre-outcome), so no leakage. Its main weakness is high cardinality/near-uniqueness, but semantically it carries strong predictive signal about department."
+      },
+      {
+        "name": "condition_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A rolled-up clinical category of the visit reason (Preventive_Care, Musculoskeletal_Issue, Cardiovascular_Issue, etc.). This is a derived predictor from the reason text, external to department, available at intake, and generalizes the reason into a low-cardinality feature that plausibly maps strongly to departments. Legitimate, high-utility predictor."
+      }
+    ],
+    "n_predictors": 2,
+    "predictive_utility": 0.75,
+    "rationale": "Both added columns are legitimate, non-leaking predictors of department derived from the visit reason, directly matching the analytical intent of finding which reasons point to which departments. condition_category is especially useful: it converts the free-text reason into a compact, generalizable categorical feature that a model can leverage. primary_reason adds signal but its extreme cardinality limits standalone leverage. As a set they add meaningful predictive leverage beyond the raw reason_for_visit text, though they are transformations of an existing column rather than genuinely new external variables, capping the incremental utility."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

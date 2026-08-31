@@ -1,0 +1,122 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 14,
+  "added_columns": [
+    "crew_service_quality",
+    "seat_comfort_and_space",
+    "food_beverage_quality",
+    "aircraft_condition_recency",
+    "operational_disruption",
+    "service_consistency_trend",
+    "amenity_availability",
+    "price_value_alignment",
+    "ground_operations_quality",
+    "aircraft_age_and_condition",
+    "ground_and_checkin_experience",
+    "operational_disruption_and_reliability",
+    "service_consistency_and_trend",
+    "value_for_money_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 14,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.4675,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Drivers of overall airline passenger experience/satisfaction, decomposed into service and operational facets",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "supports_focus": true,
+        "rationale": "A coherent experience facet capturing in-flight crew service tone."
+      },
+      {
+        "name": "seat_comfort_and_space",
+        "supports_focus": true,
+        "rationale": "Physical comfort facet of the experience."
+      },
+      {
+        "name": "food_beverage_quality",
+        "supports_focus": true,
+        "rationale": "Catering facet of the experience."
+      },
+      {
+        "name": "aircraft_condition_recency",
+        "supports_focus": true,
+        "rationale": "Aircraft condition facet; but near-duplicate of aircraft_age_and_condition."
+      },
+      {
+        "name": "operational_disruption",
+        "supports_focus": true,
+        "rationale": "Operational reliability facet; but near-duplicate of operational_disruption_and_reliability."
+      },
+      {
+        "name": "service_consistency_trend",
+        "supports_focus": true,
+        "rationale": "Temporal consistency facet; near-duplicate of service_consistency_and_trend."
+      },
+      {
+        "name": "amenity_availability",
+        "supports_focus": true,
+        "rationale": "Service scope facet of the experience."
+      },
+      {
+        "name": "price_value_alignment",
+        "supports_focus": true,
+        "rationale": "Value facet; near-duplicate of value_for_money_perception."
+      },
+      {
+        "name": "ground_operations_quality",
+        "supports_focus": true,
+        "rationale": "Ground/check-in facet; overlaps ground_and_checkin_experience."
+      },
+      {
+        "name": "aircraft_age_and_condition",
+        "supports_focus": false,
+        "rationale": "Redundant restatement of aircraft_condition_recency."
+      },
+      {
+        "name": "ground_and_checkin_experience",
+        "supports_focus": false,
+        "rationale": "Redundant with ground_operations_quality."
+      },
+      {
+        "name": "operational_disruption_and_reliability",
+        "supports_focus": false,
+        "rationale": "Redundant with operational_disruption."
+      },
+      {
+        "name": "service_consistency_and_trend",
+        "supports_focus": false,
+        "rationale": "Redundant with service_consistency_trend."
+      },
+      {
+        "name": "value_for_money_perception",
+        "supports_focus": false,
+        "rationale": "Redundant with price_value_alignment."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.8,
+    "rationale": "The columns collectively centre on one coherent, data-inferable focus: the facets driving overall airline passenger experience/satisfaction (crew, seat, food, aircraft, operations, ground, value, consistency). This is an actionable framing an analyst could investigate to identify which aspect most affects Overall Rating/Recommended. Focus coherence is strong. However, structure quality is weakened by substantial redundancy: roughly five facets are duplicated near-verbatim (aircraft condition, operational disruption, service consistency, ground/check-in, value for money), so the added set is padded with restated columns rather than a clean, differentiated facet decomposition. Several facets (seat, food, value) also merely re-encode existing original numeric ratings as categoricals, adding limited new granularity. The core inferred focus is sound and useful, but the executed structure is inflated and not cleanly parsimonious."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 14
+}

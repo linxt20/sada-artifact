@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "focus_variable": "travel_policy_risk",
+  "concept": "travel_policy_risk",
+  "n_added_columns": 9,
+  "added_columns": [
+    "asset_category_type",
+    "travel_equipment_marker",
+    "expense_automation_method",
+    "receipt_or_approval_risk",
+    "personal_use_risk_indicator",
+    "department_compliance_context",
+    "ci_vendor_brand",
+    "high_value_risk_flag",
+    "miscellaneous_or_undefined_asset"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1825,
+    "facet_fraction": 0.3333,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.75,
+    "exhaustiveness": 0.4,
+    "mece": 0.5477,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "travel_policy_risk",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes what kind of asset/item the expense is for. This is a contextual attribute that may predict risk but is not itself an aspect of travel policy risk."
+      },
+      {
+        "name": "travel_equipment_marker",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Flags whether the item is travel equipment; identifies subject matter relevance, not a constitutive dimension of the risk itself."
+      },
+      {
+        "name": "expense_automation_method",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "How the expense entry was generated (automatic vs manual) is a process attribute, not a part of policy risk. At best a weak predictor of control weakness."
+      },
+      {
+        "name": "receipt_or_approval_risk",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Receipt/approval/pre-approval requirements are a genuine documentation-and-authorization facet of travel policy compliance risk."
+      },
+      {
+        "name": "personal_use_risk_indicator",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Personal (non-business) use is a legitimate constitutive dimension of travel policy risk (misuse/ineligibility)."
+      },
+      {
+        "name": "department_compliance_context",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Owning department is a segmentation/context attribute of the expense, not an aspect of the risk concept itself."
+      },
+      {
+        "name": "ci_vendor_brand",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Vendor/brand of the configuration item is descriptive metadata unrelated to constituting policy risk."
+      },
+      {
+        "name": "high_value_risk_flag",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Excess/high monetary value relative to policy limits is a genuine spend-threshold facet of travel policy risk."
+      },
+      {
+        "name": "miscellaneous_or_undefined_asset",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the asset is uncategorized is a data-quality/classification attribute, at best a predictor, not a facet of the risk."
+      }
+    ],
+    "facet_columns": [
+      "receipt_or_approval_risk",
+      "personal_use_risk_indicator",
+      "high_value_risk_flag"
+    ],
+    "non_facet_columns": [
+      "asset_category_type",
+      "travel_equipment_marker",
+      "expense_automation_method",
+      "department_compliance_context",
+      "ci_vendor_brand",
+      "miscellaneous_or_undefined_asset"
+    ],
+    "mutual_exclusivity": 0.75,
+    "exhaustiveness": 0.4,
+    "rationale": "Only three of nine columns are constitutive facets of travel_policy_risk: documentation/approval requirements, personal-use misuse, and high-value/limit breach. The remaining six are external predictors or irrelevant metadata (asset type, travel markers, entry method, department, vendor brand, data-completeness), which describe the expense context rather than parts of the risk concept. Among the genuine facets, exclusivity is fairly good (documentation vs personal-use vs monetary-threshold are distinct), lowered slightly by overlapping generic 'risk' framing. Exhaustiveness is weak: important constitutive facets of travel policy risk—such as booking-timing/advance-purchase compliance, allowable-class/rate limits, out-of-policy category (e.g., alcohol/entertainment), duplicate/split claims, and geographic/per-diem limits—are not covered."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit-note signals suggest high urgency?",
+  "focus_variable": "urgency",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "chief_complaint_category",
+    "symptom_onset_acuity",
+    "pain_severity_indicator",
+    "hemodynamic_instability",
+    "organ_system_involved",
+    "visit_type_context",
+    "diagnostic_urgency_proxy"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.75,
+    "leakage_rate": 0.1429
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "urgency",
+    "per_column": [
+      {
+        "name": "chief_complaint_category",
+        "role": "predictor",
+        "rationale": "Complaint type (e.g., chest_pain_cardiac vs routine_preventive) is a legitimate clinical predictor of urgency, derivable from the reason for visit and known before triage disposition. Carries strong signal without restating urgency."
+      },
+      {
+        "name": "symptom_onset_acuity",
+        "role": "predictor",
+        "rationale": "Onset tempo (sudden_acute vs weeks_to_chronic) is a classic pre-outcome feature that plausibly correlates with urgency; it is a property of the presentation, not a restatement of urgency itself."
+      },
+      {
+        "name": "pain_severity_indicator",
+        "role": "predictor",
+        "rationale": "Reported pain severity is an independent presenting-symptom feature that carries predictive signal for urgency without being a component or function of it."
+      },
+      {
+        "name": "hemodynamic_instability",
+        "role": "predictor",
+        "rationale": "A vital-sign-based instability flag is a genuine clinical predictor available at presentation. It strongly correlates with high urgency but is a distinct physiological measurement, not a restatement of the urgency label."
+      },
+      {
+        "name": "organ_system_involved",
+        "role": "predictor",
+        "rationale": "Organ system affected is a presentation attribute that modulates risk (e.g., cardiovascular/neurological vs dermatologic) and provides predictive signal orthogonal to the raw reason text."
+      },
+      {
+        "name": "visit_type_context",
+        "role": "predictor",
+        "rationale": "Visit context (acute_new_problem, emergency_activation vs well_child_preventive) is knowable at intake and predictive of urgency. Borderline because 'emergency_activation' partially overlaps with an urgent disposition, but overall it is a context feature rather than a direct restatement."
+      },
+      {
+        "name": "diagnostic_urgency_proxy",
+        "role": "leakage",
+        "rationale": "Workup ordered (stat_imaging, emergent_labs, ecg_monitoring_stat) is decided as a consequence of the clinician's urgency assessment. It is post-triage and effectively a downstream marker of urgency, so it leaks the outcome rather than predicting it from pre-decision signals."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.75,
+    "rationale": "Six of seven columns are legitimate pre-outcome presentation features (complaint category, onset acuity, pain severity, hemodynamic instability, organ system, visit context) that collectively give a model substantial genuine leverage on urgency beyond the original reason_for_visit free text. One column (diagnostic_urgency_proxy) leaks because ordered workups are downstream of the urgency decision, and visit_type_context is mildly leaky via 'emergency_activation'. The set is coherent and clinically grounded, so predictive utility is high but discounted for the leakage and partial overlap."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_high",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

@@ -1,0 +1,63 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How would HelpfulnessNumerator change if reviews provided more detailed product information?",
+  "focus_variable": "helpfulness_numerator_outcome",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "ProductInfoCompletenessScore",
+    "HasDetailedProductInfo"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "HelpfulnessNumerator",
+    "per_column": [
+      {
+        "name": "ProductInfoCompletenessScore",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "A continuous measure of how much detailed product information a review provides. This is exactly the lever named in the query ('more detailed product information') and is intervenable, since a reviewer could choose to include more detail."
+      },
+      {
+        "name": "HasDetailedProductInfo",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "A binary indicator of whether the review contains detailed product info; an alternative operationalization of the same treatment named in the query. Intervenable (a reviewer can decide to add detail), but redundant with the score column and still just the treatment."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "ProductInfoCompletenessScore",
+      "HasDetailedProductInfo"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns capture only the treatment (detail/completeness of product information), which is exactly what the query names, and provide it in two redundant forms (continuous score and binary flag). No confounders are supplied at all. A valid what-if analysis of the effect of information detail on HelpfulnessNumerator requires adjusting for common causes of both the treatment and the outcome that are NOT named in the query -- e.g., review length/verbosity, product category or popularity, reviewer expertise/engagement, star Score, or how long the review has been visible (Time / exposure, which also drives HelpfulnessDenominator). None of these were added. Because the operator only re-expressed the treatment and named zero confounders, it fails the decisive test: it does not surface any un-named common causes needed to identify the counterfactual effect. Confounder capability under test is not demonstrated."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_whatif_helpfulness",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

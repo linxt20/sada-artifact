@@ -1,0 +1,72 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "content_word_count",
+    "has_complaint_language",
+    "has_praise_language",
+    "has_negation_language"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "content_word_count",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A mechanical length feature. Not a candidate cause of review sentiment nor a common cause of both a treatment and the outcome; at best a generic covariate/noise, not a genuine confounder."
+      },
+      {
+        "name": "has_complaint_language",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Complaint language in the review text is an expression/reflection of the reviewer's negative experience, lying on the path between whatever real cause and the recorded label. It is essentially a proxy/mediator of the sentiment outcome, not an upstream common cause. Its extreme correlation with label_pos makes it near-outcome leakage rather than a confounder."
+      },
+      {
+        "name": "has_praise_language",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Praise language is likewise an in-text manifestation of positive sentiment, essentially a proxy of the outcome itself, not a common cause of a treatment and the outcome."
+      },
+      {
+        "name": "has_negation_language",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A surface linguistic feature of the review text; correlated with sentiment expression but not an exogenous common cause of any treatment and the outcome. Not a genuine confounder."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query asks which product-level factors cause predominantly negative reviews, so a valid causal setup needs a candidate TREATMENT (e.g., product attributes like price, category, quality, defect rate, shipping/delivery issues) plus CONFOUNDERS that cause both such a treatment and the sentiment outcome. None of the added columns supply this. They are all surface linguistic features derived from the review text (word count, complaint/praise/negation language). The complaint/praise features are near-proxies of the outcome (mediators/leakage), and word count/negation are generic textual covariates. No genuine treatment is present, and no variable qualifies as a common cause of both a treatment and label_pos. Therefore the causal-attribution claim is not realised."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

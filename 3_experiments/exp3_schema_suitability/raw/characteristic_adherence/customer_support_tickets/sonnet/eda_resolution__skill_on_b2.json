@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "issue_theme",
+    "operational_severity",
+    "blast_radius",
+    "root_cause_category",
+    "requires_escalation",
+    "workaround_available",
+    "data_sensitivity_flag",
+    "data_sensitivity_or_compliance_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.63,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.875
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly named in the query; well-separated interpretable themes with reasonable spread; strong segmentation variable to compare resolution time across."
+      },
+      {
+        "name": "operational_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal, interpretable scale from no_impact to service_down with balanced categories; a classic associational driver of resolution time."
+      },
+      {
+        "name": "blast_radius",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable scope categories (single_user to multi_tenant) that segment cleanly; plausibly related to resolution effort, distinct from severity."
+      },
+      {
+        "name": "root_cause_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable causal categories that support meaningful grouping; heavy NULL share (~30%) weakens but does not eliminate its comparative value."
+      },
+      {
+        "name": "requires_escalation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Escalation path is well-separated and strongly associated with resolution time; good interpretable segmentation."
+      },
+      {
+        "name": "workaround_available",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, but heavily concentrated in no_workaround/not_present with tiny minority classes, limiting the contrast that can be drawn."
+      },
+      {
+        "name": "data_sensitivity_flag",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable sensitivity categories, though dominated by not_present (~75%), reducing segmentation power."
+      },
+      {
+        "name": "data_sensitivity_or_compliance_flag",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Near-duplicate of data_sensitivity_flag with essentially identical category distribution; adds no new relationship."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.72,
+    "rationale": "The set provides multiple external, interpretable, well-separated segmentation dimensions (issue_theme, operational_severity, blast_radius, requires_escalation, root_cause_category) that genuinely support exploring how resolution_minutes varies, directly serving the query. Weaknesses: one column (data_sensitivity_or_compliance_flag) is a redundant restatement of another, and several columns (workaround_available, data_sensitivity_flag) are heavily dominated by a single value, limiting meaningful contrast. Overall strong for EDA but with some redundancy and imbalance."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

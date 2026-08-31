@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "focus_variable": "review_score",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "avg_word_length",
+    "capitalized_word_count",
+    "exclamation_count",
+    "has_product_mention",
+    "helpfulness_ratio",
+    "negative_word_count",
+    "positive_word_count",
+    "question_mark_count",
+    "summary_length",
+    "text_length",
+    "word_count"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5,
+    "predictor_fraction": 0.9091,
+    "n_predictors": 10,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "review_score",
+    "per_column": [
+      {
+        "name": "avg_word_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Stylistic feature of the review text, computable before knowing the score; weak but legitimate signal."
+      },
+      {
+        "name": "capitalized_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Text-derived feature independent of the score; may capture emphasis/tone."
+      },
+      {
+        "name": "exclamation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Punctuation feature plausibly correlated with enthusiasm/rating; not a restatement of score."
+      },
+      {
+        "name": "has_product_mention",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "rationale": "Almost entirely constant (9934 zeros vs 66 ones), so it carries essentially no discriminative signal."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from helpfulness votes, external to the score; weak but plausible predictor and not leakage of the score itself."
+      },
+      {
+        "name": "negative_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Lexicon-based sentiment count from text; genuinely predictive of rating and not a restatement of the numeric score."
+      },
+      {
+        "name": "positive_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Positive sentiment lexicon count is a strong, legitimate predictor of review score."
+      },
+      {
+        "name": "question_mark_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Punctuation feature from text; weak but valid predictive signal, not leakage."
+      },
+      {
+        "name": "summary_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Length of summary text, knowable pre-outcome; weak stylistic predictor."
+      },
+      {
+        "name": "text_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Review length is a legitimate feature that can correlate with rating extremity/verbosity."
+      },
+      {
+        "name": "word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Token count of text; valid, though redundant with text_length, it remains a legitimate predictor."
+      }
+    ],
+    "n_predictors": 10,
+    "predictive_utility": 0.55,
+    "rationale": "None of the columns restate or leak the score, so this is a clean feature-engineering set. The sentiment lexicon counts (positive_word_count, negative_word_count) provide the strongest genuine predictive leverage for review score, and helpfulness_ratio adds external signal. The remaining stylistic/punctuation/length features are legitimate but individually weak and partially redundant (text_length vs word_count vs summary_length). has_product_mention is near-constant and effectively useless. Overall the set gives moderate predictive leverage beyond the original columns, driven mainly by sentiment counts."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 11
+}

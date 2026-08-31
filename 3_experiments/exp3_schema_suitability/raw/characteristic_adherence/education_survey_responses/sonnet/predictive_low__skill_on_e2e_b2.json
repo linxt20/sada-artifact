@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "instruction_quality_signal",
+    "student_engagement_level",
+    "disengagement_pattern",
+    "positive_adaptation_signal",
+    "teacher_support_quality",
+    "subject_format_fit",
+    "peer_interaction_loss_signal",
+    "learner_emotional_distress"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.78,
+    "predictor_fraction": 1.0,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.78,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "instruction_quality_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Quality of instruction extracted from the open response is an external construct that plausibly drives satisfaction without restating or deterministically fixing it."
+      },
+      {
+        "name": "student_engagement_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Engagement is a distinct behavioral construct that correlates with but does not define the 1-5 satisfaction rating; its 1-5 scale is coincidental, not a restatement."
+      },
+      {
+        "name": "disengagement_pattern",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Specific disengagement types (roster dropout, cameras off) are observable behavioral signals distinct from the satisfaction score and plausibly predictive."
+      },
+      {
+        "name": "positive_adaptation_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Degree of adaptation/thriving is a related but separate construct; it carries signal about satisfaction without being a deterministic component of the rating."
+      },
+      {
+        "name": "teacher_support_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Perceived teacher support is an external situational factor that plausibly influences satisfaction and is not a restatement of the score."
+      },
+      {
+        "name": "subject_format_fit",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Fit between subject and remote format is a contextual variable outside the satisfaction score, plausibly predictive of it."
+      },
+      {
+        "name": "peer_interaction_loss_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Loss of peer community is a distinct experiential factor that may drive dissatisfaction without restating the outcome."
+      },
+      {
+        "name": "learner_emotional_distress",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Emotional distress is a related affective construct; while it borders on being an affective correlate of satisfaction, it is a distinguishable signal (distress vs. rated satisfaction) and plausibly predictive rather than a strict restatement."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.78,
+    "rationale": "All eight columns encode substantive constructs mined from the open_response text (instruction quality, engagement, disengagement patterns, adaptation, teacher support, format fit, peer loss, emotional distress) rather than mechanical text statistics. Each lies outside the satisfaction score itself and is not a deterministic component of it, so none constitute hard leakage or restatement; they are legitimate, semantically rich predictors. The main caveats reducing utility somewhat: learner_emotional_distress and student_engagement_level are close affective/experiential correlates of satisfaction and could partially proxy the outcome, and several signals are mutually correlated (redundant), so the set's independent predictive leverage is high but not maximal."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

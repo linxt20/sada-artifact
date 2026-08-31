@@ -1,0 +1,131 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we improve incident resolution efficiency?",
+  "focus_variable": "incident_resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "affected_device_type",
+    "failure_symptom_severity",
+    "resolution_action_type",
+    "reassignment_flag",
+    "repeat_incident_signal",
+    "urgency_signal",
+    "repeat_caller_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.75,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.75,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "incident_resolution_efficiency",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident is a common cause of both how it is handled (resolution action) and how efficiently it resolves; not a lever an actor sets, and not named in the query."
+      },
+      {
+        "name": "affected_device_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Device type influences both the resolution approach chosen and the difficulty/speed of resolution; an intrinsic property of the incident, not intervenable, not named."
+      },
+      {
+        "name": "failure_symptom_severity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Severity affects both the action taken and the time to resolve; it is a characteristic of the fault, not a settable lever, and not named."
+      },
+      {
+        "name": "resolution_action_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The resolution action (repair, replace, configure, investigate) is something an operator could actually choose or change, making it an intervenable treatment on the efficiency outcome."
+      },
+      {
+        "name": "reassignment_flag",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether an incident is reassigned is an operational decision that can be set/changed, and it plausibly affects resolution efficiency; a valid intervenable lever."
+      },
+      {
+        "name": "repeat_incident_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an incident recurs reflects underlying problem difficulty that drives both handling and speed; not directly settable, not named."
+      },
+      {
+        "name": "urgency_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Urgency of the disruption is a property of the incident that shapes both prioritization/action and resolution time; not an intervenable lever, not named."
+      },
+      {
+        "name": "repeat_caller_flag",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Constant value (all true) carries no variation, so it cannot function as treatment, confounder, or informative covariate."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "resolution_action_type",
+      "reassignment_flag"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "affected_device_type",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "failure_symptom_severity",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "repeat_incident_signal",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "urgency_signal",
+        "named_in_query": false,
+        "plausibility": 0.75
+      }
+    ],
+    "confounder_quality": 0.75,
+    "rationale": "The query poses a genuinely interventional 'how can we improve' question about resolution efficiency. At least two added columns (resolution_action_type, reassignment_flag) are genuinely intervenable treatments an actor can set, satisfying condition (a). Several columns (incident_category, affected_device_type, failure_symptom_severity, urgency_signal, repeat_incident_signal) are plausible common causes of both the chosen action and the resolution speed, and none are named in the vague query, demonstrating the confounder-generation capability under test. One column (repeat_caller_flag) is a constant and contributes nothing. Overall the set realises the what-if claim with reasonably strong, unnamed confounders."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

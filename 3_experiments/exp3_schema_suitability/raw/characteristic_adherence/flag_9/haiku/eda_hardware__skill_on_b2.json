@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What in an incident's description tends to signal it's a hardware problem?",
+  "focus_variable": "hardware_incident",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "device_type",
+    "failure_mode",
+    "affected_component",
+    "physical_state_keyword",
+    "problem_specificity",
+    "location_mentioned"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "hardware_incident",
+    "per_column": [
+      {
+        "name": "device_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Extracted device categories (printer, server, keyboard vs software/database) are well-separated, interpretable groups directly comparable against hardware vs non-hardware, an ideal EDA segmentation variable."
+      },
+      {
+        "name": "failure_mode",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct failure descriptors (overheating, flickering, crashing, connection_error) are interpretable categories that plausibly associate differently with hardware vs software incidents, supporting meaningful grouping."
+      },
+      {
+        "name": "affected_component",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Component classes (physical_hardware, storage, power_thermal, network, display_output) are clean, interpretable segments strongly associational with hardware status; high NULL rate slightly weakens coverage but categories remain informative."
+      },
+      {
+        "name": "physical_state_keyword",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Boolean flag for presence of physical-state language is interpretable and directly hypothesizes a description signal for hardware, with a reasonable 185/415 split enabling comparison."
+      },
+      {
+        "name": "problem_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "An ordinal 1-5 specificity scale is interpretable and can be segmented, though its link to hardware is weaker and the tail (4,5) is sparse; borderline but usable for exploration."
+      },
+      {
+        "name": "location_mentioned",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Boolean indicating a location reference is interpretable and separable; physical incidents may mention locations, giving a plausible if secondary associational signal."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.82,
+    "rationale": "As a set, these columns extract external, interpretable descriptive attributes (device, failure mode, component, physical/location cues) that can each be grouped and compared against the hardware focus, directly serving the query about what description signals hardware problems. Categories are well-separated and human-readable rather than opaque scores. Minor weaknesses lower the score: several columns carry high NULL rates (affected_component 270, failure_mode 138), problem_specificity's tail is near-constant, and physical_state_keyword/location_mentioned are coarse booleans, but none merely restate the focus and the set strongly supports interpretable relationship discovery."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "eda_hardware",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

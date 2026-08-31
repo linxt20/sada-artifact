@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_complaint_category",
+    "complaint_intensity_level",
+    "plot_quality_deficit"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "primary_complaint_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query centers on 'the most common audience complaints'; this column identifies the complaint category that would be addressed. Addressing/fixing a complaint category is an intervenable lever a filmmaker could act on, so it functions as the treatment. It is explicitly implied by the query."
+      },
+      {
+        "name": "complaint_intensity_level",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Intensity of the complaint is a graded characterization of the complaint itself, lying on the path between having a complaint and the resulting sentiment. It is a consequence/aspect of the treatment rather than a common cause of both treatment and outcome, so it is not a confounder."
+      },
+      {
+        "name": "plot_quality_deficit",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "This is a finer-grained decomposition of a specific complaint (plot). It is another aspect of the same complaint construct being intervened on, an intervenable deficit that could be fixed, not a common cause of both treatment and outcome. It does not act as a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_complaint_category",
+      "plot_quality_deficit"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns capture the treatment side of the what-if question—identifying and decomposing the audience complaints that films could 'address'—and these are genuinely intervenable levers (a filmmaker can fix plot, pacing, acting, etc.). However, the intervention framing is incomplete: NO confounders were added. To read off a counterfactual effect of addressing complaints on positive sentiment, one must adjust for common causes of BOTH which complaints arise AND baseline sentiment (e.g., genre, budget/production tier, reviewer expectations, star power, franchise/expectation effects, viewer demographics). None of these were introduced, and complaint_intensity_level is a mediator/aspect of the treatment rather than a confounder. The set therefore establishes the treatment but fails the decisive test: it supplies zero confounders (named or unnamed), so the counterfactual effect is not identifiable."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

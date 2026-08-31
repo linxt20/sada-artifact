@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "crew_service_quality",
+    "food_quality_issue",
+    "seat_comfort_issue",
+    "disruption_handling_quality",
+    "customer_service_resolution_quality",
+    "ground_service_quality",
+    "ife_quality",
+    "cabin_class_experience_gap",
+    "service_decline_perception",
+    "service_consistency_across_legs"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.79,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7825,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Crew service is arguably the strongest driver of SIA ratings/recommendations, and a 4-way qualitative categorisation (warm/professional/robotic/rude) gives a genuine grouping axis beyond the raw Staff Service score. However groundedness is a real problem: in the seats-dreadful review (sample 2) the source text mentions nothing about crew, yet the value is 'rude_dismissive' — an invented negative. The near-even warm(3207)/rude(3073) split hints at systematic over-assignment of 'rude_dismissive' to negative reviews regardless of crew mention."
+      },
+      {
+        "name": "food_quality_issue",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorises food into actionable failure modes (taste, quantity, special-meal) rather than just echoing the numeric Food & Beverages score, so it adds leverage for identifying improvement levers. Samples are well grounded: praise mapped to 'praised_or_acceptable', and reviews silent on food correctly returned 'Unknown' rather than fabricating a category."
+      },
+      {
+        "name": "seat_comfort_issue",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Partially overlaps the existing numeric Seat Comfort column, but the issue-type breakdown (narrow/outdated/broken) is more actionable for targeting fixes, so it is not trivially redundant. Grounded in samples: 'seat far too narrow' → narrow_or_insufficient_legroom, comfortable seats → comfortable_no_issue, silence handled sensibly."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Disruption handling is a plausible major driver of non-recommendation, so isolating it is a useful new axis. All sample reviews lack disruptions and are correctly marked 'not_applicable' — appropriate silent handling; no evidence of fabrication."
+      },
+      {
+        "name": "customer_service_resolution_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures post-flight/complaint resolution, distinct from inflight service, giving a separate improvement dimension relevant to detractors. Samples that never contacted service are correctly 'not_contacted' rather than invented outcomes."
+      },
+      {
+        "name": "ground_service_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Check-in/boarding/lounge is a genuine axis absent from the original numeric ratings, useful for locating friction outside the cabin. Samples with no ground-service mention are marked 'no_issue', a defensible default though slightly optimistic; no clear contradictions observed."
+      },
+      {
+        "name": "ife_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.68,
+        "hallucination_observed": true,
+        "rationale": "Adds an issue-type view over the existing Inflight Entertainment numeric column. Groundedness is mixed: sample 2's 'sound...dreadful' fits a technical fault more than 'limited_or_outdated', and sample 4's review never mentions IFE yet was tagged 'excellent_or_adequate' — an over-confident positive where the text is silent. Positive/silent cases are otherwise handled reasonably."
+      },
+      {
+        "name": "cabin_class_experience_gap",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "The gap between class paid for and experience delivered is a valuable lens for premium-cabin improvement. It is fairly inferential, though: it requires combining Class with sentiment, and sample 2 (a very negative economy review) mapped to 'meets_class_expectations' is debatable. No outright invented facts, but values lean interpretive."
+      },
+      {
+        "name": "service_decline_perception",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean flag that is narrower than the qualitative columns and risks being close to a sentiment marker, so leverage is modest, though 'perceived decline vs past SIA' is a distinct brand-narrative angle. Samples with no temporal comparison correctly return 'false' rather than asserting a decline."
+      },
+      {
+        "name": "service_consistency_across_legs",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Useful for pinpointing where multi-leg journeys break down and separating one-off from systemic issues. Single-route reviews are correctly labelled 'single_leg' in every sample, showing appropriate restraint rather than fabricating leg-level variation."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns form a coherent decomposition of free-text reviews into actionable service dimensions (crew, food, seat, IFE, ground, disruption, complaint resolution, class-gap, consistency, decline) that map directly onto levers SIA could pull to lift ratings and recommendation, and they enable grouping/comparison of non-recommending reviews by failure type — genuinely useful for this query, with only mild redundancy against the existing numeric sub-scores. Groundedness is generally solid, and silent rows are appropriately handled with 'Unknown'/'not_applicable' rather than fabrication. The main weaknesses are crew_service_quality (a clear 'rude_dismissive' assignment on a review that never mentions crew, plus a suspiciously high rude share suggesting systematic over-negativity) and ife_quality (asserting IFE quality where the text is silent), which pull the table-level groundedness down."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 10
+}

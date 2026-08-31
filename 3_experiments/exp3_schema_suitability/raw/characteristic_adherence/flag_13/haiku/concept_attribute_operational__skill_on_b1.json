@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What operational burdens appear in incident descriptions?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_type",
+    "severity_signal",
+    "infrastructure_component",
+    "operational_burden_aspect",
+    "scope_of_impact",
+    "resolution_pattern",
+    "recurrent_issue_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.5714,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6357,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A clean categorization of the incident from short_description, giving a solid grouping axis. Values (connectivity, database, printer) are well-grounded in the source text."
+      },
+      {
+        "name": "severity_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Severity/impact scale is analytically valuable for operational-burden analysis. However, short_descriptions rarely state scope; assigning 'localized_impact' to 'Cannot connect to office WiFi' or 'single_user' is often an unwarranted specific inference where the text is silent."
+      },
+      {
+        "name": "infrastructure_component",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well-grounded (wifi, vpn, database, printer), but largely redundant with incident_type—it splits connectivity into vpn/wifi but otherwise overlaps heavily, offering limited new leverage."
+      },
+      {
+        "name": "operational_burden_aspect",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the query's notion of operational burden (connectivity_loss, data_access_blocked, service_degradation). Values are sound readings of the descriptions. Some overlap with incident_type but adds a burden-framed axis."
+      },
+      {
+        "name": "scope_of_impact",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Useful axis, but largely duplicates severity_signal and, more importantly, is frequently unsupported. 'Company_wide' vs 'individual' is asserted for terse descriptions that do not state scope, making many values invented specifics."
+      },
+      {
+        "name": "resolution_pattern",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Resolution behavior could be useful, but the evidence columns (short_description, opened_at, closed_by) do not support 'self_resolved' vs 'cross_team_handoff' vs 'reassigned'. These values appear invented rather than derived from present text."
+      },
+      {
+        "name": "recurrent_issue_flag",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.15,
+        "hallucination_observed": true,
+        "rationale": "Recurrence is analytically relevant but cannot be read from a single short_description. Marking 371 rows 'true' is an unsupported assertion; the source text gives no basis for whether an issue recurs."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.55,
+    "rationale": "Several columns (incident_type, operational_burden_aspect, infrastructure_component) are well-grounded categorizations of the description text and give genuine grouping axes for the operational-burden query. However, a cluster of columns asserts specifics the terse descriptions cannot support: scope_of_impact and severity_signal invent impact breadth, while resolution_pattern and recurrent_issue_flag assert resolution behavior and recurrence with no supporting fields in the evidence. There is also notable redundancy among the impact/scope/severity columns. Overall usefulness is moderate-to-good, but groundedness is dragged down by multiple hallucinated inference columns."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "concept_attribute_operational",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 7
+}

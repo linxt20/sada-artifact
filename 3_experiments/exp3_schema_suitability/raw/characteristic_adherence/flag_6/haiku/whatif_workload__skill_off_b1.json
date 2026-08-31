@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "category_ticket_volume",
+    "category_avg_resolution_hours",
+    "is_heavy_workload_category",
+    "estimated_resolution_time_hours"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.45,
+    "analytical_usefulness__table_level": 0.45,
+    "source_groundedness": 0.575,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.5125,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "category_ticket_volume",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Ticket count per category is a genuine, directly relevant axis for identifying which ticket types create the heaviest workload. Values are derivable by aggregating category across rows, consistent with the sample values."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Conceptually central to the query, but the column is degenerate: every value is 0.0. The source rows have opened_at available (not shown) and closed_at, so a real resolution time is computable, yet all values collapse to 0, indicating a broken/constant computation that misrepresents the data. Near-constant and unsupported by evidence."
+      },
+      {
+        "name": "is_heavy_workload_category",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A heavy-workload flag derived from volume gives a clean grouping variable for the query. Somewhat redundant with category_ticket_volume but adds a usable threshold categorisation. Flags align with the volume samples (high-volume categories flagged 1, lower flagged 0)."
+      },
+      {
+        "name": "estimated_resolution_time_hours",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.3,
+        "hallucination_observed": false,
+        "rationale": "All values are NULL across 500 rows, providing no analytical leverage. Not affirmatively hallucinated (NULL is not a false assertion), but as a fully empty column it fails to help the resolution-time analysis it was meant to support."
+      }
+    ],
+    "analytical_usefulness": 0.45,
+    "source_groundedness": 0.55,
+    "rationale": "The volume and heavy-workload columns are well-targeted and grounded, giving real axes to identify the workload-heavy ticket types. However, the two columns that speak directly to resolution time both fail: category_avg_resolution_hours is uniformly 0.0 (broken/misleading given closed_at and opening timestamps exist) and estimated_resolution_time_hours is entirely NULL. Since the query hinges on quantifying resolution-time impact, the operator delivers the grouping side but not the outcome side."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

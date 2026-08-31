@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_type",
+    "affected_device_type",
+    "assignee_is_resolver",
+    "repeat_incident_signal",
+    "description_specificity",
+    "requires_physical_action",
+    "opened_day_of_week"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7438,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.7125,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.7282,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Clean categorization from short_description gives a strong grouping axis for comparing resolution efficiency across incident types. Values track source text well (network_connectivity, printer_hardware, database all correct)."
+      },
+      {
+        "name": "failure_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Failure mode is a plausible driver of resolution effort and offers a distinct axis from category. Values are sound readings ('not working' -> not_responding, 'unable to connect' -> connectivity_failure)."
+      },
+      {
+        "name": "affected_device_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well grounded, but largely redundant with incident_category (printer_hardware<->printer, database<->software_application), reducing added analytical leverage for this query."
+      },
+      {
+        "name": "assignee_is_resolver",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Whether the assignee also resolved is a genuinely useful efficiency signal (hand-offs). However it should derive from assigned_to vs closed_by, not the sampled short_description text; sampled rows show inconsistent values for near-identical descriptions, suggesting weak grounding in the evidence shown."
+      },
+      {
+        "name": "repeat_incident_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Repeat incidents are a relevant inefficiency signal. But short generic descriptions alone rarely justify a confident repeat flag; identical 'printer not working' texts get True while other cases get False without clear textual warrant, indicating asserted specifics the source may not support."
+      },
+      {
+        "name": "description_specificity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Vague vs specific descriptions plausibly correlate with triage delay, a good efficiency axis. Values match the text well ('not working properly' -> generic_malfunction, 'connectivity lost on floor 3' -> specific_symptom)."
+      },
+      {
+        "name": "requires_physical_action",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "On-site/physical work is a reasonable inefficiency driver. Mostly warranted inferences from device/failure type, though 'True' at 411/500 is near-dominant and some assignments (e.g. connectivity) are inferential rather than stated."
+      },
+      {
+        "name": "opened_day_of_week",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Day-of-week could weakly relate to staffing-driven delays, but it is nearly uniformly distributed here, limiting leverage. Note it should derive from opened_at; sampled rows only expose closed/updated timestamps, so the mapping cannot be verified from the evidence shown."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.7,
+    "rationale": "The set provides several genuine analytical axes for resolution efficiency (category, failure_type, description_specificity, assignee_is_resolver, repeat_incident_signal, physical action). affected_device_type is largely redundant with category and opened_day_of_week is near-uniform, weakening their usefulness. Groundedness is generally solid for text-extracted columns, but repeat_incident_signal and assignee_is_resolver assert confident specifics not clearly warranted by the short descriptions (and better derived from structured fields), showing signs of hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

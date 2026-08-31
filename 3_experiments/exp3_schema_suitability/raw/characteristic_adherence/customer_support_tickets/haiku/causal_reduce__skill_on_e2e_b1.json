@@ -1,0 +1,60 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can support teams reduce ticket resolution time?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_category",
+    "requires_external_action",
+    "external_dependency_type",
+    "resolution_action"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.9,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.7625,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.8313,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "A clean categorical axis that lets the analyst group resolution_minutes by issue type to find slow categories -- directly useful for reducing resolution time. Category assignments in samples (billing_payment, authentication_access, performance_outage, feature_request, data_quality) are all sound readings of the source text."
+      },
+      {
+        "name": "requires_external_action",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "rationale": "External blockers are a strong lever for resolution time analysis, giving a meaningful grouping axis. Grounding is mostly sound (feature_request->not_present, outage->infrastructure), but CS-0001 labeled 'awaiting_customer_info' when the customer supplied full details and awaits a corrected invoice, and CS-0002 labeled 'awaiting_engineering_fix' where the text points to the customer's IT SSO push, showing some unwarranted inference."
+      },
+      {
+        "name": "external_dependency_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "rationale": "Identifies specific external dependencies, a useful complement for pinpointing where delays originate. However CS-0001 asserts 'payment_processor' when the text only mentions a duplicate line item and ACH payment (not a processor issue), and CS-0002 asserts 'identity_provider' where SSO is only suspected -- both confident specifics the text does not clearly support."
+      },
+      {
+        "name": "resolution_action",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "rationale": "The action/disposition taken is highly relevant for identifying efficient resolution paths and where investigation time is spent. Most sample values are reasonable, but resolution_action is a produced label not stated in the source (the tickets describe requests, not outcomes), so values like 'billing_credit_refund' for CS-0001 are plausible inferences rather than grounded facts, introducing some speculation."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.75,
+    "rationale": "All four added columns give genuine, non-redundant analytical axes (issue type, external blocking, dependency, resolution path) that a support team could group resolution_minutes on to find drivers of slow resolution -- strongly aligned with the query. Categorical columns are well grounded, but the two dependency-oriented columns and resolution_action occasionally assert confident specifics (payment_processor, identity_provider, particular resolution outcomes) that the source text only weakly implies, lowering overall groundedness while usefulness remains high."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

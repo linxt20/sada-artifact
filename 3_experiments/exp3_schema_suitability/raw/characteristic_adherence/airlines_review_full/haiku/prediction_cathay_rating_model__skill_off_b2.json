@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "Service_Quality_Score",
+    "Service_to_Value_Gap",
+    "Route_Complexity",
+    "Business_Traveller",
+    "Premium_Class",
+    "High_Satisfaction"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4167,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.5,
+    "leakage_rate": 0.1667
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "Service_Quality_Score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The 0.25-step values on a 1-5 scale indicate an average of the four service sub-ratings (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment). These are reviewer-provided inputs that are correlated with, but NOT a deterministic function of, the separately-given Overall Rating, so aggregating them is a legitimate predictor of overall_rating_gt7. Marginal value is limited because the components already exist in the original table, but it is a valid predictive feature."
+      },
+      {
+        "name": "Service_to_Value_Gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A signed difference (roughly service quality minus Value For Money) on a 0.25 grid. It encodes a discrepancy/interaction between two existing sub-ratings and plausibly carries predictive signal (mismatch between perceived service and value drives overall satisfaction). It is not a restatement of the focus nor knowable only after it, so it is a legitimate predictor."
+      },
+      {
+        "name": "Route_Complexity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Values 1/2/3 look like the number of legs/segments parsed from the Route string (direct vs. connecting). This is exogenous to the Overall Rating, is knowable before the outcome, and plausibly influences satisfaction (more connections -> lower rating). Genuinely new derived signal from the raw Route field."
+      },
+      {
+        "name": "Business_Traveller",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Binary flag derived from Type of Traveller. Exogenous to the focus, available pre-outcome, and traveller segment plausibly correlates with rating propensity. A valid (if largely re-encoding an existing categorical) predictor."
+      },
+      {
+        "name": "Premium_Class",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Binary indicator derived from Class (premium cabins vs. economy). Exogenous to the outcome and plausibly predictive of higher satisfaction. Legitimate predictor, though it mostly re-encodes the existing Class column."
+      },
+      {
+        "name": "High_Satisfaction",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A near 50/50 binary explicitly named 'satisfaction' — almost certainly a re-thresholding of the Overall Rating (or of Recommended). That makes it a deterministic function / near-restatement of the focus variable itself; it would trivially and circularly 'predict' overall_rating_gt7. This is target leakage, not a usable feature."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.5,
+    "rationale": "Five of the six columns are legitimate, non-leaking predictors, but most are deterministic re-encodings or aggregations of columns already present (service sub-ratings, Class, Type of Traveller), so their MARGINAL predictive leverage beyond the original table is modest. Route_Complexity is the clearest source of genuinely new signal, and Service_to_Value_Gap adds a useful interaction. High_Satisfaction is disqualifying leakage that restates the outcome and would inflate apparent performance. Net: a coherent, on-intent (service/route levers) feature set with moderate real incremental predictive value, dragged down by redundancy with originals and one leaky column."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

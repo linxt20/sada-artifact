@@ -1,0 +1,89 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "is_travel",
+    "has_source_id",
+    "is_unfinalized",
+    "amount_range",
+    "has_processed_date",
+    "days_to_process",
+    "is_cust_support_travel"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6357,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.8571,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.7464,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_travel",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant flag for isolating travel expenses, the core subject of the query. Derivable from category/short_description; sample rows are non-travel and correctly marked 0."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 1.0,
+        "hallucination_examples": false,
+        "hallucination_observed": false,
+        "rationale": "Trivially derived presence flag from source_id. Weak analytical leverage for explaining declines; largely a data-completeness indicator. Values are directly grounded."
+      },
+      {
+        "name": "is_unfinalized",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Process-state flag could correlate with declines, giving some analytical value. Grounded—nan processed_date row correctly flagged unfinalized."
+      },
+      {
+        "name": "amount_range",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Bucketing amount is a genuine grouping axis; expense size is a plausible decline driver. Derived from amount column, though bucket thresholds are unverifiable from samples."
+      },
+      {
+        "name": "has_processed_date",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Bare presence flag largely redundant with is_unfinalized and days_to_process (-1 sentinel). Grounded but adds little independent leverage."
+      },
+      {
+        "name": "days_to_process",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Processing duration is a meaningful continuous factor for modeling declines. Uses -1 sentinel for missing dates appropriately. Requires opened_at, which is present; values appear plausible."
+      },
+      {
+        "name": "is_cust_support_travel",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A more specific travel sub-category offers a finer grouping axis relevant to the query. Derivable from department/category+description; samples are 0, consistent, but specificity is harder to verify."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.86,
+    "rationale": "Several columns (is_travel, amount_range, days_to_process, is_cust_support_travel, is_unfinalized) provide genuine grouping/modeling axes for explaining declines. A few (has_source_id, has_processed_date) are near-trivial presence flags with weak leverage and some redundancy with the duration/finalization columns. Groundedness is generally strong: values in the samples are sound readings of the source text, missing dates are handled with sentinels rather than invented facts, and no clear hallucinations are observed; only the bucket thresholds and sub-category specificity are not fully verifiable from the provided samples."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

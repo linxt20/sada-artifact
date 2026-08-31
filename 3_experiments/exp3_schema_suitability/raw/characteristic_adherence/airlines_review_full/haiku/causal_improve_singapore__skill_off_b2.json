@@ -1,0 +1,98 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "is_not_recommended",
+    "service_consistency_gap",
+    "has_critical_service_failure",
+    "poor_value_perception",
+    "premium_with_low_rating",
+    "high_service_variance",
+    "expectation_inflation"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "overall_rating_recommendation (Overall Rating & Recommended)",
+    "per_column": [
+      {
+        "name": "is_not_recommended",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is simply a binary re-encoding of the existing 'Recommended' field (the '(Recommended = no)' condition explicitly stated in the query). It is the outcome itself, not a cause; it cannot serve as treatment or confounder."
+      },
+      {
+        "name": "service_consistency_gap",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A numeric gap derived from service-rating dimensions. It is a candidate driver (cause) of the overall rating, so it functions as a treatment/predictor, not as a common cause of a separate treatment and the outcome. It does not adjust for any prior variable."
+      },
+      {
+        "name": "has_critical_service_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A binary indicator of a service failure engineered from the service dimensions. This is exactly the kind of candidate cause whose effect on the rating one would attribute — a treatment, not a confounder."
+      },
+      {
+        "name": "poor_value_perception",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Derived from 'Value For Money'; a rating driver / candidate cause of overall rating. It is a treatment (arguably even a mediator on the service→satisfaction path), but in no sense a common cause of another treatment and the outcome."
+      },
+      {
+        "name": "premium_with_low_rating",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "This interaction is defined partly on the OUTCOME itself ('low rating') combined with premium class. Conditioning on a variable built from the outcome opens collider bias; it is not a legitimate confounder (and would be an error to treat as one)."
+      },
+      {
+        "name": "high_service_variance",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A binary feature summarising dispersion across the service ratings — another engineered candidate cause of the overall rating. It is a treatment/predictor, not a common cause upstream of both a treatment and the outcome."
+      },
+      {
+        "name": "expectation_inflation",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A signed gap between expected and delivered experience. This sits on the causal path (class/service → expectation gap → dissatisfaction/rating), i.e. a mediator, not a confounder. Adjusting for it as a confounder would be a mistake."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "has_critical_service_failure",
+      "poor_value_perception",
+      "service_consistency_gap",
+      "high_service_variance"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "A treatment is clearly present — indeed the system supplied several engineered candidate causes of low rating (critical service failure, poor value perception, service consistency gap, high service variance). But the decisive requirement is CONFOUNDERS: variables that plausibly cause BOTH one of these treatments AND the outcome and must be adjusted for. None of the added columns play that role. 'is_not_recommended' is the outcome; 'expectation_inflation' and 'poor_value_perception' are mediators/drivers on the causal path; and 'premium_with_low_rating' is built partly from the outcome, making it a collider rather than a confounder. The obvious real confounders for this problem (Type of Traveller, Class, Route/market, season/Month Flown) already exist in the base table, yet the augmentation surfaced NO new adjustment variable of that kind — no data/text-derived common cause was added. Because there are zero genuine, newly-surfaced confounders (confounder_quality 0.0), the columns set up prediction/feature engineering rather than an identifiable causal estimation, and the causal-attribution claim FAILS."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

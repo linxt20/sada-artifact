@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "defect_type",
+    "expectation_gap",
+    "sentiment_intensity",
+    "reviewer_use_context",
+    "product_category_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.77,
+    "analytical_usefulness__table_level": 0.79,
+    "source_groundedness": 0.86,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.815,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "defect_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorising the nature of a product defect is a strong analytical axis for predicting negative satisfaction. Values are grounded: the doll review is reasonably 'missing_or_incomplete', and books/music with no product defect are correctly 'not_present'. Distribution is skewed to 'not_present' but that is a warranted silent value, not a flaw."
+      },
+      {
+        "name": "expectation_gap",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Whether the product met/fell below expectations is directly relevant to satisfaction prediction and gives a good grouping axis. Most mappings are sound (Lamott book 'quality_below_expectations', Bicycle Thieves 'met_expectations'). The doll review as 'description_mismatch' is a slight stretch but defensible; skincare 'better_than_expected' is reasonable."
+      },
+      {
+        "name": "sentiment_intensity",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A 1-5 intensity scale is derivable from text tone and is more granular than a bare sentiment flag, so it carries some leverage. However it is largely a proxy/restatement of the outcome (satisfaction) the query targets, risking circularity and redundancy with label_pos, capping usefulness. Sample values track sentiment sensibly."
+      },
+      {
+        "name": "reviewer_use_context",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Use context (gift, child, professional) is a legitimate new segmentation axis for satisfaction analysis. Values are well grounded: doll for daughter -> 'child_or_family', skincare -> 'personal_use', silent reviews -> 'not_present'. Mostly silent but that is warranted."
+      },
+      {
+        "name": "product_category_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Product category is a useful axis to compare dissatisfaction drivers across media vs physical goods. Values are soundly inferred from content (book, music, film, physical product), matching the source text well."
+      }
+    ],
+    "analytical_usefulness": 0.79,
+    "source_groundedness": 0.86,
+    "rationale": "The added columns provide several genuine new axes (defect type, expectation gap, use context, category) that support predicting negative satisfaction, all well grounded in the source text with appropriate 'not_present' handling for silent rows and no observed hallucinations. sentiment_intensity is the weakest, partly restating the target outcome, but the set overall is analytically useful and faithful to the source."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 5
+}

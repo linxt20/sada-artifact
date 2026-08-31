@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "incident_category",
+    "resolution_pattern",
+    "ticket_reassignment_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.85,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.7667,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.8084,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A finer-grained categorization of ticket types derived from short_description gives a strong axis to group and compare agent workload, going beyond the generic original 'category' column. Sample values ('database_access' for 'Unable to access the database', 'vpn_connectivity' for VPN issue) are sound readings. Slight imperfection: 'Unable to access the company's intranet' mapped to network_connectivity is defensible but somewhat interpretive; overall well grounded."
+      },
+      {
+        "name": "resolution_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Categorizing tickets by expected resolution nature (infrastructure_dependency, quick_fix_expected, prolonged_investigation) is directly relevant to workload analysis and gives a genuine modeling axis. However, groundedness is weaker: values like 'prolonged_investigation' or 'quick_fix_expected' imply effort/duration the short_description alone does not establish. The samples show timestamps where opened_at is absent and closed_at equals sys_updated_on, so actual resolution effort is not clearly derivable; the labels are inferred rather than evidenced, risking confident assertion where text is silent."
+      },
+      {
+        "name": "ticket_reassignment_pattern",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Comparing assigned_to vs closed_by (assigned_and_closed_same_agent, assigned_different_from_closer, no_assignment) is a solid, non-redundant workload/handoff signal derivable from original columns. Reassignment/handoff is a meaningful driver of agent workload. Values are mechanically derivable from assigned_to and closed_by fields present in the table, so groundedness is high."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.77,
+    "rationale": "All three added columns provide genuine new axes for analyzing what drives agent workload: incident_category refines ticket type, ticket_reassignment_pattern captures handoffs, and resolution_pattern captures effort profile. incident_category and ticket_reassignment_pattern are well grounded in source text/original fields. resolution_pattern is analytically valuable but partly speculative, inferring effort/duration that the short_description and available timestamps do not firmly support, which lowers overall groundedness somewhat."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

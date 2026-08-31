@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_aspect",
+    "has_complaint",
+    "comparison_mentions"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.7216,
+    "focus_coherence": 0.88,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The purchase aspects/topics that Amazon reviewers discuss in their reviews",
+    "per_column": [
+      {
+        "name": "primary_aspect",
+        "supports_focus": true,
+        "rationale": "Directly captures the main product aspect (quality, performance, design, usability, value, etc.) a reviewer talks about, which is the core of the implied focus."
+      },
+      {
+        "name": "has_complaint",
+        "supports_focus": true,
+        "rationale": "Characterises the evaluative stance toward the discussed aspect, a coherent facet of what reviewers are 'actually talking about' regarding their purchase."
+      },
+      {
+        "name": "comparison_mentions",
+        "supports_focus": true,
+        "rationale": "Counts references to alternative/comparison products, an additional discourse dimension of review content that enriches the aspect-focused decomposition."
+      }
+    ],
+    "focus_coherence": 0.88,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.85,
+    "rationale": "The three columns cohere around a single inferable focus: the substance of what reviewers discuss about their purchase. primary_aspect provides the central topical decomposition, while has_complaint (evaluative valence) and comparison_mentions (comparative framing) act as differentiated facets rather than restatements or generic noise. This forms a sound analytical structure at a useful granularity. Actionability is strong: an analyst can pivot on aspect to identify which purchase dimensions drive discussion, cross with complaints to find pain points, and use comparisons to gauge competitive references. Slight deduction because the aspect taxonomy's granularity is inferred rather than explicit, and comparison_mentions is somewhat more peripheral to 'aspects', but overall it clearly realises a coherent, non-trivial focus."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

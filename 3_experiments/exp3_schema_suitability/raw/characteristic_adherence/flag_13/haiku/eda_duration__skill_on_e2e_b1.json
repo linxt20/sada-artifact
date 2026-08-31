@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "resolution_complexity",
+    "incident_severity_signal",
+    "incident_repeat_pattern",
+    "affected_service_domain"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.67,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.62,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.645,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly categorizes incidents from short_description, giving a clean grouping axis the query explicitly needs. Values (connectivity, vpn_access, database, printing) are sound readings of the source text. Some redundancy with the existing 'category' column, but the derived taxonomy from text is finer-grained and useful."
+      },
+      {
+        "name": "resolution_complexity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A reassigned-vs-single_assignment axis is analytically relevant to resolution duration. However, the evidence samples expose only short_description/opened_at/closed_by, none of which record reassignment history. Whether an incident was reassigned is not derivable from the shown source text, so the specific values appear asserted rather than grounded."
+      },
+      {
+        "name": "incident_severity_signal",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A severity/scope axis pairs well with the duration/priority query. Some values are warranted readings (connectivity_interruption, access_denial), but distinctions like 'server_outage_level', 'multi_system_impact', or 'single_system' vs 'user_workstation' imply scope details the terse descriptions do not clearly state, so groundedness is partial."
+      },
+      {
+        "name": "incident_repeat_pattern",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Recurring-vs-isolated could add leverage, but it is not derivable from a single row's source text; identifying recurrence needs cross-row/history evidence not shown. Two nearly identical VPN descriptions get different labels (isolated vs recurring), indicating the value is largely invented rather than grounded."
+      },
+      {
+        "name": "affected_service_domain",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A reasonable domain grouping derivable from the description, but it is largely a coarser restatement of incident_category (email->communication_platform, database->data_platform), giving limited new analytical leverage. Values are well grounded, though the VPN->identity_access mapping is debatable."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.62,
+    "rationale": "The set provides several genuine grouping axes (category, service domain, severity) relevant to analyzing resolution duration by category/priority. However, three columns (resolution_complexity, incident_repeat_pattern, and parts of incident_severity_signal) assert properties—reassignment history, recurrence, system scope—that the exposed source text does not support, with a clear contradiction in the repeat_pattern labeling of near-identical VPN rows. incident_category is strong and well grounded; affected_service_domain is grounded but partly redundant."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

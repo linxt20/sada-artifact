@@ -1,0 +1,97 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "failure_mode",
+    "affected_component",
+    "scope_indicator",
+    "recurrence_signal",
+    "resolution_ownership_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "failure_mode",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The nature of the failure (connection_failure, service_down, etc.) is a candidate underlying cause whose effect on resolution time is being attributed; it is the kind of 'underlying cause' the query seeks."
+      },
+      {
+        "name": "affected_component",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The affected component plausibly drives BOTH the type/difficulty of the incident (treatment/failure_mode) and the resolution time (some components inherently take longer to fix and are prone to certain failures). Surfaced from data, not named in query."
+      },
+      {
+        "name": "scope_indicator",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (system_wide vs single_user) plausibly affects both what kind of failure occurs and how long resolution takes; broad-scope incidents attract different handling and longer times. Not named in query."
+      },
+      {
+        "name": "recurrence_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Recurring issues may reflect an underlying systemic condition that influences both the failure mode observed and the resolution time; plausibly a common cause. Not named in query. (Could arguably be a treatment, but functions as a background condition.)"
+      },
+      {
+        "name": "resolution_ownership_pattern",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "How ownership plays out (cross_agent_resolved, unassigned, self_resolved) is an outcome of the resolution process itself and lies ON the path to resolution time; adjusting for it as a confounder would be a mistake."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "failure_mode"
+    ],
+    "confounders": [
+      {
+        "name": "affected_component",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "scope_indicator",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "recurrence_signal",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The set does establish a causal estimation setup: failure_mode serves as a plausible treatment (the 'underlying cause'), and affected_component and scope_indicator are genuine, data-surfaced common causes of both the failure type and resolution time, none of which are named in the query (which only names priority and category). This demonstrates the capability under test. recurrence_signal is a weaker but defensible confounder. resolution_ownership_pattern is a mediator on the causal path and should not be adjusted for as a confounder, which slightly weakens the set. Overall a moderately strong, non-mechanical set with real surfaced confounders."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

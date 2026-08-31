@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "completion_gap",
+    "is_overdue",
+    "attention_flag",
+    "duration_days"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.738,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Goal risk / attention-worthiness (which goals are off-track or overdue and need intervention)",
+    "per_column": [
+      {
+        "name": "completion_gap",
+        "supports_focus": true,
+        "rationale": "Signed gap between target and actual completion; a direct, data-inferable measure of how far a goal is behind, central to identifying at-risk goals."
+      },
+      {
+        "name": "is_overdue",
+        "supports_focus": true,
+        "rationale": "Derived from end_date vs current state; flags goals past deadline, a key facet of attention-worthiness."
+      },
+      {
+        "name": "attention_flag",
+        "supports_focus": true,
+        "rationale": "Explicit classification (On Track / Needs Attention / Cancelled) that operationalises the focus concept directly; the aggregating facet."
+      },
+      {
+        "name": "duration_days",
+        "supports_focus": true,
+        "rationale": "Timeline length between start and end; a contextual attribute that helps interpret gap/overdue status, though somewhat more of a descriptor than a risk driver."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.82,
+    "focus_actionability": 0.9,
+    "rationale": "The columns cohere tightly around one inferable focus: identifying goals that warrant attention because they are behind or overdue. completion_gap (magnitude of shortfall), is_overdue (deadline breach), and attention_flag (a synthesized status) form a coherent multi-facet structure spanning quantitative magnitude, boolean condition, and categorical rollup, rather than a scattered grab-bag or a single restatement. duration_days is a supporting contextual attribute that adds granularity for interpreting the gap. The focus is directly actionable -- an analyst can filter/rank 'Needs Attention' or overdue goals and investigate drivers by department/owner/priority. Minor deduction on structure because attention_flag partly restates the combined signal of the other flags, creating some redundancy, and none of the columns tie the risk to explanatory predictors."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

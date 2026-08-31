@@ -1,0 +1,134 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 12,
+  "added_columns": [
+    "seat_comfort_mentioned",
+    "staff_service_mentioned",
+    "food_mentioned",
+    "entertainment_mentioned",
+    "value_mentioned",
+    "punctuality_mentioned",
+    "cleanliness_mentioned",
+    "review_length",
+    "detailed_negative_review",
+    "detailed_positive_review",
+    "dominant_theme",
+    "theme_count"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.715,
+    "predictor_fraction": 0.9167,
+    "n_predictors": 11,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.78,
+    "interpretable_fraction": 0.9167
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "seat_comfort_mentioned",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme-presence flag with well-balanced classes (485/415); reviews can be segmented on whether seat comfort was raised and mean Overall Rating compared. Directly matches the query's review-theme framing."
+      },
+      {
+        "name": "staff_service_mentioned",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary theme flag (740/160); groupable and comparable against rating, a core review theme."
+      },
+      {
+        "name": "food_mentioned",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary theme presence (599/301); supports segmented comparison of ratings."
+      },
+      {
+        "name": "entertainment_mentioned",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Balanced binary theme flag (532/368); interpretable segmentation dimension."
+      },
+      {
+        "name": "value_mentioned",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag (728/172); somewhat imbalanced but the minority class is large enough for meaningful comparison."
+      },
+      {
+        "name": "punctuality_mentioned",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag (648/252); a distinct, interpretable theme not already in original columns, well suited for grouping."
+      },
+      {
+        "name": "cleanliness_mentioned",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag (783/117); minority class small but still ~117 rows, allowing an interpretable comparison of a new theme."
+      },
+      {
+        "name": "review_length",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Raw character count is a generic, near-continuous metadata feature with highly fragmented values (mostly counts of 3-6); not a review theme and not naturally categorized, so it yields opaque rather than interpretable segmentation."
+      },
+      {
+        "name": "detailed_negative_review",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary flag (695/205) capturing sentiment-length interaction; interpretable and groupable, plausibly correlated with rating, though it conflates length with sentiment."
+      },
+      {
+        "name": "detailed_positive_review",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary flag (493/407), well balanced; interpretable segmentation associable with rating."
+      },
+      {
+        "name": "dominant_theme",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Single categorical label of the leading theme with clear, well-separated categories; excellent EDA segmentation dimension directly aligned with the query, though top-heavy toward seat_comfort/staff_service."
+      },
+      {
+        "name": "theme_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Small-integer ordinal (0-7) of how many themes a review raises; well-distributed and interpretable as review richness, comparable against rating."
+      }
+    ],
+    "n_predictors": 11,
+    "relationship_informativeness": 0.78,
+    "rationale": "The set overwhelmingly delivers interpretable, external theme dimensions that can be grouped and cross-tabbed against Overall Rating within Type of Traveller and Class, directly realising the correlational EDA intent. The per-theme binary flags, the dominant_theme categorical, and theme_count are all well-separated and human-readable. Weaknesses: review_length is an opaque, over-fragmented metadata scale offering little interpretable segmentation, and the detailed_positive/negative flags partly conflate length with sentiment. Overall the collection strongly supports discovering interpretable theme-rating relationships, with one clear miss."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 12
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "aircraft_cleanliness_maintenance",
+    "aircraft_modernity",
+    "ground_service_efficiency",
+    "fare_value_proposition"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.738,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.694,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.716,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides a well-differentiated categorical axis of crew service quality, directly relevant to identifying advantage attributes of highly rated airlines. Values map soundly to source text (e.g., 'outstanding service' -> exceptional_service, 'nice and helpful' -> professional_attentive/helpful_caring). Minor imprecision in distinguishing overlapping categories but no invented facts."
+      },
+      {
+        "name": "aircraft_cleanliness_maintenance",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Cleanliness is a plausible advantage axis and has a large NULL share indicating appropriate abstention when silent. However, some rows assert 'clean_well_maintained' where the source never mentions cleanliness (e.g., the 'consistently good service' review and the Frankfurt review say nothing about cleanliness), which is an unwarranted specific inference lowering groundedness."
+      },
+      {
+        "name": "aircraft_modernity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "Aircraft modernity is a reasonable comparative axis. The 'older aircraft ... good condition' row correctly maps to older_functional. But most samples were labeled 'well_maintained_modern' despite the text saying nothing about aircraft age/modernity, and the dominant 'well_maintained_modern' value blends maintenance with modernity, indicating frequent unsupported assertions."
+      },
+      {
+        "name": "ground_service_efficiency",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Ground/airport experience is a distinct, useful advantage attribute. High NULL/Unknown share shows correct abstention when text is silent; the lounge/check-in 'breeze' row soundly maps to smooth_quick. Grounded where present."
+      },
+      {
+        "name": "fare_value_proposition",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "A Value For Money column already exists in the original table, making this largely redundant. Worse, none of the sample reviews mention price or fare, yet every one was confidently labeled 'good_fair_price', an invented specific unsupported by the source text."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns give several genuinely useful new axes (crew service, ground efficiency, cleanliness, modernity) for grouping high-rated airlines by advantage attributes, though fare_value_proposition largely restates the existing Value For Money column. Groundedness is mixed: crew and ground-service columns abstain appropriately and read the text soundly, but cleanliness, modernity, and especially fare columns repeatedly assert positive specifics for rows where the source is silent, indicating a systematic over-assertion bias toward favorable defaults."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

@@ -1,0 +1,120 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "n_added_columns": 11,
+  "added_columns": [
+    "theme_engagement",
+    "theme_technical_issues",
+    "theme_peer_interaction",
+    "theme_instructor_effectiveness",
+    "theme_pacing",
+    "theme_hands_on_learning",
+    "theme_content_delivery",
+    "theme_mental_health",
+    "theme_access_equity",
+    "primary_theme",
+    "theme_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 11,
+    "n_judged_columns": 11,
+    "analytical_usefulness": 0.7955,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7227,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7591,
+    "hallucination_rate": 0.5455
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "theme_engagement",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A distinct thematic axis relevant to relating themes to satisfaction; binary flag gives groupable leverage. Sample readings mostly sound (ED-0002 engagement=1 warranted, ED-0004 warranted), with some borderline calls but no clear contradiction."
+      },
+      {
+        "name": "theme_technical_issues",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Clear, useful theme. Well grounded: camera freezing, platform logout, all correctly flagged; absence rows correctly 0."
+      },
+      {
+        "name": "theme_peer_interaction",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful independent axis. Grounded: 'zero peer interaction', 'cannot get juniors to participate' correctly flagged 1; correct 0s elsewhere."
+      },
+      {
+        "name": "theme_instructor_effectiveness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Useful theme. ED-0003 flags instructor_effectiveness=1 from 'teacher can't tell when she's lost' which is defensible, but ED-0004 flag on good teacher posting clips is reasonable. Some inference stretch; mostly sound."
+      },
+      {
+        "name": "theme_pacing",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Relevant axis, but flagging is loose: ED-0001 pacing=1 ('three problems ahead') is warranted, yet ED-0004 pacing=1 from 'at my own pace' is borderline. Some over-attribution."
+      },
+      {
+        "name": "theme_hands_on_learning",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Valid axis, but ED-0001 hands_on=1 is not supported by the text (about tech/pacing, no hands-on content). ED-0002 kitchen-chemistry is hands-on yet flagged 0 — inconsistent, indicating noisy grounding."
+      },
+      {
+        "name": "theme_content_delivery",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Somewhat overlaps other delivery themes and is applied loosely: ED-0001, ED-0002, ED-0003 all flagged 1 with weak specific textual anchors, suggesting over-tagging."
+      },
+      {
+        "name": "theme_mental_health",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful distinct theme. ED-0003 'cries before every session' correctly flagged; other rows correctly 0. Rare but well-grounded."
+      },
+      {
+        "name": "theme_access_equity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Reasonable axis; sampled rows all 0 which is defensible given the texts. Cannot assess positives from samples but no contradiction observed."
+      },
+      {
+        "name": "primary_theme",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Highly useful single categorical for grouping satisfaction by dominant theme. But selections are questionable: ED-0003 'technical_issues' as primary over the emotionally central mental_health/peer issues, and ED-0001 primary technical is defensible. Salience judgments partly off."
+      },
+      {
+        "name": "theme_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A derived intensity proxy that could add mild leverage, but it inherits the over-tagging: ED-0003 count=5 and ED-0001 count=4 reflect inflated theme flags, so values are noisy."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns give a strong, query-aligned decomposition: multiple distinct thematic binary flags plus a primary_theme categorical enable exactly the cross-tab of themes against satisfaction by role/grade/subject that the query requests. Analytical usefulness is high overall, with theme_count being the weakest (a derived proxy). Groundedness is generally acceptable — clear themes like technical_issues, peer_interaction, and mental_health are read soundly from the text and silent rows are correctly 0. However there is consistent evidence of over-tagging in the samples (e.g., ED-0001 flagged for hands_on_learning and content_delivery without textual support, ED-0003 flagged across five themes, primary_theme salience choices that undersell the most central concern), lowering confidence in the finer-grained flags and the derived count."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 11
+}

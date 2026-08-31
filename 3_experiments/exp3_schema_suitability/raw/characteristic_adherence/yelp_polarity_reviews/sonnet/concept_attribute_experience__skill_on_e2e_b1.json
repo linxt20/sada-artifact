@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "food_quality_rating",
+    "service_staff_sentiment",
+    "service_failure_type",
+    "atmosphere_sentiment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8125,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.805,
+    "source_groundedness__table_level": 0.81,
+    "b1_overall": 0.8088,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "food_quality_rating",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "A numeric food-quality axis is genuinely useful for identifying satisfaction themes and lets analysts group/compare. Values track the text (pizza/pita praise -> 4, silent rows -> NULL, which is correct). However, mapping qualitative praise to a specific numeric like 4.0 imposes a confident precision the text does not warrant (no star rating stated), a mild ungrounded specificity."
+      },
+      {
+        "name": "service_staff_sentiment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Service/staff sentiment is a core complaint/satisfaction theme and provides a strong grouping axis distinct from food. Sample values are well grounded: friendly employees -> positive, forgotten/rude -> negative, silence handled via NULL/neutral appropriately."
+      },
+      {
+        "name": "service_failure_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A typed categorization of failure modes gives high analytical leverage for complaint theming, going beyond a bare sentiment flag. Values are sound readings: forgotten twice -> ignored_forgotten, refusing patrons of color -> discriminatory, non-complaints -> not_present."
+      },
+      {
+        "name": "atmosphere_sentiment",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.62,
+        "hallucination_observed": true,
+        "rationale": "Atmosphere is a legitimate additional theme axis, but it is often not the subject of these reviews and appears frequently inferred. Row YLP-0004 (a real-estate agent thank-you) and YLP-0005 (cabana/entry complaints) have no genuine atmosphere content yet receive positive/negative labels, indicating the column tends to fabricate an atmosphere read from overall sentiment rather than atmosphere-specific text."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.81,
+    "rationale": "The added columns give distinct, non-redundant axes (food quality, staff sentiment, typed service failures, atmosphere) that directly serve the query about satisfaction and complaint themes, with failure-type being especially valuable. Grounding is generally solid with correct NULL handling on silent rows. The main weaknesses are the imposition of specific numeric food ratings where text is qualitative, and an atmosphere column that appears to back-fill overall sentiment onto rows lacking atmosphere-specific evidence."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

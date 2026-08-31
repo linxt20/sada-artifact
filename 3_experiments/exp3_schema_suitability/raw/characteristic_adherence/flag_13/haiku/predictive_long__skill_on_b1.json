@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals are linked to longer resolution duration values?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "severity_signal",
+    "infrastructure_scope",
+    "assigned_technician",
+    "technician_assignment_alignment",
+    "time_of_day_opened",
+    "resolution_pathway_complexity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7786,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.7393,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean categorisation of the incident type derived from short_description (WiFi/VPN->connectivity, database->database, printing->hardware). Gives a strong grouping axis for comparing resolution duration. Values are well-grounded readings of the source text."
+      },
+      {
+        "name": "severity_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Maps descriptions to access_issue/service_outage/degraded_performance, a plausible severity/type axis useful for modelling duration. Samples are reasonable inferences (connect problems->access_issue, printing->degraded_performance), though some inference is involved."
+      },
+      {
+        "name": "infrastructure_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes server/network/user_endpoint scope, a meaningful axis for duration analysis. Mostly warranted from text (VPN/WiFi->network, printing->user_endpoint), though 'database->server' is a mild inference not explicitly stated."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with existing assigned_to/closed_by columns, adding limited new leverage. More concerning: sample values contradict the source closed_by (e.g. closed_by 'Charlie Whitherspoon' -> assigned_technician 'beth_anglin'; 'Luke Wilson' -> 'charlie_whitherspoon'), suggesting invented or misaligned values."
+      },
+      {
+        "name": "technician_assignment_alignment",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A true/false alignment flag (e.g. assigned vs. closer, or vs. assignment_group) could be a useful predictor of longer/escalated durations. But its groundedness depends on assigned_technician, which itself appears fabricated/misaligned in samples, so the derived flag is unreliable."
+      },
+      {
+        "name": "time_of_day_opened",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Bucketing opened_at into night/morning/afternoon/evening is a genuine new axis for relating timing to resolution duration, and values correctly match the timestamps in the samples."
+      },
+      {
+        "name": "resolution_pathway_complexity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Escalated/direct/multi_stage is highly relevant to duration, but the source text provided (short_description, opened_at, closed_by) does not support determining escalation. Values like 'escalated' vs 'direct_resolution' appear asserted without evidence in the sampled fields."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.65,
+    "rationale": "Most added columns offer genuine new axes (category, severity, scope, timing, pathway complexity) for relating features to resolution duration, so table-level usefulness is high. Groundedness is mixed: the categorisation and time-of-day columns are sound readings of the text, but assigned_technician contradicts the source closer in samples, and technician_assignment_alignment and resolution_pathway_complexity depend on facts (escalation, true assignment) not present in the provided source fields, indicating unsupported/invented values."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

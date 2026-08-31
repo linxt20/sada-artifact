@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_issue_category",
+    "assigned_agent",
+    "issue_severity_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.6833,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.5833,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.6333,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "Directly identifies ticket types, the core grouping axis for 'which types create heaviest workload' and resolution-time analysis. Categories are soundly derived from short_description in most samples, but the 'Unable to access the company's intranet' row was labeled database_access, which is a mis-categorization (intranet != database), indicating some ungrounded assignment."
+      },
+      {
+        "name": "assigned_agent",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Agent identity is essential for measuring per-agent workload. However the original table already has assigned_to/closed_by, so this may be a restatement; more importantly, the source_text samples provided do not expose any agent-name field, so the specific agent values (e.g. beth_anglin, howard_johnson) are not visibly derivable from the shown evidence and appear asserted. If they map from an existing column they'd be grounded, but the evidence given does not support them."
+      },
+      {
+        "name": "issue_severity_signal",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A bare true/false severity flag adds little leverage for the workload/resolution-time query, especially since priority already exists in the original table. All samples are 'False' with no visible textual basis for the true/false split, so the values are weakly grounded and the signal is near-constant and generic."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.58,
+    "rationale": "primary_issue_category is the key column enabling the requested 'which ticket types drive workload / resolution time' analysis and is largely well-grounded in short_description, though one mislabel is visible. assigned_agent is useful for workload attribution but overlaps with existing assignment columns and its specific values are not supported by the shown evidence. issue_severity_signal is a generic near-constant flag redundant with priority and lacks clear textual grounding. Overall the set provides meaningful grouping axes but with notable groundedness concerns on two of three columns."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

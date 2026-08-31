@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "hardware_device_category",
+    "incident_type",
+    "resource_assignment_pattern",
+    "description_specificity_level",
+    "issue_scope_impact",
+    "resolution_path_hint",
+    "caller_persistence",
+    "reopened_or_chronic_issue"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7937,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7025,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7481,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_device_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Extracts device/asset type from short_description, giving a strong grouping axis to find which categories (e.g., printers) drive recurring inefficiency. Samples map cleanly to source text."
+      },
+      {
+        "name": "incident_type",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Categorizes failure nature (functionality, connectivity, etc.), a genuine axis for identifying recurring issue types. Sample values are sound readings of the descriptions."
+      },
+      {
+        "name": "resource_assignment_pattern",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Single_resolver vs transferred is relevant to resolution inefficiency, but 'transferred' is asserted for 'Printer not working properly' with no evidence of reassignment in the shown fields; this could be inferred from assignment history not present in samples, so groundedness is uncertain."
+      },
+      {
+        "name": "description_specificity_level",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Vague/generic descriptions plausibly slow resolution, giving a real axis to correlate with inefficiency. Judgments of specificity from the text are defensible."
+      },
+      {
+        "name": "issue_scope_impact",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Scope is useful for prioritizing recurring high-impact issues. But labeling 'The office printer is not functioning' as multi_user_shared_resource and 'Unable to connect to the database' as system_critical are inferences beyond what the terse text states; some are warranted, others speculative."
+      },
+      {
+        "name": "resolution_path_hint",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Suggested resolution path is relevant to inefficiency analysis, but values like 'replacement_needed' and 'environmental_trigger' are guesses about remediation not supported by the description text, which only states a symptom."
+      },
+      {
+        "name": "caller_persistence",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Repeat reporters are directly relevant to chronic/recurring issues. Derivable by counting caller_id occurrences, an original column, so groundedness is reasonable though not verifiable in the shown samples."
+      },
+      {
+        "name": "reopened_or_chronic_issue",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Directly on-point for recurring issues driving inefficiency. However there is no reopen field or state history in the source shown; a true/false chronic flag risks being an unsupported inference, so groundedness is questionable."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns provide multiple genuine, non-redundant axes (device category, incident type, scope, specificity, persistence, chronicity) that meaningfully support analyzing recurring drivers of resolution inefficiency, so analytical usefulness is strong. Extraction-type columns (hardware_device_category, incident_type) are well grounded in the short_description text. However, several inference-heavy columns (resolution_path_hint, issue_scope_impact, resource_assignment_pattern, reopened_or_chronic_issue) assert specifics the terse source text or shown fields do not clearly support, lowering overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

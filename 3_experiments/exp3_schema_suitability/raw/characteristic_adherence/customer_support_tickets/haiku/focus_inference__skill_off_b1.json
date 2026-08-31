@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "issue_category",
+    "issue_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.9,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.96,
+    "source_groundedness__table_level": 0.96,
+    "b1_overall": 0.93,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.97,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by grouping tickets into a coherent, moderate-cardinality taxonomy (Bug, Feature Request, Infrastructure, etc.), giving a strong new axis to aggregate on. Sample values are sound readings of the source text: billing invoice duplicate -> Billing, 502 outage -> Infrastructure, nav pin request -> Feature Request, session drops -> Authentication. The CSV BOM row labelled 'Bug' is defensible. Well grounded."
+      },
+      {
+        "name": "issue_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A finer-grained subtype that adds a genuine second axis of resolution (e.g. Session Management, Service Outage, Data Export, Billing Accuracy) beyond the coarse category, useful for identifying specific recurring problem kinds. Cardinality is high but not merely redundant with issue_category. Sample values are faithful extractions/categorisations of the source text; no invented facts observed."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.96,
+    "rationale": "Both added columns directly serve the query about the main kinds of issues, offering complementary granularity (coarse category + specific subtype) that supports grouping and comparison. Values across the evidence samples are well-grounded, warranted readings of the issue_description text with no hallucinated specifics. Slight deduction on issue_type usefulness for its high cardinality and partial conceptual overlap with issue_category, but it still provides distinct analytical leverage."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 2
+}

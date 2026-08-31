@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If a company shifted the business model described in its profile toward a more service-oriented or localized model, how would its fit for a new region change?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "business_model_type",
+    "delivery_modality",
+    "geographic_scope",
+    "customer_segment",
+    "localization_dependency",
+    "service_intensity",
+    "industry_vertical",
+    "company_maturity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8525,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.8263,
+    "hallucination_rate": 0.125
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "business_model_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly captures the business model dimension central to the query. Sample values (venture_investment for VC firms, staffing_consulting for 280 Group, product_software for 23andMe) are sound readings of descriptions."
+      },
+      {
+        "name": "delivery_modality",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Service-oriented vs digital delivery is exactly the axis the query calls for. Values are well-grounded; VC firms as in_person_service is a defensible inference from partnership-based descriptions."
+      },
+      {
+        "name": "geographic_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Relevant to regional-fit analysis. Correctly uses not_stated for silent rows. 'global' for 23andMe and 5AM is a reasonable warranted inference, though some 'global' labels are somewhat speculative given silent text."
+      },
+      {
+        "name": "customer_segment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "B2B/B2C segmentation gives a useful modeling axis for regional fit. Values are well-supported readings of the source text."
+      },
+      {
+        "name": "localization_dependency",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Highly on-point for the localization aspect of the query. Mostly grounded, but 23andMe tagged high_regulatory_compliance is a reasonable domain inference not explicit in text; generally defensible categorisation."
+      },
+      {
+        "name": "service_intensity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "An ordinal service-orientation scale directly addresses the 'more service-oriented' pivot in the query. Values are plausible but partly subjective (e.g. 280 Group=4, VC=2); reasonable but not strictly derivable, hence moderate groundedness."
+      },
+      {
+        "name": "industry_vertical",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides a solid grouping axis; somewhat overlaps business_model_type but adds finer sector granularity. Sample values (healthcare_biotech, venture_capital, fintech_finance) are sound readings."
+      },
+      {
+        "name": "company_maturity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Maturity is tangential to the model-shift/regional-fit query and often not stated in short descriptions. Values like 23andMe=established_public and Addepar=growth_stage require external knowledge; growth_stage/established labels are frequently asserted where the text is silent."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.8,
+    "rationale": "The added columns collectively decompose the business model along dimensions (delivery modality, service intensity, localization dependency, geographic scope, customer segment) that are highly relevant to a query about shifting toward service-oriented/localized models and assessing regional fit. Most values are sound readings or warranted inferences of the descriptions, with correct use of not_stated for silent rows. Groundedness is slightly reduced for the more subjective/inferential columns (service_intensity, localization_dependency) and especially company_maturity, which often relies on external knowledge rather than the source text."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "whatif_business_model",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 8
+}

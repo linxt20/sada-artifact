@@ -1,0 +1,81 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "service_sentiment",
+    "food_sentiment",
+    "value_sentiment",
+    "ambiance_sentiment",
+    "primary_complaint",
+    "top_positive_driver",
+    "satisfaction_driver"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7943,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8286,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8115,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "service_sentiment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Service is a core actionable axis for improving satisfaction; the query directly benefits from per-aspect sentiment. Samples are well grounded (YLP-0002 negative, YLP-0001/0004 positive). Neutral-heavy distribution is plausible where service is unmentioned."
+      },
+      {
+        "name": "food_sentiment",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.75,
+        "rationale": "Food quality is a clear improvement lever. Mostly grounded, but YLP-0003 labels food 'negative' despite 'Very good pizza... Crust cooked very well'; the size complaint is arguably value, so this reading is questionable."
+      },
+      {
+        "name": "value_sentiment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Price/value is a distinct actionable axis. YLP-0003 'value negative' is reasonably grounded in the under-$20 portion-size remark. Other silent rows correctly neutral."
+      },
+      {
+        "name": "ambiance_sentiment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Ambiance gives a genuine additional grouping axis. Values track the text well (mostly neutral when unmentioned)."
+      },
+      {
+        "name": "primary_complaint",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.7,
+        "rationale": "Directly identifies what to fix, highly relevant to the query. Grounding is mostly sound, but YLP-0005 mapped to 'unspecified' understates concrete complaints (cabana given away, drinks, discriminatory entry), and the NULL/'none'/unspecified inconsistency is a minor concern."
+      },
+      {
+        "name": "top_positive_driver",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Highlights strengths to preserve/replicate, useful for improvement strategy and distinct from complaint. Well grounded in samples (service, general_positive)."
+      },
+      {
+        "name": "satisfaction_driver",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "rationale": "Largely a mechanical concatenation of top_positive_driver / primary_complaint into a strength:/weakness: string, so it is mostly a restatement of other added columns adding little new analytical leverage. Values are consistent with sources."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.82,
+    "rationale": "The aspect-level sentiment columns plus complaint/positive-driver columns give strong, actionable axes directly aligned with 'how to improve satisfaction' — they let an analyst group and compare by service, food, value, ambiance, and identify weaknesses vs strengths. Grounding is generally sound with reasonable neutral/unknown handling for silent rows, though a few readings are shaky (YLP-0003 food negative; YLP-0005 collapsed to 'unspecified' despite concrete complaints). The satisfaction_driver column is largely redundant with two other added columns and drags usefulness down slightly, but the overall set meets both necessary conditions well."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 7
+}

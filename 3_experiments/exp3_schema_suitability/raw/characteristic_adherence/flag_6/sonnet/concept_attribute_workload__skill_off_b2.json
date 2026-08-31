@@ -1,0 +1,75 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of tickets create heavier agent workload?",
+  "focus_variable": "agent_workload_burden",
+  "concept": "agent_workload_burden",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_hours",
+    "priority_score",
+    "updated_after_close",
+    "workload_index"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.053,
+    "facet_fraction": 0.25,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.15,
+    "mece": 0.2121,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "agent_workload_burden",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The time an agent spends handling/resolving a ticket is a genuine constitutive aspect of workload burden -- the temporal/effort-duration facet of how much work a ticket imposes."
+      },
+      {
+        "name": "priority_score",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Priority is an attribute assigned to the ticket that predicts or drives how much attention it gets; it is not itself a part of the agent's workload. It is an external driver, not an aspect of the burden."
+      },
+      {
+        "name": "updated_after_close",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A binary flag for post-close updates (constant 0 here) does not constitute an aspect of workload burden; it is a degenerate data-quality/rework indicator that carries no information and does not decompose the concept."
+      },
+      {
+        "name": "workload_index",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A composite 'index' is a re-aggregation of the whole concept rather than a distinct non-overlapping part; it restates the burden as a single scalar and overlaps heavily with resolution_hours (its values track that column), violating meronymy."
+      }
+    ],
+    "facet_columns": [
+      "resolution_hours"
+    ],
+    "non_facet_columns": [
+      "priority_score",
+      "updated_after_close",
+      "workload_index"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.15,
+    "rationale": "Only resolution_hours is a true constitutive facet of workload burden (effort/duration). priority_score is an external predictor/driver, updated_after_close is a degenerate irrelevant flag, and workload_index restates the whole concept as a composite and overlaps with resolution_hours, harming mutual exclusivity. As a facet set it captures essentially one aspect (time/effort) and omits other constitutive facets such as cognitive/complexity load, interaction/communication volume, number of reassignments or touches, and multitasking/concurrency, so exhaustiveness is very low."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "concept_attribute_workload",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

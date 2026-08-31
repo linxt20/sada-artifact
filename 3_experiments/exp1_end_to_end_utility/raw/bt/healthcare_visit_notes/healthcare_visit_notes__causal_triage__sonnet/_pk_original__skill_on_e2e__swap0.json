@@ -1,0 +1,145 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.86,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 3,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "V-0170: Stevens-Johnson syndrome requiring transfer",
+        "why": "cites concrete row IDs"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Routine (~60%)... Urgent (~28%)... Emergency (~12%)",
+        "why": "figures are approximate, not exact counts"
+      },
+      {
+        "dimension": "depth",
+        "quote": "urgency is not always apparent from the chief complaint alone",
+        "why": "cross-department discrimination reasoning"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "Urgent (81, 32%), Emergency (28, 11%)",
+        "why": "exact counts and percentages"
+      },
+      {
+        "dimension": "depth",
+        "quote": "104 visits, 42% of total... primary scheduling challenge",
+        "why": "grey-zone cross-tab segmentation"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "acuity-based slot tiers (20 / 25 / 45 min)",
+        "why": "decision-ready thresholds tied to numbers"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "imaging_and_labs ... mean 39.4 min, n 17",
+        "why": "precise magnitudes with counts"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "clinical_acuity_level",
+        "quote": "tagged semi_urgent by clinical_acuity_level",
+        "dependent": true
+      },
+      {
+        "column": "required_diagnostic_workup",
+        "quote": "required_diagnostic_workup = imaging_and_labs",
+        "dependent": true
+      },
+      {
+        "column": "complexity_driver",
+        "quote": "multi_system_comorbidity visits ... average 31 min",
+        "dependent": true
+      },
+      {
+        "column": "visit_type_category",
+        "quote": "acute_new_problem is the dominant visit type",
+        "dependent": true
+      },
+      {
+        "column": "specialty_routing_signal",
+        "quote": "specialty_routing_signal of emergency_escalation",
+        "dependent": true
+      },
+      {
+        "column": "care_continuity_type",
+        "quote": "protocol_surveillance visits ... 20 min mean",
+        "dependent": true
+      },
+      {
+        "column": "pediatric_age_vulnerability",
+        "quote": "pediatric_age_vulnerability = True in 46 visits",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B provides exact counts, cross-tabs, and quantified slot recommendations while A relies on approximations.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

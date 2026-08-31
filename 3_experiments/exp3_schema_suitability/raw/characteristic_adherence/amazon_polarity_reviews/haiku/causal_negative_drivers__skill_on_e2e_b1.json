@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some Amazon products receive predominantly negative reviews, and which factors contribute the most?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "product_quality_defect_mentioned",
+    "performance_inadequacy_type",
+    "value_for_money_concern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.84,
+    "analytical_usefulness__table_level": 0.84,
+    "source_groundedness": 0.9,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.87,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_quality_defect_mentioned",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorising types of quality/defect complaints gives a genuine grouping axis for the 'which factors contribute most' query. The sampled rows are all non-defect complaints (book, music, doll availability) and were correctly marked not_present, showing sound reading of source text."
+      },
+      {
+        "name": "performance_inadequacy_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing works_poorly / does_not_work / insufficient provides a distinct performance-failure axis useful for identifying negative-review drivers. Sampled silent rows correctly labelled not_present; no invented specifics observed."
+      },
+      {
+        "name": "value_for_money_concern",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures price/value dissatisfaction as a separate contributing factor, directly relevant to why products get negative reviews. Sample rows without price complaints correctly marked not_present; values are warranted readings."
+      }
+    ],
+    "analytical_usefulness": 0.84,
+    "source_groundedness": 0.9,
+    "rationale": "The three added columns each provide a distinct, non-redundant categorical axis (quality/defect, performance, value) that directly supports analysing and ranking factors behind negative reviews. Values in the evidence samples are sound readings of the source text, with silent rows appropriately marked not_present rather than fabricated. No hallucination observed in samples. Only mild concern is that the categories rely on inference from free text, but the observed behaviour is well grounded."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_negative_drivers",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 3
+}

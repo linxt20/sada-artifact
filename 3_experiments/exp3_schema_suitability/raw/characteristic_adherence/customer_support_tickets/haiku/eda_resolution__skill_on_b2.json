@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_category",
+    "blocker_status",
+    "affected_user_scope",
+    "issue_type_specificity",
+    "cross_system_dependency",
+    "actionability"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.82,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly realizes the query's 'issue themes' dimension with 8 well-separated, interpretable categories that can be grouped against resolution time."
+      },
+      {
+        "name": "blocker_status",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary segmentation orthogonal to priority; blocking vs non-blocking is a plausible, interpretable driver of resolution time."
+      },
+      {
+        "name": "affected_user_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal scope (single_user to multiple_tenants) offers an interpretable escalation-of-impact axis; multiple_tenants is near-empty (2) but the top three levels are well-balanced for comparison."
+      },
+      {
+        "name": "issue_type_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable typology (reproducible vs stochastic bug, missing feature, outage, etc.) with reasonable spread; overlaps somewhat with issue_category but adds a distinct resolvability angle."
+      },
+      {
+        "name": "cross_system_dependency",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean boolean with balanced split; cross-system dependencies plausibly lengthen resolution and are easy to segment on."
+      },
+      {
+        "name": "actionability",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable ownership/path categories; top two levels are well-populated and clearly separable, supporting comparison of resolution time by required action."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.82,
+    "rationale": "All six columns are external, associational variables with interpretable, human-readable categories rather than opaque scores, and each can be grouped against resolution_minutes. They meaningfully extend the query's stated axes (themes, channel, priority) with orthogonal impact/complexity dimensions (scope, dependency, blocker, actionability). Minor deductions: issue_category and issue_type_specificity partially overlap, and a couple of levels (multiple_tenants=2, vendor_coordination_required=2) are too sparse to support reliable comparison. Overall a strong, non-mechanical set that supports discovering interpretable relationships."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

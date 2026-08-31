@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_quality",
+    "ground_service_quality",
+    "food_quality_signal",
+    "disruption_handling_quality",
+    "post_flight_service_outcome",
+    "value_for_money_perception",
+    "service_consistency_trend"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.65,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.65,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "cabin_crew_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Aspect-level assessment of crew service (poor/good/exceptional/mixed) extracted from the review text. It is a distinct experiential driver of overall satisfaction, not the rating itself, and plausibly carries strong predictive signal. Note it partially overlaps the existing numeric 'Staff Service' sub-rating, so incremental leverage beyond the original columns is moderate."
+      },
+      {
+        "name": "ground_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Captures check-in/gate/ground handling quality (rude_unhelpful/smooth_efficient/etc.). This is a genuine driver that is NOT represented in the original numeric sub-ratings, lies outside overall_rating, and is knowable pre-outcome. Legitimate and largely non-redundant predictor."
+      },
+      {
+        "name": "food_quality_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Aspect sentiment about catering with informative failure modes (special_meal_failure, out_of_stock). A real satisfaction driver outside the focus. Overlaps the existing 'Food & Beverages' rating but adds finer-grained failure categories, so it retains some incremental predictive value."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How delays/cancellations were handled (well/poorly/partially). Not present in the original columns, a well-known driver of satisfaction, and determined by events during travel (pre-rating). Strong, non-redundant predictor."
+      },
+      {
+        "name": "post_flight_service_outcome",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Complaint/issue resolution outcome (resolved/unresolved/ignored). Distinct from the overall score and absent from the original schema. Occurs as part of the experience the reviewer evaluates, not a deterministic function of the rating, so it is a valid predictor with fresh signal."
+      },
+      {
+        "name": "value_for_money_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A perceived value construct (poor/good/fair). It is a driver rather than a literal restatement of overall_rating, but it duplicates the existing numeric 'Value For Money' sub-rating and is near-collinear with overall satisfaction, so its incremental predictive contribution beyond the original columns is low."
+      },
+      {
+        "name": "service_consistency_trend",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Perceived trajectory of service (declining/stable_positive/improving). It adds a temporal-dynamics angle, but the categories bundle valence with trend, making it close to a bare sentiment label; it is a weak/borderline predictor that risks tracking overall sentiment rather than an independent driver."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.65,
+    "rationale": "The set is a coherent aspect-based feature engineering of the review text, exactly the kind of drivers one wants for explaining/predicting overall satisfaction. All columns lie outside the focus variable, are knowable at/before the time the rating is formed (no post-outcome leakage), and none is a deterministic restatement of overall_rating. Genuine incremental leverage comes from ground_service_quality, disruption_handling_quality, and post_flight_service_outcome, which are absent from the original numeric sub-ratings. Utility is held below high because cabin_crew_quality, food_quality_signal, and especially value_for_money_perception largely duplicate existing numeric sub-ratings (and value-for-money is near-collinear with overall satisfaction), while service_consistency_trend is sentiment-laden and weak. Net: a legitimate, mostly non-trivial predictor set with meaningful but partially redundant added signal."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

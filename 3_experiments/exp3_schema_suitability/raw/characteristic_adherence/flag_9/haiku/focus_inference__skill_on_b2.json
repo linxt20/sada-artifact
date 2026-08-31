@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "failure_mode",
+    "hardware_severity_indicator",
+    "problem_scope"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.72,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature of hardware failures in incidents -- characterizing how hardware fails (failure mode), how severe/impactful the failure is, and how broadly it is scoped across the environment.",
+    "per_column": [
+      {
+        "name": "failure_mode",
+        "supports_focus": true,
+        "rationale": "Directly categorizes the type of hardware failure (connectivity loss, not powering on, physical damage, etc.), which is the core of characterizing kinds of hardware problems."
+      },
+      {
+        "name": "hardware_severity_indicator",
+        "supports_focus": true,
+        "rationale": "Captures the severity/behavioral pattern of the failure (complete vs partial vs intermittent), a coherent facet of hardware problem characterization distinct from failure mode, though it partially overlaps (performance_degradation appears in both)."
+      },
+      {
+        "name": "problem_scope",
+        "supports_focus": true,
+        "rationale": "Describes the affected hardware scope (workstation, server, building infrastructure), a meaningful facet of the hardware problem centered on where/what hardware is impacted."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The three added columns collectively centre on one coherent, data-inferable focus: the characterization of hardware problems in incidents. Each column is a distinct, non-mechanical facet (mode of failure, severity/pattern, scope of impact), forming a sound multi-facet analytical structure rather than a restatement or noise. This directly answers the query about 'different kinds of hardware problems' by decomposing them along type, severity, and reach. Minor deduction on structure_quality because failure_mode and hardware_severity_indicator overlap (both include performance_degradation / malfunction-like values), slightly blurring the facet boundary. The implied focus is clearly actionable -- an analyst could triage, prioritize, and target remediation by failure mode, severity, and scope."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

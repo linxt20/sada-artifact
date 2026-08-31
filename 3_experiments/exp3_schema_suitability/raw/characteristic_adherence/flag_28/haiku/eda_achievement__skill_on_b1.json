@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does goal achievement vary across department, metric, and the management practices described?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "management_practice_category",
+    "improvement_target_type",
+    "target_metric_alignment",
+    "target_scope",
+    "stakeholder_impact_span",
+    "risk_or_dependency_indicator",
+    "comparison_baseline",
+    "temporal_scope_window"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7675,
+    "analytical_usefulness__table_level": 0.79,
+    "source_groundedness": 0.8175,
+    "source_groundedness__table_level": 0.81,
+    "b1_overall": 0.7925,
+    "hallucination_rate": 0.375
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "management_practice_category",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly captures the 'management practices' axis the query asks about; strong analytical leverage for grouping. Values are well-grounded readings of the described practices (e.g. 'after-sales support/personalized interactions' -> survey_feedback_loop is a bit loose but defensible; process_standardization for resource/communication optimization is sound). Uses Unknown/NULL appropriately when unstated."
+      },
+      {
+        "name": "improvement_target_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.97,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the nature of the target (cost/time/satisfaction/volume/rate), a useful cross-cutting axis for comparing goals. Values are cleanly derivable from the described verbs and metrics in each row."
+      },
+      {
+        "name": "target_metric_alignment",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Flags whether the goal's intent matches the assigned metric column, a genuinely useful analytic axis given the visibly mismatched metrics (e.g. Customer Satisfaction goal with 'Expense Ratio', Revenue goal with 'Survey Score'). Judgments in samples correctly read as misaligned; grounded in comparing description vs metric."
+      },
+      {
+        "name": "target_scope",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A thematic domain axis (efficiency, revenue, customer/employee experience, cost). Partially overlaps with category but offers a normalized grouping usable across departments. Values are sound extractions from descriptions."
+      },
+      {
+        "name": "stakeholder_impact_span",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Adds a stakeholder-reach dimension distinct from scope; useful for cross-comparison. Mostly a warranted inference, though somewhat correlated with target_scope, and some assignments (e.g. cross_organizational for a subscription-volume goal) are looser inferences."
+      },
+      {
+        "name": "risk_or_dependency_indicator",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Heavily skewed (459 true / 91 false) making it near-constant and low-leverage. Grounding is weak: several sample rows contain no explicit risk/dependency yet are marked True, suggesting the flag is over-asserted beyond textual support."
+      },
+      {
+        "name": "comparison_baseline",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.78,
+        "hallucination_observed": true,
+        "rationale": "Baseline of comparison is analytically valuable for interpreting targets. Grounded when text is explicit ('compared to last quarter', 'fiscal year'), but some samples introduce a specific baseline the text does not state (e.g. 'current_baseline' assigned where no baseline is mentioned rather than NULL), a mild over-specification."
+      },
+      {
+        "name": "temporal_scope_window",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Timeframe is a useful axis and often grounded ('by end of Q4' -> next_quarter/6_months, 'next fiscal year'). However some mappings are inconsistent or unsupported (e.g. 'upcoming year' -> next_2_years is contradicted by the text; Q4 -> next_6_months vs next_quarter inconsistency), indicating some invented specificity."
+      }
+    ],
+    "analytical_usefulness": 0.79,
+    "source_groundedness": 0.81,
+    "rationale": "The added columns collectively open several genuine new axes (management practice, target type, metric alignment, scope, stakeholder span, baseline, timeframe) that map well onto the query's department/metric/practice comparison and are mostly well-grounded extractions or warranted inferences from the descriptions. The metric-alignment column is especially valuable given the visibly mismatched metric assignments. Weaknesses: risk_or_dependency_indicator is near-constant and over-asserted, and comparison_baseline / temporal_scope_window occasionally invent specifics the text does not support instead of using unknown values."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "eda_achievement",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

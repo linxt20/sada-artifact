@@ -1,0 +1,40 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "n_added_columns": 1,
+  "added_columns": [
+    "recurrence_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 1,
+    "n_judged_columns": 1,
+    "analytical_usefulness": 0.15,
+    "analytical_usefulness__table_level": 0.15,
+    "source_groundedness": 0.3,
+    "source_groundedness__table_level": 0.3,
+    "b1_overall": 0.225,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "The query asks about KINDS of hardware issues, which calls for a column that categorizes or extracts hardware issue types. A binary recurrence flag does not provide any axis to characterize hardware issue types; it is generic and off-topic for this query, so analytical usefulness is low. On groundedness, 'recurrence' is not a per-row extractable fact from a single short_description; determining whether an issue recurs requires cross-row aggregation not evident in the source text. The evidence samples show software/database issues labeled 'False' with no textual basis for the recurrence determination, so the values assert something the row text does not support."
+      }
+    ],
+    "analytical_usefulness": 0.15,
+    "source_groundedness": 0.3,
+    "rationale": "The single added column, recurrence_signal, fails both necessary conditions. It gives no leverage for identifying kinds of hardware issues (the query's actual need) and is a bare boolean flag. Its values are not soundly derivable from the per-row source text, since recurrence cannot be read off a single short_description; the flag appears asserted without textual warrant."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 1
+}

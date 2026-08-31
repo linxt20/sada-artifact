@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What visit-note signals suggest high urgency?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "acute_symptom_severity",
+    "vital_sign_hemodynamic_abnormality",
+    "life_threat_or_organ_failure_present",
+    "urgent_diagnostic_testing_imaging",
+    "acute_intervention_or_procedure_urgency",
+    "department_urgency_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8167,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8733,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.845,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "acute_symptom_severity",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Graded severity of acute symptoms is a strong, directly relevant axis for urgency analysis. Sample values are sound readings of the text (mild fatigue -> not_present/mild; low-grade fever cough -> acute_stable_mild), with reasonable not_present on silent rows."
+      },
+      {
+        "name": "vital_sign_hemodynamic_abnormality",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Vital-sign/hemodynamic abnormality is a classic urgency signal and a genuine new grouping axis. Values look grounded (BP 128/82 -> mild_or_stable; no vitals -> not_present). Slight risk of over-reading 'mild_or_stable' from an essentially normal BP, but not a clear hallucination."
+      },
+      {
+        "name": "life_threat_or_organ_failure_present",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Presence of life-threat/organ failure is highly discriminative for urgency. Samples correctly return not_present for benign visits (post-MI follow-up with stable EF -> not_present). Warranted inference on silent rows."
+      },
+      {
+        "name": "urgent_diagnostic_testing_imaging",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Test/imaging urgency is a meaningful behavioral signal for urgency and adds analytical leverage. Values well grounded (MRI ordered for acute injury -> urgent_testing_same_visit; routine labs -> routine_or_deferred_testing)."
+      },
+      {
+        "name": "acute_intervention_or_procedure_urgency",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Procedure/intervention urgency is a useful distinct axis. Mostly grounded, though labeling topical adapalene/doxycycline as 'scheduled_or_elective_procedure' is a slight stretch since medication starts are not procedures; minor over-reach lowers groundedness modestly."
+      },
+      {
+        "name": "department_urgency_category",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A deterministic recoding of the existing 'department' column into an urgency tier. Grounded and legitimate, but largely redundant with an original column and coarse (only 3 values), so it offers limited new analytical leverage."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.87,
+    "rationale": "The clinical-signal columns (symptom severity, hemodynamic abnormality, life-threat/organ failure, urgent testing, intervention urgency) each provide genuine, distinct axes directly aligned with identifying high-urgency visit-note signals, and their sample values are sound readings of the source text with appropriate not_present on silent rows. The department_urgency_category column is grounded but largely a recoding of an existing column, adding little. Minor over-reads (calling a medication start an elective procedure) are the only groundedness concerns, and no clear hallucinations were observed."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_high",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

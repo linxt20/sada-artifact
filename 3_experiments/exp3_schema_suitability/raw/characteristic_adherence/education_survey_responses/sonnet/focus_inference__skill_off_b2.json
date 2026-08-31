@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different themes do students raise in these open responses?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "themes",
+    "primary_theme",
+    "sentiment"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.765,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The thematic content of students' open-ended responses -- i.e. what topics/themes they raise and their valence.",
+    "per_column": [
+      {
+        "name": "themes",
+        "supports_focus": true,
+        "rationale": "Multi-label decomposition of each response into a coherent taxonomy of themes (hands_on_missing, digital_tools_engagement, teacher_quality, etc.), directly realising the 'different themes' focus at a rich granularity."
+      },
+      {
+        "name": "primary_theme",
+        "supports_focus": true,
+        "rationale": "Single dominant theme per response using the same coherent taxonomy; complements the multi-label column and enables frequency/ranking analysis of the leading theme."
+      },
+      {
+        "name": "sentiment",
+        "supports_focus": true,
+        "rationale": "Valence facet (positive/mixed/negative) that adds an interpretive dimension to the themes, letting an analyst cross themes with tone rather than being a bare mechanical restatement."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.85,
+    "rationale": "All three columns centre tightly on one inferable focus: the themes present in student open responses. 'themes' and 'primary_theme' share a coherent, substantive taxonomy (multi-label + dominant-label views), giving a sound analytical structure at useful granularity rather than a single restatement. 'sentiment' is a defensible added facet that enriches theme analysis (theme-by-valence) rather than being noise, though on its own bare sentiment would be weak. The implied focus is genuinely actionable -- an analyst can rank themes, examine co-occurrence, and correlate with satisfaction/role/grade. Minor deductions: sentiment is somewhat generic, and no columns tie themes to the existing satisfaction/grade structure, which would sharpen actionability further."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

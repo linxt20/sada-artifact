@@ -1,0 +1,97 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What should I focus on in this table to identify actions that could improve product scores?",
+  "focus_variable": "product_score_outcome",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "helpfulness_ratio",
+    "review_length",
+    "mentions_quality_issues",
+    "mentions_value_price",
+    "mentions_delivery",
+    "low_score_with_issue",
+    "high_satisfaction_indicator"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "product_score_outcome",
+    "per_column": [
+      {
+        "name": "helpfulness_ratio",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Fraction of readers finding a review helpful. This is a property of the review's reception, not a candidate cause of the product score nor a common cause of a treatment and the score. It does not fit a treatment or confounder role for improving product scores."
+      },
+      {
+        "name": "review_length",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Mechanical text-length feature. Not a plausible common cause of both an action (treatment) and the product score; at best a generic covariate, not a genuine confounder."
+      },
+      {
+        "name": "mentions_quality_issues",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the review flags quality problems. As an 'action to improve scores' framing, product quality is a candidate cause whose effect on score is being attributed. Functions as a treatment-like feature, though it is really a reflection of the outcome (potential collider/reverse-causation concern)."
+      },
+      {
+        "name": "mentions_value_price",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Flags price/value mentions; pricing is a plausible actionable cause of the score, so it reads as a candidate treatment. Not a common cause of another treatment and the outcome, so not a confounder."
+      },
+      {
+        "name": "mentions_delivery",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Flags delivery mentions; delivery experience is an actionable candidate cause of the score, so treatment-like. Not a confounder."
+      },
+      {
+        "name": "low_score_with_issue",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Interaction defined jointly from low score (the outcome) and issue mention. Conditioning on a variable that is a function of the outcome induces collider/selection bias; labelling it a driver would be an error."
+      },
+      {
+        "name": "high_satisfaction_indicator",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "A satisfaction/high-score indicator is essentially a restatement of the outcome, not a cause or confounder of it."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "mentions_quality_issues",
+      "mentions_value_price",
+      "mentions_delivery"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply several candidate treatments (quality, price, delivery mentions) framed as actionable causes of the product score, so requirement (a) is partially met. However, requirement (b) is not satisfied: there are NO variables that plausibly cause BOTH one of these treatments AND the outcome and would need adjustment. The remaining columns are mechanical (review_length, helpfulness_ratio), restatements of the outcome (high_satisfaction_indicator), or an outcome-derived interaction that is a collider (low_score_with_issue). No genuine, data-surfaced confounder is present, so the causal-attribution claim fails: the schema sets up naive treatment-outcome associations without any confounding control."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

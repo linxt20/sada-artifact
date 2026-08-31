@@ -1,0 +1,104 @@
+{
+  "var_a": "skill_on",
+  "var_b": "skill_off",
+  "swap": true,
+  "winner": "A",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.82,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 2
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 2,
+      "delta_a_minus_b": 3,
+      "winner": "A",
+      "margin": "large"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "evidence",
+        "quote": "\"Not working\" / \"Not functioning\": 18.1% vs. 1.0% in non-hardware (18x higher ratio)",
+        "why": "quantified hardware vs non-hardware contrast"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "99.5% of hardware incidents (181/182) have physical_state_keyword=True",
+        "why": "concrete counts and column reference"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Comparison with Database Issues ... vs. Software Issues",
+        "why": "cross-category contrasts"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Most common single description: \"Printer not working properly\" (15 occurrences)",
+        "why": "concrete example counts"
+      },
+      {
+        "dimension": "depth",
+        "quote": "97 hardware incidents (34.8%) appear in other categories",
+        "why": "cross-category segmentation"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "0% of non-hardware incidents mention hardware devices ... Confirmed hardware problems: 279 (46.5%)",
+        "why": "hardware count 279 conflicts with A's 182 and internal category math"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "A gives consistent quantified contrasts while B contains internal contradictions in its hardware counts and definitions.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

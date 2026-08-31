@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are IMDb audiences dissatisfied?",
+  "focus_variable": "audience_dissatisfaction",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "dissatisfaction_category",
+    "complaint_intensity",
+    "mentions_acting_issues",
+    "mentions_writing_issues",
+    "wasted_potential"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "audience_dissatisfaction",
+    "per_column": [
+      {
+        "name": "dissatisfaction_category",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "This is a categorization/description of the type of dissatisfaction itself, essentially a restatement or subtyping of the outcome. It does not represent an external candidate cause whose effect is estimated; it partitions the outcome."
+      },
+      {
+        "name": "complaint_intensity",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A measure of how strongly the dissatisfaction is expressed. This is a facet/severity of the outcome, not a distinct treatment or common cause. It cannot be adjusted for as a confounder."
+      },
+      {
+        "name": "mentions_acting_issues",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Poor acting is a candidate cause of dissatisfaction. However, it is derived directly from the review text as a stated reason, so it is essentially the reviewer's own attribution rather than an independently measured film attribute; it is more descriptive than an estimable treatment."
+      },
+      {
+        "name": "mentions_writing_issues",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Bad writing as a candidate cause of dissatisfaction. Same limitation: it is a text-extracted complaint, functioning as a self-reported reason rather than an exogenous treatment set up for unbiased estimation."
+      },
+      {
+        "name": "wasted_potential",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate reason/complaint theme. Like the others, it is an extracted complaint aspect rather than a genuine common cause; effectively a component of the outcome's rationale."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "mentions_acting_issues",
+      "mentions_writing_issues",
+      "wasted_potential"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply several candidate 'causes' (acting issues, writing issues, wasted potential), so a treatment is arguably present. However, they are all complaint themes extracted from the review text itself -- they are the reviewers' own stated reasons for disliking, making them near-tautological with the outcome rather than exogenous treatments. Critically, the schema supplies NO confounders: there is not a single variable that plausibly causes BOTH one of these 'treatments' AND overall dissatisfaction and would need adjustment (e.g., genre, budget, director reputation, star power, runtime, release year, reviewer harshness). Without any common causes surfaced from the data, no causal estimation is set up and any attribution would be uncontrolled. The set is essentially a descriptive decomposition of dissatisfaction, not a causal identification design, so the technical claim under test fails."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "causal_audience",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

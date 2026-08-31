@@ -1,0 +1,151 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce declined expense submissions?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "submission_origin_type",
+    "has_source_id",
+    "ci_identifier_quality",
+    "submitter_description_specificity",
+    "asset_category_type",
+    "asset_form_factor",
+    "travel_related",
+    "high_value_asset_signal",
+    "processing_lag_band",
+    "asset_brand_family"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 6,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 6,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "submission_origin_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Submission channel/origin could plausibly be a configurable process lever (e.g. routing manual vs auto-generated submissions), so it is weakly intervenable, though it mostly reflects the nature of the expense rather than a policy dial."
+      },
+      {
+        "name": "has_source_id",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Presence of a source_id could reflect data completeness affecting both how a submission is created and whether it is declined; borderline, but a settable data-capture requirement makes it a possible lever/confounder."
+      },
+      {
+        "name": "ci_identifier_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Quality/specificity of the CI identifier is something submitters/process could be required to improve — an intervenable data-quality lever plausibly reducing declines."
+      },
+      {
+        "name": "submitter_description_specificity",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How specific a submitter's description is can be mandated via form guidance/validation; an actionable lever that could reduce declines."
+      },
+      {
+        "name": "asset_category_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The kind of asset is largely an immutable property of the purchase, not settable, but it is a common cause of both submission characteristics and decline likelihood."
+      },
+      {
+        "name": "asset_form_factor",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Form factor is an intrinsic attribute of the purchased asset, not intervenable; may confound description/category and outcome."
+      },
+      {
+        "name": "travel_related",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the expense is travel is an intrinsic attribute of the expense, not a settable lever, but influences submission type and decline rate."
+      },
+      {
+        "name": "high_value_asset_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Asset value is intrinsic to the item, not intervenable; higher value likely drives both scrutiny/description effort and decline probability."
+      },
+      {
+        "name": "processing_lag_band",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Processing lag occurs during/after submission handling and lies on the path to a decline outcome; treated as a mediator, not a confounder."
+      },
+      {
+        "name": "asset_brand_family",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Brand is an intrinsic property of the purchased asset, not a settable lever; may correlate with both identifier quality and decline."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "ci_identifier_quality",
+      "submitter_description_specificity",
+      "submission_origin_type"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "has_source_id",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "asset_category_type",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "asset_form_factor",
+        "named_in_query": false,
+        "plausibility": 0.45
+      },
+      {
+        "name": "travel_related",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "high_value_asset_signal",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "asset_brand_family",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The query poses a genuine what-if ('How can we reduce declined submissions?') with declined submissions as the outcome. The added set does contain at least one intervenable treatment: data-quality/description levers (ci_identifier_quality, submitter_description_specificity) and arguably submission_origin_type are properties a process owner could set or enforce, satisfying part (a). Several other columns are plausible confounders (asset value, category, travel, brand), none of which are named in the query, which is the capability under test. However, the confounder set is of moderate quality: most 'confounders' are intrinsic asset attributes that primarily act as common causes but are somewhat generic, processing_lag_band is a mediator rather than a confounder, and no confounder was clearly named in the query. Overall the columns set up an interventional framing but the treatment/confounder distinction is only partially and implicitly realised."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 10
+}

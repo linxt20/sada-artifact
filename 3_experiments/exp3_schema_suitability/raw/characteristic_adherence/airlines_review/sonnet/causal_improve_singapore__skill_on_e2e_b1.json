@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "crew_service_quality",
+    "food_quality_issue_type",
+    "amenity_reduction_signal",
+    "cabin_class_value_gap",
+    "perceived_service_decline"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.89,
+    "source_groundedness__table_level": 0.89,
+    "b1_overall": 0.845,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "Categorising crew service into attentive/mechanical/rude gives a strong axis to explain non-recommendations, directly relevant to service improvement. Most samples map well to text. However, the seats-dreadful review (which never mentions crew) was labelled 'inattentive_or_rude', an unwarranted inference, indicating some ungrounded values."
+      },
+      {
+        "name": "food_quality_issue_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing types of food problems (poor taste, special meal error, ran out) is a genuine actionable axis for improvement. Sampled values (praised where food praised, Unknown where silent) are sound readings of the text."
+      },
+      {
+        "name": "amenity_reduction_signal",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A boolean flag for perceived cutbacks could add some leverage on decline complaints, but it is heavily skewed (833 false) and somewhat generic; its usefulness overlaps conceptually with perceived_service_decline. Sampled values are all plausibly grounded (false where no such signal)."
+      },
+      {
+        "name": "cabin_class_value_gap",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Flagging whether a class underdelivered relative to expectation is a valuable axis for value-for-money analysis and non-recommendation drivers. Mostly grounded, though 'economy_as_expected' is sometimes assigned to reviews that don't explicitly state class (e.g. Phuket seats review), a mild inference risk but generally defensible."
+      },
+      {
+        "name": "perceived_service_decline",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Capturing whether a passenger perceives the airline declining is a meaningful signal for a premium carrier's reputation and recommendation. Somewhat overlaps with amenity_reduction_signal but adds a distinct sentiment-over-time angle. Sampled values grounded (false where no decline mentioned)."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.89,
+    "rationale": "The added columns provide several genuinely useful analytical axes (crew service quality, food issue typing, cabin-class value gap, perceived decline) that directly support diagnosing why passengers do not recommend Singapore Airlines and where to improve. Two boolean signals partially overlap but each still adds a distinct angle. Groundedness is high overall: silent rows are sensibly marked Unknown/false, and most produced values are sound readings of source text. The main weakness is occasional over-inference, notably labelling a crew-silent seat-comfort review as 'inattentive_or_rude', which slightly lowers groundedness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

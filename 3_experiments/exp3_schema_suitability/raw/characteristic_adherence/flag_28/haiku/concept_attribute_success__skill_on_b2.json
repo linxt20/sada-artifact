@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What goal-management practices support high achievement?",
+  "focus_variable": "goal_management_success_factors",
+  "concept": "goal_management_success_factors",
+  "n_added_columns": 8,
+  "added_columns": [
+    "goal_outcome_domain",
+    "improvement_mechanism",
+    "success_enabler_type",
+    "timeframe_horizon",
+    "baseline_reference_included",
+    "stakeholder_focus",
+    "improvement_multiplicity",
+    "outcome_metric_alignment"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3897,
+    "facet_fraction": 0.75,
+    "n_facets": 6,
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.6,
+    "mece": 0.5196,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "goal_management_success_factors",
+    "per_column": [
+      {
+        "name": "goal_outcome_domain",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Describes the subject-area/outcome the goal targets (revenue, satisfaction, etc.), i.e. WHAT the goal is about, not an aspect of the success-management practice itself. It characterizes the goal's content domain rather than a facet of what makes goal management successful."
+      },
+      {
+        "name": "improvement_mechanism",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The mechanism/approach used to drive improvement (training, automation, process redesign) is a constitutive aspect of the practices employed in managing goals toward achievement."
+      },
+      {
+        "name": "success_enabler_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Directly names a category of enabler (people capability, process design, technology) that contributes to goal success -- an 'aspect of' the success-factor concept. However it overlaps heavily with improvement_mechanism."
+      },
+      {
+        "name": "timeframe_horizon",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The time horizon over which a goal is managed is a legitimate structural facet of goal-management practice (long vs short horizon goals), an aspect of how goals are set and pursued."
+      },
+      {
+        "name": "baseline_reference_included",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether a measurable baseline is defined is a concrete facet of good goal-setting/measurement practice -- an aspect of the management discipline that supports achievement."
+      },
+      {
+        "name": "stakeholder_focus",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Identifies whose interests the goal serves (financial, employee, customer). This overlaps strongly with goal_outcome_domain and characterizes the goal's target audience, not a facet of the success-management practice itself."
+      },
+      {
+        "name": "improvement_multiplicity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether a goal targets multiple improvements is a structural facet of how the goal is scoped/managed, an aspect of goal-setting practice."
+      },
+      {
+        "name": "outcome_metric_alignment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the outcome is aligned to a defined metric is a core facet of measurement discipline in goal management, an aspect of the success-factor concept."
+      }
+    ],
+    "facet_columns": [
+      "improvement_mechanism",
+      "success_enabler_type",
+      "timeframe_horizon",
+      "baseline_reference_included",
+      "improvement_multiplicity",
+      "outcome_metric_alignment"
+    ],
+    "non_facet_columns": [
+      "goal_outcome_domain",
+      "stakeholder_focus"
+    ],
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.6,
+    "rationale": "Several columns are genuine facets of goal-management practice (measurement discipline via baseline_reference_included and outcome_metric_alignment, scoping via improvement_multiplicity and timeframe_horizon, and enabler/mechanism categories). However mutual exclusivity is weakened by strong redundancy: improvement_mechanism and success_enabler_type largely restate the same 'what drives improvement' axis with overlapping value spaces (training/technology/process appear in both), and goal_outcome_domain vs stakeholder_focus both encode the goal's target domain/audience. Those latter two are also external-predictor/content descriptors of the goal rather than facets of the success-management practice. Exhaustiveness is moderate: measurement and scoping aspects are covered, but key constitutive facets of goal-management success -- ownership/accountability, progress monitoring/review cadence, prioritization, and specificity/clarity of the target -- are not decomposed here, so the concept is only partially covered."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

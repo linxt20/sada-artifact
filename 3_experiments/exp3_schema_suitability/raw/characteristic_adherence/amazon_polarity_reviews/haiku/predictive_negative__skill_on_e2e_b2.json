@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "disappointment_signal",
+    "frustration_or_annoyance_tone",
+    "waste_or_resource_loss_framing",
+    "personal_inconvenience_or_burden",
+    "explicit_product_comparison"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "disappointment_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Presence of disappointment is a sentiment cue derived from review text that plausibly predicts satisfaction polarity without being a restatement of the label itself; it is an inferable feature, not the outcome. Mild leakage risk since it is emotionally near the label, but it remains a distinct extracted signal usable before knowing label_pos."
+      },
+      {
+        "name": "frustration_or_annoyance_tone",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Tone categorization (frustration, annoyance, sarcasm) is a text-derived affective feature that carries genuine predictive signal about negative satisfaction while remaining distinct from the binary label; it captures gradations not deterministically equal to label_pos."
+      },
+      {
+        "name": "waste_or_resource_loss_framing",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the review frames the purchase as wasted money/time/effort is a specific rhetorical feature outside the label, plausibly correlated with dissatisfaction but not a restatement of it."
+      },
+      {
+        "name": "personal_inconvenience_or_burden",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorizes concrete burdens (repeated effort, incompatibility, logistical, safety) that are content-grounded predictors of dissatisfaction; these are substantive drivers rather than restatements of the outcome and add non-trivial signal."
+      },
+      {
+        "name": "explicit_product_comparison",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Type of comparison (to expectations, competitor, prior model) is a legitimate text-derived feature that lies outside the label and can carry predictive signal in either direction, making it a valid non-leaking predictor."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.6,
+    "rationale": "All five columns are content-grounded, text-derived features that lie outside label_pos and none deterministically restate or are computable only after the outcome, so none are strict leakage. Several (disappointment_signal, frustration_tone) are affectively very close to the label, giving strong but partly redundant sentiment signal; the more diagnostic contributions come from concrete framings (waste, inconvenience/burden, comparison type) that decompose *why* a review is negative and add genuine leverage beyond raw title/content. As a set they provide moderate-to-good predictive leverage, tempered by overlap among the sentiment-oriented columns."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

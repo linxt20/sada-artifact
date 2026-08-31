@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "staff_attentiveness",
+    "food_taste_quality",
+    "food_freshness",
+    "portion_size",
+    "food_freshness_issue",
+    "portion_size_satisfaction"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.4534,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.68,
+    "interpretable_fraction": 0.6667
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "staff_attentiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A service theme external to sentiment with interpretable categories (friendly, helpful, attentive vs not_present). Can be segmented and compared against label_pos to reveal how service themes differ by sentiment."
+      },
+      {
+        "name": "food_taste_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated valenced categories (delicious, excellent vs mediocre, bland) forming a clear taste theme that plausibly correlates with and can be grouped against sentiment."
+      },
+      {
+        "name": "food_freshness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable freshness theme (fresh vs old, cold, overcooked). Distinct from taste; supports meaningful segmentation against label_pos."
+      },
+      {
+        "name": "portion_size",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable quantity theme (generous, adequate vs small, microscopic) that can be compared across sentiment groups."
+      },
+      {
+        "name": "food_freshness_issue",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Near-duplicate of food_freshness with essentially identical value distribution; adds no new relationship, merely restates an existing added column."
+      },
+      {
+        "name": "portion_size_satisfaction",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Redundant with portion_size, sharing the same category vocabulary and distribution; contributes no additional interpretable dimension."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.68,
+    "rationale": "The set successfully decomposes review content into distinct, interpretable theme dimensions (service attentiveness, taste, freshness, portion size), each with well-separated valenced categories that can be grouped and compared against the label_pos focus to explore how themes differ by sentiment. This directly serves the exploratory query. However, two of the six columns are near-exact duplicates of others (food_freshness_issue ≈ food_freshness; portion_size_satisfaction ≈ portion_size), inflating the column count without opening new relationships. The heavy 'not_present' skew in some columns (staff_attentiveness, portion_size) limits comparative power for the minority categories. Net: a genuinely informative EDA schema partially weakened by redundancy."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

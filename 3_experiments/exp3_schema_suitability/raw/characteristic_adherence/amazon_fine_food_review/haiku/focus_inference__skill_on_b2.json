@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "satisfaction_driver",
+    "primary_quality_issue",
+    "product_category",
+    "health_nutrition_mention",
+    "price_value_perception",
+    "repeat_purchase_intent",
+    "recommendation_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.7055,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.83,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Drivers of customer satisfaction and their actionable signals in food-product reviews",
+    "per_column": [
+      {
+        "name": "satisfaction_driver",
+        "supports_focus": true,
+        "rationale": "Directly identifies the positive facet driving satisfaction; central to the focus."
+      },
+      {
+        "name": "primary_quality_issue",
+        "supports_focus": true,
+        "rationale": "Captures the negative counterpart -- what detracts from satisfaction, actionable for remediation."
+      },
+      {
+        "name": "product_category",
+        "supports_focus": true,
+        "rationale": "Segmentation dimension enabling satisfaction/issue analysis by category; a supporting attribute."
+      },
+      {
+        "name": "health_nutrition_mention",
+        "supports_focus": true,
+        "rationale": "A specific thematic facet reviewers care about, tying into satisfaction/attention."
+      },
+      {
+        "name": "price_value_perception",
+        "supports_focus": true,
+        "rationale": "Value dimension is a coherent facet of satisfaction and a common actionable lever."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "supports_focus": true,
+        "rationale": "An outcome/behavioral signal downstream of satisfaction -- highly actionable."
+      },
+      {
+        "name": "recommendation_signal",
+        "supports_focus": true,
+        "rationale": "Advocacy outcome tied to satisfaction; actionable for surfacing worth-attention products."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.83,
+    "focus_actionability": 0.9,
+    "rationale": "The added columns converge tightly on one inferable focus: what drives (and undermines) satisfaction in food-product reviews and which signals merit attention. Positive drivers (satisfaction_driver), negative counterparts (primary_quality_issue), thematic facets (health, price/value), and downstream behavioral outcomes (repeat_purchase_intent, recommendation_signal) form a genuine multi-facet analytical structure rather than a restatement or generic noise; product_category adds a legitimate segmentation attribute. The set is far from a mechanical grab-bag (no token counts or bare sentiment) and is actionable -- an analyst can pinpoint what to fix, promote, or flag by category. Minor deductions: satisfaction_driver, price_value_perception, and repeat/recommendation overlap somewhat, and category is more a covariate than a satisfaction facet, slightly diffusing the structure. Overall this convincingly realises focus inference."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

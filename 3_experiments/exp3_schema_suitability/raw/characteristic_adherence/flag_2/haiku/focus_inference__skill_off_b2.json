@@ -1,0 +1,50 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "problem_type",
+    "problem_frequency_rank"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.506,
+    "focus_coherence": 0.92,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Recurring problem type (thematic category of the incident) and its prevalence across tickets",
+    "per_column": [
+      {
+        "name": "problem_type",
+        "supports_focus": true,
+        "rationale": "Directly infers a semantic category of the underlying problem from ticket text, realizing the focus of 'recurring types of problems' with a coherent, data-inferable set of values (VPN, Email, Database, etc.)."
+      },
+      {
+        "name": "problem_frequency_rank",
+        "supports_focus": true,
+        "rationale": "Ranks each problem_type by observed frequency, adding a prevalence facet around the same focus. It is largely a deterministic derivative of the counts, but it does quantify recurrence, which is central to the query."
+      }
+    ],
+    "focus_coherence": 0.92,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.85,
+    "rationale": "Both columns centre tightly on one coherent, inferable focus -- the recurring problem type -- so focus_coherence is high. The focus is genuinely actionable: an analyst can prioritise VPN/Email/Database issues for root-cause work. However, structure_quality is only moderate: the second column (frequency_rank) is essentially a mechanical restatement of the aggregate counts of the first column rather than an independent analytical facet or predictor. A stronger structure would add differentiating attributes of the problem (e.g., inferred root-cause area, affected service, resolution pattern, recurrence over time), not just a rank of the same category. So the pair leans toward a single concept plus its restatement rather than a well-differentiated facet set."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

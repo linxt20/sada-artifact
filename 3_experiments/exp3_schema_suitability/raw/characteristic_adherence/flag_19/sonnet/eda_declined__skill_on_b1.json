@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "expense_category_type",
+    "asset_subcategory",
+    "asset_brand",
+    "entry_generation_method",
+    "has_source_id",
+    "ci_identifier_quality",
+    "is_premium_or_high_end",
+    "is_new_procurement",
+    "travel_context_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.5722,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.6361,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "expense_category_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A clean expense-type categorization directly enables grouping declined expenses by kind, which is the core of the query. Values are well-grounded in short_description/ci text (hardware, cloud_service, travel all match sources), with minor edge cases like 'ISP Services' -> software_service being reasonable."
+      },
+      {
+        "name": "asset_subcategory",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A finer-grained expense breakdown gives a genuine additional axis for analyzing what gets declined. Mostly sound readings (laptop, desktop_workstation, service_subscription match text); 'Miscellaneous hardware component'/'RAM Component' -> peripheral_accessory is a mild stretch but defensible."
+      },
+      {
+        "name": "asset_brand",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Brand is well-extracted from text (Dell, HP, etc.) and 'Other' is an honest fallback. Only moderately useful for a decline-by-department query; brand could plausibly correlate with declines but is a secondary axis."
+      },
+      {
+        "name": "entry_generation_method",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Whether an entry was manually vs auto generated is largely orthogonal to what expenses get declined. It is also not clearly derivable from the shown source text (short_description/ci); the manual/auto assignment appears asserted without visible textual support."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "This merely restates presence of the existing source_id column—trivially redundant and of little analytical leverage for decline patterns. Groundedness is fine since it reflects an actual field, though the sample rows don't expose source_id to verify."
+      },
+      {
+        "name": "ci_identifier_quality",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A metadata-quality flag about the ci string; marginally relevant to declines. Categorization is a plausible reading of ci text, though 'Random Access Memory Component' -> standard_model_name is questionable, weakening grounding."
+      },
+      {
+        "name": "is_premium_or_high_end",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Premium tier could plausibly relate to declines (costly items rejected), giving some leverage. But groundedness is weak: 'Dell XPS 13' (a premium ultrabook) flagged false suggests inconsistent/under-supported inference from text."
+      },
+      {
+        "name": "is_new_procurement",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "New-procurement vs reassignment is a reasonable axis for decline analysis. However inference seems shaky: 'Provision of Services for iPod touch' -> True while 'Miscellaneous hardware component' -> False is inconsistent, and it exactly mirrors is_premium counts (445/55), raising redundancy/derivation concerns."
+      },
+      {
+        "name": "travel_context_flag",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Travel-vs-not is a meaningful expense-type split that could differ by department and correlate with declines. Well grounded in text (travel keywords), with non-travel rows correctly flagged false."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.72,
+    "rationale": "The strongest columns (expense_category_type, asset_subcategory, travel_context_flag, asset_brand) give genuine new axes to characterize declined expenses and cross them with department, directly serving the query. Several columns are weaker: has_source_id merely restates an existing field, entry_generation_method is orthogonal and poorly grounded, and is_premium/is_new_procurement show inconsistent, under-supported inferences (e.g., Dell XPS 13 marked not premium) with suspiciously identical distributions. Overall the added set is useful but diluted by low-leverage and partially hallucinated flags."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

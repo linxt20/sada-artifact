@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "focus_variable": "praise_and_complaint_drivers",
+  "concept": "praise_and_complaint_drivers",
+  "n_added_columns": 6,
+  "added_columns": [
+    "performance_vs_advertised_spec",
+    "content_quality_aspect",
+    "expectation_gap_direction",
+    "intended_use_fit",
+    "reviewer_emotional_intensity",
+    "recommendation_stance"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.2371,
+    "facet_fraction": 0.5,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.45,
+    "mece": 0.4743,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "praise_and_complaint_drivers",
+    "per_column": [
+      {
+        "name": "performance_vs_advertised_spec",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether a product performs relative to its advertised specification is a genuine aspect/driver of praise and complaints -- a substantive dimension along which reviewers evaluate."
+      },
+      {
+        "name": "content_quality_aspect",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Content-quality dimensions (plot, production, character, pacing) are constitutive aspects that drive praise/complaint for media items; a legitimate facet of what reviewers react to."
+      },
+      {
+        "name": "expectation_gap_direction",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Whether the product fell short/met/exceeded expectations is essentially the outcome polarity of praise vs complaint, not an independent driver of it; it restates the valence rather than decomposing its causes."
+      },
+      {
+        "name": "intended_use_fit",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Fit for intended use case is a distinct evaluative dimension driving satisfaction/dissatisfaction, a real aspect of the drivers concept."
+      },
+      {
+        "name": "reviewer_emotional_intensity",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Emotional intensity measures the strength of the praise/complaint expression itself, not a constitutive driver of what caused it; it characterizes the reaction, not its aspects."
+      },
+      {
+        "name": "recommendation_stance",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Recommend / do-not-recommend is a downstream expression of overall sentiment (a summary of praise vs complaint), not a facet decomposing the drivers behind it."
+      }
+    ],
+    "facet_columns": [
+      "performance_vs_advertised_spec",
+      "content_quality_aspect",
+      "intended_use_fit"
+    ],
+    "non_facet_columns": [
+      "expectation_gap_direction",
+      "reviewer_emotional_intensity",
+      "recommendation_stance"
+    ],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.45,
+    "rationale": "Only three of six columns are true constitutive facets of the drivers concept (spec performance, content quality, intended-use fit). The remaining three characterize the reaction itself: expectation_gap_direction and recommendation_stance restate overall valence/sentiment, and reviewer_emotional_intensity measures expression strength rather than a driver. Mutual exclusivity is moderate: performance_vs_advertised_spec, expectation_gap_direction, and intended_use_fit substantially overlap in capturing 'did it match expectations of what/how it should perform,' and the three non-facets all echo overall sentiment. Exhaustiveness is weak: even among valid facets, major driver categories such as price/value, build/durability, delivery/packaging/shipping, and customer service are absent, so the set does not cover the concept's main constitutive aspects."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

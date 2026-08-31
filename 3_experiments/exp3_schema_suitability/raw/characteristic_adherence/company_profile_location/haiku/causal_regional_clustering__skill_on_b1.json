@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "n_added_columns": 4,
+  "added_columns": [
+    "industry_domain",
+    "specialized_talent_focus",
+    "venture_ecosystem_dependency",
+    "company_maturity_stage"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.655,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.7275,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_domain",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Industry is a well-grounded categorisation readable from the company descriptions (e.g. VC firm, life science, financial reporting platform), and industry mix is a genuine axis for explaining regional clustering. Values in samples are sound readings of the source text."
+      },
+      {
+        "name": "specialized_talent_focus",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Talent/skill demand is a plausible driver of location choice (talent pools), giving a real analytical axis. Values are mostly warranted extractions (product_management, financial_analysis), and 'not_present' for silent rows is correct behaviour. Some inferences (biotech_research for a VC firm) are slightly stretched but defensible."
+      },
+      {
+        "name": "venture_ecosystem_dependency",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Dependency on a venture ecosystem is directly relevant to why firms co-locate (e.g. near Sand Hill Road), so it is analytically useful. However the specific dependency levels are largely inferred and not strongly supported by the terse descriptions; a mature genomics firm labelled 'low_dependency_mature' and a founders-focused VC 'high_dependency' are guesses the text does not clearly warrant."
+      },
+      {
+        "name": "company_maturity_stage",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Maturity/funding stage is a reasonable axis for location analysis, but the descriptions contain no funding or stage information. Specific labels like 'scaling_series_c_plus' or 'early_growth_series_a_b' are confident assertions unsupported by the source text, which is silent on funding stage."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.62,
+    "rationale": "All four columns offer genuine, non-redundant axes (industry, talent, ecosystem dependency, maturity) that plausibly help explain regional location choice, so analytical usefulness is solid. Groundedness is mixed: industry_domain and specialized_talent_focus are sound readings of the descriptions, but venture_ecosystem_dependency and especially company_maturity_stage assert specific funding/stage details the terse source text does not support, producing confident inventions rather than warranted 'unknown' values."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 4
+}

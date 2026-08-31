@@ -1,0 +1,77 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How would HelpfulnessNumerator change if reviews provided more detailed product information?",
+  "focus_variable": "helpfulness_numerator_outcome",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "product_info_score",
+    "product_info_detail_level",
+    "counterfactual_helpfulness_numerator_high_detail",
+    "helpfulness_numerator_delta_if_high_detail"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "HelpfulnessNumerator",
+    "per_column": [
+      {
+        "name": "product_info_score",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Quantifies the degree of detailed product information in a review, which is the intervenable lever named directly in the query ('provided more detailed product information'). A review author could plausibly set/change how much product detail they include."
+      },
+      {
+        "name": "product_info_detail_level",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Categorical (low/medium/high) rendering of the same treatment concept; also intervenable and named in the query. Functions as the discretized treatment assignment used in the counterfactual columns."
+      },
+      {
+        "name": "counterfactual_helpfulness_numerator_high_detail",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Predicted counterfactual value of the outcome under the intervention 'set detail to high'. This is a counterfactual outcome estimate, not a treatment or confounder."
+      },
+      {
+        "name": "helpfulness_numerator_delta_if_high_detail",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "The counterfactual - factual difference in the outcome; it is the estimated effect, i.e. a derived outcome quantity, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "product_info_score",
+      "product_info_detail_level"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns supply an intervenable treatment (amount of detailed product information, which a review author can actually set) and two counterfactual outcome quantities (predicted high-detail helpfulness and the delta). This satisfies part (a) of the claim: the treatment is genuinely settable/changeable. However, the schema FAILS the decisive test for part (b). No confounder columns were added at all. Common causes of both including product detail AND helpfulness -- e.g., overall review length/verbosity, product category or popularity, reviewer expertise/experience, star Score, review age (Time) exposure, or denominator/vote exposure -- are neither present nor even represented. Without adjusting for such common causes, the counterfactual outcome and delta columns are computed as if the effect were identifiable, but the confounding control that the interventional claim requires is entirely absent. The operator merely emitted the treatment and a black-box counterfactual output, which does not realise the confounder-adjustment capability under test."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_whatif_helpfulness",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

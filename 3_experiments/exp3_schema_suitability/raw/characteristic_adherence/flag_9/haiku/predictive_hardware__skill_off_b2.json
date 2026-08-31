@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals indicate a hardware incident is in the anomaly window?",
+  "focus_variable": "is_hardware_anomaly_window",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "is_hardware_issue",
+    "is_critical_hardware",
+    "is_high_priority_hardware",
+    "resolution_days",
+    "long_resolution",
+    "hardware_incidents_last_7d",
+    "is_infrastructure_hardware",
+    "in_anomaly_window"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.3125,
+    "predictor_fraction": 0.625,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.5,
+    "leakage_rate": 0.25
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "is_hardware_anomaly_window",
+    "per_column": [
+      {
+        "name": "is_hardware_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the incident is hardware-related is a partial component of the focus (which combines hardware AND anomaly window), but it lies outside the anomaly-window dimension and derives from category/short_description available at incident time, plausibly carrying signal. It is a legitimate, non-leaking predictor of the hardware facet."
+      },
+      {
+        "name": "is_critical_hardware",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Criticality of hardware issues is derivable from priority/category before outcome and plausibly correlates with anomaly-window membership without restating it."
+      },
+      {
+        "name": "is_high_priority_hardware",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Priority-conditioned hardware flag; knowable at incident open time and plausibly predictive of anomaly windows. Not a restatement of the focus."
+      },
+      {
+        "name": "resolution_days",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Resolution duration is only known after the incident is closed (uses closed_at). Using it to predict whether the incident is in an anomaly window is post-outcome leakage."
+      },
+      {
+        "name": "long_resolution",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A deterministic threshold of resolution_days; same post-outcome leakage, only knowable after closure."
+      },
+      {
+        "name": "hardware_incidents_last_7d",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A rolling count of recent hardware incidents is exactly the kind of clustering signal that indicates an anomaly window, computable from prior events (backward-looking) and not a restatement of the focus. Strong legitimate predictor."
+      },
+      {
+        "name": "is_infrastructure_hardware",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Sub-type of hardware (infrastructure) derivable from category at intake; plausibly carries signal about anomaly-window incidents without leaking the outcome."
+      },
+      {
+        "name": "in_anomaly_window",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is essentially the anomaly-window half of the focus variable (is_hardware_anomaly_window = hardware AND anomaly_window). Its value distribution mirrors the target and it directly restates a defining component of the focus, providing no legitimate external predictive leverage."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.5,
+    "rationale": "Five columns are legitimate, non-leaking predictors: the hardware-type flags (is_hardware_issue, is_critical_hardware, is_high_priority_hardware, is_infrastructure_hardware) capture the hardware facet from intake attributes, and hardware_incidents_last_7d is a genuinely strong, backward-looking clustering feature well suited to detecting anomaly windows. However, resolution_days and long_resolution are post-outcome leakage (require closure), and in_anomaly_window is a restatement of the target's defining component. The hardware flags are also mutually correlated and only cover one axis of the focus, so real incremental leverage beyond the original columns is moderate—driven mainly by the temporal count feature."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "predictive_hardware",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

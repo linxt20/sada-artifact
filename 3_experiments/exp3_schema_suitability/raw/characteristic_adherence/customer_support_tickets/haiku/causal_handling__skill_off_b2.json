@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do handling times differ by channel and priority?",
+  "focus_variable": "handling_time_gap",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "issue_complexity",
+    "urgency_factor",
+    "channel_communication_mode"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 0.5,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "handling_time_gap",
+    "per_column": [
+      {
+        "name": "issue_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Issue complexity plausibly drives which channel/priority a ticket gets routed to AND directly affects handling time, making it a genuine common cause. It is surfaced from the issue_description text, not named in the query."
+      },
+      {
+        "name": "urgency_factor",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Urgency is essentially a restatement of 'priority', which is the treatment/dimension named in the query. As a driver of both priority assignment and handling time it functions as a confounder, but it is clearly implied by the query's 'priority', so it does not demonstrate the capability under test."
+      },
+      {
+        "name": "channel_communication_mode",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "This is a property of the channel (Async vs Sync), which is the treatment named in the query. It lies on the causal path from channel to handling time (channel determines communication mode which affects timing), so it is a mediator/attribute of the treatment, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "channel_communication_mode"
+    ],
+    "confounders": [
+      {
+        "name": "issue_complexity",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "urgency_factor",
+        "named_in_query": true,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The query asks why handling times differ by channel and priority, so channel and priority are the candidate causes. Only issue_complexity is a genuine, query-independent confounder surfaced from the text: it plausibly affects both routing (channel/priority) and handling time. urgency_factor is just a re-encoding of the query's 'priority', and channel_communication_mode is an attribute/mediator of the 'channel' treatment rather than an adjustable common cause. Thus only one of three columns realises the causal-attribution capability under test, and no clearly distinct treatment plus unnamed confounder pairing is established, yielding modest confounder quality."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

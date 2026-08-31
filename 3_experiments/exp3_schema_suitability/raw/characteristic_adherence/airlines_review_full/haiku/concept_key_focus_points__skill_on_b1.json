@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_service_quality",
+    "seat_comfort_quality",
+    "food_beverage_quality",
+    "operational_reliability",
+    "customer_service_recovery",
+    "ground_service_professionalism",
+    "value_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.61,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.5471,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.5786,
+    "hallucination_rate": 0.7143
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Adds a qualitative axis (warmth vs. professional vs. robotic vs. rude) that enriches the numeric 'Staff Service' rating and gives a useful grouping dimension for a summary-oriented query. Samples read the text soundly (exceptional_warmth for the birthday-cake review, professional_attentive for well-trained staff). Only mild concern: sample 2 was about seats with no crew mention yet got 'neutral_robotic', but neutral is a conservative fallback, so grounding is largely intact."
+      },
+      {
+        "name": "seat_comfort_quality",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categories (very_comfortable...very_uncomfortable) essentially restate the existing 'Seat Comfort' rating scale, so it adds limited new analytical leverage. Groundedness is strong, however: 'comfortable' and 'very_uncomfortable' match the source text closely and the large NULL count (2211) shows appropriate abstention when seats aren't discussed."
+      },
+      {
+        "name": "food_beverage_quality",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Largely parallels the original 'Food & Beverages' rating, though the 'special_diet_forgotten' category adds a bit of novelty. Grounding is mixed: correct on the food-focused reviews (excellent_gourmet_quality for two full meals) and it does use NULL (3069) when food is silent, but sample 2 (a seats-only complaint with no food mention) was labelled 'limited_bland_poor', an over-read of overall negativity."
+      },
+      {
+        "name": "operational_reliability",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Genuinely new axis (delays/cancellations/missed connections) absent from the original columns and highly relevant to a 'what to concentrate on' query. But grounding is weak: every sampled review that never mentions timing was still labelled 'on_time_reliable', and that value dominates (5114) while NULL is only 1293. The operator defaults silent rows to a confident 'on time' assertion rather than unknown, systematically over-claiming."
+      },
+      {
+        "name": "customer_service_recovery",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Adds a distinct complaint-handling/service-recovery dimension not covered by the original ratings, useful for grouping. Abstention is mostly sensible (samples 2-5 correctly NULL, 1217 NULL overall), but sample 1 — a purely positive onboard review with no complaint scenario — was labelled 'responsive_helpful_support', showing some inference of recovery quality where none is described."
+      },
+      {
+        "name": "ground_service_professionalism",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "Ground/airport service is a legitimately new axis relative to the onboard-focused originals. However groundedness is poor: the column has NO NULLs at all, yet every sampled review describes only the inflight experience with no check-in/boarding/ground-staff mention, and all were still assigned a ground verdict (professional_courteous, neutral_efficient). This is systematic fabrication of a facet the source text does not address."
+      },
+      {
+        "name": "value_perception",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.48,
+        "hallucination_observed": true,
+        "rationale": "Closely mirrors the existing 'Value For Money' rating, limiting its added leverage. It also asserts a value judgement for almost every row (only 10 NULL) despite most sampled reviews never mentioning price or value; 'excellent_value' (sample 1) and 'poor_overpriced' (sample 2) appear inferred from overall sentiment rather than any cost/value statement in the text."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.5,
+    "rationale": "The added columns collectively provide several useful qualitative axes for summarising airline reviews. The strongest contributions are operational_reliability, customer_service_recovery, and ground_service_professionalism, which introduce facets absent from the original numeric ratings; crew_service_quality adds interpretive nuance. Others (seat_comfort_quality, food_beverage_quality, value_perception) largely restate existing rating columns, dampening their marginal usefulness. Groundedness is the bigger weakness: while seat, food, and crew columns abstain sensibly with NULLs, the operator systematically over-asserts on rows where the text is silent — defaulting to 'on_time_reliable', assigning ground-service verdicts with zero NULLs, and inferring value from generic sentiment. This produces confident specifics the source text does not support, pulling the table-level grounding to roughly moderate."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 7
+}

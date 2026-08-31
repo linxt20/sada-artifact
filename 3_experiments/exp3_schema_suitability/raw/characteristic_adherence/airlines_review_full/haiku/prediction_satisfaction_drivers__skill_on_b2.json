@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "flight_operational_reliability",
+    "aircraft_condition",
+    "ground_staff_efficiency",
+    "problem_resolution",
+    "value_for_money_perception",
+    "airline_consistency"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A distinct service dimension (crew attentiveness/politeness) extracted from the review. It lies outside the overall rating and is a classic driver of satisfaction, carrying real predictive signal. It is aspect-level, not a restatement of the holistic score."
+      },
+      {
+        "name": "flight_operational_reliability",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "On-time vs delay/cancellation is an objective operational fact that is not captured by any original structured rating and is a strong, legitimate predictor of overall satisfaction. Clearly outside the focus and high incremental signal."
+      },
+      {
+        "name": "aircraft_condition",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Condition/modernity of the aircraft is a separable driver not present among the original ratings. It plausibly influences the overall score without restating or deterministically defining it."
+      },
+      {
+        "name": "ground_staff_efficiency",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Check-in/ground handling experience is a distinct touchpoint absent from the original columns (which cover only inflight aspects). A legitimate predictor with novel signal about satisfaction."
+      },
+      {
+        "name": "problem_resolution",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How complaints/disruptions were handled is a separate causal driver of satisfaction, not covered by the base ratings and not a mere re-expression of the outcome. Genuine predictive feature."
+      },
+      {
+        "name": "value_for_money_perception",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Price-to-quality perception is a distinct construct from the holistic overall rating and is a valid predictor. However, the original table already contains a 'Value For Money' rating, so this largely duplicates existing structured signal and adds little incremental leverage; it borders on redundancy but is not leakage."
+      },
+      {
+        "name": "airline_consistency",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Categories like 'consistently_excellent' vs 'declining_degraded' encode a holistic quality/satisfaction judgment about the airline that essentially paraphrases the overall rating itself rather than isolating an external driver. It restates the focus construct and offers little independent predictive information."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.7,
+    "rationale": "Most added columns are aspect-level drivers extracted from the review text that lie outside the overall rating and plausibly carry predictive signal. Four of them (operational reliability, aircraft condition, ground staff efficiency, problem resolution) introduce genuinely NEW dimensions absent from the original structured ratings, giving substantial incremental predictive leverage for modeling satisfaction. cabin_crew_service_quality is a solid predictor though it overlaps somewhat with the existing 'Staff Service' rating, and value_for_money_perception largely duplicates the existing 'Value For Money' column. airline_consistency is effectively a restatement of the holistic outcome and contributes little. As a set, the columns provide meaningful predictive value beyond the originals, discounted by one restatement and some redundancy with existing ratings."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

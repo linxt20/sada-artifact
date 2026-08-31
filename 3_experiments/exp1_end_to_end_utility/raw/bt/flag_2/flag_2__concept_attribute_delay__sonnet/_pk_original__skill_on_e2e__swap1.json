@@ -1,0 +1,104 @@
+{
+  "var_a": "skill_on_e2e",
+  "var_b": "original",
+  "swap": true,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.72,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "outage_wide | 1,144 | 1,180 | 52",
+        "why": "concrete magnitudes with counts"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "same_day 24 h vs multi_day 1,057 h",
+        "why": "numeric contrast"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "same_day | 24 | n=1 ... 400 of 500 (80%) had multi-day lag",
+        "why": "unassigned/lag counts inconsistent, n=1 undermines claim"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "opening date is almost perfectly aligned with the final duration",
+        "why": "identifies confounding artifact causally"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "2023-01: 141.3 h ... 2023-10: 2096.6 h",
+        "why": "monotonic numeric trend"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "main explanation here is dataset structure or aging logic",
+        "why": "consistently caveats weak signals"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "B uncovers the dominant temporal artifact and stays internally consistent, while A rests on a suspiciously derived lag signal with an n=1 base.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

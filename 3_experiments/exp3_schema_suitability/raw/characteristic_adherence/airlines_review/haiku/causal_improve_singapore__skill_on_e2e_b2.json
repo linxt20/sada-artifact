@@ -1,0 +1,134 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "seat_comfort_issue",
+    "food_quality_decline",
+    "service_inconsistency",
+    "customer_service_responsiveness",
+    "booking_operational_failure",
+    "inflight_entertainment_failure",
+    "aircraft_age_condition",
+    "crew_service_attitude",
+    "traveller_segment",
+    "cabin_class"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "overall_rating_recommendation",
+    "per_column": [
+      {
+        "name": "seat_comfort_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of dissatisfaction; a service attribute whose effect on rating/recommendation is being attributed."
+      },
+      {
+        "name": "food_quality_decline",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate service-quality cause of low ratings."
+      },
+      {
+        "name": "service_inconsistency",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause affecting satisfaction and recommendation."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause; responsiveness plausibly drives the outcome."
+      },
+      {
+        "name": "booking_operational_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate operational cause of poor experience and low rating."
+      },
+      {
+        "name": "inflight_entertainment_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of dissatisfaction."
+      },
+      {
+        "name": "aircraft_age_condition",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause affecting comfort/experience and rating."
+      },
+      {
+        "name": "crew_service_attitude",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate service cause of satisfaction."
+      },
+      {
+        "name": "traveller_segment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Traveller type plausibly affects both which service issues are experienced/expected (treatment) and baseline rating tendencies (outcome). Present in original data as Type of Traveller but re-surfaced as an adjustment variable; not named in query."
+      },
+      {
+        "name": "cabin_class",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Cabin class plausibly affects service/comfort levels received (treatment) and satisfaction expectations/ratings (outcome), making it a common cause. Not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "seat_comfort_issue",
+      "food_quality_decline",
+      "service_inconsistency",
+      "customer_service_responsiveness",
+      "booking_operational_failure",
+      "inflight_entertainment_failure",
+      "aircraft_age_condition",
+      "crew_service_attitude"
+    ],
+    "confounders": [
+      {
+        "name": "traveller_segment",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "cabin_class",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The added columns clearly supply candidate TREATMENTS (multiple service-quality/operational causes) whose effect on the outcome is being attributed. Two columns (traveller_segment, cabin_class) function as plausible confounders -- common causes of both the service experience received and the rating given -- and neither is named in the query, so they show some genuine causal reasoning. However, they overlap heavily with existing original columns (Type of Traveller, Class), so they are re-encodings rather than newly surfaced latent confounders, and one could argue class partly lies on the causal path. The confounder set is thin (only two, both plausibility ~0.6) relative to many treatments, and several treatments themselves risk being mediators of one another. Overall the causal setup is partially realised: treatments present, confounders present but modest in quality and originality."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

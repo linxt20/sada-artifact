@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary by agent and issue type?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "resolution_time_hours",
+    "issue_type_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.925,
+    "analytical_usefulness__table_level": 0.92,
+    "source_groundedness": 0.635,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.78,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Resolution time is the core metric the query asks about, so it directly enables grouping by agent and issue type -- high usefulness. However, groundedness is weak: the table exposes opened_at, but the samples show closed_at equal to sys_updated_on, and the produced values (e.g. 286.79, 348.57) cannot be derived from the identical timestamps shown; several negative values (-4.29, -106.72, -110.64) are logically impossible for a duration, indicating a flawed or unwarranted computation not soundly supported by the source rows."
+      },
+      {
+        "name": "issue_type_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Provides a clean grouping axis for 'by issue type', which the query explicitly needs, and is not trivially redundant with the existing category column as a normalized bucket. The categorizations are well-grounded readings of short_description: 'Unable to access the database' -> Database, 'VPN issue' -> Network, 'Software update issue' -> Software all follow soundly from the text."
+      }
+    ],
+    "analytical_usefulness": 0.92,
+    "source_groundedness": 0.6,
+    "rationale": "Both columns are squarely relevant to 'resolution time by agent and issue type': one supplies the metric, the other supplies a grouping dimension. issue_type_category is well grounded in the short_description text. resolution_time_hours, however, shows serious groundedness problems -- the sample rows have identical start/end timestamps yet yield nonzero times, and multiple negative durations appear, signaling values not soundly derivable from the shown source, which drags the table-level groundedness down."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 2
+}

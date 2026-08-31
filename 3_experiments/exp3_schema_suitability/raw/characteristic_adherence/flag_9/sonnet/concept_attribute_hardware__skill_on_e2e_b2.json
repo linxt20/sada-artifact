@@ -1,0 +1,50 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "focus_variable": "hardware_hiccups",
+  "concept": "hardware_hiccups",
+  "n_added_columns": 1,
+  "added_columns": [
+    "hardware_scope"
+  ],
+  "metrics": {
+    "n_added_columns": 1,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.5,
+    "facet_fraction": 1.0,
+    "n_facets": 1,
+    "mutual_exclusivity": 1.0,
+    "exhaustiveness": 0.25,
+    "mece": 0.5,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "hardware_hiccups",
+    "per_column": [
+      {
+        "name": "hardware_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The scope/locus of the affected hardware (server infrastructure, individual device, shared office device, network infrastructure) is a genuine constitutive aspect OF a hardware issue -- it decomposes WHERE in the hardware landscape the hiccup occurs, rather than predicting or causing it. Its values are non-overlapping partitions of the hardware domain, so as a single facet it is internally mutually exclusive and coherent."
+      }
+    ],
+    "facet_columns": [
+      "hardware_scope"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 1.0,
+    "exhaustiveness": 0.25,
+    "rationale": "The single added column, hardware_scope, is a legitimate part-of facet: it carves out the 'affected component / locus' aspect of a hardware issue, which is constitutive rather than an external predictor, cause, or restatement. Because there is only one facet column, mutual exclusivity is trivially satisfied (nothing overlaps with it). However, exhaustiveness is very low: a MECE decomposition of 'hardware issues' should cover several constitutive aspects -- e.g. the failure mode / symptom type (won't power on, overheating, disk failure, connectivity loss), the component type (storage, memory, peripheral, power supply), and severity/impact. The provided set captures only the spatial scope and leaves the core 'what kind of malfunction' dimension -- which the analytical query most directly asks about -- entirely uncovered."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 1
+}

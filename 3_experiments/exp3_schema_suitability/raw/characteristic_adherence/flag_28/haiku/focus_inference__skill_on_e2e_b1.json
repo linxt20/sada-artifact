@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "goal_outcome_domain",
+    "improvement_mechanism",
+    "targeted_improvement_scope",
+    "implementation_timeline_clarity",
+    "financial_impact_quantified",
+    "goal_scope_breadth",
+    "execution_complexity_estimate"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6571,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7857,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7214,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_outcome_domain",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Gives a clean grouping axis for goals. Well grounded but largely mirrors the existing 'category' column, so its incremental leverage is modest."
+      },
+      {
+        "name": "improvement_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A genuinely new axis (how the goal is pursued) not present in original columns. Values are reasonable readings of the descriptions (e.g. resource_optimization, service_enhancement)."
+      },
+      {
+        "name": "targeted_improvement_scope",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Grounded, but its value distribution maps one-to-one onto goal_outcome_domain/category (revenue->revenue_channel, cost->cost_line_item), making it largely a restatement with little independent leverage."
+      },
+      {
+        "name": "implementation_timeline_clarity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful new axis for prioritizing which goals have concrete timing. Values track cues in the text ('next fiscal year', 'by end of Q4', 'compared to last quarter'). NULL for silent rows is appropriate."
+      },
+      {
+        "name": "financial_impact_quantified",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "A bare boolean flag with limited leverage. Grounding is shaky: the customer-satisfaction row (ratings 78%->90%) is marked True despite no financial figure, suggesting inconsistent criteria."
+      },
+      {
+        "name": "goal_scope_breadth",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes single-function vs cross-functional vs enterprise-wide, a genuine axis for attention prioritization. Readings are defensible though somewhat interpretive."
+      },
+      {
+        "name": "execution_complexity_estimate",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A useful ordinal for prioritization, but the numeric scores are weakly warranted by text and appear partly heuristic; near-two-valued distribution limits and slightly overstates precision the source doesn't support."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.78,
+    "rationale": "The set offers several genuinely useful new axes (improvement_mechanism, timeline_clarity, scope_breadth) that help identify goals worth attention. A couple of columns are weak: targeted_improvement_scope largely restates the outcome domain/category, and financial_impact_quantified is a bare flag applied inconsistently. Most values are sound readings of the descriptions with appropriate NULLs, but the boolean and complexity columns show some ungrounded/inconsistent assignments."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

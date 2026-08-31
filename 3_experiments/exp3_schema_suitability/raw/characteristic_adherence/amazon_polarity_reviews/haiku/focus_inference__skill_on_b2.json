@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "product_performance_aspect",
+    "quality_durability_issue",
+    "content_substance_quality",
+    "comparison_to_alternatives"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.68,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.82,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The specific aspects/dimensions of a purchase that Amazon reviewers evaluate (product performance, build quality/durability, content substance, and comparative standing vs. alternatives)",
+    "per_column": [
+      {
+        "name": "product_performance_aspect",
+        "supports_focus": true,
+        "rationale": "Captures whether the review discusses how well the product functions — a core purchase aspect reviewers talk about."
+      },
+      {
+        "name": "quality_durability_issue",
+        "supports_focus": true,
+        "rationale": "Captures build quality and longevity, a distinct and coherent facet of the purchase-aspect focus, differentiated from raw performance."
+      },
+      {
+        "name": "content_substance_quality",
+        "supports_focus": true,
+        "rationale": "Captures the quality/substance of the review's content or the item's content; a coherent aspect facet, though slightly ambiguous as to whether it targets the product or the review text itself."
+      },
+      {
+        "name": "comparison_to_alternatives",
+        "supports_focus": true,
+        "rationale": "Captures comparative framing against competitors — a recognizable, actionable aspect that reviewers commonly raise."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.82,
+    "rationale": "The four added columns collectively centre on a single, data-inferable focus: the distinct aspects of a purchase reviewers discuss. Each column is a genuine categorical facet (performance, durability, content substance, comparison) with meaningful, non-trivial value sets rather than mechanical text metrics, so this clearly realises focus inference rather than a grab-bag. Structure is sound — the facets are differentiated at a useful granularity and each carries a 'not_present'/'no_comparison' option to encode aspect presence, giving a coherent multi-aspect decomposition. Minor weaknesses: 'content_substance_quality' is ambiguous (review-writing quality vs. product content) and blurs the aspect-vs-metaquality boundary, and the four aspects are somewhat arbitrarily chosen rather than exhausting the purchase-aspect space (e.g., price/value, shipping, customer service are absent), which slightly caps coherence and structure. The implied focus is clearly actionable — an analyst could quantify which purchase aspects dominate reviews and how sentiment splits within each."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 4
+}

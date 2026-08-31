@@ -1,0 +1,46 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across issue themes, channel, and priority?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 1,
+  "added_columns": [
+    "issue_theme"
+  ],
+  "metrics": {
+    "n_added_columns": 1,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.78,
+    "predictor_fraction": 1.0,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.78,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_theme",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "issue_theme categorizes free-text issue descriptions into well-separated, human-interpretable buckets (UI/UX, Authentication, Infrastructure/Outage, Billing/Pricing, etc.). It is external to the focus (resolution_minutes) and directly enables grouping/segmentation to compare how resolution time varies by theme, which is exactly one of the dimensions named in the query. Categories are balanced enough to support meaningful comparison, though 'Security' (2) and 'Other' (35) are somewhat weak/ambiguous buckets."
+      }
+    ],
+    "n_predictors": 1,
+    "relationship_informativeness": 0.78,
+    "rationale": "The single added column, issue_theme, correctly realises the exploratory-analysis claim: it derives an interpretable categorical segmentation from the unstructured issue_description and lets a human explorer compare resolution_minutes across themes. It is associational, not a restatement of the focus, and its categories are well-separated with mostly usable group sizes. It squarely addresses the 'issue themes' dimension of the query (channel and priority already exist in the original table). It does not merely restate the focus or produce opaque scores. Slight deductions: only one dimension is added, and a couple of categories ('Other', 'Security') offer limited comparative value."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 1
+}

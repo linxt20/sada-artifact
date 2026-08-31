@@ -1,0 +1,128 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "n_added_columns": 12,
+  "added_columns": [
+    "seat_comfort_deficiency",
+    "crew_service_quality",
+    "food_beverage_quality_deficiency",
+    "operational_reliability",
+    "ground_service_failure",
+    "customer_service_responsiveness",
+    "service_recovery_adequacy",
+    "communication_failure",
+    "product_quality",
+    "passenger_segment",
+    "service_class",
+    "route_complexity_and_transfer_risk"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 12,
+    "n_judged_columns": 12,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.5958,
+    "source_groundedness__table_level": 0.57,
+    "b1_overall": 0.6229,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "seat_comfort_deficiency",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Seat comfort is a first-order driver of ratings and non-recommendation, so this binary flag is a genuine analytical axis. Grounding is strong in the samples (False when 'legroom spacious'; True when 'seat far too narrow, poor padding, back ache'), and it carries very few NULLs because seats are almost always mentioned."
+      },
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Crew/service is a top driver for SIA reviews, so the categorical is highly useful. But it is forced onto nearly every row (only 137 NULL/~8100), producing invented negatives: sample 2 says NOTHING about crew yet was labelled 'cold_robotic'. Where crew is described the label is right, but the near-absence of 'unknown' indicates confident assertions on silent rows."
+      },
+      {
+        "name": "food_beverage_quality_deficiency",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Catering quality is a legitimate rating driver and the flag is a clean grouping axis. Samples are well grounded (False when 'food delicious'/'plentiful and tasty'), with a reasonable NULL count. Default-False on silent rows is acceptable behaviour."
+      },
+      {
+        "name": "operational_reliability",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Delays, cancellations and baggage failures are strong predictors of non-recommendation, so this multi-class column is analytically valuable. The specific failure categories are grounded only when explicitly mentioned, but every sample where the text is silent on timing was still labelled 'on_time_reliable', which asserts reliability the text does not confirm (mild over-assertion)."
+      },
+      {
+        "name": "ground_service_failure",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Check-in/boarding/ground failures are a plausible driver of dissatisfaction and give a useful split. Default-False on silent rows (as in the samples) is defensible, but with only 2 NULLs across the table the 'True' assignments cannot be verified and the binary is applied very aggressively."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Overlaps substantially with crew_service_quality and ground_service_failure, reducing its added leverage. Grounding is mixed: sample 2 correctly returns 'Unknown', but sample 1 labels 'responsive_proactive' by conflating onboard crew with post-flight customer service, an inference the text does not support."
+      },
+      {
+        "name": "service_recovery_adequacy",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Conceptually relevant to the non-recommender question (did SIA recover from failures?), but it is mislabelled: several positive reviews with no failure at all (samples 1, 3, 4, 5) are marked 'True' for recovery, treating a generically good flight as a successful recovery. The value is not a sound reading of the source for those rows."
+      },
+      {
+        "name": "communication_failure",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A communication-breakdown flag is a reasonable driver axis but overlaps with operational_reliability and customer_service. Values default to False on silent rows (acceptable), yet the column has zero NULLs, indicating a forced binary rather than an evidence-gated one."
+      },
+      {
+        "name": "product_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Cabin/aircraft condition is a useful axis distinct from raw seat comfort. Grounding is mostly sound (modern_clean_functional for 'well sanitized/clean'), but there is slippage: 'dreadful' seats/IFE are mapped to 'dated_worn_dirty' (text implies quality, not dirt/age), and an explicitly 'older aircraft in relatively good condition' is labelled 'modern_clean_functional'."
+      },
+      {
+        "name": "passenger_segment",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Largely a normalised restatement of the existing 'Type of Traveller' column, so it adds limited new leverage. If mapped from that column it is grounded, but sample 1 (traveller explicitly flying with 'my mom') is labelled 'solo_leisure', which conflicts with the text and suggests the mapping is not always faithful to the review content."
+      },
+      {
+        "name": "service_class",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Trivially redundant with the original 'Class' column, giving little new analytical value. Groundedness is acceptable if derived from that column (economy inference for the emergency-exit sample is sound), though the business_class label on a silent ~1h45 short-haul review is not corroborated by its text."
+      },
+      {
+        "name": "route_complexity_and_transfer_risk",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Transfer/connection risk is a relevant lens for missed-connection dissatisfaction, but it is partly redundant with 'Route'. Groundedness is weak: the dominant 'single_connection' label (4364) is inferred where the Route field only gives direct city pairs, and the presence of 'hub_transfer_istanbul_risk' is a template artifact from another carrier (SIA's hub is Singapore), signalling an imported, not data-derived, taxonomy."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.57,
+    "rationale": "Collectively the columns supply a rich set of driver axes (seat comfort, crew, catering, operational reliability, ground service, product quality) that are genuinely useful for diagnosing why passengers rate low or do not recommend, which is exactly what the query needs. Usefulness is dragged down by redundancy (service_class duplicates 'Class', passenger_segment duplicates 'Type of Traveller') and by several overlapping service dimensions (customer_service_responsiveness, communication_failure, service_recovery_adequacy). Groundedness is the bigger concern: several columns are forced onto essentially every row with almost no 'unknown' values, producing over-assertions on silent text (e.g., 'cold_robotic' crew and default 'on_time_reliable' where the review is silent, and 'service_recovery=True' on flights with no failure). The 'hub_transfer_istanbul_risk' category further reveals a taxonomy borrowed from a different airline. Where the source text is explicit, most labels are read correctly, so grounding is moderate rather than poor."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 12
+}

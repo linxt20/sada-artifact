@@ -1,0 +1,116 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can educators improve learning satisfaction?",
+  "focus_variable": "learning_satisfaction",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "instruction_delivery_quality",
+    "subject_format_fit",
+    "hands_on_criticality",
+    "peer_community_presence",
+    "learner_control_over_pace",
+    "pedagogical_innovation_level",
+    "resource_equity_gap"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "learning_satisfaction",
+    "per_column": [
+      {
+        "name": "instruction_delivery_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Educators can set/change how instruction is delivered (responsive/personalized vs minimal/passive); a settable pedagogical lever."
+      },
+      {
+        "name": "subject_format_fit",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How well the subject fits the format is largely a property of the subject; it influences both the delivery approach available and satisfaction. Acts as a common cause rather than an educator-set lever."
+      },
+      {
+        "name": "hands_on_criticality",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether hands-on work is essential is an intrinsic property of the subject/course, not something the educator sets. It affects both delivery choices and satisfaction."
+      },
+      {
+        "name": "peer_community_presence",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Educators can design for peer interaction/community; an intervenable lever affecting satisfaction."
+      },
+      {
+        "name": "learner_control_over_pace",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the course is self-paced vs rigidly synchronous is a configurable design decision the educator can set."
+      },
+      {
+        "name": "pedagogical_innovation_level",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The degree of pedagogical innovation is an educator action/choice; intervenable lever."
+      },
+      {
+        "name": "resource_equity_gap",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Disparity in resource access reflects the learner population/context, a common cause influencing both feasible educator interventions and satisfaction, not directly set by the educator."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "instruction_delivery_quality",
+      "peer_community_presence",
+      "learner_control_over_pace",
+      "pedagogical_innovation_level"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "subject_format_fit",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "hands_on_criticality",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "resource_equity_gap",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The query ('How can educators improve learning satisfaction?') is a genuine what-if/intervention intent, and the augmentation supplies multiple intervenable treatments that an educator can actually set: instruction delivery quality, peer/community presence, learner control over pace, and pedagogical innovation level. These pass the intervenability test (a). For (b), several columns capture common causes not named in the query -- subject_format_fit and hands_on_criticality are intrinsic subject properties that shape both the feasible interventions and satisfaction, and resource_equity_gap captures population/context disparities that confound the treatment-outcome relation. None of these confounders were named in the query (which only mentions educators and satisfaction), so they demonstrate the capability under test. The confounders are plausible but somewhat coarse and could arguably be treated as effect modifiers; hence moderate confounder quality rather than high."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "focus_variable": "praise_and_complaint_drivers",
+  "concept": "praise_and_complaint_drivers",
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_domain",
+    "quality_or_durability_issue",
+    "works_as_intended",
+    "value_for_money",
+    "expectation_alignment",
+    "recommendation_stance"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.383,
+    "facet_fraction": 0.6667,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "praise_and_complaint_drivers",
+    "per_column": [
+      {
+        "name": "primary_domain",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "Product category is context/segmentation, not a driver aspect of praise or complaint. It classifies WHAT is reviewed, not WHY it is praised or criticized."
+      },
+      {
+        "name": "quality_or_durability_issue",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Product quality/durability is a genuine constitutive aspect of what drives complaints (and its absence, praise)."
+      },
+      {
+        "name": "works_as_intended",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Functional performance / whether the product works is a core aspect of praise/complaint drivers, distinct from build quality."
+      },
+      {
+        "name": "value_for_money",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Price/value is a legitimate constitutive dimension driving satisfaction and dissatisfaction."
+      },
+      {
+        "name": "expectation_alignment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether the product met/exceeded/fell short of expectations is a facet of drivers, though it partly overlaps with performance and value as a summary judgment."
+      },
+      {
+        "name": "recommendation_stance",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Recommend vs discourage is an OUTCOME/summary of overall sentiment, essentially restating the praise/complaint valence rather than a constitutive driver of it."
+      }
+    ],
+    "facet_columns": [
+      "quality_or_durability_issue",
+      "works_as_intended",
+      "value_for_money",
+      "expectation_alignment"
+    ],
+    "non_facet_columns": [
+      "primary_domain",
+      "recommendation_stance"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "rationale": "Four of six columns are true facets of the drivers concept: quality/durability, functional performance, value, and expectation alignment. However mutual exclusivity is imperfect because expectation_alignment is a composite summary that overlaps with performance and value, and works_as_intended vs quality_or_durability_issue partly co-vary. primary_domain is segmentation (irrelevant to drivers) and recommendation_stance restates the overall praise/complaint outcome rather than decomposing its drivers. Exhaustiveness is moderate: important driver facets like customer service/shipping/seller experience, usability/ease of use, aesthetics, and content/subjective enjoyment (highly relevant given book/music/movie dominance) are absent, so the set does not fully cover the concept's constitutive aspects."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

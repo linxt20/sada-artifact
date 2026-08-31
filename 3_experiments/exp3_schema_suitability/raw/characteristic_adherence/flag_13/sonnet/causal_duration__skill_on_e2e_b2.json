@@ -1,0 +1,121 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do resolution duration values vary across tickets?",
+  "focus_variable": "resolution_duration_variation",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "affected_system_scope",
+    "assigned_resolver",
+    "resolver_match",
+    "ticket_open_hour_band",
+    "caller_id_group"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_duration_variation",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category of the incident plausibly influences which resolver/team handles it (treatment-adjacent assignment) and the difficulty/duration of resolution, making it a common cause of both assignment and duration."
+      },
+      {
+        "name": "failure_mode",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of failure affects both who is assigned and how long resolution takes; a plausible common cause not named in the query."
+      },
+      {
+        "name": "affected_system_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Server vs client vs network scope drives resolver assignment and inherently affects duration; plausible common cause, surfaced from data."
+      },
+      {
+        "name": "assigned_resolver",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The candidate cause whose effect on resolution duration is being attributed -- differences in who resolves the ticket."
+      },
+      {
+        "name": "resolver_match",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the resolver matches (e.g., specialization fit) lies on the causal path between assignment and duration rather than being a prior common cause; adjusting for it would be a mistake."
+      },
+      {
+        "name": "ticket_open_hour_band",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Time of day influences resolver availability/assignment and expected duration (off-hours delays), a plausible common cause not named in the query."
+      },
+      {
+        "name": "caller_id_group",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The caller/requester may influence routing/assignment and expected duration (e.g., priority handling), a plausible common cause; moderate plausibility."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "assigned_resolver"
+    ],
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "failure_mode",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "affected_system_scope",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "ticket_open_hour_band",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "caller_id_group",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The added columns realise a causal attribution setup: 'assigned_resolver' is a clear treatment whose effect on resolution duration is being attributed. Several genuine confounders (incident_category, failure_mode, affected_system_scope) are common causes of both resolver assignment and duration, and were surfaced from the data rather than named in the generic query. 'resolver_match' is a mediator, not a confounder, so it should not be adjusted. Overall the set demonstrates real causal reasoning with treatment plus multiple non-query-copied confounders."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "causal_duration",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce declined travel expenses?",
+  "focus_variable": "travel_expense_declined_status",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "travel_decline_risk_flag",
+    "missing_source_id_indicator",
+    "unprocessed_duration_days",
+    "amount_quartile"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "travel_expense_declined_status",
+    "per_column": [
+      {
+        "name": "travel_decline_risk_flag",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A risk flag for decline is essentially a restatement/proxy of the outcome itself, not an intervenable treatment. Its single observed value (0) offers no variation and no lever to set."
+      },
+      {
+        "name": "missing_source_id_indicator",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether a source_id is present is a data-completeness property that submitters/systems could plausibly change (ensure source is attached), making it a candidate intervenable lever affecting decline. Not named in the query."
+      },
+      {
+        "name": "unprocessed_duration_days",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Processing duration sits on the pathway between submission and final decline; it is a downstream consequence of handling rather than an adjustable common cause. Degenerate (-1 constant), so uninformative."
+      },
+      {
+        "name": "amount_quartile",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Claim amount can influence both the likelihood of missing/incorrect supporting info and the decline decision, so it is a plausible common cause to adjust for. Not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "missing_source_id_indicator"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "amount_quartile",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The query asks a genuine what-if ('how can we reduce' declines). Only missing_source_id_indicator resembles an intervenable lever, and it is weak. The named risk flag merely restates the outcome, unprocessed_duration is a mediator (and degenerate), and only amount_quartile serves as a plausible unnamed confounder. There is no explicit adjustment for stronger common causes (department, category, user, expense type) that drive both data completeness and decline. The set only marginally realises the interventional claim, with thin and partly degenerate confounding control."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

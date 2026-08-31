@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "Sentiment",
+    "Issues_Flagged",
+    "Key_Focus_Point",
+    "Needs_Attention",
+    "Review_Length"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.59,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.67,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Sentiment",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A bare positive/negative/neutral sentiment flag is fairly generic and partly redundant with the existing Recommended/Overall Rating columns, but it still offers a usable grouping axis. All five sampled values are sound readings of the source text."
+      },
+      {
+        "name": "Issues_Flagged",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A multi-label issue taxonomy (seat/food/delay/staff/entertainment) is a genuinely useful new axis for grouping complaints. However groundedness is shaky: sample 1 is wholly positive ('can't fault a single aspect') yet was tagged 'seat'; the reservation-system review had a payment/booking issue tagged 'none'. Some invented/contradicted values are present."
+      },
+      {
+        "name": "Key_Focus_Point",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Identifying the dominant service dimension per review gives useful analytical leverage. But several samples are questionable: the itinerary-swap review (no food content) mapped to 'Food & Beverages', and the entertainment-praising review mapped to 'Inflight Entertainment' is fine, but the seat-uncomfortable review mapped to 'Staff Service' is a stretch. Warranted in some rows, unsupported in others."
+      },
+      {
+        "name": "Needs_Attention",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binary yes/no flag is largely a restatement of Sentiment/Recommended and adds limited independent leverage, but it does offer a simple triage axis. Sampled values align reasonably with the tone of the source text."
+      },
+      {
+        "name": "Review_Length",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A short/medium/long bucketing of raw review length is exactly the kind of generic surface feature that adds little analytical leverage for 'what should I concentrate on'. Values are trivially derivable and correct."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.72,
+    "rationale": "The set includes genuinely useful analytical axes (Issues_Flagged, Key_Focus_Point) that help surface what to concentrate on, alongside weaker/generic or redundant columns (Review_Length, Needs_Attention). Groundedness is mixed: sentiment and length are solidly derivable, but the issue and focus classifications show clear errors in the samples — a fully positive review tagged with 'seat', a booking-system complaint tagged 'none', and a focus point ('Food & Beverages') with no textual support — indicating some hallucination in the extraction/categorisation logic."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

@@ -1,0 +1,106 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "industry_sector",
+    "is_venture_capital",
+    "is_life_science",
+    "talent_density_proxy",
+    "founding_stage_focus",
+    "proximity_cluster"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Industry sector plausibly causes both where a company locates (sector-specific clusters, e.g. semiconductors vs SaaS) and can be seen as a candidate driver of regional choice. As a common cause of location it functions as a confounder/treatment-like driver surfaced from the description text, not named in the query."
+      },
+      {
+        "name": "is_venture_capital",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of location: being a VC firm drives clustering in specific financial districts. It is a plausible treatment/attribution variable derived from the data rather than the query."
+      },
+      {
+        "name": "is_life_science",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Being a life-science firm is a candidate cause pushing location toward biotech corridors; a plausible treatment surfaced from the text."
+      },
+      {
+        "name": "talent_density_proxy",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Local talent availability plausibly causes both firm characteristics/sector and the chosen region, making it a genuine common cause not named in the query."
+      },
+      {
+        "name": "founding_stage_focus",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Stage focus (startup vs enterprise) can drive both firm type and where it locates (startup hubs vs enterprise corridors); a plausibly common cause surfaced from data."
+      },
+      {
+        "name": "proximity_cluster",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "This is essentially a finer-grained restatement of the outcome (sub-region of the same regional_cluster). It lies on/at the outcome itself rather than being a common cause; adjusting for it would be a mistake."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "is_venture_capital",
+      "is_life_science",
+      "industry_sector"
+    ],
+    "confounders": [
+      {
+        "name": "talent_density_proxy",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "founding_stage_focus",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "industry_sector",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The set does supply candidate causes/treatments (VC, life-science, industry sector) whose effect on regional location can be attributed, and these were surfaced from the company descriptions rather than copied from the query, which is positive. However, the causal design is weak: several columns (sector, VC, life-science) blur treatment and confounder roles, and the strongest 'confounders' (talent density, stage focus) are only loosely genuine common causes of BOTH a specific treatment and the outcome. proximity_cluster is effectively a restatement of the outcome (a near-collider/mediator on location) and should not be adjusted for. No clearly external common cause (e.g., real-estate cost, founder origin, incentives) was surfaced, so the confounder quality is modest."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

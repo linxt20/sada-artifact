@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit reasons point to different departments?",
+  "focus_variable": "department",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "visit_type",
+    "primary_body_system",
+    "chief_complaint_category",
+    "symptom_onset_pattern",
+    "clinical_severity",
+    "imaging_or_lab_ordered",
+    "medication_class_initiated"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4286,
+    "predictor_fraction": 0.7143,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.2857
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "department",
+    "per_column": [
+      {
+        "name": "visit_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorization of the visit (chronic mgmt, acute injury, screening) is derivable from the reason text and lies outside department; carries signal since injury vs chronic disease routes to different departments. Not a deterministic function of the focus."
+      },
+      {
+        "name": "primary_body_system",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Body system (cardiovascular, dermatologic, neurologic) is a strong, legitimate predictor of department without being a restatement of it. Extracted from the visit reason, it lies outside the label and plausibly correlates with routing (e.g., cardiovascular -> cardiology)."
+      },
+      {
+        "name": "chief_complaint_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Complaint category (skin lesion, pain, injury, cardiorespiratory) is an outside variable inferred from the reason text that plausibly predicts department. Not deterministic and known at intake, so no leakage."
+      },
+      {
+        "name": "symptom_onset_pattern",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Onset pattern (chronic vs acute-sudden vs episodic) is a legitimate intake-time feature that carries weaker but non-trivial signal about which department (e.g., acute -> ER/urgent care). Outside the focus, no leakage."
+      },
+      {
+        "name": "clinical_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "An ordinal severity assessable at presentation; plausibly correlates with department (high severity -> emergency/ICU). It is an outside variable, not a restatement of department, though its signal partly overlaps urgency already present."
+      },
+      {
+        "name": "imaging_or_lab_ordered",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Orders placed during/after the visit are decided by the department the patient reaches (e.g., cardiac echo in cardiology). This is downstream of the routing outcome and only knowable after the encounter begins, so it leaks the focus rather than predicting it at intake."
+      },
+      {
+        "name": "medication_class_initiated",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Medication initiated is an outcome of the clinical encounter within a department; it is determined after routing and strongly co-determined with the department (cardiovascular agent -> cardiology). This is post-outcome information and constitutes leakage."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.6,
+    "rationale": "Five columns (visit_type, primary_body_system, chief_complaint_category, symptom_onset_pattern, clinical_severity) are legitimate intake-time predictors inferred from the reason-for-visit text and give real leverage for predicting department beyond the original columns, with body_system and complaint_category being especially strong. Two columns (imaging_or_lab_ordered, medication_class_initiated) are post-encounter decisions co-determined with the department and constitute leakage. As a set the predictors carry substantial genuine signal, but several overlap with each other and with existing urgency/reason fields, so net incremental leverage is moderate."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

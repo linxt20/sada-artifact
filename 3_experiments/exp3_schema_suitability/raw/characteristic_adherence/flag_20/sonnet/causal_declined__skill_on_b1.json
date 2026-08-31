@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some travel expenses get declined, and which factors contribute the most?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "is_travel_related",
+    "expense_category_type",
+    "asset_class",
+    "entry_method",
+    "has_source_id",
+    "ci_specificity",
+    "processing_lag_band",
+    "department_confounder"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.5938,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.8375,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7157,
+    "hallucination_rate": 0.125
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_travel_related",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to the query, which is specifically about travel expenses; lets the analyst isolate the travel subset. Values are soundly derived from short_description/ci text."
+      },
+      {
+        "name": "expense_category_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Gives a genuine categorical axis to compare decline rates across expense types; partly overlaps with is_travel_related but adds finer granularity. Categorisations match source text well."
+      },
+      {
+        "name": "asset_class",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Grounded in ci model strings and reasonable. Somewhat redundant with expense_category_type and mostly relevant to non-travel rows, so weaker leverage for the travel-decline query."
+      },
+      {
+        "name": "entry_method",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Manual vs automated entry is a plausible confounder for declines and derivable from short_description phrasing ('automated', 'procurement'). Useful new axis."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Trivially derived from presence of the existing source_id column, so largely redundant with an original column, though presence/absence could weakly correlate with declines."
+      },
+      {
+        "name": "ci_specificity",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Whether ci is a specific model vs a bare travel label is a reasonable reading of the ci text and could plausibly relate to declines (vague entries more likely rejected)."
+      },
+      {
+        "name": "processing_lag_band",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Binned lag between opened_at/processed_date is a legitimate new modeling axis; 'not_processed' for nan dates is sound. Bands are derivable, though exact banding depends on opened_at not shown in samples."
+      },
+      {
+        "name": "department_confounder",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "This merely restates the existing department column, so it is redundant. Sample values ('Customer Support', 'Sales') attached to hardware-procurement rows appear invented/mismatched rather than read from source, suggesting fabricated assignment."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.82,
+    "rationale": "Most added columns provide genuine new categorical or temporal axes (travel flag, expense type, entry method, processing lag) that directly support analysing why travel expenses are declined, and their values are soundly derived from short_description, ci, and date fields. has_source_id and department_confounder are weak: the former duplicates an original column and the latter restates department while showing signs of arbitrary/fabricated values in the samples. Overall the set is useful and mostly grounded, with one column exhibiting likely hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

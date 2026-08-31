@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_service_quality",
+    "service_responsiveness",
+    "food_quality",
+    "ground_service_quality",
+    "disruption_handling_quality",
+    "customer_service_resolution",
+    "class_value_gap"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A review theme extracted from free text with clearly labelled, well-separated categories (warm_proactive, rude_inattentive, competent_neutral, robotic_rushed) that carry an intuitive valence ordering. Roughly balanced across levels, so subgroups can be segmented and their Overall Rating compared across Type of Traveller and Class. This is exactly the kind of external, interpretable associational variable the query calls for."
+      },
+      {
+        "name": "service_responsiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Captures a distinct service dimension (responsive / absent / inconsistent / slow) with human-readable, ordered categories and a healthy spread across levels. Segments cleanly and supports direct comparison against Overall Rating. Some conceptual overlap with crew_service_quality, but it isolates a separable responsiveness aspect rather than restating it."
+      },
+      {
+        "name": "food_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable graded theme (excellent / adequate / poor / wrong_or_missing_meal) that maps onto a satisfaction scale and can be grouped for comparison. High NULL rate (~44%) shrinks the comparable population and mildly weakens power, but among non-null rows the categories are well separated and meaningfully contrasted against the focus."
+      },
+      {
+        "name": "ground_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct touchpoint theme (poor_unhelpful / positive / rude_aggressive / adequate) with clear valence and a usable distribution among non-null rows. Adds a new relationship axis not covered by the original numeric sub-ratings, and segments cleanly for comparison against Overall Rating."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categories are interpretable and valenced (proactive_helpful / passive_unhelpful / actively_obstructive / reactive_adequate), and 'not_applicable' is itself a meaningful segment (no disruption occurred). Dominated by not_applicable (~60%), which concentrates the informative comparison in a minority of rows, but a meaningful conditional comparison against the focus is still possible."
+      },
+      {
+        "name": "customer_service_resolution",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordered, interpretable outcome theme (resolved_satisfactorily / partially_resolved / unresolved_ignored / not_contacted). Heavily skewed toward 'not_contacted' (~76%), leaving small resolved/unresolved cells that limit segmentation power, but the levels are meaningful and can still be contrasted against Overall Rating. Weakest of the set due to imbalance."
+      },
+      {
+        "name": "class_value_gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A binary flag (true/false) indicating whether the cabin Class failed to deliver expected value. Roughly balanced, trivially interpretable, and directly ties Class expectations to experience, making it a clean segmentation variable to compare against Overall Rating. It relates to but does not restate the focus."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.85,
+    "rationale": "The added columns are review-theme extractions from the free-text reviews, which is precisely what the query targets: interpretable, valenced categorical variables that can be grouped/segmented and compared against Overall Rating across Type of Traveller and Class. None are opaque scores and none merely restate the focus; the categories are human-readable and mostly well separated. The set spans several distinct service touchpoints (crew, responsiveness, food, ground, disruption handling, resolution, class-value fit), opening multiple informative relationship axes. Deductions: some conceptual overlap between crew_service_quality and service_responsiveness; food_quality has a high NULL share; and disruption_handling_quality and especially customer_service_resolution are dominated by not_applicable/not_contacted, concentrating the informative comparison in minority subgroups. These reduce but do not negate segmentation value, yielding a strong overall realization of the exploratory intent."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

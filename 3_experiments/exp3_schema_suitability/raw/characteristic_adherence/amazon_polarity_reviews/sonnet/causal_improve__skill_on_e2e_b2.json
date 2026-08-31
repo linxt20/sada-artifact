@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "focus_variable": "product_satisfaction",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "content_or_media_quality",
+    "product_category"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "product_satisfaction",
+    "per_column": [
+      {
+        "name": "content_or_media_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Content/media quality is a configurable property of the product that a seller could plausibly set or improve (better editing, less shallow content, accuracy). It is an intervenable lever the actor (seller) can decide, and it aligns with the query's 'How can sellers improve' framing."
+      },
+      {
+        "name": "product_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Product category is a common cause of both what quality levers are available/typical (treatment) and baseline satisfaction (outcome): books vs CDs vs physical goods differ in both. It is not itself something the seller can freely reset to change satisfaction of a given product, so it functions as a confounder to adjust for rather than a treatment. Not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "content_or_media_quality"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "product_category",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The added columns partially realise the what-if claim. content_or_media_quality is a genuinely intervenable treatment: a seller can change content/media quality, so requirement (a) is met. product_category serves as a plausible confounder that is a common cause of both the available quality of an offering and its baseline satisfaction, and it was not named in the query, which is the capability under test. However, only a single confounder is provided; other obvious common causes (e.g., price, brand reputation, product complexity/expectations) are absent, so adjustment is incomplete. The set is coherent and not merely mechanical, but confounder coverage is thin, yielding a moderate quality score."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 2
+}

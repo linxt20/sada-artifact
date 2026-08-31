@@ -1,0 +1,100 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we improve incident resolution efficiency?",
+  "focus_variable": "incident_resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "problem_severity_class",
+    "resolution_mechanism",
+    "assigned_technician",
+    "repeat_incident_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.75,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.75,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "incident_resolution_efficiency",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident (printer, hardware, software) is a common cause: it influences which resolution mechanism/technician is chosen and also directly affects resolution difficulty/time. It is not settable by an actor (given an incident, its category is fixed), so it is a confounder, not a treatment. Not named in the query."
+      },
+      {
+        "name": "problem_severity_class",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Severity (functional_failure, performance_degradation) is an intrinsic property of the incident that drives both the resolution approach chosen and the outcome efficiency. Not an intervenable lever; a classic confounder. Not named in query."
+      },
+      {
+        "name": "resolution_mechanism",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The method used to resolve an incident (hardware_replacement, power_reset, software_reinstall) is a decision/action an actor can set or change. This is an intervenable treatment on which resolution efficiency depends."
+      },
+      {
+        "name": "assigned_technician",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Assignment of a technician is a settable/changeable managerial decision (an assignment lever) that plausibly affects resolution efficiency. Intervenable treatment."
+      },
+      {
+        "name": "repeat_incident_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the incident is a recurring/repeat pattern is a property of the incident that can influence both which resolution mechanism is applied and how efficiently it resolves. It is not directly settable, functioning as a confounder rather than a treatment."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "resolution_mechanism",
+      "assigned_technician"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "problem_severity_class",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "repeat_incident_pattern",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.75,
+    "rationale": "The added columns genuinely set up an interventional what-if: resolution_mechanism and assigned_technician are intervenable levers an actor can set/change, satisfying (a). They are accompanied by plausible confounders (incident_category, problem_severity_class, repeat_incident_pattern) that are common causes of both the chosen treatment and resolution efficiency, and must be adjusted for to read off the counterfactual effect, satisfying (b). None of these confounders were named or implied by the bare query 'How can we improve incident resolution efficiency?', so they demonstrate the capability under test. The set avoids mediators and colliders, so the interventional claim is well realised."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

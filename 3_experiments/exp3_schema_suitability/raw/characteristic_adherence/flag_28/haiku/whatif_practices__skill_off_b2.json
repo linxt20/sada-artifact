@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "focus_variable": "percent_complete",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "performance_category",
+    "achievement_gap",
+    "target_alignment",
+    "improvement_potential"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "percent_complete",
+    "per_column": [
+      {
+        "name": "performance_category",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "A binned recoding of percent_complete/achievement level itself (At Risk, Underperformer, Top Performer). It is a discretization of the outcome, not an intervenable treatment. The query's treatment is 'adopting goal-management practices described by top performers'; this column merely labels who is a top performer rather than encoding the practices as a settable lever."
+      },
+      {
+        "name": "achievement_gap",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "Difference between target and actual completion, a direct transform of the outcome (percent_complete vs target_percentage). Not a common cause of a treatment; it is a restatement of the outcome/gap."
+      },
+      {
+        "name": "target_alignment",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Alignment of achievement to target (Misaligned/Exceeded/Well Aligned) is downstream of both target-setting and actual completion; it is a function of the outcome relative to target_percentage rather than a confounding common cause. It is not an intervenable practice lever."
+      },
+      {
+        "name": "improvement_potential",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "Deterministically keyed to performance_category (each category maps to a single value), so it is a derived estimate attached to the outcome bins, not an intervenable treatment nor a confounder. It presupposes the effect rather than setting up an interventional comparison."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "treatment_intervenable": false,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query poses a genuine what-if: intervening on teams' adoption of specific goal-management practices and measuring the effect on achievement (percent_complete). A valid answer requires (a) a treatment encoding the intervenable practices top performers use (e.g., cadence of check-ins, milestone decomposition, target-setting method) that an actor could set, and (b) confounders that are common causes of both practice adoption and achievement (e.g., department resourcing, team capacity, priority/leadership support) — ideally ones not already in the query. None of the added columns supply an intervenable treatment: they are all recodings or transforms of the outcome and its target gap (performance_category, achievement_gap, target_alignment, improvement_potential). improvement_potential even hard-codes an effect estimate per outcome bin, circularly assuming the answer. No confounders are provided at all. The set fails the interventional test."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

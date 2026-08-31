@@ -1,0 +1,130 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.66,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "depth",
+        "quote": "booking/flight-like rows: 3 declines in 17 rows (17.6%)",
+        "why": "segments travel by item type revealing root cause"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Reroute asset-like travel requests before submission",
+        "why": "specific, dataset-grounded fix"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "amount alone is not a reliable driver",
+        "why": "honest caveats, no contradictions"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "category_label_only 73 36 49.3%",
+        "why": "numeric table tied to specificity dimension"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Development's zero-decline practices",
+        "why": "benchmark comparison"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "has_source_id",
+        "quote": "Every single travel expense record ... has has_source_id = False",
+        "dependent": true
+      },
+      {
+        "column": "ci_specificity",
+        "quote": "The TAPP column ci_specificity",
+        "dependent": true
+      },
+      {
+        "column": "entry_origin",
+        "quote": "The entry_origin TAPP column",
+        "dependent": true
+      },
+      {
+        "column": "expense_category",
+        "quote": "expense_category == travel_expense",
+        "dependent": true
+      },
+      {
+        "column": "submitting_department",
+        "quote": "The submitting_department TAPP column",
+        "dependent": true
+      },
+      {
+        "column": "processing_lag_category",
+        "quote": "processing_lag_category column shows all 60 declined",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B has a coherence flaw (has_source_id=False for all travel yet cited as top lever) while A gives a consistent, root-cause-focused, decision-ready analysis.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

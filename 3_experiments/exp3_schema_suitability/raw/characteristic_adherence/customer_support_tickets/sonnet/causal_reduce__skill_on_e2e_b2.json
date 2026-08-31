@@ -1,0 +1,179 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can support teams reduce ticket resolution time?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 12,
+  "added_columns": [
+    "request_type",
+    "issue_category",
+    "operational_severity",
+    "affected_scope",
+    "technical_complexity",
+    "escalation_signal",
+    "root_cause_domain",
+    "workaround_available",
+    "repro_reliability",
+    "actionability",
+    "requires_external_dependency",
+    "data_or_info_provided"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 9,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 9,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "request_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of request is an intrinsic property of the ticket that affects resolution time and correlates with how it is handled; it is a common cause / covariate but not something a team decides to reduce resolution time. Not intervenable."
+      },
+      {
+        "name": "issue_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category of the issue is an inherent attribute influencing effort and handling. Not settable by the team; acts as a covariate/confounder."
+      },
+      {
+        "name": "operational_severity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Severity is a fixed property of the incident that drives both handling priority and resolution time. Not an intervenable lever."
+      },
+      {
+        "name": "affected_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope of impact is an intrinsic characteristic of the incident affecting effort. Not settable by the actor."
+      },
+      {
+        "name": "technical_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity is an inherent difficulty measure that increases resolution time; not a lever a team can set."
+      },
+      {
+        "name": "escalation_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Presence of external pressure is a property of the ticket influencing prioritization and time. Not an intervenable treatment."
+      },
+      {
+        "name": "root_cause_domain",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The root cause is typically discovered during resolution and lies on the causal path between the issue and time-to-resolve rather than being a pre-treatment confounder."
+      },
+      {
+        "name": "workaround_available",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Availability of a workaround is a property of the situation that affects urgency and effort; treated as a covariate."
+      },
+      {
+        "name": "repro_reliability",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Reproducibility is an intrinsic property affecting diagnosis effort. Not a lever."
+      },
+      {
+        "name": "actionability",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The type of remediation action (config change, hotfix/rollback, process change, documentation, engineering fix) is closest to a decision an actor could make, so it is the only candidate intervenable lever. However it is partly determined by the issue, weakening its interventional status."
+      },
+      {
+        "name": "requires_external_dependency",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether an external dependency is needed is a property of the issue that lengthens resolution; not directly settable."
+      },
+      {
+        "name": "data_or_info_provided",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether repro steps/logs are provided reflects an intake process the team could change (e.g., require info), so it is a plausible intervenable lever, though here it is recorded as a passive attribute."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "actionability",
+      "data_or_info_provided"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "request_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "issue_category",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "operational_severity",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "affected_scope",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "technical_complexity",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "escalation_signal",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "workaround_available",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "repro_reliability",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "requires_external_dependency",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The query is genuinely interventional ('How can support teams reduce...'), demanding a settable lever plus adjustment for confounders. The schema is dominated by intrinsic properties of the ticket/issue (severity, scope, complexity, reproducibility, request type, dependencies). These function as covariates/confounders and none are named in the query, which is good for adjustment coverage. However, most added columns describe the difficulty of the case rather than a decision the team controls, so genuine intervenable treatments are weak: only 'actionability' and 'data_or_info_provided' come close to settable levers, and even these are largely case-determined attributes rather than clearly assignable interventions. There is no clean process/policy lever (e.g., staffing, tooling, SLA routing, agent action). 'root_cause_domain' is a mediator discovered during resolution and should not be adjusted for. Overall the set supports an attributional/predictive read of resolution time well but only marginally satisfies the strict what-if requirement of an intervenable treatment."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 12
+}

@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "sentiment_score",
+    "dominant_complaint",
+    "review_length",
+    "rating_sentiment_gap"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.225,
+    "focus_coherence": 0.5,
+    "structure_quality": 0.45,
+    "focus_actionability": 0.6,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Expressed customer dissatisfaction in the review text — i.e., what aspect customers complain about most, how negative the review tone is, and whether that text sentiment aligns with the numeric ratings.",
+    "per_column": [
+      {
+        "name": "sentiment_score",
+        "supports_focus": true,
+        "rationale": "A compound sentiment (~-1..1) of the review text. It relates to the 'how negative is the review' facet, but on its own it is exactly the kind of bare/generic sentiment measure the rubric flags — it points at the focus only weakly."
+      },
+      {
+        "name": "dominant_complaint",
+        "supports_focus": true,
+        "rationale": "Core column: extracts the primary complaint theme (staff, delay, seat, food, value, entertainment). This is the substantive, data-inferable anchor of the focus and directly answers 'which aspect is worth analyzing.'"
+      },
+      {
+        "name": "review_length",
+        "supports_focus": false,
+        "rationale": "A purely mechanical token/word-count metric. It does not center on any substantive dissatisfaction concept and reads as grab-bag filler rather than a facet of the focus."
+      },
+      {
+        "name": "rating_sentiment_gap",
+        "supports_focus": true,
+        "rationale": "Compares text sentiment to the numeric rating, a genuinely analytical relational facet — surfaces where written tone diverges from scores, tying text signal back to the structured ratings and reinforcing the dissatisfaction focus."
+      }
+    ],
+    "focus_coherence": 0.5,
+    "structure_quality": 0.45,
+    "focus_actionability": 0.6,
+    "rationale": "Three of the four columns (dominant_complaint, sentiment_score, rating_sentiment_gap) loosely orbit a single coherent concept — dissatisfaction/complaint content expressed in the review text and its alignment with ratings — so the set is not wholly scattered. However, coherence is diluted: sentiment_score is bare sentiment and review_length is a mechanical text-length metric, precisely the generic signals that do not realise a focus. As a structure, there is a promising nucleus (a complaint theme + an intensity measure + a text-vs-rating gap) but it is half-filled with undifferentiated filler rather than a clean, differentiated facet/predictor set, so structure quality is only moderate. The strongest inferable focus — complaint-driver themes — is genuinely actionable (an analyst can prioritise staff/delay/seat issues and probe text-rating divergence), but because the column set as a whole leans partly on vacuous sentiment/length framing, actionability is only moderately supported rather than strong."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

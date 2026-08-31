@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "crew_service_warmth",
+    "seat_comfort_design",
+    "food_beverage_quality",
+    "aircraft_condition_age",
+    "customer_service_responsiveness",
+    "value_perception_premium",
+    "service_consistency_across_class",
+    "special_requests_accommodation"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.87,
+    "predictor_fraction": 1.0,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.87,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "crew_service_warmth",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Extracts a qualitative crew-warmth theme with three clean, well-separated levels (warm_attentive / professional_neutral / inattentive_rushed) plus a small NULL. This is an external associational dimension one can segment on and cross-tabulate against Overall Rating within Traveller/Class groups. It decomposes the free-text review into a theme rather than restating the numeric focus."
+      },
+      {
+        "name": "seat_comfort_design",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable ordered categories (spacious_comfortable / adequate / cramped_uncomfortable) that can be grouped and compared to Overall Rating. High NULL share (~40%, reviews not mentioning seats) modestly weakens coverage, but the non-null categories are clear and well-separated, so meaningful comparison is possible."
+      },
+      {
+        "name": "food_beverage_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Three legible quality tiers (excellent_tasty / adequate_acceptable / poor_bland) usable for segmentation against the focus. Like seat comfort it carries a large NULL block (~47%), but the coded values remain interpretable and support theme-vs-rating exploration."
+      },
+      {
+        "name": "aircraft_condition_age",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Adds a genuinely new dimension absent from the original schema (aircraft modernity/condition) with clean levels (modern_well_maintained / adequate_acceptable / old_dated). Well-separated, interpretable, and directly groupable against Overall Rating — a strong EDA variable."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct service-responsiveness theme with four interpretable, well-separated categories. Some conceptual overlap with crew warmth, but it captures a separate responsiveness axis and is a valid, human-readable segmentation to compare against ratings."
+      },
+      {
+        "name": "value_perception_premium",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Value-perception theme with meaningful, well-separated levels (excellent_value / fair_price_justified / overpriced_for_experience / premium_not_delivered). It is highly correlated with overall satisfaction and partially echoes the existing Value For Money field, so it edges toward near-restatement, but as a coded theme it still supports interpretable segmentation and is retained as a predictor."
+      },
+      {
+        "name": "service_consistency_across_class",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly targets the query's Class dimension: legible categories (consistent_high / class_appropriate / two_tier_disparity / degraded_economy) let an explorer relate cross-class service consistency to Overall Rating. Well-separated and highly relevant to the stated intent."
+      },
+      {
+        "name": "special_requests_accommodation",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "New accommodation theme with clear, well-separated categories (personalized_attentive / standard_adequate / inflexible_no_accommodation / refused_discriminatory) and negligible NULLs. Fully groupable and interpretable for comparison against the focus."
+      }
+    ],
+    "n_predictors": 8,
+    "relationship_informativeness": 0.87,
+    "rationale": "As a set, the columns realise the EDA claim well: they decompose free-text reviews into eight interpretable, well-separated thematic dimensions, each of which can be grouped/segmented and cross-tabulated against Overall Rating within Type of Traveller and Class strata — exactly matching 'which review themes are associated with higher vs. lower Overall Rating.' None are opaque scores; all use human-readable, mutually distinct category labels rather than fine-grained or near-constant values, and none merely restate the numeric focus. Minor deductions: several themes (seat, food, value, crew) partly overlap with existing numeric rating fields, value_perception_premium borders on near-restatement of overall satisfaction, and three columns carry ~35–47% NULLs that reduce comparison coverage. Overall this is a coherent, informative set for relationship discovery."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "eda_rating_drivers",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

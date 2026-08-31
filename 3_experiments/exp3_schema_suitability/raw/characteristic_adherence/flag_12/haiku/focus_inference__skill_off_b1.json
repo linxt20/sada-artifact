@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 3,
+  "added_columns": [
+    "Is_Critical",
+    "Resolution_Speed",
+    "Is_Printer_Related"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.6833,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.4833,
+    "source_groundedness__table_level": 0.42,
+    "b1_overall": 0.5833,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Is_Critical",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "A criticality flag is a reasonable axis for triage analysis, and the table has a 'priority' column that could ground it. However, the distribution is heavily skewed (424 of 500 = 1), making it near-constant and low-leverage. The evidence samples reveal groundedness problems: 'Printer not working properly' and routine printer issues are labeled Is_Critical=1, which is not warranted by the source text and appears to contradict any sensible criticality reading. All five samples are '1', consistent with an over-asserting, poorly grounded flag."
+      },
+      {
+        "name": "Resolution_Speed",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "Bucketing resolution time is genuinely useful for analyzing incident handling and gives a real axis to compare on. But the source evidence undermines the values badly: in every sample, sys_updated_on equals closed_at to the same timestamp, implying a resolution duration of effectively zero, yet rows are labeled 'Medium (4-10 days)', 'Slow (>10 days)', and 'Fast (≤3 days)'. The bucket assignments are not derivable from (and contradict) the timestamps shown, indicating fabricated durations."
+      },
+      {
+        "name": "Is_Printer_Related",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A printer-related flag is a plausible, well-balanced (298/202) categorical axis for grouping incidents by theme, useful for this exploratory query. Values are soundly derived from short_description: printer descriptions map to 1, connectivity/database map to 0. Well grounded across all samples."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.42,
+    "rationale": "The added columns propose reasonable analytical axes (criticality, resolution speed, printer theme) that would help exploratory triage of incident tickets, so usefulness is moderate-to-good, though Is_Critical is weakened by a near-constant skew. Groundedness is the main failure: Resolution_Speed contradicts the source timestamps (updated=closed implies ~0 duration yet varied speed buckets are assigned), and Is_Critical over-asserts criticality on routine printer tickets without textual support. Only Is_Printer_Related is reliably grounded."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

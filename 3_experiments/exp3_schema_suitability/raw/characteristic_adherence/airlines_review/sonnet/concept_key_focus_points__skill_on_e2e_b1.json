@@ -1,0 +1,95 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "complaint_category",
+    "staff_attitude_judgment",
+    "food_quality_judgment",
+    "disruption_handling_quality",
+    "compensation_resolution_outcome",
+    "value_for_money_perception",
+    "service_consistency_concern",
+    "repeat_or_loyalty_signal",
+    "special_needs_handling"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.6833,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.8111,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7472,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "complaint_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Categorising the primary complaint gives a strong axis to group and prioritise pain points, directly serving 'what to concentrate on'. Samples map well: seat discomfort→seat_product_failure, reservation payment→billing_refund_dispute, flight swap→flight_delay_cancellation, seat reallocation→overbooking_seat_change. The positive review correctly yields Unknown/NULL. Well grounded."
+      },
+      {
+        "name": "staff_attitude_judgment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Partly overlaps with the original Staff Service rating, but the three-way positive/negative/mixed judgment derived from free text adds nuance beyond the numeric score. Samples are sound (pleasant crew→positive, friendly-but-limited employees→mixed). Grounded, though the Kuala Lumpur row labelled 'negative' is a stretch since staff aren't discussed."
+      },
+      {
+        "name": "food_quality_judgment",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Somewhat redundant with the Food & Beverages column, but the text-derived sentiment adds interpretive value and NULLs are correctly assigned when food is unmentioned. Sample readings are reasonable (syrupy juice but fine meal→mixed). Grounded."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Captures how well operational disruptions were managed — a distinct, actionable axis not in the original columns. Samples align (smooth flight→no_disruption, seat reallocation/rescheduling→poorly_handled). Well grounded."
+      },
+      {
+        "name": "compensation_resolution_outcome",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Resolution outcome is a valuable analytical lever for identifying unresolved grievances. Not_applicable dominates but is correct for non-complaint rows. Samples are consistent (seat dispute→unresolved_or_refused). Grounded."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.8,
+        "rationale": "Largely a restatement of the existing 'Value For Money' rating column, offering little new analytical leverage. Sample values are reasonable readings, so groundedness holds, but usefulness is limited by redundancy."
+      },
+      {
+        "name": "service_consistency_concern",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "rationale": "A bare boolean flag that is somewhat generic and skewed (597 true). The concept is defensible, but the true/false assignment appears loosely warranted — e.g. the Kuala Lumpur schedule-change row marked True for consistency concern is thinly supported. Moderate on both dimensions."
+      },
+      {
+        "name": "repeat_or_loyalty_signal",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.8,
+        "rationale": "Loyalty/repeat-customer signal is a genuinely useful new axis for retention analysis. Samples correctly default to False when no loyalty language appears. Grounded."
+      },
+      {
+        "name": "special_needs_handling",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "rationale": "Very sparse (34 true) and near-constant, limiting analytical leverage, but it isolates a specific accessibility concern not otherwise captured. False defaults for silent rows are correct. Grounded."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns provide multiple genuinely useful axes (complaint category, disruption handling, resolution outcome, loyalty signal) that directly help an analyst decide what to concentrate on. A couple are weaker: value_for_money_perception largely restates an existing rating, and service_consistency_concern is a somewhat generic, loosely-warranted boolean. Groundedness is generally strong across samples, with correct NULL/false defaults for silent rows and sound categorisations; only minor over-confident labels (e.g. inferring negative staff attitude where staff are unmentioned) slightly reduce the score. No systematic hallucination observed."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 9
+}

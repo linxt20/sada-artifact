@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict low Yelp user satisfaction?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "negative_word_count",
+    "complaint_phrase_count",
+    "exclamation_mark_count",
+    "excessive_caps_flag",
+    "review_word_length",
+    "comparison_mentioned_flag",
+    "refund_or_pricing_complaint_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.7357,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.6928,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "negative_word_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Counting negative words is a genuinely useful signal for predicting dissatisfaction. However groundedness is weak: the highly negative YLP-0005 ('sucked', 'none', 'Would not recommend') scores 0, and the scathing YLP-0002 scores only 1, while the positive YLP-0003 scores 2. The counts poorly track the actual negative lexical content of the source text."
+      },
+      {
+        "name": "complaint_phrase_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Complaint density is directly on-target for the query. Grounding is inconsistent: YLP-0005 with explicit 'Cons' list and 'Would not recommend' scores 0, and YLP-0003 which literally says 'My only complaint' scores 0, while YLP-0002 gets a defensible 2. The extractor misses clear complaints, undermining reliability."
+      },
+      {
+        "name": "exclamation_mark_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A mechanical punctuation count that is accurately computed (samples match the visible '!' marks). Only weakly predictive since exclamations appear in both positive and negative reviews, so analytical leverage for satisfaction is modest."
+      },
+      {
+        "name": "excessive_caps_flag",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Near-constant (238/12) and only loosely tied to dissatisfaction, but a plausible intensity/emotion signal. Values appear soundly derived from surface text; the sampled rows lacking sustained caps correctly read 0."
+      },
+      {
+        "name": "review_word_length",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Raw length is a generic surface feature with limited direct predictive value for satisfaction, and it is nearly redundant with token-count style metrics. Values are accurately measurable from the text and roughly consistent with the samples."
+      },
+      {
+        "name": "comparison_mentioned_flag",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Whether a reviewer compares to alternatives is a reasonable new axis for analysis. Grounding is mixed: YLP-0003 ('better when... heat', size comparisons) plausibly earns 1, but YLP-0002's flag=1 is a stretch given no clear comparison in the visible text."
+      },
+      {
+        "name": "refund_or_pricing_complaint_flag",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Pricing/refund grievances are a specific, actionable dissatisfaction driver. However YLP-0003 discusses price explicitly ('under $20', 'Too much for one') and is flagged 0; arguably a borderline miss, but as a strict pricing-complaint (not mere mention) the 0 is defensible. Values seem cautiously assigned without invention."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.7,
+    "rationale": "The added columns collectively provide relevant axes (negative lexicon, complaint density, pricing/refund grievances, comparison mentions, intensity markers) that are on-topic for predicting low satisfaction, though a couple (review_word_length, exclamation_mark_count) are generic surface features with weaker leverage. Groundedness is the bigger concern: the two count-based sentiment columns (negative_word_count, complaint_phrase_count) frequently mis-score sampled rows, assigning 0 to overtly negative reviews (YLP-0005) and non-zero to positive ones (YLP-0003), indicating the extraction is not reliably a sound reading of the source text. Punctuation/length/caps columns are mechanically accurate. Overall the set is usable but its core semantic signals show notable grounding weaknesses."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "predictive_low",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

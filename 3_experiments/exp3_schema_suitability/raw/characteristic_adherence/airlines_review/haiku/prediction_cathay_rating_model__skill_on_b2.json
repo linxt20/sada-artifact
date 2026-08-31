@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_service_complaint_category",
+    "customer_service_responsiveness",
+    "ground_service_failure_signal",
+    "service_quality_trend_signal",
+    "cabin_class_expectation_gap",
+    "traveler_type_satisfaction_variance"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.1,
+    "leakage_rate": 0.8333
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "primary_service_complaint_category",
+        "role": "leakage",
+        "rationale": "The presence and category of a complaint is extracted from the same review text that drives the Overall Rating; a NULL (no complaint) versus any complaint category is essentially a restatement of whether the reviewer was satisfied. It is derived post-hoc from the outcome-bearing narrative and largely determines the rating rather than predicting it independently."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "role": "leakage",
+        "rationale": "Values like 'proactive_attentive' vs 'rude_dismissive' are sentiment-laden summaries of the review's evaluation of service, which is a direct component of the Overall Rating (Staff Service already exists). It co-occurs with the outcome and encodes satisfaction, not an external predictor."
+      },
+      {
+        "name": "ground_service_failure_signal",
+        "role": "leakage",
+        "rationale": "A boolean flag of whether the reviewer reported a ground-service failure is mined from the outcome narrative. Reporting a failure is itself an expression of dissatisfaction that maps onto the rating, so it restates/leaks rather than predicts."
+      },
+      {
+        "name": "service_quality_trend_signal",
+        "role": "leakage",
+        "rationale": "Labels such as 'cost_cutting_visible' or 'degradation_post_pandemic' are negative-sentiment complaints extracted from the same review; their presence strongly correlates with a low rating and is knowable only from the outcome text. This is leakage, not an independent predictor."
+      },
+      {
+        "name": "cabin_class_expectation_gap",
+        "role": "leakage",
+        "rationale": "This encodes whether the class experience fell short of expectation (e.g., 'business_class_food_gap'), which is a direct evaluative judgment feeding the Overall Rating. It restates the satisfaction gap rather than supplying an exogenous predictor; the class itself is already a column."
+      },
+      {
+        "name": "traveler_type_satisfaction_variance",
+        "role": "predictor",
+        "rationale": "This maps to traveler segment (solo/leisure/business/family) with an expectation qualifier. The traveler type is a genuine exogenous attribute known before the outcome and plausibly carries predictive signal about rating propensity, largely duplicating the existing 'Type of Traveller' column but framed as a segment feature rather than a sentiment restatement."
+      }
+    ],
+    "n_predictors": 1,
+    "predictive_utility": 0.1,
+    "rationale": "Nearly all added columns are sentiment/complaint labels mined from the same review text that generates the Overall Rating. They restate or leak the outcome: complaint presence, service-responsiveness tone, ground-failure flags, degradation-trend labels, and expectation-gap judgments are all evaluative summaries knowable only from the outcome narrative and are effectively deterministic drivers of the rating. Only 'traveler_type_satisfaction_variance' resembles an exogenous predictor, and even it largely duplicates an existing column. As a set, they offer little genuine out-of-sample predictive leverage and would inflate model performance through leakage."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

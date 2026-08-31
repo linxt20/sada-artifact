@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "ticket_type_primary",
+    "agent_assignment",
+    "ticket_scope_extent",
+    "ticket_complexity_judgment"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7125,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.555,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6338,
+    "hallucination_rate": 0.75
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "ticket_type_primary",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "The query centers on ticket types driving workload; this column is the core grouping axis. Values are sound categorizations of short_description (e.g. 'Unable to access the database' -> database_access). Note it is partly redundant with the original 'category' column, but the finer-grained typing adds leverage. Values well-grounded."
+      },
+      {
+        "name": "agent_assignment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Agent workload is central to the query, so a per-agent axis is genuinely useful for measuring which types load which agents. However, the source table already has 'assigned_to'/'closed_by' columns and the evidence samples do NOT include any agent field in the source text, yet specific named agents are produced. Values may just duplicate an original column or be unsupported by the shown source; groundedness is questionable given the absence of visible source evidence."
+      },
+      {
+        "name": "ticket_scope_extent",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Scope (single_user vs enterprise_wide) is a plausibly useful axis for workload analysis. But the short descriptions shown ('VPN issue', 'Internet connection unstable') give no basis to distinguish single_user from enterprise_wide; the value 'single_user' appears to be a confident default not warranted by the terse source text. The enterprise_wide/department distinctions are likely invented."
+      },
+      {
+        "name": "ticket_complexity_judgment",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "A bare true/false complexity flag is low-leverage and near-binary split, offering limited analytical traction for estimating resolution-time drops. More critically, the short descriptions are too terse to justify a confident complexity label (e.g. 'Software update issue' -> False, 'Unable to access the database' -> True) with no stated criterion; the judgment is largely unsupported by source text."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.55,
+    "rationale": "The added columns provide relevant axes (ticket type, agent, scope, complexity) that align with a workload-vs-resolution-time analysis, so table-level usefulness is fair, led by ticket_type_primary. Groundedness is weaker: ticket_type is well-supported, but scope and complexity assert distinctions the terse short_description cannot support, and agent_assignment introduces named agents with no visible source evidence (and possible redundancy with existing assignment columns). Hallucination is observed in the scope and complexity columns."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

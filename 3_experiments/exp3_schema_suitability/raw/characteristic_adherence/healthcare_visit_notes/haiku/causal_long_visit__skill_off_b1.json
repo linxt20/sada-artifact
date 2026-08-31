@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Which clinical factors best explain longer visit durations?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "clinical_complexity_score",
+    "procedure_needed",
+    "medication_adjustment",
+    "clinical_detail_level"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "clinical_complexity_score",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A graded complexity axis is exactly the kind of variable that could explain longer visit durations, giving a strong modeling/grouping dimension. Values track sensibly with source text: a straightforward URI scores 1.0, an annual physical 2.0, a post-MI cardiology follow-up 4.5. The scoring is somewhat subjective and non-verifiable at the fine-grained half-point level, but the readings are reasonable interpretations of the clinical detail present."
+      },
+      {
+        "name": "procedure_needed",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Whether a procedure/imaging is ordered is a plausible driver of visit length and a distinct binary axis. Well grounded for the MRI (knee) row = 1 and viral URI = 0. The MI follow-up marked 1 is debatable (echo/labs, no new procedure that visit), a minor stretch, but broadly a sound reading of ordered diagnostics."
+      },
+      {
+        "name": "medication_adjustment",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A distinct clinical action that plausibly lengthens visits. Values are well grounded: acne row started new topical/oral meds = 1, MI row 'continue current regimen' = 0, URI supportive care = 0. Clear and defensible extraction from the text."
+      },
+      {
+        "name": "clinical_detail_level",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "This is essentially a proxy for how much text/detail the note contains (4 of 5 samples are '2'), which is near-constant and close to a raw verbosity/length signal. It adds little analytical leverage for explaining duration and offers no genuinely new clinical axis beyond the complexity score. Groundedness is moderate since the level distinction is loosely defined."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.82,
+    "rationale": "Three of the four columns (complexity, procedure_needed, medication_adjustment) provide genuinely useful, distinct clinical axes for explaining visit duration and are well grounded in the reason_for_visit text with reasonable inferences and no clear hallucinations. clinical_detail_level is weak: near-constant and close to a raw verbosity proxy, adding limited leverage. Overall the added set is analytically useful and soundly grounded, with only fine-grained scoring subjectivity as a mild limitation."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_long_visit",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 4
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_concern",
+    "concern_category",
+    "visit_severity",
+    "primary_concern.1",
+    "concern_category.1",
+    "visit_severity.1"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.4417,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.7833,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.6125,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_concern",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Directly answers the query by categorizing the type of patient concern into an actionable grouping axis. Most samples are well-grounded (knee pain->MSK, MI follow-up->Cardiac, acne->Skin). However the annual physical exam row was misclassified as 'Respiratory/Cough' despite the text being a routine physical with mild fatigue and no respiratory complaint, indicating some ungrounded assignment."
+      },
+      {
+        "name": "concern_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Provides a coarser, complementary grouping (chronic vs acute vs infectious) that adds a distinct analytical axis beyond primary_concern. Grounded on most samples (MI->Chronic, injury->Acute Injury/Trauma). The annual physical exam labeled 'Infectious Disease' is unsupported by the text. Note the value set mixes taxonomies (some rows carry Skin/Neurological/GI labels identical to primary_concern), slightly reducing coherence but still usable."
+      },
+      {
+        "name": "visit_severity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A severity axis is useful for grouping but partly overlaps with the existing 'urgency' original column; the samples track urgency closely (Urgent->Acute/Urgent, Routine->Routine/Chronic), making it somewhat redundant though it adds a chronic-vs-critical distinction. Values shown are well-grounded in the source text."
+      },
+      {
+        "name": "primary_concern.1",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "An exact duplicate of primary_concern with identical value distribution and identical row-level outputs; adds no new analytical leverage. Groundedness mirrors the original but redundancy makes it near-useless."
+      },
+      {
+        "name": "concern_category.1",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Exact duplicate of concern_category with identical distribution and row values; trivially redundant and provides no additional axis."
+      },
+      {
+        "name": "visit_severity.1",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Exact duplicate of visit_severity; no new information. Values grounded but redundant."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.78,
+    "rationale": "The first three columns give genuinely useful, largely well-grounded axes (concern type, category, severity) that directly serve the query, though visit_severity overlaps with the existing urgency column and there is a clear misclassification of the routine physical row as respiratory/infectious. The latter three columns are exact duplicates that add no analytical value, which drags the holistic usefulness down considerably. Groundedness is generally solid across samples with occasional unsupported assignments."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

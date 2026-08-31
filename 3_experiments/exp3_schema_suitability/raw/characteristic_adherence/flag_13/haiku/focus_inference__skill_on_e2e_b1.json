@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these incident descriptions.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_type",
+    "severity_indicator",
+    "root_cause_hint",
+    "assignment_consistency",
+    "assigned_to_technician",
+    "caller_category",
+    "temporal_recurrence"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.6,
+    "hallucination_rate": 0.7143
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizes short_description into a clean typology (network, database, email, peripherals), giving a strong grouping axis for triage analysis. Row samples map soundly to source text (WiFi/VPN->network, database->database_access, printing->peripherals)."
+      },
+      {
+        "name": "severity_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes access_blocked vs outage vs degraded, a useful severity/impact axis. Values are reasonable readings ('cannot connect'->access_blocked, 'printing issues'->peripheral_issue), though the distinction can partly overlap with incident_type; still adds an impact dimension."
+      },
+      {
+        "name": "root_cause_hint",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Largely a deterministic restatement of incident_type (network->connectivity_infrastructure, database->database_backend), so limited new analytical leverage. Also asserts a 'root cause' that short descriptions like 'Cannot connect to WiFi' do not actually establish, edging into inference beyond the text."
+      },
+      {
+        "name": "assignment_consistency",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A true/false flag comparing assignment fields could be useful for auditing, but its meaning is unclear and the produced assigned_to_technician often disagrees with closed_by while the flag is inconsistent (VPN row: technician Beth vs closed_by Charlie labeled False; another VPN row technician Charlie vs Luke labeled False but WiFi Fred=Fred True). The derivation basis is murky and not clearly grounded."
+      },
+      {
+        "name": "assigned_to_technician",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Largely redundant with existing assigned_to/closed_by columns, adding little new axis. Values also diverge from source closed_by in several samples (row2: closed_by Charlie but technician Beth; row5: closed_by Luke but technician Charlie), suggesting invented or mismapped assignment rather than a grounded read."
+      },
+      {
+        "name": "caller_category",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "named_user vs system_automation is a reasonable analytical split of caller_id, but the samples provide only short_description/opened_at/closed_by, not caller_id, and one VPN row is labeled system_automation without any supporting evidence, so groundedness is questionable from the shown text."
+      },
+      {
+        "name": "temporal_recurrence",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Frequency/recurrence framing (high_frequency vs isolated vs emerging_pattern) is a potentially valuable axis for spotting recurring issues. However these labels imply cross-row frequency judgments not clearly supported at row level, and appear to mostly track incident_type popularity; the confident per-row assignment is weakly grounded."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.58,
+    "rationale": "The strongest columns (incident_type, severity_indicator) give genuine, well-grounded grouping axes for triaging the incident text. Several others are weaker: root_cause_hint largely restates incident_type and over-asserts causes the terse descriptions don't establish; assigned_to_technician is redundant with existing fields and its values contradict the shown closed_by; assignment_consistency, caller_category, and temporal_recurrence introduce confident labels whose basis is not visible in the provided source text and in places conflicts with it. Overall moderate usefulness with notable groundedness concerns from observed hallucinations."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

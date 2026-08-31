@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_scope",
+    "recurring_failure_pattern",
+    "software_installation_related",
+    "database_connectivity_related",
+    "network_connectivity_related"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.62,
+    "source_groundedness": 0.62,
+    "source_groundedness__table_level": 0.6,
+    "b1_overall": 0.61,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_scope",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Scope categorisation offers a plausible new grouping axis, though it is only loosely tied to the query about hardware failure causes. Groundedness is weak: 'individual_device' and 'system_wide' are inferred from terse descriptions where the source text rarely states scope. The MySQL row labelled 'system_wide' is an unsupported specific."
+      },
+      {
+        "name": "recurring_failure_pattern",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "A recurrence flag is directly relevant to identifying 'most common' causes, but recurrence is not derivable from a single row's short_description; it requires cross-row aggregation not evidenced here. All samples are 'False' with no textual justification, suggesting an unsupported guess."
+      },
+      {
+        "name": "software_installation_related",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A clean topical flag that helps isolate a candidate cause category for the query. Values track the source text well ('software installation', 'install new software' → True), a sound extraction."
+      },
+      {
+        "name": "database_connectivity_related",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Useful cause-category flag for grouping and impact estimation. The MySQL-connection row is correctly flagged True; software rows correctly False. Well grounded in text."
+      },
+      {
+        "name": "network_connectivity_related",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Another relevant cause flag, but the MySQL row was marked both database AND network connectivity True; 'Unable to establish connection to MySQL server' does not clearly warrant a network label, indicating an over-broad, partly unsupported inference."
+      }
+    ],
+    "analytical_usefulness": 0.62,
+    "source_groundedness": 0.6,
+    "rationale": "The topical cause flags (software/database/network) give genuine axes to quantify how addressing common causes would reduce incidents, which is what the query needs, and are mostly well grounded in the descriptions. However, this is a hardware-failure query and the added columns lean toward software/DB/network causes with no direct hardware cause flag among the values shown. Groundedness is dragged down by recurring_failure_pattern (not derivable from a single row), incident_scope (scope asserted where text is silent), and the double network/database labelling of the MySQL row."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

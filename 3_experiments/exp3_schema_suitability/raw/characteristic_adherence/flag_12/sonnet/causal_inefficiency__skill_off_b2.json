@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why are some incidents resolved inefficiently, and which underlying issues drive it?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_time_hours",
+    "is_reassigned",
+    "expected_resolution_hours",
+    "resolution_delay_hours",
+    "inefficiency_flag",
+    "inefficiency_drivers"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.25,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.25,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_efficiency (operationalized via resolution_time_hours / resolution_delay_hours / inefficiency_flag)",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "This is the quantitative measure of resolution efficiency itself -- it operationalizes the focus/outcome, not a cause of it."
+      },
+      {
+        "name": "is_reassigned",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause (reassignment) whose effect on resolution efficiency is being attributed. It is the observed treatment."
+      },
+      {
+        "name": "expected_resolution_hours",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Plausibly reflects underlying case complexity/SLA class, which can drive both the likelihood of reassignment and the actual resolution time -- a common cause. However it may partly be derived from priority and could serve as a baseline rather than a surfaced common cause."
+      },
+      {
+        "name": "resolution_delay_hours",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "Difference between actual and expected resolution time; this is a direct restatement of the (in)efficiency outcome, not an independent cause."
+      },
+      {
+        "name": "inefficiency_flag",
+        "causal_role": "outcome",
+        "named_in_query": false,
+        "rationale": "A binarized version of the efficiency outcome; it labels the outcome rather than causing it."
+      },
+      {
+        "name": "inefficiency_drivers",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "This concatenates the treatment (reassigned) and the outcome deviation (above_expected_by_x pct) into a descriptive label. It is derived FROM the outcome/treatment and lies on/collapses the causal path -- it is not an adjustable common cause; treating it as a driver is a labelling error."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "is_reassigned"
+    ],
+    "confounders": [
+      {
+        "name": "expected_resolution_hours",
+        "named_in_query": false,
+        "plausibility": 0.4
+      }
+    ],
+    "confounder_quality": 0.25,
+    "rationale": "The added columns clearly identify an outcome (resolution efficiency via time/delay/flag) and a plausible treatment (is_reassigned). However, the set is dominated by restatements of the outcome (resolution_time_hours, resolution_delay_hours, inefficiency_flag) and a driver label (inefficiency_drivers) that merely concatenates the treatment with the outcome deviation -- a mediator/tautological construct rather than a common cause. Only expected_resolution_hours could function as a confounder proxying case complexity/SLA, but it is likely derived from existing priority/category fields and reads more as a baseline than a genuinely surfaced common cause of both reassignment and resolution time. No confounder was copied from the query (the query names none), but the system did NOT surface strong independent confounders (e.g., category, assignment_group, caller workload) as adjustment variables. The causal estimation is therefore only weakly set up: treatment present, but confounding is largely unaddressed."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

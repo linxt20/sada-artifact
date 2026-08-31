@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does goal achievement vary across department, metric, and the management practices described?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "goal_outcome_domain",
+    "implementation_lever_type",
+    "metric_alignment_clarity",
+    "stakeholder_engagement_signal",
+    "time_horizon_category",
+    "outcome_specificity",
+    "improvement_mechanism",
+    "quantified_financial_impact"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.65,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.775,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7125,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_outcome_domain",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derived from description/category and matches source in all samples. Somewhat redundant with the existing 'category' column (cost_reduction, customer_satisfaction, etc. mirror category values), which caps its analytical novelty, but it does offer a normalized grouping axis for the query's department/metric comparison."
+      },
+      {
+        "name": "implementation_lever_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Directly addresses the 'management practices' axis of the query, giving a genuine new grouping dimension. Mostly well-grounded (resource_optimization, customer_interaction, training_engagement match text), but the revenue-growth row's 'resource_optimization' is a weak reading of 'increase premium subscriptions', showing some categorization slippage."
+      },
+      {
+        "name": "metric_alignment_clarity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Highly relevant to the query since 'metric' figures in the analysis; flagging whether the stated goal aligns with the assigned metric is analytically valuable. Samples show metrics like 'Expense Ratio' for customer satisfaction goals, correctly labeled misaligned. Near-constant skew (392 misaligned) reduces discriminating power somewhat but the signal is real and grounded."
+      },
+      {
+        "name": "stakeholder_engagement_signal",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean flag that adds modest leverage for the management-practices angle. All samples returned False despite the customer-satisfaction row mentioning 'personalized customer interactions' and 'after-sales support', suggesting the signal may under-fire, but no clear contradiction of source."
+      },
+      {
+        "name": "time_horizon_category",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Useful new axis (immediate vs fiscal_year vs multi_year) for comparing achievement, and partially derivable from start/end dates too. Groundedness good: 'next fiscal year'->fiscal_year, 'compared to last quarter'->immediate_quarterly, 'upcoming year'->fiscal_year all match text."
+      },
+      {
+        "name": "outcome_specificity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes end-state-defined vs direction-only vs milestone goals, a meaningful lens on goal quality tied to achievement. Samples largely sound: 'from 78% to 90%' -> end_state_defined; cost-reduction 20% row labeled improvement_direction_only is arguably understated but defensible."
+      },
+      {
+        "name": "improvement_mechanism",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Adds a mechanism-of-change axis, but overlaps conceptually with implementation_lever_type, reducing independent value. Groundedness weaker: 'efficient communication channels' -> structural_reorganization and premium-subscription growth -> structural_reorganization are loosely warranted at best, indicating some imposed categorization not clearly in the text."
+      },
+      {
+        "name": "quantified_financial_impact",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Boolean flag with limited but plausible value for the analysis. Groundedness is uneven: cost-reduction 20% row (True) is fine, but the customer-satisfaction row (78%->90% ratings, no dollar figure) marked True and the subscription row marked True stretch 'financial impact' beyond what the text quantifies, conflating any percentage with financial quantification."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns collectively open several genuine analytical axes aligned to the query's department/metric/management-practices framing: outcome domain, implementation lever, metric alignment, time horizon, and outcome specificity are meaningful grouping dimensions. Some columns are partly redundant (goal_outcome_domain vs existing category; improvement_mechanism vs implementation_lever_type) or bare booleans, tempering usefulness. Groundedness is generally sound for extractive/categorical columns, but a few inferential columns (improvement_mechanism, quantified_financial_impact) apply confident labels the source text does not clearly support, and quantified_financial_impact conflates any percentage target with financial quantification, producing observable overreach."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "eda_achievement",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

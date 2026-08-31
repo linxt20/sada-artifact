@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "spend_tier",
+    "processing_days",
+    "is_amount_anomaly",
+    "fiscal_quarter"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.504,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Travel-expense spend behavior and its anomalies/timing (amount magnitude, deviations, and processing/temporal context)",
+    "per_column": [
+      {
+        "name": "spend_tier",
+        "supports_focus": true,
+        "rationale": "Buckets the amount into High/Medium/Low, directly framing spend magnitude as the central concept to analyze."
+      },
+      {
+        "name": "is_amount_anomaly",
+        "supports_focus": true,
+        "rationale": "Flags outlier amounts, a natural analytical facet of a spend focus and directly actionable for auditing."
+      },
+      {
+        "name": "processing_days",
+        "supports_focus": true,
+        "rationale": "Adds an operational/timeliness facet relevant to expense handling; loosely tied to spend but coherent as a process attribute."
+      },
+      {
+        "name": "fiscal_quarter",
+        "supports_focus": true,
+        "rationale": "Temporal bucketing enabling spend trend analysis over periods; a coherent contextual facet of the spend focus."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "rationale": "The columns cohere reasonably around spend as the inferred focus: spend_tier and is_amount_anomaly both center squarely on expense amount (magnitude and outliers), while fiscal_quarter provides a temporal axis for trend analysis. processing_days introduces a distinct operational/timeliness dimension that is useful but slightly loosens the single-focus coherence, edging toward a two-theme set (spend vs. processing efficiency). Structurally the set forms a sensible predictor/attribute mix at useful granularity — tiers, a binary anomaly flag, a numeric latency, and a period label — rather than a bare restatement or noise. The implied focus (which expenses are large/anomalous and when) is clearly investigable and actionable for audit and budgeting, so actionability is high. Minor deductions reflect the empty descriptions and the mild dilution of a single coherent focus by the processing facet."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

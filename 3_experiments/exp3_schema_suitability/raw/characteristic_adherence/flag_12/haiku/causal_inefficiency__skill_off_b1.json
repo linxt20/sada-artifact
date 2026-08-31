@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are some incidents resolved inefficiently, and which underlying issues drive it?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "resolution_days",
+    "is_inefficient",
+    "assignee_mismatch",
+    "is_critical_or_high",
+    "state_is_resolved",
+    "above_category_median",
+    "sys_updated_by_is_employee"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7643,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7643,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.7643,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_days",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly derivable from opened_at and closed_at, and is the core efficiency metric the query needs. The 57 rows with exactly '1' are slightly suspicious (possible defaulting/imputation), but overall the continuous values are a sound reading of the timestamp columns."
+      },
+      {
+        "name": "is_inefficient",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A direct inefficiency flag is exactly the target axis of the query and supports grouping/comparison. It is derived from resolution_days (or category-relative thresholds), which is grounded in timestamps, though the exact threshold is an analyst choice rather than stated in the text."
+      },
+      {
+        "name": "assignee_mismatch",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A mismatch between assigned_to and the resolving/closing party is a plausible driver of inefficiency and a genuine grouping axis. However the source samples shown do not expose the fields needed to verify it, and the very high positive rate (394/500) with no visible basis suggests the definition may not be soundly grounded in available fields."
+      },
+      {
+        "name": "is_critical_or_high",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derivable from the original priority column and gives a useful severity axis to correlate with inefficiency. Grounded, though partly redundant with the existing priority field."
+      },
+      {
+        "name": "state_is_resolved",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A direct one-hot restatement of the existing 'state' column; grounded but low added leverage since it largely duplicates original information."
+      },
+      {
+        "name": "above_category_median",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Flags whether resolution time exceeds the per-category median, giving a normalized way to spot inefficiency by issue type — very relevant to the query's 'underlying issues' angle. Derived from resolution_days and category, both grounded."
+      },
+      {
+        "name": "sys_updated_by_is_employee",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Classifying the updater as employee vs. not could relate to who handled the ticket, but the source samples do not show enough to verify the employee classification, and it is a fairly weak axis for the efficiency query. The basis for the binary label is not clearly warranted by visible text."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.77,
+    "rationale": "Most columns give real analytical leverage for the inefficiency query: resolution_days, is_inefficient, and above_category_median form a strong grounded core derivable from the timestamp and category fields, and is_critical_or_high adds a grounded severity axis. state_is_resolved is largely a restatement of an existing column, and sys_updated_by_is_employee and assignee_mismatch introduce binary labels whose derivation is not clearly supported by the visible source fields (high skew, no evidence trail), lowering groundedness. No outright contradictions of the source text were observed."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_inefficiency",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

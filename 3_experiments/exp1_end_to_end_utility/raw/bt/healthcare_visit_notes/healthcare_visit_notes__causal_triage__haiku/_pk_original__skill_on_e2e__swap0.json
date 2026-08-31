@@ -1,0 +1,130 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "large",
+  "ok": true,
+  "confidence": 0.9,
+  "scores_a": {
+    "specificity": 3,
+    "evidence": 2,
+    "depth": 3,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "evidence": {
+      "score_a": 2,
+      "score_b": 5,
+      "delta_a_minus_b": -3,
+      "winner": "B",
+      "margin": "large"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Routine visits: ~136 visits (54%)",
+        "why": "approximate counts, not tied to tables"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Reserve 30-40% of daily slots for urgent add-ons",
+        "why": "concrete scheduling rule"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "all >40 min, all Emergency department",
+        "why": "vague, unverified claim"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "16 (18.6%) are marked as Routine",
+        "why": "precise cross-tab derived figure"
+      },
+      {
+        "dimension": "depth",
+        "quote": "10 cases (27% of all emergent-now cases) are marked Urgent",
+        "why": "cross-classification revealing triage gap"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Life-threatening cases average 42 minutes",
+        "why": "specific duration by severity"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "geriatric patients warrant lower triage threshold",
+        "why": "decision-ready targeted change"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "clinical_severity_level",
+        "quote": "Acute Significant | 86",
+        "dependent": true
+      },
+      {
+        "column": "time_criticality_for_intervention",
+        "quote": "Emergent Now | 27 | 0 | 10",
+        "dependent": true
+      },
+      {
+        "column": "workup_and_diagnostic_demand",
+        "quote": "Imaging Required",
+        "dependent": true
+      },
+      {
+        "column": "visit_type_and_slot_profile",
+        "quote": "extended_procedure | 6 | 23.3 min",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B ties every claim to cross-tabulated numbers revealing triage gaps, while A relies on approximate, unverified figures.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

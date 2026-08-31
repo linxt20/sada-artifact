@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "device_type",
+    "description_vague",
+    "self_resolved"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.5616,
+    "focus_coherence": 0.78,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.82,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Incident resolution efficiency / how quickly and how well tickets get resolved",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "supports_focus": true,
+        "rationale": "Direct measure of resolution efficiency -- the core outcome facet of the implied focus."
+      },
+      {
+        "name": "device_type",
+        "supports_focus": true,
+        "rationale": "A predictor/segmentation dimension inferred from short_description; plausibly drives variation in resolution time and effort."
+      },
+      {
+        "name": "description_vague",
+        "supports_focus": true,
+        "rationale": "A ticket-quality attribute derived from short_description that plausibly affects how easily/quickly an incident can be resolved."
+      },
+      {
+        "name": "self_resolved",
+        "supports_focus": true,
+        "rationale": "Characterizes the resolution pathway (no intervention needed), another facet of resolution behavior/efficiency."
+      }
+    ],
+    "focus_coherence": 0.78,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.82,
+    "rationale": "The columns cohere around resolution efficiency/quality: resolution_time_hours is the central outcome, while device_type, description_vague, and self_resolved act as predictors/attributes that plausibly explain variation in that outcome. This is a sound predictor-plus-outcome structure at a useful granularity, not a single restatement nor generic noise. The implied focus is clearly actionable -- an analyst can investigate which device types or vague descriptions correlate with longer resolution or self-resolution. Mild deductions: the focus is inferred rather than explicit, and the set mixes an outcome with heterogeneous predictors without an obvious single organizing facet family (efficiency vs. quality vs. pathway), so coherence is strong but not tight. resolution_time_hours also shows an artificial spike at 24 hours, hinting at imputation, which slightly weakens the structural soundness."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

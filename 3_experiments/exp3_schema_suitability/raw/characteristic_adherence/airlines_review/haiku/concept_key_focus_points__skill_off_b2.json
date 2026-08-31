@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 4,
+  "added_columns": [
+    "average_component_rating",
+    "rating_variance",
+    "satisfaction_group",
+    "is_complaint_review"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.0,
+    "mece": 0.0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "average_component_rating",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is an aggregate summary of all the service quality components rolled into one number. It restates the whole concept (mean of the parts) rather than isolating a single constitutive aspect of it."
+      },
+      {
+        "name": "rating_variance",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Dispersion across component ratings is a meta-property describing consistency/agreement of the ratings, not an aspect OF service quality itself (e.g., comfort, staff, food). It measures how spread out the scores are, not a part of the concept."
+      },
+      {
+        "name": "satisfaction_group",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A discretized bucket of overall satisfaction. This is a re-expression of the aggregate quality/outcome, not a distinct constitutive facet of service quality."
+      },
+      {
+        "name": "is_complaint_review",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A binary derived from overall low quality/dissatisfaction. It flags the outcome of poor quality rather than decomposing quality into an aspect of it."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "average_component_rating",
+      "rating_variance",
+      "satisfaction_group",
+      "is_complaint_review"
+    ],
+    "mutual_exclusivity": 0.2,
+    "exhaustiveness": 0.0,
+    "rationale": "None of the added columns are constitutive facets (part-of aspects) of airline_service_quality. The genuine facets already exist in the original table (Seat Comfort, Staff Service, Food & Beverages, Inflight Entertainment, Value For Money). The added columns are instead aggregates/restatements of the whole (average_component_rating, satisfaction_group, is_complaint_review) or a meta-statistical property of the ratings (rating_variance). Because the set contains no true facets, exhaustiveness is 0. Mutual exclusivity is low as well: average_component_rating, satisfaction_group, and is_complaint_review are all near-collinear re-expressions of overall quality/satisfaction, capturing the same underlying dimension under different names."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

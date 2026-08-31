@@ -1,0 +1,123 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "focus_variable": "airline_competitive_advantage",
+  "concept": "airline_competitive_advantage",
+  "n_added_columns": 10,
+  "added_columns": [
+    "cabin_crew_attitude",
+    "ground_service_quality",
+    "service_proactivity",
+    "service_consistency",
+    "food_quality",
+    "seat_comfort_assessment",
+    "baggage_handling_outcome",
+    "customer_service_responsiveness",
+    "refund_rebooking_handling",
+    "value_for_money_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.5171,
+    "facet_fraction": 0.9,
+    "n_facets": 9,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_competitive_advantage",
+    "per_column": [
+      {
+        "name": "cabin_crew_attitude",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Onboard crew demeanor is a concrete part of the in-flight service dimension that constitutes an airline's offering, hence a meronymic aspect OF competitive advantage."
+      },
+      {
+        "name": "ground_service_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Check-in/boarding/airport service is a distinct constitutive part of the overall service experience an airline provides, an aspect OF the concept."
+      },
+      {
+        "name": "service_proactivity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Proactivity is a genuine service quality aspect, but it overlaps directly with cabin_crew_attitude's 'warm_proactive' value and with service_consistency, so as a facet it is not cleanly separated from the other service columns."
+      },
+      {
+        "name": "service_consistency",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Reliability/consistency is an aspect of the service dimension, but it is a cross-cutting meta-property that spans crew, ground and customer service rather than a disjoint part, so it blurs the boundaries between the other service facets."
+      },
+      {
+        "name": "food_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Catering is a clear constitutive part of the in-flight product an airline competes on; an aspect OF the offering."
+      },
+      {
+        "name": "seat_comfort_assessment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Seat/cabin comfort is a core constitutive product facet of the flying experience and thus a part-of the competitive advantage."
+      },
+      {
+        "name": "baggage_handling_outcome",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Baggage handling is an operational service component of what the airline delivers, a distinct constitutive aspect OF the concept."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Post/pre-flight customer support responsiveness is a service facet, though it partially overlaps with ground_service_quality and refund_rebooking_handling."
+      },
+      {
+        "name": "refund_rebooking_handling",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Disruption/refund handling is a specific service facet, but it is largely a sub-aspect of customer_service_responsiveness, creating overlap rather than a clean partition."
+      },
+      {
+        "name": "value_for_money_perception",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Value-for-money is a holistic quality-per-price judgement that aggregates across all the other facets; it summarizes the whole competitive-advantage concept (and duplicates the existing 'Value For Money' column) rather than being one disjoint part OF it."
+      }
+    ],
+    "facet_columns": [
+      "cabin_crew_attitude",
+      "ground_service_quality",
+      "service_proactivity",
+      "service_consistency",
+      "food_quality",
+      "seat_comfort_assessment",
+      "baggage_handling_outcome",
+      "customer_service_responsiveness",
+      "refund_rebooking_handling"
+    ],
+    "non_facet_columns": [
+      "value_for_money_perception"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "rationale": "Most columns are genuine meronymic facets of an airline's product/service offering, which is what constitutes competitive advantage, so the part-of relationship holds for 9 of 10. However mutual exclusivity is weakened by heavy overlap within the service cluster: service_proactivity duplicates the 'warm_proactive' aspect of cabin_crew_attitude, service_consistency is a cross-cutting meta-property spanning the other service columns, and refund_rebooking_handling is essentially a sub-case of customer_service_responsiveness. value_for_money_perception is not a part but a holistic restatement of the whole concept. Exhaustiveness is moderate: coverage skews strongly toward service (6-7 of 10 columns) while under-representing product/operational facets — notably absent are inflight entertainment (present in the source table), on-time/punctuality performance, network/schedule, and loyalty program — so the decomposition covers many but not all main constitutive aspects and is unbalanced."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_advantage_attributes",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

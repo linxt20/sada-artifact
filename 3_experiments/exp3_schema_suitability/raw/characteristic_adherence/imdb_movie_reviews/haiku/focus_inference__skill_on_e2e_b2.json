@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "technical_craft_focus",
+    "narrative_substance_focus",
+    "performance_evaluation_focus",
+    "emotional_response_focus",
+    "genre_convention_focus",
+    "thematic_message_focus"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.836,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The aspects/dimensions of filmmaking that reviewers concentrate their evaluation on (a taxonomy of review focus areas)",
+    "per_column": [
+      {
+        "name": "technical_craft_focus",
+        "supports_focus": true,
+        "rationale": "Captures whether/which technical craft aspect (cinematography, editing, etc.) the review focuses on -- a coherent facet of review focus."
+      },
+      {
+        "name": "narrative_substance_focus",
+        "supports_focus": true,
+        "rationale": "Captures story/plot/character focus -- a distinct, data-inferable facet of what reviewers attend to."
+      },
+      {
+        "name": "performance_evaluation_focus",
+        "supports_focus": true,
+        "rationale": "Captures acting/casting/chemistry focus -- another clean facet of review focus."
+      },
+      {
+        "name": "emotional_response_focus",
+        "supports_focus": true,
+        "rationale": "Captures viewer-experience dimensions (satisfaction, engagement, humor); coherent facet, though 'viewer_satisfaction' at 149 borders on generic sentiment rather than a specific aspect."
+      },
+      {
+        "name": "genre_convention_focus",
+        "supports_focus": true,
+        "rationale": "Captures originality/cliche/genre-trope focus -- a meaningful and differentiated facet."
+      },
+      {
+        "name": "thematic_message_focus",
+        "supports_focus": true,
+        "rationale": "Captures thematic/social/philosophical focus -- a distinct facet of review attention."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.9,
+    "rationale": "All six columns converge tightly on a single coherent focus concept: a taxonomy of the film aspects reviewers emphasize, exactly matching the query. They form a well-differentiated, mutually distinct facet structure (technical, narrative, performance, emotional, genre, thematic) at a useful granularity, each with meaningful sub-values plus a 'not_present' option that lets an analyst quantify how often each aspect is invoked. This is directly actionable: an analyst can measure aspect prevalence and cross with label_pos to see which aspects drive sentiment. Minor weakness: the emotional_response_focus facet leans partly toward generic satisfaction/sentiment rather than a specific reviewable aspect, slightly diluting structure quality; otherwise the decomposition is strong and non-mechanical."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

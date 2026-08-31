@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "affected_system",
+    "failure_symptom",
+    "scope_qualifier",
+    "resolver_match",
+    "assignment_lag_present",
+    "caller_id_group",
+    "resolution_delay_proxy"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.45,
+    "predictor_fraction": 0.75,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.6,
+    "interpretable_fraction": 0.75
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable categories (email, database, vpn, etc.) that can be grouped and compared against resolution time; a strong external segmentation variable."
+      },
+      {
+        "name": "affected_system",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, reasonably balanced categories of the affected system; supports meaningful comparison of resolution time across systems."
+      },
+      {
+        "name": "failure_symptom",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear symptom categories (connection_failure, outage_down, access_denied...) that are external and can be segmented against resolution time."
+      },
+      {
+        "name": "scope_qualifier",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable scope categories (general, remote_access, location_specific...); usable for grouping, though somewhat dominated by 'general'."
+      },
+      {
+        "name": "resolver_match",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Boolean whether resolver matched assignee; interpretable segmentation that could relate to resolution time, though 100 NULLs weaken it."
+      },
+      {
+        "name": "assignment_lag_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable boolean about assignment lag; a plausible associational variable, though heavily skewed (428 true vs 72 false)."
+      },
+      {
+        "name": "caller_id_group",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Named 'group' but values are individual caller identities; high-cardinality identifier that is essentially a restatement of caller_id, not a meaningful segmentation."
+      },
+      {
+        "name": "resolution_delay_proxy",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Bins based directly on resolution time (same_day, over_seven_days, unresolved); this restates the focus variable rather than providing an external relationship."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.6,
+    "rationale": "Most added columns are genuine external, interpretable segmentation variables (incident_category, affected_system, failure_symptom, scope_qualifier, resolver_match, assignment_lag_present) that let a human group and compare resolution time. Two columns weaken the set: resolution_delay_proxy is a direct restatement/binning of the focus, and caller_id_group is a high-cardinality identifier rather than a segmentation. Some predictors are also skewed (scope_qualifier, assignment_lag_present) reducing comparative power, but as a set they still support meaningful exploratory relationships with the focus."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

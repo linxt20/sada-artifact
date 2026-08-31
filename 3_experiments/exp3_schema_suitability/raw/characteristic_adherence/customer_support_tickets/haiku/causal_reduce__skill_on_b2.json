@@ -1,0 +1,104 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can support teams reduce ticket resolution time?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "issue_type_category",
+    "has_blocker_or_dependency",
+    "urgency_indicator",
+    "technical_root_cause_domain",
+    "resolution_action_required"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_type_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of issue is an immutable property of the ticket that affects both what resolution action is needed and the resolution time; a pre-existing common cause, not an intervenable lever."
+      },
+      {
+        "name": "has_blocker_or_dependency",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Presence of blockers/dependencies is a pre-existing condition of the ticket that drives both the required resolution path and resolution time; it is not something support teams freely set, so it functions as a confounder rather than a treatment."
+      },
+      {
+        "name": "urgency_indicator",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Urgency is an intrinsic attribute of the ticket that influences prioritization/action and resolution time; a common cause, not a settable intervention."
+      },
+      {
+        "name": "technical_root_cause_domain",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The underlying technical root cause is a fixed property of the incident affecting both the action taken and the time to resolve; not an intervenable lever."
+      },
+      {
+        "name": "resolution_action_required",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The resolution action/escalation path is something a support team can actually decide or set (escalate, self-serve, configure), making it the one plausibly intervenable treatment on the outcome. However it is arguably a mediator between issue characteristics and time; it is the closest thing to an actionable lever."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "resolution_action_required"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "issue_type_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "has_blocker_or_dependency",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "urgency_indicator",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "technical_root_cause_domain",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The query 'How can support teams reduce ticket resolution time?' is genuinely interventional: it asks what levers reduce the outcome. Only resolution_action_required is a plausibly intervenable treatment (an actor can choose the escalation/handling path), and it is not named in the query. The other four columns are pre-existing ticket attributes (issue type, blockers, urgency, root cause) that serve as confounders / common causes affecting both the chosen action and resolution time, and none were named in the query, which is a point in the schema's favor. Weaknesses: the treatment is largely a description of what was done rather than a cleanly settable policy, and it can behave as a mediator downstream of the issue attributes; the 'confounders' partly determine the treatment mechanistically (bordering on mediator ambiguity). Thus the intervention is set up but not cleanly, yielding moderate confounder quality."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_type",
+    "blocker_scope",
+    "business_impact",
+    "root_cause_clarity"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.75,
+    "predictor_fraction": 1.0,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.75,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorizes the nature of the issue (bug, outage, feature request, etc.), derivable from the issue_description at ticket intake and knowable before resolution. Different issue types plausibly carry strong signal about resolution time without restating or leaking it."
+      },
+      {
+        "name": "blocker_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope of who is blocked (single user vs. all tenants) is an intake-time attribute independent of resolution duration. It plausibly correlates with escalation and complexity, offering legitimate predictive signal."
+      },
+      {
+        "name": "business_impact",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Severity of business impact (friction vs. financial/compliance risk) is assessable at ticket creation from the description and is not a component or deterministic function of resolution_minutes. It plausibly predicts prioritization and handling time."
+      },
+      {
+        "name": "root_cause_clarity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How well the root cause is characterized at submission (evidence provided vs. requires investigation) is an early-stage feature independent of the outcome. Greater initial clarity plausibly shortens resolution, giving genuine predictive leverage."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.75,
+    "rationale": "All four added columns are intake-time, description-derived attributes that lie outside the focus variable: none restates, componentizes, or leaks resolution_minutes, and none is knowable only post-outcome. Each plausibly carries distinct predictive signal (issue nature, blast radius, impact severity, diagnostic clarity) beyond the original priority/channel/agent columns, and together they span complementary dimensions of ticket complexity. Utility is strong but not maximal because some overlap with existing 'priority' is likely and the signals are heuristic categorizations rather than harder quantitative predictors."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

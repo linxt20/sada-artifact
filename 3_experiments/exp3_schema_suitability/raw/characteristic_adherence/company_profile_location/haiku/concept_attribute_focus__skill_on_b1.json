@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What market-expansion focus should analysts study?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "industry_vertical",
+    "business_model_category",
+    "expansion_maturity_stage",
+    "geographic_ecosystem_position",
+    "ecosystem_strategic_role",
+    "expansion_maturity_signal",
+    "silicon_valley_ecosystem_position"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6429,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.7714,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7071,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a strong grouping axis for market-expansion analysis. Values are well-grounded in descriptions (5AM->life sciences, Addepar->fintech). Minor slip: Accel labeled enterprise_software despite a generic VC description, but mostly sound."
+      },
+      {
+        "name": "business_model_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Distinct, useful axis for comparing expansion strategies. Values track the text (280 Group->professional services, VCs->investment_and_capital). 23andMe as content_and_media is a questionable read but not egregious."
+      },
+      {
+        "name": "expansion_maturity_stage",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Maturity is directly relevant to expansion focus. However the descriptions rarely state stage; assigning 'established_public_and_large_cap' to 23andMe or 'growth_stage' to a small consultancy is largely inferred beyond text support."
+      },
+      {
+        "name": "geographic_ecosystem_position",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Geographic clustering is highly relevant to market-expansion analysis and grounded in Address fields (Sand Hill Road->VC cluster). Good new axis beyond raw lat/long/city."
+      },
+      {
+        "name": "ecosystem_strategic_role",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a functional role dimension (provider vs capital vs infrastructure) useful for ecosystem mapping. Values align with source (VCs->capital_provider). Some overlap with business_model but not fully redundant."
+      },
+      {
+        "name": "expansion_maturity_signal",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Near-duplicate of expansion_maturity_stage using identical value vocabulary; in samples it produces the same value as that column. Adds no new analytical leverage and inherits the same weak grounding for stage inference."
+      },
+      {
+        "name": "silicon_valley_ecosystem_position",
+        "analytical_usefulness": 0.1,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Essentially a restatement of geographic_ecosystem_position with identical vocabulary and matching per-row values; trivially redundant, so low usefulness despite being grounded."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.78,
+    "rationale": "Most columns offer genuine axes (vertical, business model, geography, strategic role) directly relevant to studying market-expansion focus and are well-grounded in descriptions/addresses. Two columns (expansion_maturity_signal, silicon_valley_ecosystem_position) are near-duplicate restatements of other added columns, dragging holistic usefulness down. Groundedness is generally solid; the main weakness is maturity-stage columns asserting specific stages the text seldom states."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

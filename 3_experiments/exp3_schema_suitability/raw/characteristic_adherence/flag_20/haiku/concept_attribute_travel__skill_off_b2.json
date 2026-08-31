@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What travel policy risks appear in expense descriptions?",
+  "focus_variable": "travel_policy_risk",
+  "concept": "travel_policy_risk",
+  "n_added_columns": 3,
+  "added_columns": [
+    "is_travel",
+    "policy_risks",
+    "amount_tier"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1155,
+    "facet_fraction": 0.3333,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.3,
+    "mece": 0.3464,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "travel_policy_risk",
+    "per_column": [
+      {
+        "name": "is_travel",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether an expense is travel-related is a precondition/scope filter for the concept, not an aspect OF the risk itself. It gates applicability rather than carving the risk into parts."
+      },
+      {
+        "name": "policy_risks",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This column enumerates the risk types (High Amount, Unresolved Status, International/Premium Travel) as a bundled multi-label field. It restates the whole concept as an aggregated list rather than exposing a single non-overlapping facet; internally it conflates several distinct risk dimensions into one column."
+      },
+      {
+        "name": "amount_tier",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Amount magnitude is a genuine constitutive aspect of travel policy risk (excessive spend is a risk dimension). It captures the 'monetary threshold' facet of the concept."
+      }
+    ],
+    "facet_columns": [
+      "amount_tier"
+    ],
+    "non_facet_columns": [
+      "is_travel",
+      "policy_risks"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.3,
+    "rationale": "Only one column (amount_tier) is a clean single facet of the concept. is_travel is a scope predictor, not a part of the risk. policy_risks is a bundled restatement of the entire concept that itself packs multiple distinct aspects (monetary excess, status/approval, travel class, international) into one multi-label field, which both overlaps heavily with amount_tier (High Amount vs High tier) and violates a proper MECE decomposition into separate columns. As a facet SET, the decomposition is weak: it does not carve travel_policy_risk into distinct non-overlapping facet columns (mutual exclusivity is undermined by the amount overlap and the bundling), and it leaves major constitutive aspects (approval/documentation compliance, booking-class/premium violations, timeliness, vendor/booking-channel compliance) either merged inside one column or absent, hurting exhaustiveness."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "concept_attribute_travel",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

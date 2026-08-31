@@ -1,0 +1,81 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth attention in these goal records.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "intervention_type",
+    "scope_of_change",
+    "time_horizon",
+    "measurement_approach",
+    "metric_category_alignment",
+    "baseline_state_specified",
+    "category_specific_lever"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7857,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8286,
+    "source_groundedness__table_level": 0.83,
+    "b1_overall": 0.8072,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "intervention_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Categorizes the kind of initiative described, giving a strong grouping axis for understanding what these goals target. Values align well with descriptions (e.g. 'Optimize duplicated resources'->process_optimization, engagement program->feedback_survey_system)."
+      },
+      {
+        "name": "scope_of_change",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "rationale": "Useful axis for prioritization by breadth of impact. Some values are warranted inferences but 'company_wide' is frequently assigned where the text does not specify scope (e.g. cost reduction and customer satisfaction goals), suggesting a default-guess bias; still often defensible."
+      },
+      {
+        "name": "time_horizon",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Directly extractable from phrases like 'next fiscal year', 'end of Q4', 'last quarter'. Good grouping/deadline axis, with reasonable NULLs for silent rows."
+      },
+      {
+        "name": "measurement_approach",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Classifies how progress is measured (rate, financial, survey, time, count). Well grounded in descriptions/metrics; helps compare comparability of goals."
+      },
+      {
+        "name": "metric_category_alignment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Boolean flag on whether the metric fits the category is genuinely useful for spotting data-quality problems (e.g. Customer Satisfaction paired with Expense Ratio -> false). Derivable by comparing existing columns."
+      },
+      {
+        "name": "baseline_state_specified",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "rationale": "Flags whether a starting value is given ('from 78% to 90%'->true; no baseline->false). Useful for assessing goal measurability; clearly grounded in text."
+      },
+      {
+        "name": "category_specific_lever",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.7,
+        "rationale": "Provides a finer lever tied to category. Somewhat overlaps intervention_type/category, reducing marginal leverage, but adds a category-conditioned axis. Values are mostly warranted, with NULLs for unclear rows."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.83,
+    "rationale": "The added columns give multiple genuine axes (intervention type, scope, time horizon, measurement, data-quality flags) that directly help an analyst decide what deserves attention among goal records. Most values are sound readings of the source text with reasonable NULLs for silent rows. Main grounding weakness is a tendency to default 'company_wide' for scope where the text is silent, and category_specific_lever partly overlaps intervention_type, slightly lowering marginal usefulness. No completeness penalty applied."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

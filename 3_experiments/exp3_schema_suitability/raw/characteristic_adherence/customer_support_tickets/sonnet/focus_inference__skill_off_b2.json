@@ -1,0 +1,50 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "issue_category",
+    "issue_keywords"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.7254,
+    "focus_coherence": 0.93,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The type/category of issue a support ticket concerns",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "supports_focus": true,
+        "rationale": "A clean taxonomy of issue types (Feature Request, Billing, Authentication, etc.) that directly answers 'what kinds of issues' and centres on the issue-type focus."
+      },
+      {
+        "name": "issue_keywords",
+        "supports_focus": true,
+        "rationale": "Extracted salient terms from the description that ground and refine the category assignment, giving finer-grained texture to the same issue-type focus."
+      }
+    ],
+    "focus_coherence": 0.93,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.9,
+    "rationale": "Both added columns converge on ONE coherent, data-inferable focus: the kind of issue a ticket is about, directly matching the query. issue_category provides a well-formed categorical taxonomy at a useful granularity and issue_keywords supplies a supporting finer-grained facet, so this is not a single restatement nor undifferentiated noise. The implied focus is highly actionable -- an analyst can quantify issue mix, prioritise categories, and cross issue types against priority/resolution_minutes. Structure_quality is slightly reduced because issue_keywords is a semi-mechanical keyword extraction that partly overlaps with issue_category rather than adding an orthogonal analytical facet (e.g., severity or root-cause), but it still meaningfully supports the focus."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

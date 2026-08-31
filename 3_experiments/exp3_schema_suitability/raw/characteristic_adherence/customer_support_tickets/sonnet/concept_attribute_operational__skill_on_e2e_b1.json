@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What customer issues create the most support burden?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "issue_category",
+    "product_area",
+    "operational_impact",
+    "user_scope",
+    "root_cause_class",
+    "requires_engineering_escalation",
+    "workaround_available"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.8643,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.8814,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.8728,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.97,
+        "hallucination_observed": false,
+        "rationale": "A clean taxonomy of issue types is directly the axis needed to identify which issues drive support burden. Sampled values (billing_error, configuration_error, outage, feature_request, bug) are all sound readings of the source text."
+      },
+      {
+        "name": "product_area",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Adds a distinct grouping axis (which product surface is generating tickets), complementary to issue_category. Sampled mappings (billing_and_payments, authentication_and_sso, infrastructure_and_platform, ui_and_ux, data_import_export) are well grounded."
+      },
+      {
+        "name": "operational_impact",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Severity/impact is a strong axis for quantifying burden. Most samples are sound (full_service_outage, cosmetic_or_minor). Labeling the invoice ticket as blocked_workflow is a mild stretch but defensible given the finance-deadline framing; uses not_present appropriately for silent rows."
+      },
+      {
+        "name": "user_scope",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Blast radius (single_user vs entire_tenant) is a genuine driver of burden and gives a useful grouping axis. Samples are well supported (all members of Acme tenant -> entire_tenant; individual reports -> single_user). CSV export as entire_tenant is a reasonable inference."
+      },
+      {
+        "name": "root_cause_class",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Root cause is analytically valuable for pinpointing burden sources, and uses not_present for silent rows. However the invoice row is labeled data_migration_artifact with no textual support -- an invented specific where the text only describes a duplicate line item. This is a confident, unwarranted inference that lowers groundedness."
+      },
+      {
+        "name": "requires_engineering_escalation",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Escalation routing/need is a real burden signal. The name implies a boolean but values are routing categories (billing_ops, platform_infra, security_team), which is fine. Samples are reasonable readings, though escalation targets are partly inferred rather than stated."
+      },
+      {
+        "name": "workaround_available",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Workaround availability meaningfully affects support burden. partial_workaround (manual sed step) and not_present are well grounded. However asserting no_workaround for rows where the text is silent (e.g., the invoice ticket) is a confident negative not clearly supported, slightly weakening groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.87,
+    "rationale": "The added columns provide several genuinely distinct and query-relevant axes -- issue type, product area, impact severity, blast radius, root cause, escalation, and workaround -- each offering real leverage to group and quantify support burden with little redundancy. Groundedness is generally strong: most values are sound extractions or warranted inferences, and silent rows are handled with not_present. The main weakness is a tendency to assert confident specifics on silent rows (root_cause_class inventing data_migration_artifact for the invoice ticket; workaround_available defaulting to no_workaround without textual support), which introduces some ungrounded values."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 7
+}

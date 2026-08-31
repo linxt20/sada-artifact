@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of their experience are Yelp reviewers talking about?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "mentions_food_quality",
+    "mentions_service",
+    "mentions_ambiance",
+    "mentions_price",
+    "mentions_cleanliness",
+    "mentions_wait_time",
+    "num_aspects_mentioned",
+    "review_length"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.775,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.7375,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7563,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "mentions_food_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers what aspects reviewers discuss; a core groupable axis. Sample values are sound: food mentioned in rows 1/3, absent in service-only row 4 and cabana row 5."
+      },
+      {
+        "name": "mentions_service",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Highly relevant aspect flag. Values well grounded across all samples (service explicit in 1,2,3,4; absent in 5)."
+      },
+      {
+        "name": "mentions_ambiance",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Relevant aspect in principle, but values are systematically over-asserted: rows 2 and 3 marked 1 with no ambiance content, row 1 only weakly ('rowdy crowd'). Confident positives where text is silent."
+      },
+      {
+        "name": "mentions_price",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Useful axis. Grounded where present, but row 2 marked 1 despite no price mention (invented positive). Row 3 arguably should be 1 given '$20' but marked 0; inconsistent."
+      },
+      {
+        "name": "mentions_cleanliness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Relevant aspect. All sampled values 0 and consistent with silent source text; correct conservative behaviour."
+      },
+      {
+        "name": "mentions_wait_time",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Relevant aspect. Row 2=1 is a warranted inference (repeatedly forgotten/waiting); others plausibly 0."
+      },
+      {
+        "name": "num_aspects_mentioned",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Useful aggregate for measuring breadth of review discussion. However it inherits errors from the flags (e.g. counts inflated by over-asserted ambiance), lowering groundedness."
+      },
+      {
+        "name": "review_length",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Generic text-length feature adding little leverage for identifying which aspects are discussed. Values roughly derivable but the large 700 cluster suggests a truncation cap distorting real lengths."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.68,
+    "rationale": "The aspect-flag columns give genuine, groupable axes that directly answer what reviewers discuss, making the set analytically useful overall (review_length is the weak, generic outlier). Groundedness is dragged down by systematic over-assertion in mentions_ambiance and mentions_price, which claim positives on silent text; that error propagates into num_aspects_mentioned. Food, service, cleanliness, and wait_time are well grounded, and conservative 0/unknown values on silent rows are handled correctly."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 8
+}

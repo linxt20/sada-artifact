@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "teacher_responsiveness",
+    "instructional_mode_quality",
+    "student_engagement_signal",
+    "subject_format_fit",
+    "peer_interaction_loss"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.82,
+    "predictor_fraction": 1.0,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "predictive_utility": 0.82,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "teacher_responsiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Teacher responsiveness/feedback quality extracted from the open response is a distinct construct from satisfaction rating, plausibly drives satisfaction, and is knowable independently of the rating. Legitimate predictor without restating or leaking the focus."
+      },
+      {
+        "name": "instructional_mode_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Characterizes the delivery format (interactive vs passive/worksheet-only). This is a plausible antecedent of learning satisfaction and lies outside the focus variable, so it carries genuine predictive signal."
+      },
+      {
+        "name": "student_engagement_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Engagement (active vs disengaged/avoidance) is a separate behavioral signal correlated with but not a restatement of satisfaction. Some risk it co-moves closely with satisfaction, but it is a distinct variable, not a deterministic function or component of the rating, so it qualifies as a predictor."
+      },
+      {
+        "name": "subject_format_fit",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How well the subject adapts to the format is an external situational feature plausibly influencing satisfaction; not a restatement or leakage of the rating."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Degree of peer/community loss mentioned is a distinct affective/social factor that plausibly predicts lower satisfaction, and is knowable from the response independently of the numeric rating."
+      }
+    ],
+    "n_predictors": 5,
+    "predictive_utility": 0.82,
+    "rationale": "All five added columns are semantically extracted latent constructs from the open response that lie outside the satisfaction rating itself — none restate, decompose, or leak the focus variable. They span complementary explanatory dimensions (teaching quality, delivery mode, engagement, subject-format fit, social loss), giving a model substantial and diverse predictive leverage beyond the original metadata columns. Slight discount because engagement and satisfaction may be tightly coupled and some categories are sparse, but as a set these are strong, non-mechanical predictors."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

@@ -1,0 +1,115 @@
+{
+  "var_a": "skill_on",
+  "var_b": "skill_off",
+  "swap": true,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.68,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 4,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "`not_responding` | 116 | 62.7% | 19.3%",
+        "why": "granular failure-mode counts and multiple rate bases"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "153 out of 185 hardware incidents (82.7%)",
+        "why": "impact tied to explicit numbers"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "from 185 down to ~32 incidents",
+        "why": "arithmetic internally consistent"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Printer | 83 | 45.6%",
+        "why": "named cause categories with counts"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Targeting printer reliability should be the first priority",
+        "why": "specific prioritized intervention"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Hardware incidents | 182 ... Software (130)",
+        "why": "hardware-vs-software contradicts A; category totals shift between framings"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "is_top_hardware_cause",
+        "quote": "flagged as `is_top_hardware_cause = 1`",
+        "dependent": true
+      },
+      {
+        "column": "hardware_failure_cause",
+        "quote": "The `hardware_failure_cause` column identifies the root cause",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "A is more granular, numerically consistent, and offers layered impact scenarios while B shows minor coherence gaps.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

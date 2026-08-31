@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "n_added_columns": 5,
+  "added_columns": [
+    "product_category",
+    "primary_complaint_type",
+    "product_quality_assessment",
+    "taste_flavor_perception",
+    "price_value_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.83,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.9,
+    "source_groundedness__table_level": 0.9,
+    "b1_overall": 0.865,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.97,
+        "hallucination_observed": false,
+        "rationale": "Gives a strong new grouping axis to segment reviews by product type, directly useful for understanding 'what's in these reviews.' Categories are soundly inferred from source text (dog food->pet_food, peanuts->processed_snack, taffy->candy_confection). Some overlapping/redundant categories (beverage_coffee vs coffee_tea, tea_beverage) are a minor schema-hygiene issue but not a groundedness failure."
+      },
+      {
+        "name": "primary_complaint_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.93,
+        "hallucination_observed": false,
+        "rationale": "Highly actionable axis directly answering 'what's worth attention' by surfacing and categorizing complaints (quality defect, taste, shipping, health/safety). Samples map well to source (mislabeled peanuts->quality_defect, medicinal flavor->taste_flavor_issue, positive reviews->no_complaint). Well grounded."
+      },
+      {
+        "name": "product_quality_assessment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a graded quality ordinal useful for prioritization. Partially correlated with Score and with complaint_type, but the graded scale (excellent/good/acceptable/poor/concerning/defective) adds resolution beyond a 1-5 star. Sample mappings are reasonable, though 'concerning' for a merely medicinal-flavored extract is a mild overreach. Generally sound."
+      },
+      {
+        "name": "taste_flavor_perception",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Isolates the taste dimension, a genuine analytic axis for a food dataset. Values are mostly warranted from text. The domain is somewhat noisy/redundant (good_taste vs excellent_taste vs positive_flavor_descriptor vs smooth_balanced overlap), slightly diluting leverage, but core signal is grounded. NULL for silent rows is correct behavior."
+      },
+      {
+        "name": "price_value_perception",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures price/value sentiment, a distinct actionable axis not present in originals. Correctly emits Unknown/NULL when text is silent (peanut, confection, extract samples) and good_value when stated ('great price'). Grounded and appropriately restrained on silent rows."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.9,
+    "rationale": "All five columns provide genuine, non-trivial axes (category, complaint type, quality, taste, price/value) that materially help an analyst triage and understand these food reviews and identify actionable issues. Values are consistently sound readings of the source text, with appropriate Unknown/NULL handling for silent rows and no observed fabrication. Minor weaknesses are internal redundancy within some category vocabularies and partial overlap between quality/complaint/taste columns, which slightly lowers usefulness on a couple of columns but does not breach the necessary conditions."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

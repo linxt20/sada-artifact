@@ -1,0 +1,104 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "resolution_time_hours",
+    "priority_level",
+    "involves_infrastructure",
+    "involves_access_issue",
+    "involves_performance",
+    "involves_database",
+    "was_resolved"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.08,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.2,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A restatement of the focus variable (resolution time) in hours; this is the outcome itself, not a candidate cause."
+      },
+      {
+        "name": "priority_level",
+        "causal_role": "confounder",
+        "named_in_query": true,
+        "rationale": "Priority is explicitly named in the query as something to control for. It plausibly affects both which incidents get certain treatments (e.g., staffing/routing) and resolution time, but it was copied directly from the query."
+      },
+      {
+        "name": "involves_infrastructure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate underlying cause (issue type) whose effect on resolution time is being attributed. Derived from the text/data, not named in query."
+      },
+      {
+        "name": "involves_access_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause-type flag whose effect on resolution time is under attribution."
+      },
+      {
+        "name": "involves_performance",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause-type flag; a potential explanatory factor for longer resolution times."
+      },
+      {
+        "name": "involves_database",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause-type flag; potential explanatory factor for resolution time."
+      },
+      {
+        "name": "was_resolved",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether the incident was resolved is downstream of / jointly determined with resolution time (resolution time is only defined when resolved). Conditioning on it induces selection bias; it is not a common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "involves_infrastructure",
+      "involves_access_issue",
+      "involves_performance",
+      "involves_database"
+    ],
+    "confounders": [
+      {
+        "name": "priority_level",
+        "named_in_query": true,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.2,
+    "rationale": "The added columns supply plausible candidate treatments (the involves_* issue-type flags) whose effects on resolution time can be attributed, satisfying part (a). However, part (b) is not genuinely realised: the only confounder-like column, priority_level, is simply a copy of a variable explicitly named in the query ('controlling for priority and category'). Category, the other query-named control, was not even added. Crucially, the system surfaced NO confounder from the data/text that was not already named in the query -- the decisive test for real causal reasoning fails. The remaining added columns are either the outcome restated (resolution_time_hours) or a collider (was_resolved), the latter being an outright adjustment error. Thus treatment structure is present but confounding control is weak and query-copied, yielding low confounder quality."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

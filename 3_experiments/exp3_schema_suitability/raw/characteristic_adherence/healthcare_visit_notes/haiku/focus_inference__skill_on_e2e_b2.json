@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "concern_type",
+    "clinical_domain",
+    "visit_stage_in_continuum"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.765,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/type of the patient's presenting clinical concern in each visit",
+    "per_column": [
+      {
+        "name": "concern_type",
+        "supports_focus": true,
+        "rationale": "Directly categorises the kind of clinical concern (acute, chronic, routine, preventive, etc.), which is the core of the query about types of concerns patients present with."
+      },
+      {
+        "name": "clinical_domain",
+        "supports_focus": true,
+        "rationale": "Specifies the medical specialty/body-system context of the concern, a coherent facet that differentiates concern types by clinical area rather than restating concern_type."
+      },
+      {
+        "name": "visit_stage_in_continuum",
+        "supports_focus": true,
+        "rationale": "Locates the concern along the care continuum (new presentation, follow-up, exacerbation, screening), adding a temporal/care-stage facet that meaningfully qualifies the concern without duplicating the others."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.85,
+    "focus_actionability": 0.9,
+    "rationale": "All three columns centre on one coherent, data-inferable focus: characterising the patient's presenting concern. concern_type supplies the primary typology directly answering the query, while clinical_domain and visit_stage_in_continuum form complementary, non-redundant facets (clinical area and position in the care continuum) at a useful granularity. There is minor conceptual overlap between the acute/chronic/follow-up values of concern_type and visit_stage_in_continuum, which slightly weakens differentiation, but they are distinct enough to constitute a sound analytical structure rather than a restatement. The implied focus is clearly actionable: an analyst can profile and segment the dominant concern types (e.g., the large acute_diagnosis share) across domains and care stages to investigate demand patterns. This is not a mechanical/generic set, so the claim is well realised."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

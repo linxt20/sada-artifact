@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What goal-management practices support high achievement?",
+  "focus_variable": "goal_management_success_factors",
+  "concept": "goal_management_success_factors",
+  "n_added_columns": 6,
+  "added_columns": [
+    "goal_specificity_score",
+    "has_quantified_target",
+    "goal_duration_days",
+    "priority_numeric",
+    "achievement_vs_target",
+    "goal_outcome"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3127,
+    "facet_fraction": 0.6667,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.4,
+    "mece": 0.469,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "goal_management_success_factors",
+    "per_column": [
+      {
+        "name": "goal_specificity_score",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Specificity of a goal is a genuine constitutive aspect of good goal-management practice (the 'S' in SMART), an aspect OF how well goals are managed."
+      },
+      {
+        "name": "has_quantified_target",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether a goal has a measurable/quantified target is a constitutive facet of goal-management quality (measurability), an aspect of the practice itself."
+      },
+      {
+        "name": "goal_duration_days",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Time-bounding/duration is a constitutive facet of goal setting (the 'T' in SMART), an aspect of how the goal is framed rather than an external predictor."
+      },
+      {
+        "name": "priority_numeric",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Prioritization is a legitimate aspect of goal-management practice; however it is a numeric restatement of the existing 'priority' column, adding little new facet coverage."
+      },
+      {
+        "name": "achievement_vs_target",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This measures achievement/outcome, i.e., the high achievement the practices are supposed to SUPPORT. It is the dependent outcome, not a facet of the management practices themselves."
+      },
+      {
+        "name": "goal_outcome",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Final completion status is the achievement outcome, not a constitutive part of the success-factor practices; it also overlaps heavily with achievement_vs_target."
+      }
+    ],
+    "facet_columns": [
+      "goal_specificity_score",
+      "has_quantified_target",
+      "goal_duration_days",
+      "priority_numeric"
+    ],
+    "non_facet_columns": [
+      "achievement_vs_target",
+      "goal_outcome"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.4,
+    "rationale": "The concept is the set of goal-management PRACTICES that support achievement. Genuine facets present cover SMART-style dimensions: specificity, measurability (quantified target), and time-bounding (duration). Priority is a facet but duplicates the existing priority column. Mutual exclusivity is weakened by two pairs of overlaps: priority_numeric restates priority, and achievement_vs_target overlaps with goal_outcome. Critically, two of the six added columns (achievement_vs_target, goal_outcome) are the achievement OUTCOME the practices are meant to drive, not facets of the practices themselves, violating the part-of requirement. Exhaustiveness is low because key management-practice facets (ownership/accountability, relevance/alignment, tracking/update cadence, realistic attainability) are absent, and the only genuine facets are a partial SMART subset."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

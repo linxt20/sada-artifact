@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What market-expansion focus should analysts study?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "Industry_Focus",
+    "Geographic_Region",
+    "Market_Expansion_Stage"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8167,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.7084,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Industry_Focus",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a strong categorical axis to group and compare companies for market-expansion analysis. Values are sound readings of the descriptions (Venture Capital, Professional Services, Enterprise Software all warranted). '23andme' as Healthcare is defensible from its ancestry/health text. Minor risk that some categorisations are inferred beyond the sparse text, but overall well grounded."
+      },
+      {
+        "name": "Geographic_Region",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Regional grouping is a legitimate axis for market-expansion study. However the table already has City/Latitude/Longitude, so it is somewhat redundant, and the specific labels (Silicon Valley vs Peninsula vs Bay Area) require geographic inference from addresses that only give a street. Distinguishing 'Peninsula' from 'Silicon Valley' from a bare street address asserts specificity the source rows do not clearly support."
+      },
+      {
+        "name": "Market_Expansion_Stage",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Directly on-topic for the query and offers a valuable grouping axis. But the values are largely unsupported by the source text: nothing in the descriptions indicates a firm is 'Established', 'Mid-Market', or 'Growth Stage'. Assigning 23andme 'Established' or 280 Group 'Mid-Market' are confident specifics the text is silent on, indicating invented staging labels."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.55,
+    "rationale": "All three columns give genuine grouping axes directly relevant to studying market-expansion focus, so analytical usefulness is high. Groundedness is mixed: Industry_Focus is well-supported by the descriptions, but Geographic_Region over-specifies region from bare street addresses, and Market_Expansion_Stage asserts stage/maturity labels that the source text provides no basis for, constituting hallucinated specificity."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

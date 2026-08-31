@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "incident_severity_signal",
+    "infrastructure_target",
+    "resolution_complexity_indicator",
+    "time_of_incident_context",
+    "repeat_incident_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.625,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.75,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "The original table already contains a 'category' column, so this largely restates an existing focus dimension named in the query. While its categories are clean and well-separated, it adds little external information beyond what the query already segments on."
+      },
+      {
+        "name": "incident_severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Segments incidents by impact scope (individual_access, widespread_impact, system_outage, minor_functionality). These are interpretable, well-separated categories distinct from raw priority, and one plausibly expects resolution_duration to differ across them, enabling informative grouped comparison."
+      },
+      {
+        "name": "infrastructure_target",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Groups by affected infrastructure (network, database, email, user_device). Interpretable and segmentable, though it correlates heavily with incident_category, so its marginal informativeness for the focus is partly redundant. Still supports a distinct relationship view."
+      },
+      {
+        "name": "resolution_complexity_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categorises the nature of the fault (server_side_failure, client_side_configuration, performance_degradation, connectivity_obstruction). These are interpretable, well-separated buckets with a clear mechanistic link to how long resolution takes, making it a strong exploratory predictor of the focus."
+      },
+      {
+        "name": "time_of_incident_context",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary after_hours vs business_hours split (284/216) is balanced, interpretable, and external to the focus. Resolution duration plausibly varies with staffing availability, so this enables a clean and meaningful segmentation."
+      },
+      {
+        "name": "repeat_incident_flag",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Boolean flag (403 false / 97 true) is interpretable and reasonably distributed. Repeat incidents may resolve faster (known fix) or slower, so it opens an informative associational comparison against resolution_duration."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.75,
+    "rationale": "As a set, these columns provide multiple external, interpretable, well-separated segmentations (severity/impact scope, fault complexity, time-of-day, repeat status) that a human can group on and compare against resolution_duration, satisfying the exploratory-analysis claim. All are categorical/boolean with balanced, non-constant distributions and no opaque scores. Deductions: 'incident_category' largely restates the existing 'category' column already central to the query, and 'infrastructure_target' overlaps strongly with category, so part of the set is redundant rather than opening new relationships. The remaining four columns carry genuinely new, interpretable dimensions, yielding solid but not maximal informativeness."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

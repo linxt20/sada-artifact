@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How would HelpfulnessNumerator change if reviews provided more detailed product information?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "product_info_score",
+    "product_info_detail_level",
+    "counterfactual_helpfulness_numerator_high_detail",
+    "helpfulness_numerator_delta_if_high_detail"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.6375,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.525,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.5813,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_info_score",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A count/score of product-information detail in the text is a genuine new axis directly relevant to the query about detail affecting helpfulness. Values are a plausible reading of the source text (e.g. the confection review with more specifics scores higher than the terse taffy review), so it is reasonably grounded, though the exact integer scale is a coarse construction."
+      },
+      {
+        "name": "product_info_detail_level",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A low/medium/high bucketing of detail is useful for grouping, but it is largely a coarse restatement of product_info_score, reducing its marginal leverage. NULL for the zero-detail rows is reasonable behaviour. Categorisation of samples as 'low' is a defensible reading."
+      },
+      {
+        "name": "counterfactual_helpfulness_numerator_high_detail",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "The query explicitly asks a counterfactual, so a projected numerator is on-topic. However the values are not grounded in the source text: they are model-produced predictions with implausibly precise constants (0.8057771331375584) and appear to be a deterministic function of the score rather than derivable from anything in the row. This asserts specific numeric outcomes the text cannot support."
+      },
+      {
+        "name": "helpfulness_numerator_delta_if_high_detail",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "The delta directly targets the query's 'how would it change' framing, which is useful. But like the counterfactual it is a fabricated numeric estimate not warranted by the source text, and it is largely a mechanical transform of the counterfactual column, so its values assert unsupported specifics."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.45,
+    "rationale": "The two detail-quantifying columns give a legitimate, grounded new axis aligned with the query. The two counterfactual columns are on-topic and would help the intended analysis, but their values are invented numeric predictions with spurious precision that the source text does not support, and they partly restate each other. Overall usefulness is moderate; groundedness is dragged down by the fabricated counterfactual estimates."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_whatif_helpfulness",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

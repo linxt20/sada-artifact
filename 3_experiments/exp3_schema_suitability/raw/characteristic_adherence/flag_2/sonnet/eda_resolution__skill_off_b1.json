@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_time_hours",
+    "is_resolved",
+    "priority_rank",
+    "avg_resolution_hours_by_category",
+    "avg_resolution_hours_by_priority",
+    "avg_resolution_hours_by_assignment_group"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7783,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.9167,
+    "source_groundedness__table_level": 0.92,
+    "b1_overall": 0.8475,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is the core metric the query asks about; derived from opened_at/closed_at. Values are well-grounded (24.0, 31.2 etc. match closed timestamps). -1 sentinel for unresolved rows is a reasonable 'not applicable' encoding, though slightly noisy if treated as numeric."
+      },
+      {
+        "name": "is_resolved",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "A binary resolved flag derived from closed_at/state; useful to filter valid resolution times before analysis, and consistent with the -1 sentinels. Somewhat generic but adds a genuine filtering axis."
+      },
+      {
+        "name": "priority_rank",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Largely a numeric restatement of the existing priority column, which is already a query dimension. Grounded (rank matches priority), but adds limited new leverage beyond the original."
+      },
+      {
+        "name": "avg_resolution_hours_by_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly serves the query's category dimension by attaching a group aggregate. Values are consistent within category (same value repeats per group). It is a precomputed rollup rather than a new axis, but genuinely aids comparison across categories."
+      },
+      {
+        "name": "avg_resolution_hours_by_priority",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Serves the priority dimension of the query via a group-level average. Consistent per priority. Precomputed aggregate but directly on-query."
+      },
+      {
+        "name": "avg_resolution_hours_by_assignment_group",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Serves the assignment_group dimension explicitly named in the query. Values consistent within group and grounded in aggregated resolution times."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.92,
+    "rationale": "The added columns collectively target exactly the three dimensions in the query (category, priority, assignment group) plus the core resolution_time metric and a resolved flag. resolution_time_hours and is_resolved are grounded in the timestamp/state fields, and the three group-average columns are consistent, on-query rollups. Values in the row_evidence_samples align soundly with the source timestamps and grouping. priority_rank is somewhat redundant with the original priority column, slightly lowering holistic usefulness, but no hallucinated facts are observed."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

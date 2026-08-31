@@ -1,0 +1,130 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.85,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 3,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "GraphQL p95 latency: 180 ms → 720 ms (CS-0077)",
+        "why": "concrete ticket IDs and magnitudes"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "~55 feature requests / ~50 core feature bugs plus ~250 total",
+        "why": "approx counts inconsistent and non-numeric"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "bug 85 34% median 46",
+        "why": "exact counts, shares, medians per category"
+      },
+      {
+        "dimension": "depth",
+        "quote": "impact_scope: 40 single-user, 23 multiple users, 21 entire-tenant",
+        "why": "segmentation across scope and root cause"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Slowest to resolve Performance degradation (median 140 min)",
+        "why": "decision-ready triage signals"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "issue_category",
+        "quote": "issue_category | Count | Share",
+        "dependent": true
+      },
+      {
+        "column": "issue_subcategory",
+        "quote": "Subcategories (from issue_subcategory)",
+        "dependent": true
+      },
+      {
+        "column": "root_cause_class",
+        "quote": "root_cause_class: infrastructure_failure (15)",
+        "dependent": true
+      },
+      {
+        "column": "business_impact_signal",
+        "quote": "business_impact_signal is mostly revenue_or_payment_at_risk",
+        "dependent": true
+      },
+      {
+        "column": "impact_scope",
+        "quote": "28/34 affect the entire_tenant (impact_scope)",
+        "dependent": true
+      },
+      {
+        "column": "affected_component",
+        "quote": "affected_component: admin_console (19)",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B provides precise quantified distributions and multi-facet segmentation while A relies on illustrative examples and approximate counts.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

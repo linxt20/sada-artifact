@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals are linked to longer resolution duration values?",
+  "focus_variable": "duration_like_resolution_value",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "incident_symptom_type",
+    "affected_system_scope",
+    "resolver_match",
+    "open_hour_band",
+    "opened_day_of_week",
+    "assigned_agent",
+    "caller_type"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.7,
+    "predictor_fraction": 1.0,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "duration_like_resolution_value",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Incident type (database, email, vpn, network) is known at intake and plausibly drives how long resolution takes; sits outside the duration and carries genuine predictive signal."
+      },
+      {
+        "name": "incident_symptom_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Symptom class (connectivity_failure, access_denied, outage) is observable early and different symptoms have systematically different fix times; legitimate predictor, no leakage."
+      },
+      {
+        "name": "affected_system_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope (single_user vs system_wide/service_wide) is knowable at diagnosis and strongly plausibly correlates with resolution effort/duration; not a restatement of the outcome."
+      },
+      {
+        "name": "resolver_match",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the assignee matches the appropriate resolver group is plausibly predictive of routing efficiency and thus duration. Mildly ambiguous timing, but generally determinable at assignment, so treat as a weak-to-moderate predictor rather than leakage."
+      },
+      {
+        "name": "open_hour_band",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The time band an incident is opened (after_hours, overnight, business_hours) is known at intake and plausibly affects staffing availability and hence resolution time; clean predictor derived from opened_at."
+      },
+      {
+        "name": "opened_day_of_week",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Weekday vs weekend at open time affects staffing and SLA clocks; known at intake, plausible predictive signal, no leakage."
+      },
+      {
+        "name": "assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Specific agent handling the ticket plausibly carries signal about resolution speed (experience/workload); known during handling and outside the duration value itself."
+      },
+      {
+        "name": "caller_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Caller category (named_user vs itil_user) is known at intake and may correlate with issue complexity and prioritization, plausibly predictive of duration."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.7,
+    "rationale": "All eight added columns are variables that lie outside the resolution-duration focus, are knowable at or before resolution (no post-outcome leakage), and each plausibly carries signal about how long resolution takes. The set spans complementary dimensions -- issue type/symptom/scope, temporal open-time features, routing/agent, and caller type -- giving a model meaningful additional leverage beyond the raw columns. Utility is high but not maximal because several features (open_hour_band, opened_day_of_week) are derivable from existing opened_at and thus add limited fresh information, and resolver_match/agent effects may be partly collinear with existing assignment fields."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

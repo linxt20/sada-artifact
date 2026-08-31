@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "agent_avg_resolution_hrs",
+    "agent_workload",
+    "priority_numeric",
+    "category_avg_resolution_hrs",
+    "opened_hour_of_day",
+    "opened_day_of_week"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6833,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.725,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.7042,
+    "hallucination_rate": 0.1667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "agent_avg_resolution_hrs",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Directly targets the query: per-agent average resolution time is a strong signal for whether an agent's tickets take longer. However the table exposes assigned_to plus opened_at/closed_at, so an agent average is derivable in principle. The suspicious clustering (e.g. a flat '750' for 84 rows) and lack of opened_at in samples suggests some values may be imputed/placeholder rather than cleanly computed, so groundedness is only moderate."
+      },
+      {
+        "name": "agent_workload",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Agent ticket count/workload is a plausible and genuinely useful axis for explaining longer resolution times. It is derivable from assigned_to counts in the table. Values track agent identity consistently, though the exact counts cannot be fully verified from samples."
+      },
+      {
+        "name": "priority_numeric",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A numeric encoding of the existing 'priority' column. Priority is relevant to resolution time, but this is largely a restatement of an original column, adding little new analytical leverage. Values are well grounded in the source priority field."
+      },
+      {
+        "name": "category_avg_resolution_hrs",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Category-level average resolution is useful context but is a ticket/category property rather than an agent signal, so somewhat tangential to the agent-focused query. Derivable from category plus timestamps; values are consistent per category across samples."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Extracted from opened_at; a legitimate new temporal axis that could correlate with resolution delays. Note the produced hour (e.g. 9, 14, 16) does not match closed_at hours shown, but is plausibly from opened_at which is present in the table but not in the sample text."
+      },
+      {
+        "name": "opened_day_of_week",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Day-of-week from opened_at gives a reasonable grouping axis for resolution-time analysis. Derivable from the present opened_at column; values plausible and cannot be contradicted from the samples shown."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.7,
+    "rationale": "The set provides several genuinely useful axes for the query -- per-agent resolution average and workload directly address 'which agents/signals lead to longer resolution', while temporal decompositions add modeling leverage. priority_numeric is largely redundant with an existing column and category averages drift from the agent focus, lowering overall usefulness slightly. Groundedness is generally acceptable since values are derivable from present columns (assigned_to, category, opened_at, timestamps), but the agent_avg_resolution_hrs column shows placeholder-looking flat values (e.g. '750') and the raw computations cannot be fully verified from samples, introducing some hallucination risk."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

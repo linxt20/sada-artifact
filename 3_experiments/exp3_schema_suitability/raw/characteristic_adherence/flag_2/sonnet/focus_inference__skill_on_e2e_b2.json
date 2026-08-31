@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "affected_component",
+    "scope_context",
+    "recurrence_signal",
+    "resolution_same_day"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.546,
+    "focus_coherence": 0.78,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/type of recurring problem in each incident ticket, characterized along a taxonomy of problem-defining facets (what kind of issue, how it fails, what it affects, and its scope).",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "supports_focus": true,
+        "rationale": "Classifies the problem domain (email, database, vpn, etc.), a core facet of 'what type of problem' and directly enables recurring-type analysis."
+      },
+      {
+        "name": "failure_mode",
+        "supports_focus": true,
+        "rationale": "Captures HOW the problem manifests (connection_failure, outage, access_denied), a distinct and highly relevant facet for typing recurring problems."
+      },
+      {
+        "name": "affected_component",
+        "supports_focus": true,
+        "rationale": "Identifies the technical locus of the problem (server_side, remote_access, client_application), adding orthogonal structure to the problem taxonomy."
+      },
+      {
+        "name": "scope_context",
+        "supports_focus": true,
+        "rationale": "Describes the breadth/context of impact (individual_user, production_environment, department), a coherent facet, though it overlaps somewhat with affected_component (remote_access appears in both)."
+      },
+      {
+        "name": "recurrence_signal",
+        "supports_focus": false,
+        "rationale": "Constant 'true' for all 500 rows; it carries zero information and cannot differentiate recurring vs non-recurring problems, so it does not realise the focus despite its on-topic name."
+      },
+      {
+        "name": "resolution_same_day",
+        "supports_focus": false,
+        "rationale": "A resolution/SLA attribute, not a facet of the problem TYPE; it drifts toward outcome/handling rather than the recurring-problem taxonomy the query asks for."
+      }
+    ],
+    "focus_coherence": 0.78,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.85,
+    "rationale": "The columns collectively centre on a coherent inferable focus: a multi-facet taxonomy of incident problem types (category x failure_mode x affected_component x scope). Four of six columns form a genuinely differentiated, non-trivial predictor/attribute set at a useful granularity that would let an analyst surface recurring problem clusters -- clearly beyond mechanical text metrics. This is actionable: an analyst can group and count these facets to identify dominant recurring problem types. Coherence and structure are dented by two weak columns: recurrence_signal is a constant with no discriminative value (vacuous), and resolution_same_day shifts to resolution/outcome rather than problem typing. There is also mild redundancy between affected_component and scope_context. Overall a solid but not clean realisation of focus inference."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

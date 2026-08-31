@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "performance_vs_expectation",
+    "content_or_creative_quality_issue"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.86,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.815,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8375,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "performance_vs_expectation",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Categorizing how the product met expectations gives a strong axis to group complaints vs praise, directly supporting the 'how to improve satisfaction' query. Values are mostly sound readings (AMZ-0004 works_as_advertised, AMZ-0005 works_as_advertised, AMZ-0002 shortfall). Weaker on AMZ-0001, where the grievance is availability/lack of a product rather than a product underperforming, so 'significant_shortfall' is a loose fit, but not egregiously invented."
+      },
+      {
+        "name": "content_or_creative_quality_issue",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a distinct axis focused on creative/content problems (narrative, factual accuracy, bias), complementing the performance dimension rather than restating it, useful for media products in the review set. Values are well grounded: AMZ-0002 political commentary weighed against faith writing maps reasonably to narrative/pacing weak; AMZ-0004 skincare correctly not_present; AMZ-0005 meets_expectations. AMZ-0003's music rant as 'narrative_or_pacing_weak' is a defensible categorization of shallow lyrical content."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.82,
+    "rationale": "Both columns supply genuine, non-redundant categorical axes that let an analyst segment reviews by product performance and by content quality, directly enabling insight into what sellers could improve. Neither is near-constant nor a trivial sentiment flag. Values are largely well-grounded extractions/categorizations of the source text, with only mild stretch on rows where the grievance type doesn't cleanly fit the schema (e.g., availability complaint coerced into a performance shortfall). No clear hallucinations of invented facts observed."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 2
+}

@@ -1,0 +1,121 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "weakest_dimension",
+    "value_gap",
+    "service_score",
+    "hardware_score",
+    "improvement_priority",
+    "rating_consistency",
+    "experience_segment",
+    "recommendation_risk_score",
+    "class_adjusted_vfm",
+    "top_complaint_category"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.02,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.05,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "Overall Rating / Recommended (recommendation rate)",
+    "per_column": [
+      {
+        "name": "weakest_dimension",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Labels which sub-rating is lowest for a review. This identifies a candidate driver of low recommendation (an exposure), not a common cause of both a driver and the outcome. It is a re-expression of the sub-ratings, which themselves sit on the causal path to the outcome."
+      },
+      {
+        "name": "value_gap",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A signed gap derived from Value-For-Money vs. the other ratings. Treated as a candidate cause of dissatisfaction/low recommendation. Not a common cause of a treatment and the outcome; it is itself a derived rating feature."
+      },
+      {
+        "name": "service_score",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Composite of the soft-service ratings (staff, food). A plausible candidate cause of the overall rating/recommendation, i.e., a treatment/exposure — not a confounder that independently causes both a treatment and the outcome."
+      },
+      {
+        "name": "hardware_score",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Composite of the physical-product ratings (seat comfort, inflight entertainment). Another candidate driver/exposure of the outcome, not a common cause external to the drivers."
+      },
+      {
+        "name": "improvement_priority",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Prescriptive ranking of which area to fix. It is an actionable recommendation output rather than a causal variable (neither treatment, confounder, mediator, nor collider)."
+      },
+      {
+        "name": "rating_consistency",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A dispersion/consistency statistic across the sub-ratings. It is a summary feature, not a common cause of both a treatment and the outcome; conditioning on it does not remove confounding bias."
+      },
+      {
+        "name": "experience_segment",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Segments (satisfied / poor_value / poor_service / poor_hardware) are built from the sub-ratings that lie between the service drivers and the recommendation outcome. It is on the causal path, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "recommendation_risk_score",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "A predicted probability/score of NOT recommending — essentially a proxy for the outcome itself (Recommended). It restates the focus rather than supplying a common cause; conditioning on it is conditioning on the outcome."
+      },
+      {
+        "name": "class_adjusted_vfm",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Value-For-Money residualised by cabin Class. It bakes an adjustment for Class into a single transformed treatment, hinting at awareness of Class as a confounder, but it does NOT surface Class as an explicit confounder column to adjust for; it is a constructed (adjusted) exposure."
+      },
+      {
+        "name": "top_complaint_category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Dominant complaint theme extracted from review text. A candidate cause/driver of low recommendation (exposure), not a common cause of both a driver and the outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "service_score",
+      "hardware_score",
+      "value_gap",
+      "weakest_dimension",
+      "class_adjusted_vfm",
+      "top_complaint_category"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.05,
+    "rationale": "The operator supplies plentiful candidate TREATMENTS (service_score, hardware_score, value_gap, weakest_dimension, class_adjusted_vfm, top_complaint_category) — all derived from the existing sub-ratings or review text and read as candidate drivers of the outcome. However, it fails the decisive test for causal attribution: it does not surface any CONFOUNDER, i.e., a variable that plausibly causes BOTH a treatment and the outcome and must be adjusted to de-bias the attribution. The remaining columns are non-causal or wrong-role for adjustment: experience_segment is a mediator on the driver→recommendation path; recommendation_risk_score is a proxy of the outcome itself (conditioning on it is conditioning on the outcome); rating_consistency and improvement_priority are summary/prescriptive features. class_adjusted_vfm shows implicit awareness of Class as a confounder by residualising for it, but Class (and other plausible common causes such as Type of Traveller or Route, which sit in the original table) is never exposed as a distinct confounder column to include in an adjustment set. Because no genuine common-cause confounder is provided — let alone one newly surfaced from the data rather than copied from the query — the columns do not set up a valid causal estimation. FAIL on the technical claim."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_improve_singapore",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 10
+}

@@ -1,0 +1,97 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some agents have longer resolution times?",
+  "focus_variable": "agent_resolution_discrepancy",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "assigned_agent",
+    "incident_category",
+    "problem_scope",
+    "incident_complexity_signal",
+    "agent_closure_alignment"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "agent_resolution_discrepancy (resolution time)",
+    "per_column": [
+      {
+        "name": "assigned_agent",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query asks why some AGENTS have longer resolution times; the agent identity is the candidate cause whose effect on the outcome is being attributed. It is the treatment, explicitly named in the query."
+      },
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Incident type plausibly affects resolution time (some categories are harder) and can also correlate with which agents get assigned (specialization routing), making it a common cause of both treatment and outcome. Not named in query."
+      },
+      {
+        "name": "problem_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The breadth of a problem (facility-wide vs individual device) drives longer resolution and may influence agent assignment (senior agents get bigger scope). Plausible common cause, not named in query."
+      },
+      {
+        "name": "incident_complexity_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Intrinsic complexity raises resolution time and can steer assignment toward particular agents; a plausible common cause. Not named in query. (Some risk it overlaps with a mediator of scope, but as an assignment-driving pre-treatment trait it functions as a confounder.)"
+      },
+      {
+        "name": "agent_closure_alignment",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether the closing agent matches the assigned agent is an outcome of the resolution process (handoffs occur during/after resolution). It is downstream of both agent and resolution, so it is a post-treatment collider/mediator, not a confounder; adjusting for it would introduce bias."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "assigned_agent"
+    ],
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "problem_scope",
+        "named_in_query": false,
+        "plausibility": 0.65
+      },
+      {
+        "name": "incident_complexity_signal",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The system supplies a clear treatment (assigned_agent, the cause under attribution) plus three variables not named in the query that plausibly cause both agent assignment (via routing/specialization) and resolution time, realising the causal-attribution setup. The confounders were surfaced from the data rather than copied from the query. One added column (agent_closure_alignment) is a post-treatment collider/mediator and should not be adjusted for, lowering overall quality; complexity and scope also carry some overlap risk. Overall a genuine but imperfect causal-estimation scaffold."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

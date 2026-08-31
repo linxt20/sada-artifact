@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some agents have longer resolution times?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "assigned_resolver_match",
+    "incident_category",
+    "incident_severity_signal",
+    "failure_mode",
+    "affected_scope",
+    "is_ticket_unresolved"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7417,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.7833,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7625,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "assigned_resolver_match",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Whether the assigned agent matches the closer is a genuine axis relevant to resolution-time analysis (hand-offs may lengthen resolution). Derivable from assigned_to vs closed_by present in original table; values are a sound reading."
+      },
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents gives a strong grouping axis for comparing resolution times across issue types. Well grounded in short_description (e.g. 'access the database' -> database, 'VPN issue' -> vpn). Partly redundant with existing category column but more granular/derived from text."
+      },
+      {
+        "name": "incident_severity_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Severity (outage/degraded/access_denied) is a plausible driver of resolution time and a useful axis. Mostly grounded, but 'Unable to access the database' -> 'access_denied' is a reasonable read while some assignments (e.g. degraded for 'frequent disconnection') are inferential; NULLs for silent rows are appropriate. Some values assert severity the terse text only weakly supports."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Failure mode is a genuine new axis for modeling resolution time. Grounded for cases like 'connection unstable' -> connection_failure, but 'Unable to access the database' -> connection_failure is a specific inference the text does not clearly support (could be permissions), indicating some overconfident labeling."
+      },
+      {
+        "name": "affected_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual vs office/department-wide) is a strong candidate driver of resolution time. However most short_descriptions are silent on scope, yet 280 rows are labeled 'individual_user' as a confident default — that asserts specifics the text does not state. Unknown values for silent rows would be correct; the default weakens groundedness."
+      },
+      {
+        "name": "is_ticket_unresolved",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Largely derivable from state/closed_at and is nearly constant (478 false / 22 true), and partly redundant with the original state column, giving limited analytical leverage for comparing agent resolution times. Grounded where derived, but low-variance."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.75,
+    "rationale": "Most added columns provide genuine new grouping/modeling axes (category, severity, failure_mode, resolver_match, scope) directly relevant to explaining resolution-time differences, so table-level usefulness is solid; is_ticket_unresolved is near-constant and redundant. Groundedness is generally good for extractions from short_description and original fields, but several columns over-assert specifics the terse text does not support — notably affected_scope defaulting to 'individual_user' and failure_mode inferring connection_failure for access issues — pulling groundedness down from high."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

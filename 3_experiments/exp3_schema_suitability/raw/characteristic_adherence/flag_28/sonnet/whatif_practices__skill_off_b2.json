@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "focus_variable": "percent_complete",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "current_achievement_rate",
+    "is_top_performer_priority",
+    "top_performer_benchmark_achievement",
+    "projected_achievement_rate",
+    "projected_improvement_pct_pts"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "percent_complete",
+    "per_column": [
+      {
+        "name": "current_achievement_rate",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Baseline value of the outcome (achievement) itself, not a treatment or confounder; it is the pre-intervention level referenced by the query."
+      },
+      {
+        "name": "is_top_performer_priority",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Encodes whether the row adopts the top-performer goal-management practice; this is the intervenable lever the query asks about (teams could adopt these practices), so it is settable."
+      },
+      {
+        "name": "top_performer_benchmark_achievement",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "A benchmark/reference target derived from top performers; it is a comparison constant used to compute projections, not a common cause of both treatment and outcome."
+      },
+      {
+        "name": "projected_achievement_rate",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "The post-intervention (counterfactual) outcome value; it is the outcome under treatment, not a confounder."
+      },
+      {
+        "name": "projected_improvement_pct_pts",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "The estimated effect (delta) on the outcome; a derived difference of outcome values, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "is_top_performer_priority"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns identify a plausibly intervenable treatment (adopting top-performer practices, encoded as is_top_performer_priority) and directly express the counterfactual outcome and its projected improvement. However, the interventional claim requires adjusting for CONFOUNDERS -- common causes of both adoption of the practices and achievement (e.g., team maturity, resourcing, department, priority, historical performance). No column plays a confounder role; the projections appear to be mechanically computed by rescaling toward a top-performer benchmark rather than adjusting for any pre-treatment common causes. Existing columns like department/priority/owner that could confound adoption vs. achievement are not incorporated as adjustment variables. Because the decisive test concerns confounders (especially those not named in the query), and none are supplied, the causal what-if identification is not realised."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

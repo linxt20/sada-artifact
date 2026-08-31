@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main kinds of issues these support tickets are about?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_category",
+    "primary_product_area",
+    "root_cause_mechanism",
+    "resolution_action_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.8875,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.785,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.8362,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.98,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query about kinds of issues; provides a clean grouping axis with well-differentiated categories. Values are sound readings of the source text (billing_issue for invoice duplicate, outage_incident for 502, feature_request for enhancement). Minor debatability: CS-0002 session drop labeled 'bug' when the customer suspects an SSO config push, but it is a defensible reading."
+      },
+      {
+        "name": "primary_product_area",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Gives a genuine second axis (product area) to cross-tabulate issue kinds, useful for the analysis. Values are well-grounded: billing_payments, authentication_identity, infrastructure_platform, user_interface, data_integrity all map cleanly to the described text."
+      },
+      {
+        "name": "root_cause_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Useful root-cause axis and correctly uses 'not_present' for silent rows (feature request). However several values assert mechanisms the text does not support: CS-0001 labeled configuration_error though text only describes a duplicate line item; CS-0003 labeled resource_exhaustion when a 502 could stem from many causes and the text is silent; CS-0002 configuration_error where the customer only 'suspects' an SSO push. Confident specifics on silent rows lower groundedness."
+      },
+      {
+        "name": "resolution_action_type",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Adds an actionable axis (what fix is needed) that is not redundant with category. Mostly warranted inferences (feature_implementation for enhancement, urgent_incident_response for outage, billing_credit_audit for invoice fix). Slightly speculative since tickets describe problems not resolutions, but the inferred action types are reasonable projections of the request."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.75,
+    "rationale": "All four columns give distinct, non-redundant analytical axes (issue kind, product area, root cause, resolution action) that meaningfully support answering what the tickets are about and how they cluster. Groundedness is strong for issue_category and product_area, but weaker for root_cause_mechanism where several confident specific causes are asserted on rows where the source text is silent or only speculative. Correct use of 'not_present' for silent rows is noted positively."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

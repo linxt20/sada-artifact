@@ -1,0 +1,48 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How would HelpfulnessNumerator change if reviews provided more detailed product information?",
+  "n_added_columns": 2,
+  "added_columns": [
+    "ProductInfoCompletenessScore",
+    "HasDetailedProductInfo"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 2,
+    "n_judged_columns": 2,
+    "analytical_usefulness": 0.725,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.325,
+    "source_groundedness__table_level": 0.32,
+    "b1_overall": 0.525,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "ProductInfoCompletenessScore",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "A continuous measure of how much product detail a review contains is directly the axis the query asks to model against HelpfulnessNumerator, giving genuine analytical leverage. However, groundedness is weak: values look poorly calibrated and internally inconsistent with the paired text. The C.S. Lewis confection review, which is largely a literary aside, scores 100.0, while the peanut mislabeling review with concrete product attributes scores only 43.6, and the taffy review 30.4. The dominant spike at exactly 100 (3134 rows) suggests an arbitrary saturation rather than a faithful reading of source text, and the specific decimal scores assert a precision the text does not warrant."
+      },
+      {
+        "name": "HasDetailedProductInfo",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "A binary detailed/not-detailed flag offers a simple grouping axis for comparing HelpfulnessNumerator, so it is somewhat useful, though largely redundant with the continuous score. Groundedness is poor and, worse, contradicts the companion column: the confection review scored 100.0 on completeness yet is flagged 0 here, while the medicinal-flavor review scoring 50.8 is flagged 1. The Robitussin/root beer review flagged 1 contains little concrete product spec. These inconsistencies indicate the flag is not a sound reading of the source text."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.32,
+    "rationale": "Both columns target exactly the construct the query needs (degree of product-information detail vs. helpfulness), so they provide real analytical leverage, with the binary flag being partly redundant with the continuous score. The critical failing is groundedness: the produced values are poorly aligned with, and in several cases contradict, the paired source text, and the two columns even disagree with each other on the same rows (a text-light literary review scores 100 completeness but is flagged as not detailed). The large exact-100 spike further signals arbitrary rather than text-derived scoring. Values assert precision and judgements the source does not support."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_whatif_helpfulness",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 2
+}

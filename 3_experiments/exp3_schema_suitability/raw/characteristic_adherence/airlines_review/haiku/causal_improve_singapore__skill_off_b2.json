@@ -1,0 +1,95 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "How can Singapore Airlines improve its overall rating and recommendation rate, especially on flights where passengers do not recommend it (Recommended = no)?",
+  "focus_variable": "overall_rating_recommendation",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "avg_service_rating",
+    "lowest_service_dimension",
+    "rating_service_gap",
+    "customer_segment",
+    "critical_issue_type",
+    "is_problem_review"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 3,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "overall_rating_recommendation",
+    "per_column": [
+      {
+        "name": "avg_service_rating",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "An aggregate of service dimension ratings that plausibly drives both overall rating and recommendation; positioned as a candidate cause whose effect is being attributed."
+      },
+      {
+        "name": "lowest_service_dimension",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Identifies which service aspect is weakest, a candidate driver of the outcome, but it is derived from the same rating variables that constitute the outcome pathway rather than a distinct common cause."
+      },
+      {
+        "name": "rating_service_gap",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The gap between overall rating and service rating is a function that includes the outcome itself; it lies on/derives from the outcome path and is not a common cause. Adjusting for it would be an error."
+      },
+      {
+        "name": "customer_segment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Economy vs high-value segment (tied to travel class/expectations) plausibly influences both service experience/ratings and likelihood to recommend; a candidate common cause not named in the query."
+      },
+      {
+        "name": "critical_issue_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The specific critical issue is a manifestation of low service ratings and lies on the path to the outcome; it is a mediator, not a common cause."
+      },
+      {
+        "name": "is_problem_review",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "A flag derived jointly from poor service and negative outcome signals; it is an effect of both treatment and outcome, effectively a collider/outcome-derived indicator, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "avg_service_rating",
+      "lowest_service_dimension"
+    ],
+    "confounders": [
+      {
+        "name": "customer_segment",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The added columns supply a plausible treatment (aggregate service rating) but the confounding structure is weak. Most 'context' columns (rating_service_gap, critical_issue_type, is_problem_review) are mediators or outcome/treatment-derived colliders rather than genuine common causes, and adjusting for them would bias attribution. Only customer_segment functions as a plausible confounder surfaced from the data (not named in the query), and even it is only moderately convincing since it is closely tied to Class. No unnamed pre-treatment common causes such as route, traveller type, or seasonality were surfaced as adjustment variables. The set therefore only partially realises the causal-attribution claim."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_improve_singapore",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

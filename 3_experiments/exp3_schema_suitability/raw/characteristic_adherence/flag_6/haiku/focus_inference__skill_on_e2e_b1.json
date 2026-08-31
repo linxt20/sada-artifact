@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_issue_category",
+    "issue_severity_signal",
+    "assigned_technician",
+    "location_or_scope",
+    "issue_recurrence_pattern",
+    "same_person_assigned_closed"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6083,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.5083,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.5583,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_issue_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the free-text short_description into clean issue types, giving a strong new grouping axis. Sampled values (database_access, vpn_connectivity, network_connectivity, software_system) are all sound readings of the source text. Somewhat overlaps with the existing 'category' column but adds finer text-derived granularity."
+      },
+      {
+        "name": "issue_severity_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A severity/nature dimension is genuinely useful for prioritization analysis. However some labels are not well-grounded: 'Unable to access the database' -> access_failure_individual is fine, but 'VPN issue, frequent disconnection' -> service_degradation_partial and 'Software update issue' -> access_failure_individual read as guesses beyond the terse text; individual-vs-outage scope is asserted where the text is silent."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Almost certainly redundant with the existing 'assigned_to'/'closed_by' original columns, so it adds little new analytical leverage. The specific technician names are not derivable from the sampled source_text (which only exposes timestamps and short_description); the value appears copied from an unshown column or invented, and cannot be validated from the provided evidence."
+      },
+      {
+        "name": "location_or_scope",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Scope is a plausibly useful axis, and the large <NULL> share (238) correctly reflects silence. But non-null assignments are weakly grounded: 'Unable to access the database' -> device_individual and 'Unable to access the company's intranet' -> office_wide impose a scope the terse text does not state, so many concrete values are unwarranted inferences."
+      },
+      {
+        "name": "issue_recurrence_pattern",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "Recurrence would be useful if grounded, but the values contradict the text. 'Unable to access the database' and 'Unable to access the company's intranet' -> systemic_recurring have no recurrence signal in the source; only 'frequent disconnection' warrants a recurring label. The distinctions (systemic vs same_user vs same_system) are largely fabricated for single-line tickets."
+      },
+      {
+        "name": "same_person_assigned_closed",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": false,
+        "rationale": "A boolean comparing assigned_to and closed_by is a legitimate process/workflow metric derivable from original columns. It is not verifiable from the sampled source_text (those columns aren't shown), but it is a clearly warranted mechanical derivation from existing fields, so no fabrication is assumed."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.5,
+    "rationale": "The added set offers several genuinely useful analytical axes (issue category, severity, workflow same-person flag), improving on the raw ticket text. The main weakness is groundedness: severity, location/scope, and especially recurrence assign confident specific labels to extremely terse single-line descriptions that do not support them, and assigned_technician is both redundant with existing columns and unverifiable from the shown text. primary_issue_category is the strongest column; issue_recurrence_pattern is the weakest due to systematic over-assertion of recurrence."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

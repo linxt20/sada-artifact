@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "n_added_columns": 4,
+  "added_columns": [
+    "amount_tier",
+    "processing_lag_days",
+    "missing_source_id",
+    "submitter_expense_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7125,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.725,
+    "source_groundedness__table_level": 0.73,
+    "b1_overall": 0.7188,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "amount_tier",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A tiered bucketing of the existing amount column gives a clean grouping axis for expense analysis. Values are a direct, warranted transformation of the numeric amount present in the table, and the near-tercile split (167/167/166) is consistent with quantile binning."
+      },
+      {
+        "name": "processing_lag_days",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Lag between opened_at and processed_date is a genuine actionable operational metric. However both processed_date values shown as 'nan' correctly yield null, but the row with processed_date '2023-06-20' also yields null, suggesting the derivation depends on opened_at which isn't shown; where a value ('1.0') is produced it is plausibly grounded, but the mostly-NULL distribution weakens confidence that it is being computed soundly."
+      },
+      {
+        "name": "missing_source_id",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A data-quality flag can be actionable, but it is a fairly generic presence/absence indicator largely restating whether an original field is populated. Groundedness is questionable: the flag should track source_id, yet the sample with processed_date present and no indication of source_id status is marked 'Yes' while others 'No'; the evidence samples do not include source_id, and one mapping (row 3) appears inconsistent, indicating the values may not reliably read the source."
+      },
+      {
+        "name": "submitter_expense_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Count of expenses per submitter is a strong new axis to identify high-frequency filers and concentration, directly aggregable from the existing user column. Values are a warranted derivation via grouping over the table, and the spread of counts is analytically meaningful."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.73,
+    "rationale": "The added columns collectively provide genuine analytical leverage for expense analysis: amount_tier and submitter_expense_count offer clean grouping/concentration axes, and processing_lag_days targets an actionable operational metric. Groundedness is generally sound for the transformation-based columns (amount_tier, submitter_expense_count), but processing_lag_days and especially missing_source_id show weaker or inconsistent alignment with the sampled source text (source_id not visible in samples, and at least one flag mapping looks inconsistent), lowering overall confidence."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

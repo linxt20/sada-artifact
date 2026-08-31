@@ -1,0 +1,84 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "focus_variable": "percent_complete",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "goal_domain",
+    "implementation_mechanism",
+    "employee_involvement_level",
+    "outcome_metric_alignment"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "percent_complete",
+    "per_column": [
+      {
+        "name": "goal_domain",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The domain/type of goal (revenue, satisfaction, cost) is a common cause: it influences which management practices are adopted and how achievable the goal is, hence percent_complete. Not settable as an intervention, and not named in the query."
+      },
+      {
+        "name": "implementation_mechanism",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The mechanism used to implement the goal (engagement program, process automation, training) is an intervenable lever an actor could choose. This aligns with the 'adopt goal-management practices' intervention, though it is more the concrete practice than the outcome."
+      },
+      {
+        "name": "employee_involvement_level",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The level at which people are involved (team, department, individual, enterprise) is a configurable/assignable property of how the goal is managed -- an intervenable practice consistent with the what-if intervention."
+      },
+      {
+        "name": "outcome_metric_alignment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether the metric is aligned or misaligned is a decidable design choice about goal management; an actor could set goals to be aligned. It plausibly drives percent_complete and is an intervenable lever rather than a mediator internal to the outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "implementation_mechanism",
+      "employee_involvement_level",
+      "outcome_metric_alignment"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "goal_domain",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The added columns capture several plausibly intervenable treatments (implementation_mechanism, employee_involvement_level, outcome_metric_alignment) that operationalize the 'adopt goal-management practices' intervention, so the treatment side of the what-if claim is reasonably satisfied. However, the intervention structure is weak on the confounding side: only goal_domain functions as a genuine common cause of both treatment and outcome, and no other confounders (e.g., team capability, resourcing, prior performance, difficulty of target) are provided. Without adjusting for common causes, the counterfactual effect of adopting these practices cannot be cleanly read off. The set leans toward enumerating treatment variants rather than the confounders needed for identification, so it only partially realizes the interventional claim."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

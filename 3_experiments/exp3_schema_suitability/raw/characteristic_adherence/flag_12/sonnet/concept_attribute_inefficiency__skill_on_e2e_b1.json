@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_type",
+    "resolution_action_type",
+    "reassignment_indicator",
+    "self_resolution_indicator",
+    "resolver_agent",
+    "scope_breadth",
+    "affected_asset_class"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7812,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.65,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.7156,
+    "hallucination_rate": 0.625
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents from short_description gives a clean axis to group recurring issues (printer dominates). Values align well with source text."
+      },
+      {
+        "name": "failure_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A distinct failure-mode axis useful for spotting inefficiency drivers. Mostly well-grounded, though 'database connection lost' -> connectivity_failure is a reasonable reading; somewhat correlated with incident_category but adds a different lens."
+      },
+      {
+        "name": "resolution_action_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Directly relevant to resolution efficiency. However short_descriptions rarely state the action taken; values like 'repair'/'network_fix' are often inferred defaults from category rather than grounded, so some assertions exceed what the text supports."
+      },
+      {
+        "name": "reassignment_indicator",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is a strong signal of resolution inefficiency, so highly relevant. But the sampled source text (short_description + timestamps) contains no reassignment history; True/False values appear unsupported by available fields."
+      },
+      {
+        "name": "self_resolution_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Self-resolution vs assisted is a useful efficiency dimension, but nothing in the sampled source text indicates self-resolution; e.g. connectivity loss marked self_resolution=True is not warranted. Values seem invented."
+      },
+      {
+        "name": "resolver_agent",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Agent-level comparison is relevant to efficiency, but this largely duplicates the existing assigned_to/closed_by columns. Values are names not present in the sampled source text, so groundedness is uncertain and possibly a restatement."
+      },
+      {
+        "name": "scope_breadth",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Blast-radius axis is a genuinely new grouping dimension for inefficiency. Some values are warranted ('floor 3' -> location_wide), but others like generic 'printer not working' -> shared_office_equipment and 'database' -> infrastructure_wide are inferred beyond what the text states."
+      },
+      {
+        "name": "affected_asset_class",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Well-grounded extraction of the asset from short_description, but heavily overlaps incident_category, reducing incremental analytical leverage."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.65,
+    "rationale": "The set provides several genuinely useful axes for diagnosing resolution inefficiency (category, failure_type, scope_breadth, reassignment). Groundedness is mixed: extraction-style columns (incident_category, affected_asset_class) read soundly from short_description, but the process/behavioral columns (reassignment, self_resolution, resolution_action_type) assert facts the sampled source text does not support and appear inferred or invented. resolver_agent and affected_asset_class also partly restate existing/other columns."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

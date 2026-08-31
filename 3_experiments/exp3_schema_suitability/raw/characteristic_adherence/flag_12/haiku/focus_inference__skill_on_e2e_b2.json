@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "device_component",
+    "problem_type",
+    "resolution_action",
+    "recurring_pattern",
+    "urgency_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.656,
+    "focus_coherence": 0.82,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/anatomy of incidents captured in ticket free-text: what device/component fails, what problem occurs, and how it gets resolved.",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "supports_focus": true,
+        "rationale": "Classifies the incident into a semantic category derived from short_description, anchoring the 'what kind of incident' facet."
+      },
+      {
+        "name": "device_component",
+        "supports_focus": true,
+        "rationale": "Identifies the affected hardware/component, a concrete facet of the incident subject."
+      },
+      {
+        "name": "problem_type",
+        "supports_focus": true,
+        "rationale": "Characterizes the failure mode (malfunction, connectivity, update issue), a distinct and complementary facet."
+      },
+      {
+        "name": "resolution_action",
+        "supports_focus": true,
+        "rationale": "Captures how the incident was addressed, closing the problem->resolution loop and adding analytical value."
+      },
+      {
+        "name": "recurring_pattern",
+        "supports_focus": true,
+        "rationale": "Flags whether the incident reflects a repeated issue; relevant to prioritizing what's worth analyzing, though slightly broader."
+      },
+      {
+        "name": "urgency_signal",
+        "supports_focus": false,
+        "rationale": "A bare urgency boolean overlaps with the existing priority column and drifts toward generic severity tagging rather than the incident-anatomy focus."
+      }
+    ],
+    "focus_coherence": 0.82,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The added columns collectively centre on a coherent, data-inferable focus: decomposing the incident's substance from free-text into component / problem / resolution facets. This is far from a grab-bag or mechanical text-length noise; four columns (category, component, problem_type, resolution_action) form a well-differentiated predictor/attribute set at a useful granularity, enabling analysis like 'which components drive which problems and resolutions.' recurring_pattern adds a legitimate prioritization angle. urgency_signal is the weakest link: a bare boolean that largely duplicates the existing priority field and slightly dilutes the focus. Overall the implied focus is clearly actionable (an analyst can pivot on component/problem/resolution and target recurring hot spots), so scores are high but not maximal due to the mild redundancy/drift of urgency_signal."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

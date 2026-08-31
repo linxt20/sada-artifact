@@ -1,0 +1,79 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "focus_variable": "hardware_incident_spike",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "weekly_hardware_count",
+    "weekly_hardware_pct",
+    "hw_rolling_avg_prior4w",
+    "hw_spike_ratio",
+    "in_anomaly_window"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "hardware_incident_spike",
+    "per_column": [
+      {
+        "name": "weekly_hardware_count",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "The weekly count of hardware incidents is essentially the operationalized outcome itself (the spike is defined on this series), not a distinct treatment or confounder."
+      },
+      {
+        "name": "weekly_hardware_pct",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Hardware share of incidents per week is another restatement of the outcome magnitude, not a candidate cause or common cause of a treatment."
+      },
+      {
+        "name": "hw_rolling_avg_prior4w",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A prior-4-week baseline of hardware volume; it is a lagged version of the outcome used to define the spike ratio, functioning as a normalization baseline rather than a treatment or a common cause of any treatment."
+      },
+      {
+        "name": "hw_spike_ratio",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "Ratio of current to baseline hardware volume; this is the quantitative definition of the spike (the outcome), not an external cause."
+      },
+      {
+        "name": "in_anomaly_window",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "A time-window flag copied directly from the query ('the anomaly window'). It marks WHEN the outcome occurred but supplies no candidate cause; it is an indicator of the outcome period, not a treatment or confounder."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The added columns are all descriptive re-expressions of the outcome itself: weekly counts, percentages, a prior-window baseline, the spike ratio, and a flag for the anomaly window taken verbatim from the query. None of them names a candidate CAUSE of the hardware spike (e.g., a specific deployment, vendor, change request, config update, patch, hardware model, load event). There is therefore no treatment, and consequently no confounders (variables that jointly cause a treatment and the outcome). The operator quantified and localized the spike but never set up any causal estimation, so the causal-attribution claim fails entirely."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 5
+}

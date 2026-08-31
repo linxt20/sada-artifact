@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "staff_conduct",
+    "value_perception",
+    "atmosphere_ambiance_signal",
+    "visit_context",
+    "business_category"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.876,
+    "analytical_usefulness__table_level": 0.89,
+    "source_groundedness": 0.878,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.877,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "staff_conduct",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Staff conduct is a core, actionable driver of Yelp satisfaction, giving a strong axis to group and prioritize improvements. Row evidence is well grounded: friendly/positive, dismissive (forgotten twice), rude/discriminatory nightclub, all correctly read; silent rows marked not_present."
+      },
+      {
+        "name": "value_perception",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Pricing/value is a genuine satisfaction lever and adds a distinct grouping axis. Mostly grounded, though YLP-0003 tagged 'overpriced_poor_value' is a borderline read — the review only speculates about a cheaper single-serve option rather than clearly complaining of overpricing. Row 1's 'good_value_positive' (free pita) is reasonable."
+      },
+      {
+        "name": "atmosphere_ambiance_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Ambiance is a legitimate satisfaction dimension distinct from staff/value. Values appear conservative and grounded; row 1 rowdy-crowd could arguably be noise/crowding but not_present is not a hallucination. Silent rows correctly not_present."
+      },
+      {
+        "name": "visit_context",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Visit context enables segmentation (late-night, group, first-time) that can meaningfully inform targeted improvements. Late_night for Oliveo and dine_in for lunch reviews are sound. The heavy default to 'dine_in_regular' (e.g., YLP-0002/0003 where only 'lunch' is stated) is a mild over-assertion but broadly warranted."
+      },
+      {
+        "name": "business_category",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Category is highly useful for segmenting how businesses can improve satisfaction across sectors. Extractions are sound: real-estate → other_service, cabana/door policy → nightclub_bar, pizza → restaurant_food. Well grounded in text."
+      }
+    ],
+    "analytical_usefulness": 0.89,
+    "source_groundedness": 0.87,
+    "rationale": "All five added columns provide genuine, distinct analytical axes (staff, value, ambiance, context, category) directly relevant to improving Yelp satisfaction, with no near-constant or trivially redundant columns. Values are largely sound readings of the source text with appropriate not_present defaults for silent rows. Minor groundedness weaknesses are the occasional confident default (e.g., dine_in_regular, and the borderline overpriced tag on YLP-0003), but no clear invented facts or contradictions were observed."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

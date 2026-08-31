@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an incident resolution will be inefficient?",
+  "focus_variable": "inefficient_resolution",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_type",
+    "affected_device_type",
+    "assignee_is_resolver",
+    "repeat_incident_signal",
+    "description_specificity",
+    "requires_physical_action",
+    "opened_day_of_week"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.4813,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.125
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "inefficient_resolution",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from short_description, known at open time; category (e.g., hardware vs software) plausibly correlates with resolution efficiency and lies outside the focus."
+      },
+      {
+        "name": "failure_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Nature of failure (physical damage, connectivity, performance) is knowable up front and plausibly predicts how hard/long resolution will be; not a restatement of the outcome."
+      },
+      {
+        "name": "affected_device_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Device type is available early and can carry signal about resolution complexity; independent of the efficiency outcome."
+      },
+      {
+        "name": "assignee_is_resolver",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the assignee ended up being the resolver reflects reassignment/hand-off behavior that unfolds during the resolution process; it is only known at/after closure and is intertwined with efficiency itself, so it leaks the outcome."
+      },
+      {
+        "name": "repeat_incident_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the incident/caller appears to be recurring is knowable independently of this incident's outcome and plausibly predicts inefficiency; a legitimate predictor."
+      },
+      {
+        "name": "description_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Specificity of the report text is available at open time and vague descriptions plausibly correlate with slower/inefficient handling; outside the focus."
+      },
+      {
+        "name": "requires_physical_action",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a physical intervention is needed is inferable up front and plausibly drives longer resolution paths; independent predictive signal."
+      },
+      {
+        "name": "opened_day_of_week",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Temporal context known at open time; weekend/weekday effects on staffing can plausibly influence efficiency. Weak but legitimate, non-leaking predictor."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.55,
+    "rationale": "Most added columns are legitimate, early-knowable predictors capturing incident nature, device, recurrence, report quality, physical-action need, and timing—collectively giving a model meaningful leverage beyond the raw fields. However several (incident_category, affected_device_type, failure_type, requires_physical_action) are correlated re-encodings of the same short_description signal, so their marginal information overlaps. assignee_is_resolver is leakage because resolver-vs-assignee status reflects hand-offs occurring during resolution and is entangled with the efficiency outcome. Net: solid but partially redundant predictive value."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "predictive_inefficient",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit-note signals suggest a longer visit?",
+  "focus_variable": "visit_duration_min",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "visit_type",
+    "active_problem_count",
+    "clinical_severity",
+    "critical_stabilizing_action",
+    "imaging_or_diagnostic_ordered",
+    "laboratory_test_ordered",
+    "specialist_consult_urgency",
+    "medication_change_type",
+    "counseling_topic_type",
+    "shared_decision_making_documented",
+    "specialist_consult_or_referral"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6818,
+    "predictor_fraction": 0.9091,
+    "n_predictors": 10,
+    "redundancy": 0.0,
+    "predictive_utility": 0.75,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "visit_duration_min",
+    "per_column": [
+      {
+        "name": "visit_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Nature of visit (new acute vs follow-up vs preventive) plausibly correlates with duration but is not a component of it; a legitimate upstream predictor."
+      },
+      {
+        "name": "active_problem_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "More active problems documented plausibly drives longer visits; a distinct clinical complexity feature outside the focus."
+      },
+      {
+        "name": "clinical_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Severity/acuity is a patient-state variable that plausibly predicts duration without restating it."
+      },
+      {
+        "name": "critical_stabilizing_action",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Actions taken during the visit correlate with time spent; borderline concurrent, but represents care intensity rather than a deterministic function of duration, so predictive signal is genuine."
+      },
+      {
+        "name": "imaging_or_diagnostic_ordered",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Ordering imaging plausibly extends visit length; a separate documented activity, not a restatement of duration."
+      },
+      {
+        "name": "laboratory_test_ordered",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Lab ordering is a distinct workflow signal correlated with longer visits."
+      },
+      {
+        "name": "specialist_consult_urgency",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Consult urgency reflects complexity/coordination effort predictive of duration; not a component of it."
+      },
+      {
+        "name": "medication_change_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Medication changes require discussion/reconciliation time; a legitimate distinct feature."
+      },
+      {
+        "name": "counseling_topic_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Counseling activity plausibly lengthens visits; distinct documented content, not a restatement."
+      },
+      {
+        "name": "shared_decision_making_documented",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "SDM documentation reflects deliberation time; a separate signal with plausible predictive value."
+      },
+      {
+        "name": "specialist_consult_or_referral",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Semantically near-duplicate of specialist_consult_urgency with overlapping categories; adds little independent signal beyond that column."
+      }
+    ],
+    "n_predictors": 10,
+    "predictive_utility": 0.75,
+    "rationale": "Nearly all added columns are legitimate upstream/concurrent clinical-workflow variables (complexity, severity, orders, actions, counseling) that plausibly carry real predictive signal about visit duration without restating or deterministically encoding it, and none constitute post-outcome leakage of the minutes themselves. The set is coherent and clinically grounded, giving substantial predictive leverage beyond the original columns. One column (specialist_consult_or_referral) is a redundant restatement of specialist_consult_urgency, slightly diluting the set."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 11
+}

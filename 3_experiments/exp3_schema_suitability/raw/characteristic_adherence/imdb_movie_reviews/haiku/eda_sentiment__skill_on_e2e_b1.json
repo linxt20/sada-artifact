@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_critique_focus",
+    "narrative_quality_signal",
+    "comparison_or_genre_context",
+    "technical_or_creative_root_cause",
+    "recommendation_stance"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.846,
+    "analytical_usefulness__table_level": 0.86,
+    "source_groundedness": 0.818,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.832,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_critique_focus",
+        "analytical_usefulness": 0.93,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A well-diversified thematic axis directly answering the query about how review themes differ by sentiment; groupable and comparable. Samples are sound readings (Stargate review -> dialogue; King review -> plot). The sexploitation review focusing on 'acting_or_performance' is arguably about visuals/appeal rather than acting, a minor stretch, but generally defensible."
+      },
+      {
+        "name": "narrative_quality_signal",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Ordinal quality signal that plausibly correlates with and helps explain sentiment differences, giving a distinct axis. Values map reasonably to source (positive reviews -> coherent_or_engaging, negatives -> convoluted_or_thin), though it partly tracks sentiment itself. IMDB-0002 as 'convoluted_or_thin' is a loose fit since the text stresses badness/gore more than thinness, but acceptable."
+      },
+      {
+        "name": "comparison_or_genre_context",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.86,
+        "hallucination_observed": false,
+        "rationale": "Captures whether reviewers invoke comparisons/genre framing, a genuine independent axis for theme analysis. 'not_present' dominance is honest silence handling. Sample readings look warranted (Stargate compares to Voyager/Star Trek -> compared_to_other_films; IMDB-0003 'soap operas'/'daytime movie' -> genre_contextualized). Distribution well-spread."
+      },
+      {
+        "name": "technical_or_creative_root_cause",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Attributes causes of quality (writing, casting, direction), a strong analytical axis with a proper 'not_attributed' for silent rows. However some assignments read in causes not clearly stated: IMDB-0005 lacks any craft attribution yet is tagged 'writing_or_scripting', and IMDB-0004 tagged 'direction_or_cinematography' where the text mainly praises the actress's looks. These are somewhat over-asserted, lowering groundedness."
+      },
+      {
+        "name": "recommendation_stance",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Recommendation posture is a useful axis that differs meaningfully across sentiment and is not merely a restatement of the label (explicit vs implicit distinction adds leverage). Sample readings are sound (Stargate/King -> explicit_avoid; sexploitation 'must see' -> implicit_positive, though arguably explicit_recommend). Values are well grounded in review tone."
+      }
+    ],
+    "analytical_usefulness": 0.86,
+    "source_groundedness": 0.82,
+    "rationale": "All five columns provide distinct, non-trivial thematic axes (focus, quality, comparison, root cause, recommendation) that directly serve the query on how themes differ between positive and negative sentiment, enabling grouping and comparison. None are near-constant or bare sentiment restatements. Values are generally well-grounded in the source text with appropriate 'not stated' handling for silent rows; the main weakness is technical_or_creative_root_cause occasionally asserting a cause the text does not clearly support. Overall a strong, well-grounded augmentation."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

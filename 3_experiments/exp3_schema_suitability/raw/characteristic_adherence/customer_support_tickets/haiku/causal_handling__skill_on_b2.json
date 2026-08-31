@@ -1,0 +1,79 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do handling times differ by channel and priority?",
+  "focus_variable": "handling_time_gap",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "issue_type",
+    "customer_impairment_scope",
+    "resolution_intervention"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "handling_time_gap",
+    "per_column": [
+      {
+        "name": "issue_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The nature of the issue (e.g., service_outage vs documentation) plausibly influences BOTH which channel/priority a ticket takes (the treatment) AND the intrinsic handling time. It is a common cause not named in the query and was surfaced from issue_description text, making it a genuine confounder."
+      },
+      {
+        "name": "customer_impairment_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The scope/severity of customer impact plausibly drives priority assignment and channel choice (treatment) and independently affects how long resolution takes (outcome). It is surfaced from the text, not named in the query, so it functions as a genuine common cause."
+      },
+      {
+        "name": "resolution_intervention",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The type of remediation performed (bug_fix, escalation, rollback) lies ON the causal path between channel/priority and handling time -- it is the mechanism through which handling time is generated. Adjusting for it would block part of the effect being attributed, so it is a mediator, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "channel",
+      "priority"
+    ],
+    "confounders": [
+      {
+        "name": "issue_type",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "customer_impairment_scope",
+        "named_in_query": false,
+        "plausibility": 0.85
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The treatment (channel and priority) is already present in the original table, and the query explicitly asks about attribution to these. The added columns do NOT re-supply the treatment but instead attempt to supply adjustment variables. Two of them -- issue_type and customer_impairment_scope -- are genuine common causes of both the treatment (priority/channel routing depends on issue nature and severity) and the outcome (handling time depends on issue complexity/scope), and neither was named or implied in the query, demonstrating real causal surfacing from the underlying text. However, resolution_intervention is a mediator on the causal path, not a confounder; treating it as an adjustment variable would bias the attribution. This mix lowers the overall confounder quality."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

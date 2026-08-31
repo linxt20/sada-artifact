@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Controlling for priority and category, which underlying causes explain longer resolution times?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "failure_symptom_type",
+    "affected_system_component",
+    "scope_specificity",
+    "recurrence_signal",
+    "assignee_resolver_match",
+    "environment_context",
+    "caller_profile",
+    "ticket_open_state"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7188,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7462,
+    "source_groundedness__table_level": 0.74,
+    "b1_overall": 0.7325,
+    "hallucination_rate": 0.125
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "failure_symptom_type",
+        "analytical_usefulness": 0.92,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorises the nature of failure (cannot_connect, service_down, etc.), a genuine causal axis for explaining resolution time beyond priority/category. Values track short_description well ('VPN connection issue'->cannot_connect, 'Email system not working'->service_down)."
+      },
+      {
+        "name": "affected_system_component",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Identifies the impacted component, a strong grouping dimension for underlying cause of delays. Extractions are sound readings ('Cannot connect to database'->database_server, 'WiFi ... sales department'->wifi_access_point)."
+      },
+      {
+        "name": "scope_specificity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Scope (individual vs system/department-wide) is a plausible driver of resolution time. Department cues are grounded ('sales department'->department_wide), but 'individual_user' is often inferred by default when descriptions are silent, a somewhat confident assignment yet defensible."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Recurrence could explain longer times if grounded, but short_descriptions here give no recurrence indication; 'false' appears to be a default rather than an evidenced reading, and 'true' for 95 rows is not clearly supportable from the sampled text."
+      },
+      {
+        "name": "assignee_resolver_match",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether assignee equals resolver is a meaningful reassignment/handoff proxy for delays, derivable by comparing assigned_to and closed_by/resolved fields present in the table. Grounded in structured columns, though the exact comparison basis is not fully verifiable from samples."
+      },
+      {
+        "name": "environment_context",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Distinguishes remote_access/office_local/production etc., a useful contextual axis. Some values are well-grounded (VPN->remote_access), but 'production' and 'application_specific' are inferential and partly overlap with affected_system_component."
+      },
+      {
+        "name": "caller_profile",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "end_user vs itil_internal can matter for triage speed, giving modest analytical leverage. Likely derived from caller_id/sys_updated_by patterns, but the basis is not evident in the sampled short_description text, so groundedness is moderate."
+      },
+      {
+        "name": "ticket_open_state",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Largely redundant with the original 'state'/'closed_at' columns and near-constant (false=423). Well-grounded but adds little new leverage for explaining resolution-time causes."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.74,
+    "rationale": "Most added columns supply genuine new causal axes (symptom type, component, scope, handoff match, environment) that let an analyst group and compare resolution times beyond priority and category, directly serving the query. Groundedness is generally sound for extraction/categorisation columns tied to short_description or structured fields, but recurrence_signal appears largely defaulted/unsupported by the sampled text, and scope/environment involve confident inferences on silent rows. ticket_open_state is mostly redundant with existing state columns. Overall a useful, mostly grounded augmentation with one weak column."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_delay",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 8
+}

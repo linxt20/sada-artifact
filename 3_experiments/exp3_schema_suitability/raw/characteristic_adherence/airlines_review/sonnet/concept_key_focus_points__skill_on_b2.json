@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 5,
+  "added_columns": [
+    "disruption_handling_quality",
+    "staff_behavior_tone",
+    "crew_responsiveness",
+    "customer_service_resolution",
+    "aircraft_type_mismatch"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3794,
+    "facet_fraction": 0.8,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.5,
+    "mece": 0.4743,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "disruption_handling_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How the airline handles disruptions (delays, cancellations) is a genuine aspect OF service quality — the service dimension during irregular operations."
+      },
+      {
+        "name": "staff_behavior_tone",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The demeanor/tone of staff is a constitutive interpersonal aspect of service quality."
+      },
+      {
+        "name": "crew_responsiveness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Crew responsiveness is an aspect of service quality, but it overlaps heavily with staff_behavior_tone — both capture the human/staff-interaction dimension, weakening mutual exclusivity."
+      },
+      {
+        "name": "customer_service_resolution",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How service issues are resolved is an aspect of service quality, though it overlaps conceptually with disruption_handling_quality (both concern problem handling/resolution)."
+      },
+      {
+        "name": "aircraft_type_mismatch",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the operated aircraft differs from the advertised one is an operational/product attribute that may PREDICT dissatisfaction but is not itself an aspect of service quality; it is external to the service-quality concept."
+      }
+    ],
+    "facet_columns": [
+      "disruption_handling_quality",
+      "staff_behavior_tone",
+      "crew_responsiveness",
+      "customer_service_resolution"
+    ],
+    "non_facet_columns": [
+      "aircraft_type_mismatch"
+    ],
+    "mutual_exclusivity": 0.45,
+    "exhaustiveness": 0.5,
+    "rationale": "Four of five added columns are genuine facets of service quality, but the set skews heavily toward the human/staff and problem-handling dimensions. staff_behavior_tone and crew_responsiveness substantially overlap (both about staff interaction quality), and disruption_handling_quality and customer_service_resolution overlap (both about issue/problem resolution), lowering mutual exclusivity. Exhaustiveness is moderate-to-low because the tangible/physical service dimensions already present conceptually (seat comfort, food & beverage, inflight entertainment, cleanliness, boarding/check-in efficiency) are not represented among the added facets, so the decomposition covers only the interpersonal and disruption-handling slices of the concept. aircraft_type_mismatch is not a facet at all."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

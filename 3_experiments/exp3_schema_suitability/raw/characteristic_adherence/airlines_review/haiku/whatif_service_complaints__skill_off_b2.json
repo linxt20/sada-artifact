@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "Has_Common_Complaint",
+    "Improved_Rating_If_Fixed"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "Has_Common_Complaint",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Flags whether a review contains the most common cabin-service complaints. This is the intervenable lever the query proposes to eliminate/fix -- airlines could act to reduce these complaints. It is directly named in the query text ('eliminated the most common cabin-service complaints')."
+      },
+      {
+        "name": "Improved_Rating_If_Fixed",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "This is a pre-baked counterfactual outcome -- the hypothesized post-intervention rating. It is not a confounder, mediator, or collider; it simply encodes the answer to the query rather than a variable to be adjusted for. It provides no confounding adjustment."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "Has_Common_Complaint"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The augmentation identifies a valid intervenable treatment (presence of the common cabin-service complaint, something airlines could set/eliminate) and even names the outcome directly in the query. However, the decisive test is whether NEW confounders -- common causes of both the complaint and the Overall Rating that were NOT already named in the query -- were introduced so the counterfactual effect can be read off. No confounders were added at all. Plausible confounders such as Class, Type of Traveller, Route, or ticket price influence both the likelihood/type of cabin-service complaint and the overall rating, and none were introduced for adjustment. Instead, the second column ('Improved_Rating_If_Fixed') simply asserts the counterfactual answer without any identification strategy. Because no confounders were adjusted for, the interventional claim under test is not realised."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

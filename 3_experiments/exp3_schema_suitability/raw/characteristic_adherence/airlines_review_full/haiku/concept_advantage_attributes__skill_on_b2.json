@@ -1,0 +1,66 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "focus_variable": "airline_competitive_advantage",
+  "concept": "airline_competitive_advantage",
+  "n_added_columns": 3,
+  "added_columns": [
+    "cabin_crew_attentiveness",
+    "seat_comfort_legroom",
+    "customer_service_responsiveness"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.4472,
+    "facet_fraction": 1.0,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.4,
+    "mece": 0.4472,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_competitive_advantage",
+    "per_column": [
+      {
+        "name": "cabin_crew_attentiveness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Quality of in-flight crew interaction (friendly/attentive vs rude/dismissive) is an aspect OF an airline's service offering and thus a genuine part-of the competitive-advantage concept, not an external predictor of it."
+      },
+      {
+        "name": "seat_comfort_legroom",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Physical seat/cabin comfort and pitch is a constitutive dimension of the airline product experience, a legitimate meronymic facet of competitive advantage."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Responsiveness/helpfulness of service is an aspect OF the airline's offering, so it qualifies as a facet; however its underlying dimension (helpful vs dismissive service) substantially overlaps with cabin_crew_attentiveness."
+      }
+    ],
+    "facet_columns": [
+      "cabin_crew_attentiveness",
+      "seat_comfort_legroom",
+      "customer_service_responsiveness"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.4,
+    "rationale": "All three added columns are true constitutive facets (parts-of) the concept of airline competitive advantage: they each describe an aspect of the airline's product/service rather than an external cause or predictor. However, MECE is only moderately satisfied. Mutual exclusivity is weakened because cabin_crew_attentiveness and customer_service_responsiveness both capture essentially the same underlying dimension -- attentive/helpful vs dismissive/unresponsive service -- with near-identical value polarities (friendly_attentive/proactive_helpful vs rude_dismissive/dismissive_unhelpful), so the concept's 'service' aspect is double-counted. Exhaustiveness is limited: the columns effectively cover only two distinct aspects (interpersonal/service quality and seat comfort), while other clearly constitutive facets of an airline's competitive advantage -- food & beverages, inflight entertainment, value for money, punctuality/reliability, route network, and check-in/boarding/baggage handling -- are absent, leaving major parts of the concept uncovered."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 3
+}

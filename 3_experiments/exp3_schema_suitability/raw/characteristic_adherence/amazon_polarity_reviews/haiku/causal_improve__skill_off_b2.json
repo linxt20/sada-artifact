@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can sellers improve Amazon product satisfaction?",
+  "focus_variable": "product_satisfaction",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_issue_category",
+    "improvement_focus",
+    "issue_count"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "product_satisfaction",
+    "per_column": [
+      {
+        "name": "primary_issue_category",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Identifies the dominant issue type (quality, design, durability, packaging, support, performance). These map to intervenable levers a seller could address, so it functions as a candidate treatment/actionable dimension rather than a confounder. However, it is derived from the review outcome itself and arguably reflects/mediates satisfaction rather than being an independently settable pre-treatment lever."
+      },
+      {
+        "name": "improvement_focus",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Frames what the seller should focus on to improve satisfaction (satisfaction_drivers vs dissatisfaction categories). This is an attempt at an intervenable focus area, but it is a post-hoc labeling of the review content describing satisfaction, so it largely restates the outcome rather than defining a manipulable pre-treatment variable."
+      },
+      {
+        "name": "issue_count",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Counts the number of issues surfaced in a review. This is a symptom/consequence measured from the same review that expresses satisfaction; it sits on the path between product state and satisfaction rather than being a common cause, so it is a mediator, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_issue_category",
+      "improvement_focus"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The columns gesture at intervenable levers (issue categories, improvement focus) that a seller could act on, so a nominal treatment is present and at least partly settable. But the operator fails the decisive test: NO confounders are added. All three columns are extracted from the same review text that also encodes the outcome (satisfaction), making them mediators/restatements of the outcome rather than common causes of both treatment and outcome. There is no adjustment variable (e.g., product category, price, brand, review recency, buyer segment) that would license reading off a counterfactual effect. Because confounder_quality is 0 and the 'treatments' largely reflect rather than precede the outcome, the interventional what-if claim is not realised."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

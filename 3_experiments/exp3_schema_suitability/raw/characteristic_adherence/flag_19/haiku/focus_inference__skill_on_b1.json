@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_type_category",
+    "vendor_or_manufacturer",
+    "department_assignment",
+    "processing_delay_indicator",
+    "asset_intended_use",
+    "record_generation_method"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6583,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.575,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.6166,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Strong grouping axis for spend analysis by asset type. Mostly well-grounded via short_description/ci (Dell Laptop->laptop, OptiPlex->desktop). But 'iPod touch / ISP Services' labeled 'cloud_service' is a misread of a mobile device, showing some ungrounded categorisation."
+      },
+      {
+        "name": "vendor_or_manufacturer",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Vendor is a highly actionable axis for expense analysis. Values track source text well (Dell XPS->dell, OptiPlex->dell) and silent rows sensibly get other_vendor rather than an invented brand."
+      },
+      {
+        "name": "department_assignment",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "A 'department' column already exists, so this largely duplicates it. More seriously, the values appear invented: source text in the samples gives no departmental cues, yet confident specifics like 'sales', 'product_management', 'customer_support' are asserted, contradicting the silent source."
+      },
+      {
+        "name": "processing_delay_indicator",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Bucketing processing latency is genuinely actionable for operational analysis. Derivable from processed_date vs opened_at; NULL/Unknown correctly assigned to rows with nan dates. Cannot fully verify buckets without opened_at in samples, but behaviour looks sound."
+      },
+      {
+        "name": "asset_intended_use",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A usage axis adds some analytical leverage beyond raw asset type. Some mappings are warranted (server->server_infrastructure), but others overreach: 'iPod touch' -> 'sales_mobile' asserts a use the text does not support, and generic descriptions get confident use labels."
+      },
+      {
+        "name": "record_generation_method",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Provenance could be mildly useful, but the values are not grounded: all samples are labeled 'imported_from_source' with no source signal justifying that vs 'system_auto_generated', suggesting an unsupported guess. Near-generic and weakly evidenced."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.55,
+    "rationale": "The added set gives several genuinely useful axes for expense analysis (asset type, vendor, processing delay, intended use) that support grouping and comparison beyond the originals. Groundedness is mixed: asset_type, vendor, and delay are largely defensible readings of short_description/ci/dates with sensible unknowns, but department_assignment duplicates an existing column while asserting invented specifics, record_generation_method appears to guess provenance with no supporting signal, and a few asset categorisations (iPod->cloud_service/sales_mobile) misread the source. Overall useful but with notable ungrounded assertions."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

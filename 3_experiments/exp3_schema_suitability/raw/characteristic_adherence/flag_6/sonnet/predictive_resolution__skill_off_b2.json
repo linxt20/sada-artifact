@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary by agent and issue type?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_hours",
+    "agent_avg_resolution_hours",
+    "category_avg_resolution_hours",
+    "agent_category_avg_resolution_hours"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.05,
+    "interpretable_fraction": 0.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is simply the focus variable itself (resolution_time expressed in hours). It restates the focus and offers no external variable to segment or compare against. Its continuous, highly fine-grained values cannot serve as a grouping dimension."
+      },
+      {
+        "name": "agent_avg_resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is a per-agent aggregate of the focus variable, not an external associational variable. It is derived directly from resolution_time and effectively pre-computes the answer the query seeks rather than opening an independent relationship. The agent identity itself already exists in the table (assigned_to); this column just leaks the target mean, which is circular for EDA."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Same issue: a per-category mean of the focus variable. Category already exists as a genuine segmentation dimension; this column merely encodes the focus aggregated by it, which is target restatement rather than an external explanatory variable."
+      },
+      {
+        "name": "agent_category_avg_resolution_hours",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A two-way aggregate of the focus variable itself. It is an opaque continuous score derived from resolution_time, not an interpretable, well-separated category to group on. It restates the answer to the query rather than enabling independent exploration."
+      }
+    ],
+    "n_predictors": 0,
+    "relationship_informativeness": 0.05,
+    "rationale": "None of the added columns introduce an external, associational variable. The first is the focus itself; the remaining three are group-wise averages of the focus (by agent, by category, by agent-and-category). These are direct aggregations/leakage of resolution_time and simply pre-bake the very comparison the query asks for, rather than providing new interpretable dimensions to segment on. Genuine segmentation variables (agent, category, priority) already exist in the original table; the augmentation added nothing external. All values are fine-grained continuous means with no well-separated categories, failing the interpretability requirement. This set does not realise the exploratory-analysis claim."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

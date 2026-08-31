@@ -1,0 +1,120 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do handling times differ by channel and priority?",
+  "focus_variable": "handling_time_gap",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_category",
+    "operational_urgency",
+    "technical_complexity",
+    "scope_of_impact",
+    "root_cause_domain",
+    "workaround_available"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.8,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 6,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 6,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.8,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "handling_time_gap",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of issue plausibly drives both which channel/priority a ticket lands in (treatment routing) and how long it takes to handle (outcome), so it is a common cause not stated in the query."
+      },
+      {
+        "name": "operational_urgency",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Genuine operational urgency influences the assigned priority (treatment) and independently affects handling time via escalation and effort, making it a common cause surfaced from the text. It is distinct from the nominal 'priority' field named in the query."
+      },
+      {
+        "name": "technical_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity plausibly shapes both routing to a channel/priority and the intrinsic time to resolve, a classic common cause not named in the query."
+      },
+      {
+        "name": "scope_of_impact",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Breadth of impact affects prioritization (treatment) and the workload/handling time (outcome), so it is a plausible common cause not in the query."
+      },
+      {
+        "name": "root_cause_domain",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The technical domain of the fault can drive which channel/team and priority it goes to and the resolution effort, a common cause; some risk of being a mediator of complexity but treated as an upstream categorical cause."
+      },
+      {
+        "name": "workaround_available",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether a workaround exists influences urgency-based priority assignment and reduces pressure/time on handling, plausibly a common cause not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "channel",
+      "priority"
+    ],
+    "confounders": [
+      {
+        "name": "issue_category",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "operational_urgency",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "technical_complexity",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "scope_of_impact",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "root_cause_domain",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "workaround_available",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.8,
+    "rationale": "The treatments (channel and priority) are the columns already present in the query, and every added column supplies a plausible common cause of both routing/prioritization and handling time. Crucially, none of these confounders (issue type, urgency, complexity, scope, root-cause domain, workaround availability) were named or implied in the query, which only mentioned channel and priority. They are genuine upstream common causes rather than mediators on the treatment->outcome path or colliders, so the set demonstrates real causal-attribution reasoning by surfacing adjustment variables from the ticket text. Minor risk exists that technical_complexity/root_cause_domain partly mediate each other, but each remains a plausible confounder for the channel/priority->handling_time attribution."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_handling",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

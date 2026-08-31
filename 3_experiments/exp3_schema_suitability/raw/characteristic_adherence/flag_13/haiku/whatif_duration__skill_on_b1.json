@@ -1,0 +1,74 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_issue_category",
+    "issue_scope",
+    "technical_complexity",
+    "issue_recurrence_pattern",
+    "assignee_resolution_efficiency",
+    "assigned_technician_continuity"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6917,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.4917,
+    "source_groundedness__table_level": 0.48,
+    "b1_overall": 0.5917,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_issue_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Extracts a clear issue type from short_description, directly enabling grouping by 'most common operational burdens' central to the query. Values (wifi, vpn, database, printer) match source text soundly."
+      },
+      {
+        "name": "issue_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.45,
+        "rationale": "Scope (system-wide vs individual) is a useful axis for burden analysis, but the short descriptions rarely state scope. Labeling 'Cannot connect to office WiFi' or a single VPN failure as 'system_wide' is an unwarranted confident inference; the dominance of system_wide (362) suggests over-assertion."
+      },
+      {
+        "name": "technical_complexity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "rationale": "Complexity could correlate with resolution duration, giving analytical leverage. However it is a heuristic inference from category rather than something the text states; defensible as a categorisation but partly speculative."
+      },
+      {
+        "name": "issue_recurrence_pattern",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.3,
+        "rationale": "Recurrence directly relates to 'operational burdens' and is analytically relevant. But the source text (single short descriptions with one timestamp) does not support daily/weekly/rare labels; assigning 'recurring_weekly' or 'recurring_daily' to isolated tickets is largely invented, contradicting available evidence."
+      },
+      {
+        "name": "assignee_resolution_efficiency",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.35,
+        "rationale": "A resolution-efficiency axis is relevant to duration, but a binary high/moderate closure-rate label per row is not derivable from the shown fields (closed_by name alone). It appears to be an unsupported inference and is near-binary, limiting leverage."
+      },
+      {
+        "name": "assigned_technician_continuity",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.4,
+        "rationale": "A true/false continuity flag adds little clear analytical leverage for the duration query, and its basis is unclear from the available columns; the per-row values are not evidently grounded and read as guessed."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.48,
+    "rationale": "primary_issue_category is strong and directly serves the query's focus on common burdens. Several other columns (issue_scope, issue_recurrence_pattern, assignee_resolution_efficiency, technical_complexity) target relevant axes but assert categories the short single-ticket text does not support, producing confident specifics (system_wide, recurring_weekly/daily, closure-rate labels) that are not grounded. Groundedness is the main weakness across the set."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "asset_category",
+    "asset_form_factor",
+    "ci_brand_family",
+    "procurement_action_type",
+    "has_source_id",
+    "has_processing_lag",
+    "department_group"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.372,
+    "focus_coherence": 0.6,
+    "structure_quality": 0.62,
+    "focus_actionability": 0.7,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature of the procured asset/configuration item (CI) underlying each expense record -- i.e. what was actually bought/tracked and how it was acquired.",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "supports_focus": true,
+        "rationale": "Directly characterizes the asset type (hardware, travel item, cloud, software) -- a core facet of what the expense represents."
+      },
+      {
+        "name": "asset_form_factor",
+        "supports_focus": true,
+        "rationale": "Refines asset_category with physical form (laptop, server, vehicle), a coherent sub-facet of the same asset focus."
+      },
+      {
+        "name": "ci_brand_family",
+        "supports_focus": true,
+        "rationale": "Normalizes the CI's vendor/brand, another attribute of the procured asset."
+      },
+      {
+        "name": "procurement_action_type",
+        "supports_focus": true,
+        "rationale": "Classifies how the asset was acquired (new, rental, upgrade, tracking), tying the asset to a procurement lifecycle -- adds analytical structure."
+      },
+      {
+        "name": "has_source_id",
+        "supports_focus": false,
+        "rationale": "A mechanical null-presence flag on an existing field; a data-quality indicator, not a facet of the asset focus."
+      },
+      {
+        "name": "has_processing_lag",
+        "supports_focus": false,
+        "rationale": "Processing-timeliness flag; relates to record handling, orthogonal to the asset/procurement focus."
+      },
+      {
+        "name": "department_group",
+        "supports_focus": false,
+        "rationale": "Rolls up department -- an organizational dimension, not an attribute of the asset. Sensible for analysis but off the inferred focus."
+      }
+    ],
+    "focus_coherence": 0.6,
+    "structure_quality": 0.62,
+    "focus_actionability": 0.7,
+    "rationale": "The strongest four columns (asset_category, asset_form_factor, ci_brand_family, procurement_action_type) cohere tightly around a single, data-inferable focus: what asset/CI each travel-expense record covers and how it was procured. These form a genuine layered structure (type -> form -> brand -> acquisition mode) at a useful granularity, and the focus is actionable (an analyst can profile spend by asset class, vendor, and procurement mode). However, the set is diluted by three off-focus columns: two are bare mechanical/data-quality flags (has_source_id, has_processing_lag) that the rubric explicitly discounts, and department_group pivots to an organizational dimension. This scatter across asset, data-quality, and org axes prevents full coherence and weakens the analytical tightness, though the dominant asset theme keeps scores above the midpoint. Note also that the surfaced values (dell laptops, servers) suggest the underlying data is broader IT-asset expense, only partly 'travel' -- the focus is inferable but somewhat at odds with the stated travel-expense framing."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

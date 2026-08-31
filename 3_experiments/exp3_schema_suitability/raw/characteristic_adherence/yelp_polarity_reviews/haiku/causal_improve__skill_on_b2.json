@@ -1,0 +1,55 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "focus_variable": "user_satisfaction",
+  "concept": null,
+  "n_added_columns": 1,
+  "added_columns": [
+    "staff_behavior_issue"
+  ],
+  "metrics": {
+    "n_added_columns": 1,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "user_satisfaction",
+    "per_column": [
+      {
+        "name": "staff_behavior_issue",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Staff behavior is an intervenable lever: a business can actually change, train, or manage staff conduct (rudeness, attentiveness, professionalism, training consistency). It is settable/decidable by the actor ('businesses') and plausibly affects user satisfaction, so it qualifies as a valid what-if treatment rather than an immutable attribute."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "staff_behavior_issue"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The single added column identifies an intervenable treatment (staff behavior issues), which a business could actually change, satisfying part (a) of the technical claim. However, the augmentation adds NO confounders at all -- there are no common causes of both staff behavior and user satisfaction (e.g., establishment type, price tier, location/neighborhood, business volume/traffic, management quality, staffing levels). Without any adjustment variables, the counterfactual effect of the treatment on the outcome cannot be identified. Part (b) of the claim is entirely unmet, so the interventional setup fails despite having a valid treatment."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 1
+}

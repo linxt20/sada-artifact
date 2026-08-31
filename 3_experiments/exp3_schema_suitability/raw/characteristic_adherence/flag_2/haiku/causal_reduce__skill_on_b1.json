@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce incident resolution time?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "incident_location_scope",
+    "resolution_status",
+    "same_technician_assigned_closed",
+    "assigned_technician",
+    "recurring_incident_pattern"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.5917,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.725,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.6583,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents (connectivity, email, database) gives a strong grouping axis to compare resolution times across types, directly serving the query. Values are soundly derived from short_description (e.g. 'VPN connection issue' -> connectivity). Note a partial redundancy with the existing 'category' column, slightly lowering usefulness."
+      },
+      {
+        "name": "incident_location_scope",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Scope (network_wide vs single_user) is a plausibly useful axis for resolution-time analysis. However groundedness is weaker: 'VPN connection issue' -> network_wide and 'Cannot connect to database' -> application_specific are inferences the terse text does not clearly support, and 'WiFi in sales department' -> department_wide is reasonable while other assignments look asserted beyond evidence."
+      },
+      {
+        "name": "resolution_status",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Resolved/open is derivable from state/closed_at fields already present, making it largely redundant with original columns; limited new analytical leverage for reducing resolution time. Values are well grounded (closed_at present -> resolved)."
+      },
+      {
+        "name": "same_technician_assigned_closed",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Comparing assigned_to vs closed_by is a genuinely useful handoff indicator that could relate to resolution delays. Derivable directly from existing columns, so well grounded; NULLs for open incidents are appropriate."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This restates the existing assigned_to column with essentially the same values, offering little new analytical axis. Values are grounded but trivially redundant."
+      },
+      {
+        "name": "recurring_incident_pattern",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "Whether an incident is recurring could be useful for targeting systemic causes, but the flag is overwhelmingly 'true' (366/500) and every sample row is marked True with no textual basis. A single short_description gives no evidence of recurrence; these values appear asserted/invented rather than derived."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.65,
+    "rationale": "The set offers several genuinely useful grouping axes for a resolution-time analysis (incident_category, same_technician_assigned_closed, location scope), but is diluted by redundancy (assigned_technician restates assigned_to; resolution_status echoes state/closed_at). Groundedness is mixed: category and handoff flags read soundly from source, but incident_location_scope over-infers from terse descriptions and recurring_incident_pattern is a near-constant flag with no textual support in any sampled row, indicating hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

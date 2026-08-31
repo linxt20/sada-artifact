@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What open-response signals predict low learning satisfaction?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "instructional_pacing_issue",
+    "asynchronous_content_benefit",
+    "hands_on_or_lab_gap",
+    "peer_interaction_quality",
+    "teacher_feedback_responsiveness",
+    "subject_remote_format_fit",
+    "emotional_affect_during_class",
+    "curiosity_and_intrinsic_motivation_trajectory"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6125,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "predictive_utility": 0.7,
+    "leakage_rate": 0.125
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "instructional_pacing_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Pacing problems (too fast/slow) are a plausible driver of satisfaction extracted from the open response, external to the rating itself."
+      },
+      {
+        "name": "asynchronous_content_benefit",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Format affordance (reusable/rewatchable vs livestream-only) is a course attribute that could shape satisfaction without restating it."
+      },
+      {
+        "name": "hands_on_or_lab_gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Missing critical lab work is a structural gap plausibly predictive of low satisfaction, distinct from the score."
+      },
+      {
+        "name": "peer_interaction_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Quality of peer collaboration is a legitimate experiential predictor of satisfaction, not a component of the rating."
+      },
+      {
+        "name": "teacher_feedback_responsiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Feedback timeliness/quality is an external instructional variable with clear predictive signal for satisfaction."
+      },
+      {
+        "name": "subject_remote_format_fit",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How well the subject suits remote delivery is a contextual predictor lying outside the satisfaction score."
+      },
+      {
+        "name": "emotional_affect_during_class",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Affect (joyful/energized vs distressed_crying) is near-synonymous with satisfaction; it is an affective restatement of the outcome measured from the same response, so it leaks rather than predicts."
+      },
+      {
+        "name": "curiosity_and_intrinsic_motivation_trajectory",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Motivation trajectory is conceptually distinct from a satisfaction rating and can plausibly serve as a correlated but non-identical predictor, though it borders on affective overlap."
+      }
+    ],
+    "n_predictors": 7,
+    "predictive_utility": 0.7,
+    "rationale": "Most added columns are content-derived experiential features (pacing, format, labs, peer interaction, feedback, subject fit) that lie outside the satisfaction score and carry genuine predictive signal, giving the set substantial leverage beyond the original columns. One column (emotional_affect_during_class) essentially restates the outcome as affect and constitutes leakage, and the motivation trajectory column borders on affective overlap; excluding the leaking feature, the remaining set still provides strong, non-redundant predictive value."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "predictive_low",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

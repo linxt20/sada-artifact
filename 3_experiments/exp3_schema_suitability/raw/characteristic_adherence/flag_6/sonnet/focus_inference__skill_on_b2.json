@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "affected_system",
+    "symptom_type",
+    "incident_scope",
+    "is_open_unresolved",
+    "self_resolved",
+    "recurrence_signal",
+    "opened_hour_of_day",
+    "access_context"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.68,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/profile of IT incidents — characterizing each ticket by what failed, how it manifested, its scope, and resolution/timing context, effectively decomposing incidents into analyzable failure dimensions.",
+    "per_column": [
+      {
+        "name": "affected_system",
+        "supports_focus": true,
+        "rationale": "Identifies the technical component involved — a core facet of what an incident is about and a strong analytical predictor."
+      },
+      {
+        "name": "symptom_type",
+        "supports_focus": true,
+        "rationale": "Characterizes the failure mode; a coherent facet describing how the incident manifests."
+      },
+      {
+        "name": "incident_scope",
+        "supports_focus": true,
+        "rationale": "Captures blast radius (individual vs infrastructure-wide), a meaningful severity/impact facet."
+      },
+      {
+        "name": "is_open_unresolved",
+        "supports_focus": true,
+        "rationale": "Resolution-state facet of the incident lifecycle; actionable for backlog analysis."
+      },
+      {
+        "name": "self_resolved",
+        "supports_focus": true,
+        "rationale": "Resolution-path facet distinguishing auto/self-resolution from intervention."
+      },
+      {
+        "name": "recurrence_signal",
+        "supports_focus": true,
+        "rationale": "Flags recurring incidents — a genuinely useful analytical dimension, though its extreme skew (472/28) raises reliability concerns."
+      },
+      {
+        "name": "opened_hour_of_day",
+        "supports_focus": true,
+        "rationale": "Temporal context facet useful for staffing/pattern analysis; derivable from opened_at."
+      },
+      {
+        "name": "access_context",
+        "supports_focus": true,
+        "rationale": "Remote vs on-premise context; relevant facet though largely 'unspecified' (378), limiting its value."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.8,
+    "focus_actionability": 0.85,
+    "rationale": "The columns collectively centre on one coherent inferable focus: profiling incident tickets by their failure characteristics and lifecycle context. They span differentiated, non-redundant facets — what failed (affected_system), how (symptom_type), scale (incident_scope), resolution (is_open_unresolved, self_resolved), recurrence, and temporal/access context — rather than a scattered grab-bag or mechanical text metrics. This is a sound decomposition at a useful granularity and directly actionable (an analyst can pivot on affected_system × symptom_type × scope to find hotspots). Deductions: recurrence_signal and access_context show very skewed/mostly-unspecified distributions suggesting weak inference reliability, and self_resolved partly overlaps with is_open_unresolved, slightly diluting structural cleanliness."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

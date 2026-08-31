@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What signals suggest an expense will be declined?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_category_type",
+    "asset_creation_mechanism",
+    "department_classification",
+    "travel_asset_flag",
+    "requester_repeat_status",
+    "source_tracking_present"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.47,
+    "analytical_usefulness__table_level": 0.47,
+    "source_groundedness": 0.5083,
+    "source_groundedness__table_level": 0.48,
+    "b1_overall": 0.4891,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the asset from short_description/ci into interpretable buckets, giving a genuine axis to compare decline rates by asset type. Sample values (service_subscription for ISP Services, hardware_device for Dell Laptop, miscellaneous for hardware component) are sound readings of the source text."
+      },
+      {
+        "name": "asset_creation_mechanism",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Whether an asset was manually created vs auto-generated is not derivable from the provided source text (short_description, ci, processed_date). All samples are labeled 'manually_created' with no textual warrant, suggesting an unsupported/near-invented assertion. Also weak analytical leverage for a decline query."
+      },
+      {
+        "name": "department_classification",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "The original table already has a 'department' column, so this is largely redundant. Worse, the sample values appear unsupported by the source text: 'Provision of Services for iPod touch' -> 'sales' and a hardware component -> 'sales' have no textual basis, indicating invented specifics."
+      },
+      {
+        "name": "travel_asset_flag",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A travel-related flag could plausibly correlate with expense declines, offering a modest new axis. Samples are all 'False' and consistent with non-travel descriptions, so groundedness is reasonable though it overlaps conceptually with asset_category_type's travel_equipment bucket."
+      },
+      {
+        "name": "requester_repeat_status",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Requester frequency is a genuinely useful signal for predicting declines. However it requires aggregating across the 'user' column, and the sample assignments (same-looking single rows labeled 'single_request' vs 'high_frequency_user') are not verifiable from the per-row source text shown, and no user field is provided in the samples, raising grounding concerns."
+      },
+      {
+        "name": "source_tracking_present",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Essentially a presence flag largely restating whether source_id/tracking exists; low analytical leverage and close to a trivial has-field indicator. Values are plausibly derivable from field presence but the mapping is opaque."
+      }
+    ],
+    "analytical_usefulness": 0.47,
+    "source_groundedness": 0.48,
+    "rationale": "The set offers a couple of genuinely useful axes (asset_category_type, requester_repeat_status, travel flag) for reasoning about declines, but several columns are weak: department_classification is redundant with the existing 'department' column and its sample values appear invented, asset_creation_mechanism asserts a manual/auto distinction with no textual support, and source_tracking_present is close to a trivial presence flag. Multiple columns show values not clearly derivable from the provided source text, lowering overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 6
+}

@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a support ticket will take longer to resolve?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "ticket_category",
+    "product_area",
+    "reported_severity_signal",
+    "business_deadline_pressure",
+    "affected_user_scope",
+    "environment_scope",
+    "root_cause_type",
+    "regression_after_change",
+    "reproducibility"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.64,
+    "predictor_fraction": 0.8889,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.72,
+    "leakage_rate": 0.1111
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "ticket_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Category (bug vs how-to vs incident) is knowable at intake and plausibly drives resolution time; a legitimate feature outside the focus."
+      },
+      {
+        "name": "product_area",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Which component the ticket touches is available up front and different areas have systematically different resolution durations."
+      },
+      {
+        "name": "reported_severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Severity as reported in the description is an intake-time signal correlated with effort; not a restatement of resolution_minutes."
+      },
+      {
+        "name": "business_deadline_pressure",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Stated urgency/deadline is knowable at report time and can influence prioritization and thus resolution time."
+      },
+      {
+        "name": "affected_user_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Scope of impact (single user vs whole tenant) is derivable from the ticket text and predictive of triage effort and duration."
+      },
+      {
+        "name": "environment_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether prod vs staging is affected is an intake-time attribute plausibly linked to handling speed and complexity."
+      },
+      {
+        "name": "root_cause_type",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Root cause is typically established during/after investigation, not at intake; it co-occurs with the resolution process and risks leaking the outcome."
+      },
+      {
+        "name": "regression_after_change",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the issue followed a recent change can be stated in the report and is a plausible pre-resolution predictor; borderline but often knowable at intake."
+      },
+      {
+        "name": "reproducibility",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Reproducibility (consistent vs intermittent) is a diagnostic property described early and strongly correlated with debugging effort/time."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.72,
+    "rationale": "Most added columns are semantically distinct intake-time signals (category, product area, severity, urgency, scope, environment, reproducibility) that lie outside resolution_minutes and plausibly carry predictive signal beyond the original priority/channel/agent columns. root_cause_type is flagged as leakage because it is usually determined through the resolution process itself rather than known before the outcome. As a set they offer strong, non-redundant predictive leverage, so utility is high but not maximal due to one leaking column and some overlap with existing priority."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "predictive_long",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

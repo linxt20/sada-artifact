@@ -1,0 +1,134 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 12,
+  "added_columns": [
+    "theme_seat_comfort",
+    "theme_staff_service",
+    "theme_food_quality",
+    "theme_entertainment",
+    "theme_value_for_money",
+    "theme_punctuality",
+    "theme_cleanliness",
+    "theme_boarding",
+    "review_positive_word_count",
+    "review_negative_word_count",
+    "review_sentiment_ratio",
+    "review_word_count"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.48,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.6667
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "theme_seat_comfort",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary presence of seat-comfort theme; well-balanced (462/438) and interpretable, allows segmenting Overall Rating by whether the theme is discussed."
+      },
+      {
+        "name": "theme_staff_service",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary staff-service theme flag with a reasonable split; clear segmentation for comparing ratings."
+      },
+      {
+        "name": "theme_food_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary theme flag, well-separated categories usable for grouping against the focus."
+      },
+      {
+        "name": "theme_entertainment",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary entertainment theme; balanced enough to compare rating distributions."
+      },
+      {
+        "name": "theme_value_for_money",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary theme flag; somewhat imbalanced (157 positive) but still supports meaningful segmentation."
+      },
+      {
+        "name": "theme_punctuality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary theme about delays/timeliness, groupable against ratings."
+      },
+      {
+        "name": "theme_cleanliness",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary cleanliness theme; imbalanced (118) but categories are clear and interpretable."
+      },
+      {
+        "name": "theme_boarding",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary boarding theme flag; interpretable and usable for segmentation."
+      },
+      {
+        "name": "review_positive_word_count",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A lexicon-derived count is a mechanical proxy that largely restates review sentiment/valence, which is near-tautological with rating; not an external associational theme and not a clean interpretable segmentation."
+      },
+      {
+        "name": "review_negative_word_count",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Same mechanical valence-count issue; opaque proxy tied circularly to the rating rather than an interpretable segment."
+      },
+      {
+        "name": "review_sentiment_ratio",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Bare sentiment ratio is essentially a restatement of Overall Rating's valence; fine-grained fractional values give no clean categories to segment on."
+      },
+      {
+        "name": "review_word_count",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Generic text-length feature; too fine-grained and near-constant in meaning, offers no interpretable relationship with rating."
+      }
+    ],
+    "n_predictors": 8,
+    "relationship_informativeness": 0.72,
+    "rationale": "The eight binary theme flags directly realise the exploratory intent: each is an external, interpretable, well-separated category that can be crossed with Type of Traveller and Class and compared against Overall Rating, exactly matching the query about which review themes associate with higher/lower ratings. The remaining four columns (positive/negative word counts, sentiment ratio, word count) are mechanical text metrics: sentiment ratio restates the rating's valence, the word counts are opaque proxies, and word count is a generic length feature with no interpretable segmentation. The theme set carries the informativeness; the sentiment/length columns dilute it."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 12
+}

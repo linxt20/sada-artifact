@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review facets differ by sentiment label?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "product_category",
+    "quality_dimension",
+    "complaint_severity",
+    "emotional_intensity",
+    "primary_emotion",
+    "expectation_gap_direction",
+    "defect_or_failure_type",
+    "recommendation_stance"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "product_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "External, well-separated categorical variable (book, music, movie, physical product) that can be crossed with sentiment to see whether facets differ by product type. Fully independent of the label."
+      },
+      {
+        "name": "quality_dimension",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable facet categories (content quality, performance, build, usability, etc.) that segment which aspect a review focuses on; directly supports 'review facets differ by sentiment' exploration."
+      },
+      {
+        "name": "complaint_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal 2-5 scale with meaningful NULL (no complaint). Interpretable and comparable across sentiment, though it partly co-moves with negativity, its severity gradient still yields informative segmentation."
+      },
+      {
+        "name": "emotional_intensity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Ordinal intensity scale orthogonal to polarity; lets one compare how strongly positive vs negative reviews are expressed. Interpretable and groupable."
+      },
+      {
+        "name": "primary_emotion",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Discrete, interpretable emotion categories. Richer than the bare polarity label, enabling exploration of which specific emotions map to each sentiment. Partially correlated with label but adds resolution."
+      },
+      {
+        "name": "expectation_gap_direction",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated ordinal categories (far below to exceeded expectations) offering an interpretable explanatory dimension for why sentiment is positive/negative."
+      },
+      {
+        "name": "defect_or_failure_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable failure taxonomy; heavily skewed to 'not_present' (198) but the non-null classes still permit meaningful comparison of defect types across sentiment."
+      },
+      {
+        "name": "recommendation_stance",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear stance categories (explicit/implicit recommend vs warn, mixed). Interpretable and groupable; near-restates polarity but the explicit/implicit distinction adds a useful facet."
+      }
+    ],
+    "n_predictors": 8,
+    "relationship_informativeness": 0.85,
+    "rationale": "The set consists almost entirely of external, interpretable, well-separated categorical or ordinal variables that segment reviews along facets (product type, quality dimension, emotion, expectations, defects, recommendation stance). These directly support the query 'how do review facets differ by sentiment label?' by enabling group-and-compare analysis against label_pos. Several columns (primary_emotion, complaint_severity, recommendation_stance) partially co-move with polarity and thus edge toward restatement, slightly lowering the score, but each still adds interpretable resolution beyond the bare label rather than opaque scores. No column is near-constant or so fine-grained as to prevent comparison, so the set strongly realises the exploratory-analysis claim."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

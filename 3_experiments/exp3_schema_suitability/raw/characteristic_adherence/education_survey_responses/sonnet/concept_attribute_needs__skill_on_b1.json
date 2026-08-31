@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "instructional_format",
+    "teacher_responsiveness",
+    "engagement_level",
+    "peer_interaction_loss",
+    "handson_gap_type",
+    "positive_adaptation"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8583,
+    "analytical_usefulness__table_level": 0.87,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8417,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "instructional_format",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Gives a genuine axis to segment pain points by delivery mode. Values are mostly grounded (recorded lectures -> flipped_async_video, kitchen-chemistry -> project_based). Some rows lack explicit format cues (ED-0003 has no clear live-vs-async signal), so a few 'live_interactive' assignments are mild inferences, but they are reasonable readings."
+      },
+      {
+        "name": "teacher_responsiveness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to learner pain points. Grounded where text is explicit (ED-0003 'teacher can't tell' -> absent_or_unresponsive). Weaker where silent: ED-0002 'highly_responsive' and ED-0004 'highly_responsive' are inferred from general positivity rather than stated responsiveness, and ED-0005 'adequate' is a soft read. Some confident specifics on silent rows."
+      },
+      {
+        "name": "engagement_level",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Central to the query; strong axis for comparison. Values track the text well (ED-0005 cameras off -> disengaged, ED-0002 show up on time -> actively_engaged, ED-0004 self-paced note-taking -> actively_engaged). Well grounded."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures a distinct, recurring pain point (social/community loss). Grounded: ED-0003 'zero peer interaction' -> severe_loss, ED-0005 silent chat -> severe_loss. ED-0001 'moderate_loss' is a lighter inference from 'raise my hand quietly' but defensible."
+      },
+      {
+        "name": "handson_gap_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Typed hands-on gaps are a real, subject-specific need axis. Mostly 'not_present' correctly for rows with no lab/studio content, and ED-0002 labs-over-video -> lab_experiment_gap is well grounded. Appropriate 'not_present' for silent rows is correct behaviour."
+      },
+      {
+        "name": "positive_adaptation",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a useful counter-axis (what works) complementing pain points. Grounded: ED-0002 creative labs -> innovative_curriculum_design, ED-0004 documentary clips -> effective_digital_tool_use. 'not_present' used sensibly for rows lacking positives."
+      }
+    ],
+    "analytical_usefulness": 0.87,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns collectively provide multiple genuine, non-redundant analytical axes (format, responsiveness, engagement, peer loss, hands-on gaps, positive adaptations) that map directly onto the query about learner needs and pain points. None are near-constant or trivial restatements. Values are generally sound readings of the source text, with appropriate 'not_present' defaults for silent rows. The main groundedness weakness is teacher_responsiveness and some instructional_format assignments, where the system occasionally infers confident specifics on rows that are silent about those attributes; this is mild rather than fabricated fact."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

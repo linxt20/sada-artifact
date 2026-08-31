@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_travel_related",
+    "expense_purpose",
+    "asset_category",
+    "deployment_scope",
+    "asset_cost_tier",
+    "processing_delay"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.33,
+    "focus_coherence": 0.55,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.6,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Characterizing the nature and cost profile of asset/expense purchases (what was bought, its category, cost tier, and deployment scope)",
+    "per_column": [
+      {
+        "name": "is_travel_related",
+        "supports_focus": false,
+        "rationale": "Flags travel relevance, but the query is explicitly about TRAVEL-expense records, so this is near-tautological and points away from the asset-purchasing focus the other columns build."
+      },
+      {
+        "name": "expense_purpose",
+        "supports_focus": true,
+        "rationale": "Classifies the purpose/nature of the expense, a core facet of a spend-characterization focus."
+      },
+      {
+        "name": "asset_category",
+        "supports_focus": true,
+        "rationale": "Details what asset was acquired, a coherent attribute of the purchasing focus."
+      },
+      {
+        "name": "deployment_scope",
+        "supports_focus": true,
+        "rationale": "Describes who/what the spend serves, a sensible facet of the asset/spend structure."
+      },
+      {
+        "name": "asset_cost_tier",
+        "supports_focus": true,
+        "rationale": "Buckets cost magnitude, directly supporting a cost-profile focus."
+      },
+      {
+        "name": "processing_delay",
+        "supports_focus": false,
+        "rationale": "Operational latency metric orthogonal to the asset/cost characterization; a scattered addition."
+      }
+    ],
+    "focus_coherence": 0.55,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.6,
+    "rationale": "Four of six columns (expense_purpose, asset_category, deployment_scope, asset_cost_tier) cohere around a single inferable focus: characterizing what was purchased and its cost/deployment profile. However coherence is undercut in two ways. First, the framing is oddly divorced from the stated domain: these are 'travel-expense records,' yet the inferred purpose/asset categories are dominated by hardware/laptops/cloud, and 'is_travel_related' being mostly false plus 'processing_delay' pull toward different concepts, making the set feel partly like a grab-bag. Second, expense_purpose and asset_category overlap heavily (shared values like travel_equipment, software_service), so the structure has redundant facets rather than cleanly differentiated ones. The implied focus is actionable — an analyst could segment spend by category/cost tier — but the plausible internal inconsistency and the two off-focus columns keep all three scores at a moderate, not strong, level."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

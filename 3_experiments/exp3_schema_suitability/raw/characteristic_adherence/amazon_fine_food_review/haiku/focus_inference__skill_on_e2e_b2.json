@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "product_category",
+    "primary_complaint_type",
+    "product_quality_assessment",
+    "taste_flavor_perception",
+    "price_value_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.7055,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.83,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Actionable customer-satisfaction / product-experience assessment of food reviews, organized around what drives satisfaction and what problems warrant attention (quality, taste, price, complaint type) across product categories.",
+    "per_column": [
+      {
+        "name": "product_category",
+        "supports_focus": true,
+        "rationale": "Provides the segmentation dimension so satisfaction/complaint signals can be attributed to product types -- an actionable slicing facet."
+      },
+      {
+        "name": "primary_complaint_type",
+        "supports_focus": true,
+        "rationale": "Directly captures 'what's worth attention', a taxonomy of actionable problems drawn from the text."
+      },
+      {
+        "name": "product_quality_assessment",
+        "supports_focus": true,
+        "rationale": "A core facet of product experience; ordinal quality signal that flags concerning/defective items."
+      },
+      {
+        "name": "taste_flavor_perception",
+        "supports_focus": true,
+        "rationale": "A distinct experiential facet especially salient for food; separates flavor from generic quality."
+      },
+      {
+        "name": "price_value_perception",
+        "supports_focus": true,
+        "rationale": "Value/price facet, a common actionable driver of dissatisfaction distinct from quality/taste."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.83,
+    "focus_actionability": 0.85,
+    "rationale": "The columns collectively centre on one coherent, data-inferable focus: an actionable product-experience/satisfaction assessment of food reviews. All five are semantically substantive extractions from review text (category, complaint type, quality, taste, value) rather than mechanical features like length or bare sentiment, so they are not a grab-bag. Around the implied focus they form a sound predictor/attribute structure: one segmentation dimension (category) plus four differentiated experiential facets (quality, taste, price, complaint type), at a useful mid-granularity with meaningful value taxonomies. Minor overlap exists between product_quality_assessment, taste_flavor_perception, and primary_complaint_type (e.g., taste issues appear in both complaint and taste columns), which slightly blurs facet boundaries but does not collapse into pure restatement. The focus is clearly actionable: an analyst can prioritize complaint types, drill into low-value or defective categories, and target interventions, directly serving the 'worth attention / actionable' intent."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do expense decline rates differ across departments?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "department_decline_rate",
+    "department_avg_amount",
+    "is_declined"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7833,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.9167,
+    "source_groundedness__table_level": 0.92,
+    "b1_overall": 0.85,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "department_decline_rate",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This column directly operationalizes the query's core metric -- the decline rate per department -- providing the exact axis needed to compare departments. Values are derived aggregates from the department + state columns present in the table; the per-department constancy across rows (e.g. 0.0491... repeated) is consistent with a group-level statistic and is a sound reading of the data."
+      },
+      {
+        "name": "department_avg_amount",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Average expense amount per department gives a genuine explanatory axis for why decline rates might differ (e.g. higher-value departments getting more scrutiny). Derivable from the existing amount and department columns; the repeated per-department values are consistent with a valid aggregate."
+      },
+      {
+        "name": "is_declined",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A row-level binary decline flag is largely a restatement of the existing 'state' column, so it adds limited new leverage beyond convenience; however it is the atomic basis for computing decline rates and enables cross-tabbing decline against other columns. Values are directly and soundly derivable from the state field."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.92,
+    "rationale": "The added columns are well-targeted to the query: department_decline_rate and department_avg_amount supply the exact department-level metrics and a candidate explanatory variable, while is_declined provides the underlying flag (somewhat redundant with 'state' but still useful). All values are grounded in existing table fields (department, state, amount) as valid aggregates or extractions, with no evidence of invented facts across the sampled rows."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 3
+}

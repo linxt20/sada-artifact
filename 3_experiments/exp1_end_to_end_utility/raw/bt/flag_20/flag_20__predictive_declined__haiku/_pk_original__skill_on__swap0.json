@@ -1,0 +1,109 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on",
+  "swap": false,
+  "winner": "A",
+  "margin": "large",
+  "ok": true,
+  "confidence": 0.9,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 3,
+    "actionability": 2,
+    "coherence": 2
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 2,
+      "delta_a_minus_b": 3,
+      "winner": "A",
+      "margin": "large"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 2,
+      "delta_a_minus_b": 3,
+      "winner": "A",
+      "margin": "large"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Travel is 146 of 500 rows (29%), but it makes up 61 of 84 declined rows (73%)",
+        "why": "concrete counts and shares"
+      },
+      {
+        "dimension": "depth",
+        "quote": "`Customer Support`: 35 of 60 declined ($58\\%$)",
+        "why": "segments by department"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "`4000$–$5999`: 21 of 33 declined ($64\\%$)",
+        "why": "numeric amount bands"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "processed_date...reflects workflow status rather than a pre-decision signal",
+        "why": "avoids leakage trap B falls into"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Declined: Mean $3,793, Median $3,699",
+        "why": "concrete stats"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Declined | 61 (100.0%) | 0 (0.0%)",
+        "why": "table with numbers"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "declined expenses fail before processing lag data is captured",
+        "why": "presents leakage as strongest predictor"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "A gives actionable, non-leaky segmented signals while B's top signals are post-hoc workflow leakage useless for prediction.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

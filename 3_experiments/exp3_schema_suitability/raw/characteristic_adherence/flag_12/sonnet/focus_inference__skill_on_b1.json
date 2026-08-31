@@ -1,0 +1,67 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "incident_symptom_type",
+    "affected_asset_type",
+    "software_trigger",
+    "self_resolved"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.72,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.74,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.73,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Semantic categorization of free-text short_description gives a strong grouping axis for analyzing incident distribution. Values (printer, network_connectivity, database) are well-grounded in the source text."
+      },
+      {
+        "name": "incident_symptom_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "A distinct axis (what went wrong) that complements category and enables symptom-based analysis. Extractions like connectivity_failure and not_responding are sound readings of the text; NULLs for silent rows are acceptable. Slight risk of over-specific inference (e.g. 'not_responding' from 'not working properly'), but reasonable."
+      },
+      {
+        "name": "affected_asset_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Useful for asset-level grouping, though it overlaps heavily with incident_category (printer/printer, network_connectivity/network_device). Still offers some independent leverage (e.g. database->software_application). Values are warranted from the text."
+      },
+      {
+        "name": "software_trigger",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "rationale": "A bare boolean flag with heavy skew (446 false). Provides limited leverage and is partly redundant with category=software. Groundedness is defensible from text but the specific inference of whether software 'triggered' an incident is often not stated, risking confident defaults to False."
+      },
+      {
+        "name": "self_resolved",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.35,
+        "rationale": "Not supported by the source text shown; short_description gives no indication of resolution mode. The 'True' for the floor-3 connectivity row appears to be an invented specific with no grounding. Weak analytical value as a poorly-grounded boolean."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.75,
+    "rationale": "The categorical columns (incident_category, incident_symptom_type, affected_asset_type) turn unstructured short_description text into strong, well-grounded grouping axes directly serving the exploratory query, though asset_type partially overlaps category. The two boolean flags are weaker: software_trigger is skewed and semi-redundant, and self_resolved is not derivable from the available text and shows an unsupported 'True' assertion, dragging groundedness down."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 5
+}

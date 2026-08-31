@@ -1,0 +1,95 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can educators improve learning satisfaction?",
+  "focus_variable": "learning_satisfaction",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "teacher_instructional_quality",
+    "engagement_modality",
+    "peer_social_interaction_quality",
+    "student_disengagement_pattern",
+    "subject_format_fit"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.55,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.55,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "learning_satisfaction",
+    "per_column": [
+      {
+        "name": "teacher_instructional_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Instructional quality is an intervenable lever educators can actually improve or change; a valid what-if treatment directly tied to the 'how can educators improve' framing."
+      },
+      {
+        "name": "engagement_modality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The mode of engagement (live, gamified, asynchronous, etc.) is a configurable, settable design choice educators can decide on — a second intervenable treatment."
+      },
+      {
+        "name": "peer_social_interaction_quality",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Peer/community quality plausibly affects both how much active instruction/modality is deployed and student satisfaction; a common cause not named in the query. Could also be partly a mediator, but treated as a background factor here."
+      },
+      {
+        "name": "student_disengagement_pattern",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Disengagement is a downstream response to instruction/modality that in turn lowers satisfaction; it lies on the causal path and is a mediator, not a confounder."
+      },
+      {
+        "name": "subject_format_fit",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How well the subject suits the delivery format is a common cause: it shapes which modality/instruction is feasible and independently affects satisfaction; not named in the query (subject appears in original columns, but format-fit does not)."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "teacher_instructional_quality",
+      "engagement_modality"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "peer_social_interaction_quality",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "subject_format_fit",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.55,
+    "rationale": "The set includes clearly intervenable treatments (instructional quality, engagement modality) that educators can set, satisfying part (a) of the what-if claim. For part (b), two plausible confounders (subject_format_fit, peer_social_interaction_quality) are present and were NOT named in the query, demonstrating some capability. However, student_disengagement_pattern is a mediator (on the causal path from treatment to outcome), so it does not count and would introduce bias if adjusted for. Overall the intervention setup is realized moderately: valid settable treatments plus a couple of genuine, non-named confounders, but the confounder set is thin and partly ambiguous with mediation."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

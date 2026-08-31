@@ -1,0 +1,150 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 13,
+  "added_columns": [
+    "cabin_service_complaint_type",
+    "crew_attitude_issue",
+    "service_responsiveness",
+    "complaint_severity",
+    "complaint_resolution_quality",
+    "service_failure_co_occurrence",
+    "positive_service_signal",
+    "ground_service_complaint",
+    "cabin_class_service_gap",
+    "flight_haul_type",
+    "aircraft_type_confounder",
+    "service_decline_perception",
+    "service_consistency"
+  ],
+  "metrics": {
+    "n_added_columns": 13,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 8,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "cabin_service_complaint_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Directly operationalizes 'the most common cabin-service complaints' being eliminated. This is the intervention target: an airline can improve cabin service to move rows out of complaint categories (service_responsiveness, crew_attitude, food_quality, etc.) into 'no_complaint'. This is the primary treatment and it is explicitly named in the query."
+      },
+      {
+        "name": "crew_attitude_issue",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "A specific sub-dimension of cabin-service quality (rude/cold vs friendly). It lies on the causal path between the cabin-service lever and Overall Rating rather than being a common cause. It is an aspect of the treatment itself, implied by 'cabin-service complaints', not an independent confounder."
+      },
+      {
+        "name": "service_responsiveness",
+        "causal_role": "mediator",
+        "named_in_query": true,
+        "rationale": "Another cabin-service dimension (attentive vs slow/refused). This is a component of the treatment/pathway, not a common cause of both treatment and outcome; adjusting for it would block part of the very effect being estimated."
+      },
+      {
+        "name": "complaint_severity",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Encodes the intensity of the complaint. It characterizes the magnitude of the treatment rather than being an upstream common cause; it is post-treatment descriptive information, not a confounder."
+      },
+      {
+        "name": "complaint_resolution_quality",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the complaint was resolved is downstream of the complaint occurring and sits on the path to the rating. It is a post-treatment variable / mediator, so conditioning on it would bias the counterfactual effect."
+      },
+      {
+        "name": "service_failure_co_occurrence",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Counts co-occurring service failures — this is a summary of the treatment's extent, on the causal pathway, not a common antecedent cause of both service quality and rating."
+      },
+      {
+        "name": "positive_service_signal",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A flag for positive service mentions — the flip side of the treatment (service quality) itself. It is part of the exposure/pathway, not a confounder."
+      },
+      {
+        "name": "ground_service_complaint",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Ground service is a DIFFERENT service domain that plausibly affects Overall Rating, but it is not a common cause of cabin-service complaints (it does not upstream-drive cabin service). It functions as a separate predictor/co-cause of the outcome, not a genuine confounder of the cabin-service→rating relationship."
+      },
+      {
+        "name": "cabin_class_service_gap",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Service delivered relative to class expectations. This is a perception of service quality (the treatment) relative to Class; it lies on the pathway to satisfaction rather than being an exogenous common cause."
+      },
+      {
+        "name": "flight_haul_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Haul length is a plausible common cause: longer flights create more service touchpoints (raising complaint likelihood) and also shift baseline expectations/rating levels. It is exogenous to the cabin-service lever, not on the pathway. NOT named in the query (derivable only loosely from Route), so it is the kind of confounder that demonstrates the capability under test."
+      },
+      {
+        "name": "aircraft_type_confounder",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Aircraft configuration (dense narrowbody vs high-comfort widebody) is a common cause: it shapes comfort/service delivery (affecting complaints) and independently influences Overall Rating. It is a legitimate common-cause confounder and is NOT named in the query, though the heavy NULL fraction weakens its usefulness."
+      },
+      {
+        "name": "service_decline_perception",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A perception that service has declined — this is downstream of the actual cabin-service quality and reflects/summarizes it on the way to the rating. It is a mediator/perceptual outcome, not a common cause."
+      },
+      {
+        "name": "service_consistency",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Consistency of service across sectors is a property of the service delivered (the treatment) and sits on the pathway to the rating, not an upstream common cause of both treatment and outcome."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "cabin_service_complaint_type"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "flight_haul_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "aircraft_type_confounder",
+        "named_in_query": false,
+        "plausibility": 0.65
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The set clearly establishes an intervenable treatment: 'cabin_service_complaint_type' maps directly onto 'eliminating the most common cabin-service complaints', and cabin service is a lever airlines can actually set/change, so (a) is satisfied. However, the requirement (b) — supplying common causes of BOTH treatment and outcome that must be adjusted for — is only weakly met. The overwhelming majority of added columns (crew_attitude_issue, service_responsiveness, complaint_severity, complaint_resolution_quality, service_failure_co_occurrence, positive_service_signal, cabin_class_service_gap, service_decline_perception, service_consistency) are decompositions of the treatment itself or post-treatment mediators/perceptions; conditioning on them would sit ON the causal pathway and bias the counterfactual estimate rather than identify it. Only two columns, flight_haul_type and aircraft_type_confounder, are genuine exogenous common causes, and both are NOT named in the query, which is precisely the capability being tested — a positive signal. But they are diluted among many mediators, aircraft_type is ~48% NULL, and other structural confounders that would matter (Type of Traveller, Class, Airline-level quality) are not introduced as adjustment variables. Net: valid intervenable treatment, but confounder support for the interventional identification is thin and mediator-heavy."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "whatif_service_complaints",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 13
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If films addressed the most common audience complaints, how much would positive sentiment increase?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "complaint_categories",
+    "num_complaints",
+    "sentiment_boost_if_addressed"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.7,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.6833,
+    "source_groundedness__table_level": 0.65,
+    "b1_overall": 0.6916,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "complaint_categories",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly enables identifying the most common complaint types, the exact grouping axis the query needs. Values are well-grounded: 'plot' for the review criticizing writing/dialogue is defensible, and negative reviews without a specific craft complaint get 'none'. Multi-valued categorization is a sound reading of source text."
+      },
+      {
+        "name": "num_complaints",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A count derivable directly from complaint_categories, so partly redundant with it, but still offers a usable magnitude axis for prioritizing which reviews carry the most fixable issues. Values match the categorization and are well-grounded."
+      },
+      {
+        "name": "sentiment_boost_if_addressed",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "This column speaks most directly to the query's counterfactual, giving it apparent leverage. However the specific numeric boosts (20, 40, 60) are invented and appear to be a mechanical function of complaint count rather than anything the text supports. The source gives no basis for a quantified sentiment increase, so the values assert unwarranted specifics."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.65,
+    "rationale": "complaint_categories is highly useful and well-grounded, giving the core grouping axis the query needs; num_complaints is grounded but partly redundant. sentiment_boost_if_addressed targets the query's counterfactual but its magnitudes are fabricated with no textual basis, dragging table-level groundedness down. Overall the set provides genuine analytical leverage but includes one column that confidently asserts unsupported numeric specifics."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "whatif_complaints",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

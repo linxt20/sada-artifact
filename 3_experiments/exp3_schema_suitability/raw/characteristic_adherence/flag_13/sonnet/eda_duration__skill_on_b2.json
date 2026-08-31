@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "affected_system",
+    "incident_symptom_type",
+    "scope_indicator",
+    "resolver_match",
+    "opened_hour_bucket",
+    "is_repeat_issue",
+    "caller_type"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.85,
+    "predictor_fraction": 1.0,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.85,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean, well-separated categorical (database/email/vpn/network/etc.) directly named in the query; ideal grouping axis for comparing resolution duration."
+      },
+      {
+        "name": "affected_system",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable system-level categories with reasonable cell counts; a finer but still meaningful segmentation to compare durations across."
+      },
+      {
+        "name": "incident_symptom_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Symptom taxonomy (connectivity_failure, access_denied, outage, performance_degradation) is interpretable and plausibly associated with how long resolution takes; some NULLs but usable."
+      },
+      {
+        "name": "scope_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Individual vs system_wide vs location_specific is a well-separated, intuitive scope axis strongly plausibly related to resolution effort/duration."
+      },
+      {
+        "name": "resolver_match",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Boolean (assignee matched resolver) is interpretable and can be segmented on; plausible operational driver of duration, though somewhat imbalanced (403/97)."
+      },
+      {
+        "name": "opened_hour_bucket",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Business_hours/after_hours/overnight is a clean, interpretable temporal segmentation with balanced cells, a classic axis for exploring duration variation."
+      },
+      {
+        "name": "is_repeat_issue",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Boolean repeat-issue flag is interpretable and groupable; recurrence plausibly relates to resolution duration."
+      },
+      {
+        "name": "caller_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Named_employee vs itil_user is a clean binary segmentation that could reveal duration differences by caller class."
+      }
+    ],
+    "n_predictors": 8,
+    "relationship_informativeness": 0.85,
+    "rationale": "All added columns are external, associational, and interpretable with well-separated, low-cardinality categories that can be grouped against resolution_duration. None merely restate the focus. incident_category directly echoes the existing 'category' field, and several flags are imbalanced (resolver_match, is_repeat_issue), slightly limiting comparative power, but as a set they open up multiple informative, human-readable segmentation axes (category, system, symptom, scope, timing, recurrence, caller type) well suited to exploratory analysis of duration."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

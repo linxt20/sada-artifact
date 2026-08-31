@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "crew_service_quality",
+    "crew_above_and_beyond",
+    "personalized_service",
+    "service_consistency",
+    "food_quality",
+    "seat_comfort_perception",
+    "ife_quality",
+    "amenity_provision"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7438,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7438,
+    "source_groundedness__table_level": 0.76,
+    "b1_overall": 0.7438,
+    "hallucination_rate": 0.375
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A graded categorical read of crew service is a strong axis for identifying advantage attributes tied to high ratings. Samples map soundly ('outstanding', 'consistently good', 'very nice and helpful' -> exceptional/good). Slightly generous readings but well grounded."
+      },
+      {
+        "name": "crew_above_and_beyond",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Distinguishes extraordinary effort from baseline good service, a plausible new axis. However sample 1 marks True where the text describes good but arguably routine service; the flag is somewhat subjective and one reading overreaches. Mostly defensible."
+      },
+      {
+        "name": "personalized_service",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Potentially useful axis, but grounding is shaky: sample 5 ('cabin crew nice and helpful') is marked True for personalization without clear individualized-service evidence, and sample 1's True is a stretch. Several inferences exceed the text."
+      },
+      {
+        "name": "service_consistency",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Consistency is a meaningful attribute for high-rating airlines. Grounded where text says 'consistently good from start to finish'; other rows are inferred but reasonable. Some rows lack explicit consistency cues, mildly speculative."
+      },
+      {
+        "name": "food_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Graded food read is a clear analytical axis and maps well to text ('very high quality', 'excellent', 'plentiful'). NULLs for silent rows are appropriate. Well grounded."
+      },
+      {
+        "name": "seat_comfort_perception",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a qualitative seat dimension beyond the numeric Seat Comfort column, distinguishing flat-bed vs upright vs cramped. Samples align ('spacious and comfortable' -> spacious_upright, 'lie down bed' -> spacious_flat_bed). Well grounded."
+      },
+      {
+        "name": "ife_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Useful axis distinct from the raw Inflight Entertainment column. Mostly grounded, but sample 1 and 5 are marked not_present while text is simply silent (should arguably be NULL), and sample 2 'wide range of movies' -> good is correct. Minor mislabeling of silence as absence."
+      },
+      {
+        "name": "amenity_provision",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Captures amenity/service proactivity, a plausible advantage attribute. Uses Unknown/NULL for silent rows appropriately. Some 'proactively_offered' inferences (sample 1) are reasonable from described drink rounds. Moderately grounded."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.76,
+    "rationale": "The added columns collectively provide genuine, distinct qualitative axes (crew, food, seat, IFE, amenities, consistency) that directly support identifying advantage attributes of high-rated airlines, going beyond the existing numeric ratings. Most values are sound readings of the source text, with appropriate NULL/Unknown handling for silent rows. Groundedness is reduced by a few overreaching inferences in the more subjective boolean columns (crew_above_and_beyond, personalized_service) and by labeling silence as 'not_present' in ife_quality rather than unknown. No column is near-constant or trivially redundant enough to fail on usefulness."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

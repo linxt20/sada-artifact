@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "affected_asset_type",
+    "failure_symptom_type",
+    "self_resolved_by_assignee",
+    "software_trigger_present",
+    "requires_replacement"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.3667,
+    "predictor_fraction": 0.6667,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.55,
+    "interpretable_fraction": 0.8333
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_efficiency",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated interpretable categories, but the query already names 'category' as a grouping axis and the original table has a 'category' column. This largely restates an existing focus/grouping dimension rather than opening a new relationship."
+      },
+      {
+        "name": "affected_asset_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "External associational variable with clean, well-separated categories (printer, monitor, server, laptop...). One can segment resolution efficiency by asset type and compare meaningfully. Adds a genuinely new dimension beyond the query's stated axes."
+      },
+      {
+        "name": "failure_symptom_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated symptom categories that plausibly relate to how quickly incidents resolve. Grouping efficiency by symptom is an informative exploratory comparison, though 'malfunction_general' dominates (310/500), weakening some contrasts."
+      },
+      {
+        "name": "self_resolved_by_assignee",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary split, but 'self resolved by assignee' is essentially a facet of the resolution process itself, closely tied to the efficiency focus rather than an external associational variable to compare against it."
+      },
+      {
+        "name": "software_trigger_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary segmentation that is external to the focus; efficiency can be compared for software-triggered vs not. Reasonable exploratory contrast, though the 54/446 imbalance limits the strength of comparison."
+      },
+      {
+        "name": "requires_replacement",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Conceptually relevant (replacement likely lengthens resolution), but the near-constant distribution (14 true / 486 false) means the 'true' segment is too small for a meaningful, well-supported comparison."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.55,
+    "rationale": "The set contains interpretable, well-separated categorical variables and several offer genuine external axes (affected_asset_type, failure_symptom_type, software_trigger_present) along which resolution efficiency can be segmented and compared. However, quality is diluted: incident_category largely restates an existing grouping axis, self_resolved_by_assignee is a facet of the resolution process rather than an independent associational variable, and requires_replacement is too near-constant (14/500) to support meaningful comparison. Several binaries are also heavily imbalanced, limiting contrast strength. Moderately informative for exploratory relationship discovery, but not strongly so."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across role, grade level, and subject, which open-response themes are associated with satisfaction?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "teacher_responsiveness",
+    "instructional_format_adaptation",
+    "student_engagement_level",
+    "hands_on_lab_loss_severity",
+    "peer_interaction_loss",
+    "virtual_community_building_success",
+    "async_format_benefit",
+    "digital_resource_enrichment",
+    "equity_access_barrier",
+    "parent_instructional_burden"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.768,
+    "source_groundedness__table_level": 0.74,
+    "b1_overall": 0.784,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "teacher_responsiveness",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "A meaningful thematic axis for correlating with satisfaction across roles/subjects. Grounded readings are mostly sound (ED-0003 'teacher can't tell when she's lost' -> unresponsive; ED-0002 creative teacher -> highly_responsive). However ED-0004 says nothing about teacher responsiveness yet asserts 'highly_responsive', an unwarranted confident inference, lowering groundedness somewhat."
+      },
+      {
+        "name": "instructional_format_adaptation",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Distinct axis capturing how instruction was adapted to remote format; useful for grouping. Values track text well (ED-0002 creative labs -> strong_adaptation; ED-0004 recorded lectures/clips -> strong_adaptation; ED-0001 frozen whiteboard -> minimal). Reasonable inferences."
+      },
+      {
+        "name": "student_engagement_level",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Engagement is a strong analytical axis and often explicitly referenced (ED-0005 cameras off -> low; ED-0002 show up ready -> high; ED-0004 loves lectures -> high). Well grounded."
+      },
+      {
+        "name": "hands_on_lab_loss_severity",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Subject-specific theme (lab loss) that adds leverage especially for science subjects. High not_applicable share is appropriate for silent rows. ED-0002 kitchen-chemistry mitigation -> mitigated is a sound reading; non-lab rows correctly marked not_applicable."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "analytical_usefulness": 0.83,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Relevant theme tied to satisfaction. Well grounded where text mentions isolation (ED-0003 'zero peer interaction', ED-0005 silent chat -> significant_loss). But ED-0001 asserts 'significant_loss' from only 'miss raising my hand', a stretch, and note 'not_present' vs 'minimal_loss' distinction is fuzzy."
+      },
+      {
+        "name": "virtual_community_building_success",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Partly redundant with peer_interaction_loss (both capture social connection), reducing incremental leverage. Values are also weakly grounded: ED-0002 mapped 'partial' with no community evidence, and the 'absent' vs 'not_present' split is inconsistent and often unsupported."
+      },
+      {
+        "name": "async_format_benefit",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Clear axis; ED-0004 'pause recorded lectures' -> strong_benefit is well grounded. However negative rows (ED-0001, ED-0003, ED-0005) discuss synchronous problems and are labeled 'no_benefit' where async simply isn't mentioned, an over-confident silent-row read rather than 'not_present'."
+      },
+      {
+        "name": "digital_resource_enrichment",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Useful distinct theme; ED-0004 documentary clips -> significant_enrichment is a strong reading. But several rows silent on resources are assigned 'no_enrichment' (ED-0001, ED-0003, ED-0005) rather than unknown, asserting absence not clearly stated."
+      },
+      {
+        "name": "equity_access_barrier",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Equity/access is a strong analytical axis. Grounded: ED-0003 logouts/crying -> severe; ED-0001 camera freezes -> moderate; benign rows -> not_present. Sound readings of connectivity/access cues."
+      },
+      {
+        "name": "parent_instructional_burden",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Adds a role-relevant axis. ED-0003 'we do the worksheet ourselves' -> high is well grounded; most rows correctly not_present. ED-0001 'low' is a mild inference but defensible."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.74,
+    "rationale": "The added columns collectively provide multiple genuine thematic axes (responsiveness, engagement, format adaptation, lab loss, peer interaction, equity, parent burden) that give real grouping/modeling leverage for correlating open-response themes with satisfaction across role, grade, and subject. Mild redundancy exists between peer_interaction_loss and virtual_community_building_success, and between several format/resource columns, but each still offers some distinct signal. The main weakness is groundedness: several columns convert silence into confident negatives ('no_benefit', 'no_enrichment', 'significant_loss', 'highly_responsive') rather than using an unknown/not-stated value, producing unsupported assertions on some rows. Category assignments where the text does speak are generally sound. Overall the set satisfies both necessary conditions at a solid but imperfect level."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "eda_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 10
+}

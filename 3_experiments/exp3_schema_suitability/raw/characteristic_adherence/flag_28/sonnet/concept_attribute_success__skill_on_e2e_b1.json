@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What goal-management practices support high achievement?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "primary_intervention_type",
+    "timeframe_specificity",
+    "baseline_referenced",
+    "measurement_mechanism",
+    "metric_category_alignment",
+    "scope_of_change",
+    "multi_lever_approach",
+    "technology_enablement"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8063,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.7625,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7844,
+    "hallucination_rate": 0.375
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_intervention_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "A strong categorical axis for grouping goals by the lever used to drive achievement, directly relevant to 'what practices support achievement'. Mostly well-grounded (resource_optimization, process_optimization, engagement_program, marketing_sales all read soundly from descriptions), but the Q4 customer-satisfaction row labeled 'training_development' is a misread of a support/personalization goal, indicating some categorization error."
+      },
+      {
+        "name": "timeframe_specificity",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Captures goal-setting specificity (specific quarter/fiscal year vs not specified), a recognized goal-management practice that can be correlated with achievement. Values match the source text well (fiscal year, Q4, upcoming year all correctly mapped)."
+      },
+      {
+        "name": "baseline_referenced",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Whether a goal states a baseline (e.g., 'from 78% to 90%') is a meaningful goal-quality practice to correlate with completion. However grounding is shaky: the cost-reduction row with an explicit '20%' baseline reduction is labeled False, and the resource row too, suggesting inconsistent extraction; some from-to rows are correctly True."
+      },
+      {
+        "name": "measurement_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Identifies how progress is measured, a useful axis distinct from intervention type. Well-grounded to the described metric of each goal (expense_ratio, survey_score, time_speed, sales_revenue) even when it diverges from the noisy original 'metric' column, which is a sound reading of the text."
+      },
+      {
+        "name": "metric_category_alignment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A consistency flag between the stated metric and category is analytically meaningful (goal coherence as a practice). Derivable by comparing existing fields; some samples look questionable (cost_reduction/expense_ratio marked True is correct, but the Q4 satisfaction/expense_ratio pairing logic is plausible), moderate confidence."
+      },
+      {
+        "name": "scope_of_change",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Scope (company/department/team) is a useful grouping axis for achievement analysis. But 'company_wide' dominates heavily (408/550) and several rows appear defaulted to it without textual warrant (e.g., the resource and revenue rows do not clearly state company-wide scope), suggesting an over-asserted default."
+      },
+      {
+        "name": "multi_lever_approach",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Whether a goal uses multiple levers is a plausible achievement-related practice. The Q4 row ('after-sales support' + 'personalized interactions') correctly reads as True; other single-lever rows read as False soundly. Reasonably grounded though inherently interpretive."
+      },
+      {
+        "name": "technology_enablement",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A tech-enablement flag adds a modest new axis. All sampled rows are False, which is defensible given none of the sampled descriptions cite technology; risk of near-constancy but the top-values show 151 True overall, so it is not degenerate."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns collectively provide several genuine, non-redundant axes (intervention type, timeframe specificity, measurement mechanism, scope, multi-lever, baseline referencing) on which an analyst can group and compare goals against achievement, directly serving the query about goal-management practices. Usefulness is high across the board with only technology_enablement being weaker. Groundedness is generally good and values are the right kind of readings from the text, but there are localized errors and over-asserted defaults: a misclassified intervention type, inconsistent baseline_referenced extraction on rows that clearly state from-to or percentage baselines, and a heavily dominant 'company_wide' scope that appears defaulted without textual support. These pull groundedness down to solid-but-imperfect."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

@@ -1,0 +1,78 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "asset_type_category",
+    "asset_acquisition_context",
+    "travel_related_marker",
+    "device_brand",
+    "department_requesting"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.56,
+    "predictor_fraction": 0.8,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.7,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated, interpretable categories (laptop, desktop, service, travel_equipment, etc.) that let an explorer segment decline rates by kind of expense—directly serving the 'what kinds of expenses get declined' question."
+      },
+      {
+        "name": "asset_acquisition_context",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct, human-readable categories (auto_generated, manual_registration, procurement, upgrade_maintenance) representing how an expense originated—an external associational dimension plausibly related to decline likelihood."
+      },
+      {
+        "name": "travel_related_marker",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary flag with a reasonable split (407/93); travel vs. non-travel is an interpretable segmentation that can be compared against decline rates."
+      },
+      {
+        "name": "device_brand",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable vendor categories with a dominant few plus an 'Other' bucket; allows grouping to see if certain vendors' expenses are declined more, though somewhat tangential to the intent."
+      },
+      {
+        "name": "department_requesting",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "The original table already contains a 'department' column; this duplicates the by-department axis the query explicitly asks about rather than adding a new associational variable. Interpretable but essentially a restatement of an existing dimension."
+      }
+    ],
+    "n_predictors": 4,
+    "relationship_informativeness": 0.7,
+    "rationale": "As a set, the added columns provide several external, well-separated, interpretable segmentation variables (expense/asset type, acquisition context, travel flag, brand) that genuinely open up relationships with the decline outcome and support the 'what kinds of expenses get declined' exploration. Categories are human-readable, not opaque scores, and value distributions are neither near-constant nor overly fine-grained. The main weakness is device_brand being only loosely tied to the intent and department_requesting duplicating the existing department dimension rather than introducing a novel associational axis—the query's 'by department' angle is already covered by the original schema. Overall a solid, mostly informative exploratory set."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

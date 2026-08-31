@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What market-expansion focus should analysts study?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "Industry Sector",
+    "Geographic Cluster",
+    "Market Expansion Potential"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.595,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.75,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Market-expansion potential of companies, characterized by industry sector and geographic cluster",
+    "per_column": [
+      {
+        "name": "Industry Sector",
+        "supports_focus": true,
+        "rationale": "A key predictor/segmentation attribute for assessing where market-expansion opportunities concentrate; frames the focus by industry."
+      },
+      {
+        "name": "Geographic Cluster",
+        "supports_focus": true,
+        "rationale": "A geographic segmentation attribute directly relevant to market expansion, inferable from the address/lat-long data present."
+      },
+      {
+        "name": "Market Expansion Potential",
+        "supports_focus": true,
+        "rationale": "The explicit outcome/target variable that names the focus concept; the other two columns serve as its predictors/facets."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.75,
+    "rationale": "The three columns centre coherently on a single inferable focus -- market-expansion potential -- with Industry Sector and Geographic Cluster acting as sensible segmentation/predictor attributes and Market Expansion Potential as the target. This is not a scattered grab-bag: all columns relate to the expansion theme. Structure is sound (two facets + one outcome) at a useful granularity, though it is somewhat thin: the target is a coarse Low/Medium/High ordinal that is essentially a direct restatement of the query rather than a derived, differentiated construct, and no supporting sub-facets (e.g., growth signals, funding, addressable segment) decompose the potential itself. The focus is actionable -- analysts can cross-tabulate sectors and geographies against expansion potential to prioritize targets -- but the bare ordinal rating limits investigative depth and risks being a vacuous restatement of the intent."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

@@ -1,0 +1,97 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why is learning satisfaction low for certain groups, and which factors drive it?",
+  "focus_variable": "satisfaction_1to5",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "pedagogy_adaptation_quality",
+    "peer_social_interaction_loss",
+    "teacher_feedback_and_responsiveness",
+    "async_format_benefit",
+    "student_engagement_level",
+    "subject_remote_format_fit"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "satisfaction_1to5",
+    "per_column": [
+      {
+        "name": "pedagogy_adaptation_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Candidate cause of satisfaction: quality of instructional adaptation plausibly drives learner satisfaction directly."
+      },
+      {
+        "name": "peer_social_interaction_loss",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Loss of peer/community interaction is a candidate causal factor for reduced satisfaction; a plausible treatment rather than a common cause."
+      },
+      {
+        "name": "teacher_feedback_and_responsiveness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Feedback quality is a candidate driver of satisfaction, treated here as another causal factor."
+      },
+      {
+        "name": "async_format_benefit",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Benefit from asynchronous format is a candidate cause of satisfaction, not a common cause of the other factors."
+      },
+      {
+        "name": "student_engagement_level",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Engagement is plausibly downstream of pedagogy/feedback and upstream of satisfaction -- it lies on the causal path, so it is a mediator, not a confounder."
+      },
+      {
+        "name": "subject_remote_format_fit",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "How well a subject fits remote format plausibly affects both how pedagogy is adapted/feedback given (treatment) and satisfaction (outcome), making it a genuine common cause. Subject is in the original table, but 'remote format fit' is a surfaced construct not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "pedagogy_adaptation_quality",
+      "peer_social_interaction_loss",
+      "teacher_feedback_and_responsiveness",
+      "async_format_benefit"
+    ],
+    "confounders": [
+      {
+        "name": "subject_remote_format_fit",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The query is broadly a 'which factors drive satisfaction' attribution question. The system supplied several candidate treatments (pedagogy, peer interaction loss, feedback, async benefit), so a treatment is clearly present. However, causal attribution requires confounders -- common causes of BOTH a treatment and the outcome -- that were surfaced from the data. Most added columns are parallel candidate causes, not confounders. student_engagement_level is best read as a mediator (on the causal path), so treating it as a control would be a mistake. Only subject_remote_format_fit plausibly functions as a common cause (fit shapes both how instruction is delivered and satisfaction), and it was surfaced rather than copied from the query. This is a single, weakly-specified confounder, so the technical claim of setting up an unbiased causal estimation is only partially met."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "causal_low_satisfaction",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "focus_variable": "learner_needs_and_pain_points",
+  "concept": "learner_needs_and_pain_points",
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_need_category",
+    "sentiment",
+    "engagement_impact"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0816,
+    "facet_fraction": 0.3333,
+    "n_facets": 1,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.2,
+    "mece": 0.2449,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "learner_needs_and_pain_points",
+    "per_column": [
+      {
+        "name": "primary_need_category",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The type/category of need expressed (e.g., pedagogical adaptation, digital tools, student engagement) is genuinely a constitutive aspect OF learner needs and pain points -- it decomposes WHAT the need is. However, it is a single multi-label taxonomy column rather than multiple orthogonal facets, so on its own it does not carve the concept into separable MECE aspects; the pipe-delimited overlapping values also blur any exclusivity."
+      },
+      {
+        "name": "sentiment",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Bare positive/neutral/negative sentiment of the response is a generic affective measure, not a constitutive part of what a learner NEED or PAIN POINT is. Pain points are inherently negative-valenced; sentiment restates emotional tone rather than decomposing the concept into a component aspect."
+      },
+      {
+        "name": "engagement_impact",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Engagement impact (high/medium/critical) measures a downstream consequence or severity dimension attached to the need, not a constitutive part of the need itself. It rates an effect rather than naming an aspect OF learner needs; 'critical' also mixes severity with the impact scale."
+      }
+    ],
+    "facet_columns": [
+      "primary_need_category"
+    ],
+    "non_facet_columns": [
+      "sentiment",
+      "engagement_impact"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.2,
+    "rationale": "Only one of the three added columns (primary_need_category) is a true meronymic facet of the concept, and even it is a single overlapping multi-label taxonomy rather than a set of orthogonal facets. Sentiment is a generic affective restatement and engagement_impact is an external severity/consequence predictor, neither of which is 'an aspect OF' learner needs and pain points. The set does not carve the concept into non-overlapping constitutive aspects, and it leaves major facets (e.g., need urgency/priority, affected stakeholder, resource vs. skill vs. support type, temporal/contextual dimension) uncovered. Both mutual exclusivity and exhaustiveness are weak."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

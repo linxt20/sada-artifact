@@ -1,0 +1,87 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest a travel expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "travel_expense_indicator",
+    "asset_class",
+    "asset_source_automation",
+    "processing_lag_signal",
+    "department_category",
+    "source_id_present",
+    "ci_specificity"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.3857,
+    "predictor_fraction": 0.8571,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "predictive_utility": 0.45,
+    "leakage_rate": 0.1429
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "travel_expense_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Flags whether the record is a travel expense, derived from category/description, not from the outcome. It scopes the population the query cares about and can plausibly correlate with decline rates. Legitimate predictor, though partly definitional to the query scope."
+      },
+      {
+        "name": "asset_class",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A categorization of what the expense is for (travel_equipment, vehicle, services, etc.). This lies outside the decline outcome and different asset types can plausibly carry different approval/decline propensities. Valid predictor."
+      },
+      {
+        "name": "asset_source_automation",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How the record originated (automated vs manual vs self-input) is knowable at submission time and is independent of the decline decision. Origin channel can plausibly correlate with scrutiny and decline likelihood. Valid predictor."
+      },
+      {
+        "name": "processing_lag_signal",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Processing lag is derived from processed_date relative to opening. This is only known after the record is processed (i.e., after the decline/approve decision is reached), so it is post-outcome information. Using it to predict decline constitutes temporal leakage."
+      },
+      {
+        "name": "department_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A normalized grouping of the submitting department. Fully known before the outcome and departmental spending patterns/policies plausibly affect decline rates. Valid predictor, though it largely restates the existing 'department' column, adding limited new leverage."
+      },
+      {
+        "name": "source_id_present",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether a source_id exists is a data-completeness signal available at submission and independent of the outcome. Missing linkage can plausibly correlate with declines. Weak but legitimate predictor."
+      },
+      {
+        "name": "ci_specificity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Granularity of the configuration item reference (specific model vs generic category vs service descriptor). Known at submission, outside the outcome, and specificity of documentation can plausibly relate to decline likelihood. Valid predictor."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.45,
+    "rationale": "Six of seven columns are legitimate pre-outcome predictors that lie outside state_declined and plausibly carry signal (asset_class, asset_source_automation, source_id_present, ci_specificity add genuinely new derived signal; travel_expense_indicator scopes relevance; department_category mostly restates an existing column). One column, processing_lag_signal, is leakage because processing timing is only realized after the decline decision. As a set they offer moderate genuine leverage beyond the original columns, but several are weak/generic completeness flags and one is duplicative, so overall predictive utility is moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

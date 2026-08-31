@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "sentiment_description",
+    "review_character_count",
+    "detected_themes",
+    "positive_sentiment_words",
+    "negative_sentiment_words",
+    "sentiment_word_ratio"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.4583,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.55,
+    "interpretable_fraction": 0.5
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "sentiment_description",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Its two values (positive/negative) are a direct textual restatement of the focus variable label_pos; segmenting on it just reproduces the focus, offering no external relationship."
+      },
+      {
+        "name": "review_character_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Length is an external associational variable comparable against sentiment, but the distribution is degenerate: 184 of ~250 values are capped at 700, so it is near-constant and cannot support meaningful segmentation as observed."
+      },
+      {
+        "name": "detected_themes",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated thematic categories (plot, acting, directing, etc.) that can be grouped and compared against positive vs negative sentiment; directly serves the query about theme differences."
+      },
+      {
+        "name": "positive_sentiment_words",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A small-integer count with interpretable, comparable buckets (0-4) that can be segmented against sentiment; associational rather than a restatement, though somewhat close to the sentiment construct."
+      },
+      {
+        "name": "negative_sentiment_words",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable low-cardinality count that can be grouped and compared against the focus; provides an informative lexical signal correlated with sentiment."
+      },
+      {
+        "name": "sentiment_word_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "A derived ratio of the two word counts; it is an opaque score whose values are fragmented across many fine-grained fractions and largely restates the pos/neg word columns, weakening interpretable segmentation."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.55,
+    "rationale": "The set contains one strong, directly-on-topic EDA variable (detected_themes) with clean interpretable categories, plus usable lexical counts (positive/negative sentiment words) that can be segmented against sentiment. However, several columns dilute the set: sentiment_description merely restates label_pos, review_character_count is near-constant (capped at 700) and thus non-informative as observed, and sentiment_word_ratio is a fragmented derived score that largely duplicates the word-count columns. As a whole it supports discovering some interpretable relationships with the focus but is weakened by restatement and degenerate/opaque columns."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

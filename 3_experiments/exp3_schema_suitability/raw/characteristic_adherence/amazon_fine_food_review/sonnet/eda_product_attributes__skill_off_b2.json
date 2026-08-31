@@ -1,0 +1,166 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What product attributes are associated with higher satisfaction scores?",
+  "focus_variable": "satisfaction_score",
+  "concept": null,
+  "n_added_columns": 16,
+  "added_columns": [
+    "mentioned_attributes",
+    "attribute_count",
+    "attr_taste_flavor",
+    "attr_texture",
+    "attr_smell_aroma",
+    "attr_quality",
+    "attr_packaging",
+    "attr_value_price",
+    "attr_ingredients",
+    "attr_health_nutrition",
+    "attr_size_quantity",
+    "attr_shipping_delivery",
+    "positive_word_count",
+    "negative_word_count",
+    "sentiment_ratio",
+    "review_length_bucket"
+  ],
+  "metrics": {
+    "n_added_columns": 16,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.6338,
+    "predictor_fraction": 0.8125,
+    "n_predictors": 13,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.78,
+    "interpretable_fraction": 0.8125
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "satisfaction_score",
+    "per_column": [
+      {
+        "name": "mentioned_attributes",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable product-attribute categories that can be segmented against satisfaction; directly serves the query about which attributes associate with higher scores. Slightly fine-grained due to multi-label combinations, but individual labels are meaningful."
+      },
+      {
+        "name": "attribute_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Small discrete count (0-9) giving a clean ordinal scale to compare satisfaction across breadth of attributes mentioned; interpretable and groupable."
+      },
+      {
+        "name": "attr_taste_flavor",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear binary present/absent split with well-balanced classes; ideal for grouped comparison of satisfaction by whether taste is discussed."
+      },
+      {
+        "name": "attr_texture",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary attribute flag; classes reasonably populated (1657 positives) for meaningful segmentation."
+      },
+      {
+        "name": "attr_smell_aroma",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary flag; somewhat imbalanced (470 positives) but still a distinct, interpretable segment for comparison."
+      },
+      {
+        "name": "attr_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary attribute; well-populated classes support satisfaction comparison."
+      },
+      {
+        "name": "attr_packaging",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Balanced binary flag directly relevant to product-attribute association with satisfaction."
+      },
+      {
+        "name": "attr_value_price",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary, well-populated; price mentions can be compared against satisfaction."
+      },
+      {
+        "name": "attr_ingredients",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear binary attribute segment relevant to the query."
+      },
+      {
+        "name": "attr_health_nutrition",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary flag with adequate class sizes for grouped comparison."
+      },
+      {
+        "name": "attr_size_quantity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Balanced binary attribute flag suitable for segmentation against satisfaction."
+      },
+      {
+        "name": "attr_shipping_delivery",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary; distinguishes fulfillment-related mentions, a meaningful non-product axis to compare."
+      },
+      {
+        "name": "positive_word_count",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Positive word count is essentially a proxy for the satisfaction/sentiment being studied; it restates the focus rather than offering an external explanatory attribute."
+      },
+      {
+        "name": "negative_word_count",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Negative word count is a near-direct restatement of low satisfaction; also heavily near-constant (0 for 8291 rows), limiting comparison."
+      },
+      {
+        "name": "sentiment_ratio",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Derived sentiment measure that is effectively a rephrasing of satisfaction; circular for explaining satisfaction and fine-grained/opaque as a scale."
+      },
+      {
+        "name": "review_length_bucket",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Short/medium/long is a clean, interpretable segmentation; a plausible associational (non-restating) axis to compare against satisfaction."
+      }
+    ],
+    "n_predictors": 13,
+    "relationship_informativeness": 0.78,
+    "rationale": "The bulk of the added columns are exactly what EDA of product-attribute/satisfaction associations needs: a set of interpretable binary attribute flags plus a category label and a count, all groupable with well-separated, adequately populated classes. review_length_bucket adds a clean external axis. The three sentiment-derived columns (positive_word_count, negative_word_count, sentiment_ratio) restate the satisfaction/sentiment focus rather than opening external relationships, and negative_word_count is additionally near-constant. These weaken but do not dominate the set, so the columns as a whole strongly support discovering interpretable relationships with the focus."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "eda_product_attributes",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 16
+}

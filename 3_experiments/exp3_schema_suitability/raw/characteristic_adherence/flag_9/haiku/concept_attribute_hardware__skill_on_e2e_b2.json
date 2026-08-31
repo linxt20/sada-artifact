@@ -1,0 +1,67 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "focus_variable": "hardware_hiccups",
+  "concept": "hardware_hiccups",
+  "n_added_columns": 3,
+  "added_columns": [
+    "failure_mode",
+    "affected_scope",
+    "severity_indicator"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3652,
+    "facet_fraction": 0.6667,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.6,
+    "mece": 0.5477,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "hardware_hiccups",
+    "per_column": [
+      {
+        "name": "failure_mode",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The manner in which the hardware fails (connectivity, malfunction, power issue, display issue, physical damage) is a genuine aspect OF a hardware hiccup -- it decomposes WHAT the issue is, a constitutive part-of relationship."
+      },
+      {
+        "name": "affected_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The scope/locus of what is affected (individual workstation, department server, network service, infrastructure) is a constitutive aspect of the incident -- it characterizes the WHERE/WHAT-is-impacted dimension of the hardware issue rather than externally predicting it."
+      },
+      {
+        "name": "severity_indicator",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Despite the name suggesting severity, its values (configuration_request, connectivity_issue, intermittent_failure, degraded_performance, critical_outage) mix issue-type restatements that heavily overlap failure_mode (connectivity_issue vs connectivity, degraded_performance vs performance_degradation). It largely restates the failure-mode facet rather than isolating a clean severity aspect, so it is not a distinct constitutive facet."
+      }
+    ],
+    "facet_columns": [
+      "failure_mode",
+      "affected_scope"
+    ],
+    "non_facet_columns": [
+      "severity_indicator"
+    ],
+    "mutual_exclusivity": 0.5,
+    "exhaustiveness": 0.6,
+    "rationale": "failure_mode and affected_scope are legitimate, non-overlapping facets of a hardware hiccup (the type of fault and the scope of impact). However, severity_indicator's value space collapses into failure_mode categories (connectivity, degraded performance) rather than representing a clean orthogonal severity axis, creating substantial overlap and lowering mutual exclusivity. A true severity facet (a real intensity/urgency dimension) would have improved exhaustiveness; as implemented it is a restatement. The set covers 'what fails' and 'what is affected' but leaves an intended severity/impact-intensity aspect only muddily captured, so coverage is moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

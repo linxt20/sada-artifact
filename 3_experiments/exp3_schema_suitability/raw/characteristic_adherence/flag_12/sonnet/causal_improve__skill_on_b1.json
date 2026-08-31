@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we improve incident resolution efficiency?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "affected_device_type",
+    "failure_symptom_severity",
+    "resolution_action_type",
+    "reassignment_flag",
+    "repeat_incident_signal",
+    "urgency_signal",
+    "repeat_caller_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.7025,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.5625,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.6325,
+    "hallucination_rate": 0.625
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A clean categorisation of incidents derived from short_description; gives a strong grouping axis to compare resolution efficiency by category. Values in samples (network_connectivity, printer_hardware, database) are sound readings of the text. Partly overlaps affected_device_type but adds a distinct fault-domain lens."
+      },
+      {
+        "name": "affected_device_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Device dimension is useful for targeting where resolution bottlenecks lie. Values are well grounded (printer, router, monitor). Somewhat redundant with incident_category but offers a finer device granularity. 'software' for a database connectivity issue is a defensible inference."
+      },
+      {
+        "name": "failure_symptom_severity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Distinguishing partial vs total failure is a genuinely useful axis for prioritisation and efficiency analysis. However groundedness is weaker: 'Internet connectivity lost' -> total_failure is reasonable, but 'not working properly' -> partial and 'not functioning' -> total are somewhat arbitrary distinctions from near-identical terse text, indicating some over-reading."
+      },
+      {
+        "name": "resolution_action_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Type of resolution action is highly relevant to the efficiency query. But the source text is only short_description of the problem with no resolution/close notes; the action type appears inferred from category rather than derived from stated resolution evidence, so values assert specifics the text does not clearly support."
+      },
+      {
+        "name": "reassignment_flag",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Reassignment is a strong efficiency signal (ticket bouncing). However the provided source text (short_description + timestamps) contains no reassignment history; the true/false values are not derivable from the shown fields and appear asserted without evidence."
+      },
+      {
+        "name": "repeat_incident_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Recurring-issue detection is analytically valuable for efficiency. But the true/false assignment is not clearly grounded in the visible source text; near-identical printer tickets get differing values, and no cross-row linkage evidence is shown, suggesting weakly supported inference."
+      },
+      {
+        "name": "urgency_signal",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Urgency tiers help prioritise and analyse resolution timeliness. Values are mostly a reasonable reading (connectivity lost -> immediate_disruption; printer not working -> functional_impairment), though it partly restates severity and the heavy skew to one bucket limits leverage."
+      },
+      {
+        "name": "repeat_caller_flag",
+        "analytical_usefulness": 0.02,
+        "source_groundedness": 0.1,
+        "hallucination_observed": true,
+        "rationale": "Constant value 'True' for all 500 rows: no analytical leverage (near-constant) and not grounded in the source text, which provides no caller-history evidence. Effectively an invented uniform flag."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.5,
+    "rationale": "The categorical descriptive columns (incident_category, affected_device_type, failure_symptom_severity, urgency_signal) give genuine grouping axes for the efficiency query and are largely grounded in the short_description text. However several process/history-oriented columns (resolution_action_type, reassignment_flag, repeat_incident_signal) assert specifics not supported by the visible source fields, and repeat_caller_flag is a constant, ungrounded flag with no analytical value. Overall usefulness is decent but groundedness is dragged down by multiple inference-heavy or invented columns."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 8
+}

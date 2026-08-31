@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What market-expansion focus should analysts study?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "industry_vertical",
+    "company_stage",
+    "business_model",
+    "target_customer_segment",
+    "core_technology_domain",
+    "primary_growth_lever",
+    "expansion_mode"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.792,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Company market-expansion profile: how a company grows into new markets, characterized by its business/market positioning and growth mechanics",
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "supports_focus": true,
+        "rationale": "Segments the market a company competes in -- a key attribute for understanding expansion opportunity and comparability."
+      },
+      {
+        "name": "company_stage",
+        "supports_focus": true,
+        "rationale": "Maturity strongly conditions expansion capacity and strategy; a coherent predictor of expansion behavior."
+      },
+      {
+        "name": "business_model",
+        "supports_focus": true,
+        "rationale": "Revenue/delivery model shapes scalability and expansion pathways; central facet of expansion analysis."
+      },
+      {
+        "name": "target_customer_segment",
+        "supports_focus": true,
+        "rationale": "B2B/B2C/SMB positioning determines addressable-market expansion dynamics."
+      },
+      {
+        "name": "core_technology_domain",
+        "supports_focus": true,
+        "rationale": "Technology differentiation informs defensibility and new-market entry, though high 'not_present' weakens signal."
+      },
+      {
+        "name": "primary_growth_lever",
+        "supports_focus": true,
+        "rationale": "Directly names the mechanism driving growth -- a core facet of the expansion focus."
+      },
+      {
+        "name": "expansion_mode",
+        "supports_focus": true,
+        "rationale": "Most directly operationalizes market-expansion (organic, vertical, international, acquisition); the anchor of the focus."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.85,
+    "rationale": "The system proposed a clear, data-inferable focus: characterizing companies' market-expansion posture. The columns are not a grab-bag -- they cohere around this concept, combining positioning attributes (industry_vertical, business_model, target_customer_segment, company_stage, core_technology_domain) as predictors/context with expansion-specific facets (primary_growth_lever, expansion_mode) as the analytical core. Granularity is useful: categorical taxonomies with differentiated values rather than restatements or generic noise (no token counts or bare sentiment). Structure is sound -- a coherent predictor/attribute set feeding two directly expansion-oriented outcome facets. Minor weaknesses: core_technology_domain and primary_growth_lever have large 'not_present'/'not-inferable' buckets suggesting weak data support for some rows, and some overlap exists between growth_lever and expansion_mode. The focus is actionable: an analyst could segment by expansion_mode and lever to identify high-potential targets. Deductions are modest and reflect the inference-heavy, partially-populated derived facets."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

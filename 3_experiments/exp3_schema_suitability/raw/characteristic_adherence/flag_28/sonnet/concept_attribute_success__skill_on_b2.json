@@ -1,0 +1,115 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What goal-management practices support high achievement?",
+  "focus_variable": "goal_management_success_factors",
+  "concept": "goal_management_success_factors",
+  "n_added_columns": 9,
+  "added_columns": [
+    "primary_intervention_type",
+    "automation_lever",
+    "feedback_loop_included",
+    "action_specificity",
+    "benchmark_reference",
+    "multi_lever_goal",
+    "measurement_mechanism",
+    "time_horizon",
+    "scope_breadth"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.4826,
+    "facet_fraction": 0.7778,
+    "n_facets": 7,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.7,
+    "mece": 0.6205,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "goal_management_success_factors",
+    "per_column": [
+      {
+        "name": "primary_intervention_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The type of intervention/action taken is a constitutive aspect of a goal-management practice -- it describes WHAT the practice is, an aspect of the success-factor concept."
+      },
+      {
+        "name": "automation_lever",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is a boolean redundant with primary_intervention_type ('automation' value) and multi_lever_goal; it re-expresses whether the intervention involves automation rather than adding a distinct facet."
+      },
+      {
+        "name": "feedback_loop_included",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Presence of a feedback/monitoring loop is a genuine constitutive aspect of a goal-management practice, though it overlaps with the feedback_survey value of intervention_type."
+      },
+      {
+        "name": "action_specificity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How specific the goal action is (specificity of the target) is a real aspect OF goal-management quality -- part of the concept."
+      },
+      {
+        "name": "benchmark_reference",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The reference/benchmark against which the goal is set is a constitutive aspect of how the goal is framed and measured."
+      },
+      {
+        "name": "multi_lever_goal",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Boolean derived directly from intervention_type/automation_lever (whether more than one lever is used); overlaps with intervention facet rather than carving a new aspect."
+      },
+      {
+        "name": "measurement_mechanism",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How progress is measured is a core constitutive aspect of goal management; however it overlaps heavily with benchmark_reference (both concern measurement)."
+      },
+      {
+        "name": "time_horizon",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The temporal scope of the goal is a distinct constitutive facet of a goal-management practice."
+      },
+      {
+        "name": "scope_breadth",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The organizational breadth/scope of the goal is a distinct constitutive facet of the practice."
+      }
+    ],
+    "facet_columns": [
+      "primary_intervention_type",
+      "feedback_loop_included",
+      "action_specificity",
+      "benchmark_reference",
+      "measurement_mechanism",
+      "time_horizon",
+      "scope_breadth"
+    ],
+    "non_facet_columns": [
+      "automation_lever",
+      "multi_lever_goal"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.7,
+    "rationale": "Most columns are genuine facets -- aspects OF a goal-management practice (intervention type, specificity, benchmark, measurement, time horizon, scope), satisfying the meronymy claim. However mutual exclusivity is weakened by substantial overlap: automation_lever and multi_lever_goal are derivable restatements of primary_intervention_type, feedback_loop_included duplicates the feedback value of intervention_type, and benchmark_reference overlaps measurement_mechanism (both the measurement facet). Exhaustiveness is fair: the set covers action type, specificity, measurement, benchmarking, timing, and scope, but omits aspects such as ownership/accountability, resourcing, and goal-difficulty/target-setting, and clusters redundantly around a few aspects rather than evenly carving the concept."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

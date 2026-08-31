@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined travel expenses?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "expense_category",
+    "entry_method",
+    "asset_action_type",
+    "has_source_id",
+    "ci_brand"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.49,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.83,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.66,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "expense_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly identifies travel_expense rows, which is the exact segment the query targets. Values are soundly derived from short_description/ci (e.g. 'cloud service' -> cloud_service, 'hardware asset' -> hardware_asset)."
+      },
+      {
+        "name": "entry_method",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Manual vs automated entry is a plausible axis for error/decline analysis and is well grounded in text cues ('Automated creation' -> automated). Somewhat generic to declines but offers a real grouping dimension."
+      },
+      {
+        "name": "asset_action_type",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Asset-lifecycle actions (registration, procurement, deployment) are oriented toward hardware/assets, not travel expenses, so limited leverage for THIS query. Values are mostly readable from descriptions, though similar phrasings map inconsistently (e.g. 'Procurement of new'->new_procurement vs 'creation of new'->registration)."
+      },
+      {
+        "name": "has_source_id",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean derived trivially from the existing source_id column; largely redundant and generic, giving little analytical leverage on declined travel expenses. Well grounded (presence/absence of source_id)."
+      },
+      {
+        "name": "ci_brand",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Extracting brand from ci is reasonable and could support vendor-level comparison, but 'travel_brand' and 'cloud_vendor' are placeholder pseudo-brands rather than actual brands read from text, weakening groundedness for the travel segment relevant here."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.82,
+    "rationale": "The set includes one highly relevant column (expense_category) that isolates the travel segment central to the query, plus a couple of moderately useful grouping axes (entry_method, ci_brand). Others (asset_action_type, has_source_id) are asset-focused or trivially redundant and add little leverage for reducing declined travel expenses. Most values are soundly grounded in short_description and ci text, though ci_brand introduces non-textual placeholder brand labels and asset_action_type shows some inconsistent mapping of similar phrasings."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

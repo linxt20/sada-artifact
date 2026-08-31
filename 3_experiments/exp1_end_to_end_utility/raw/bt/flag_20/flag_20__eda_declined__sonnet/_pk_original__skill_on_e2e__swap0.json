@@ -1,0 +1,130 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.7,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 5,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 5,
+      "delta_a_minus_b": 0,
+      "winner": "TIE",
+      "margin": "tie"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "16 of 61 travel declines match this exact template",
+        "why": "concrete description-level counts tied to the goal"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "short_description contains boilerplate language ... without specifying a business need",
+        "why": "decision rule from description text, matching the goal"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "amount alone is a poor predictor",
+        "why": "consistent framing of weak signals"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "evidence",
+        "quote": "No | 84 | 205 | 41.0%",
+        "why": "clean numeric contingency table"
+      },
+      {
+        "dimension": "depth",
+        "quote": "within the Travel category alone, the signal collapses",
+        "why": "conditional segmentation reasoning"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "asset_category",
+        "quote": "rows tagged `travel` have a 41.4% decline rate",
+        "dependent": true
+      },
+      {
+        "column": "action_type",
+        "quote": "travel_expense | 58 | 141 | 41.1%",
+        "dependent": true
+      },
+      {
+        "column": "description_specificity",
+        "quote": "specific_asset_named | 9 | 114 | 7.9%",
+        "dependent": true
+      },
+      {
+        "column": "has_source_id",
+        "quote": "False | 62 | 173 | 35.8%",
+        "dependent": true
+      },
+      {
+        "column": "is_luxury_or_premium",
+        "quote": "True | 4 | 12 | 33.3%",
+        "dependent": true
+      },
+      {
+        "column": "department_group",
+        "quote": "TAPP `department_group` mirrors these rankings",
+        "dependent": false
+      }
+    ]
+  },
+  "reason": "B cites TAPP columns despite 'none' being augmented and centers on structural fields; A stays on-goal with description-text signals and is more internally consistent.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

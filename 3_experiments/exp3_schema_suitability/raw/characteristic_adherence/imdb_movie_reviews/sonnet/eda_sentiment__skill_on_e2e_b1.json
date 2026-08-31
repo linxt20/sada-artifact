@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative IMDb sentiment?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "overall_craft_verdict",
+    "script_writing_quality",
+    "plot_originality",
+    "acting_quality",
+    "reviewer_emotional_response",
+    "rewatch_intent",
+    "comparative_benchmark",
+    "explicit_recommendation",
+    "genre_expectation_met"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7789,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8244,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8016,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "overall_craft_verdict",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "A graded craft verdict gives a clean axis to compare across sentiment classes, richer than the raw label. Samples align well with review tone (poor for pans, good for the positive review).",
+        "hallucination_observed": false
+      },
+      {
+        "name": "script_writing_quality",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "rationale": "Writing quality is a distinct thematic dimension useful for theme comparison. Values track the text (insipid writing->poor_incoherent; wooden 'poignant' cliches->cliched_formulaic; not_present when unmentioned).",
+        "hallucination_observed": false
+      },
+      {
+        "name": "plot_originality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "rationale": "Originality is a meaningful theme axis. Mostly grounded, though 'derivative_formulaic' for IMDB-0002 is a slightly generous read of a review focused on gore/badness; not_present handled correctly for silent rows.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "acting_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Acting is a core review theme and a good grouping axis. Well grounded: 'wooden'->poor_wooden, 'acting is pretty good'->competent_solid, not_present where unmentioned.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "reviewer_emotional_response",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.82,
+        "rationale": "An affect taxonomy finer than the binary label adds leverage for theme/sentiment analysis. Some risk of overlap with the sentiment label, but graded emotion types are still distinct. Sample readings are reasonable.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "rewatch_intent",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.75,
+        "rationale": "Rewatch intent is a useful behavioral signal. Grounded when explicit, but 'implicit_positive_engagement' is often inferred and correlates heavily with sentiment, slightly weakening independent value and groundedness.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "comparative_benchmark",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Captures whether reviewers benchmark against peers/classics -- a genuine theme axis, mostly not_present which is correctly conservative. Star Trek comparison->compared_to_peer_unfavorably is well grounded.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "explicit_recommendation",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.78,
+        "rationale": "Recommendation strength is analytically useful and distinct from raw sentiment. Somewhat correlated with the label; some rows (e.g., IMDB-0004 'must see'->strong_recommend) grounded, but graded strength can be over-asserted.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "genre_expectation_met",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.72,
+        "rationale": "Expectation fulfillment is a legitimate theme dimension. Grounded where reviewers state disappointment/surprise, but 'exceeded_expectations'/'failed_expectations' are sometimes inferred from overall tone rather than explicit expectation framing.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns decompose reviews into multiple genuine thematic axes (craft, writing, plot, acting, emotion, rewatch, benchmarking, recommendation, genre expectation), all directly supporting the query about how themes differ by sentiment and offering real grouping/comparison leverage beyond the binary label. Values are largely sound readings of the source text, with appropriate use of not_present/neutral for silent rows. Minor groundedness risk comes from a few graded categories (rewatch intent, recommendation strength, genre expectation) being inferred from overall tone rather than explicit statements, and some correlation with the sentiment label, but no clear hallucinations were observed in the samples."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "eda_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

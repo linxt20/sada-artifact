@@ -1,0 +1,53 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "is_high_rating",
+    "advantages_text",
+    "high_rating_advantages"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8667,
+    "source_groundedness__table_level": 0.85,
+    "b1_overall": 0.8334,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_high_rating",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "rationale": "Directly operationalizes the 'high overall rating' grouping the query requires, giving a clean axis to compare advantage attributes across. Derivable from the existing Overall Rating column via a threshold; a sound categorisation."
+      },
+      {
+        "name": "advantages_text",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "rationale": "A structured, multi-label extraction of advantage attributes (Comfort, Service Quality, Food & Beverages, etc.) is exactly the axis the query asks about, enabling frequency analysis of advantages. Evidence samples show values mostly well-grounded in review text (comfort, food, service, lounge, entertainment all mentioned). Minor overreach: e.g. 'WiFi' and 'New Aircraft' asserted for the first sample where the text does not clearly support WiFi and describes an OLDER aircraft, a mild contradiction."
+      },
+      {
+        "name": "high_rating_advantages",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "rationale": "Largely a conditional restatement of advantages_text masked to null for non-high-rating rows; the same information could be obtained by filtering advantages_text on is_high_rating, so it adds limited new analytical leverage. Values themselves are as grounded as advantages_text, and NULLs for low-rating rows are appropriate."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.85,
+    "rationale": "The columns collectively deliver the two axes the query needs: a high-rating flag and a structured list of advantage attributes to aggregate. is_high_rating and advantages_text are strong and complementary; high_rating_advantages is mostly redundant with the two combined, lowering holistic usefulness slightly. Groundedness is generally solid on the evidence samples, with occasional unsupported labels (WiFi, and a 'New Aircraft' claim contradicting an explicitly older-aircraft review) preventing a top groundedness score."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_advantage_attributes",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

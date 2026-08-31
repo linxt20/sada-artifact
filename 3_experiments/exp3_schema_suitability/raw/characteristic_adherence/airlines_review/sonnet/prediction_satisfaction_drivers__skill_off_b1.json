@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "Avg_Sub_Rating",
+    "Satisfaction_Gap",
+    "Pain_Point_Dimension",
+    "Delight_Driver_Dimension",
+    "Sub_Rating_Variance",
+    "Service_Tier",
+    "Value_For_Money_Class_Adjusted"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7471,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.72,
+    "source_groundedness__table_level": 0.63,
+    "b1_overall": 0.7335,
+    "hallucination_rate": 0.2857
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Avg_Sub_Rating",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A mean of the existing sub-rating columns gives a compact composite axis to correlate against Overall Rating. Somewhat redundant with the individual sub-ratings but adds genuine aggregate leverage, and values are a sound arithmetic derivation from present columns."
+      },
+      {
+        "name": "Satisfaction_Gap",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Plausibly Overall Rating minus a sub-rating aggregate — a useful diagnostic of over/under-performance relative to details. Values are computable from present numeric columns, though the exact formula is opaque and it partly restates the target variable, slightly reducing independent value."
+      },
+      {
+        "name": "Pain_Point_Dimension",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Identifying the worst-scoring dimension is a strong new axis for what drags ratings down. But evidence rows contradict the label: a review that praised inflight entertainment ('far better than any equivalent flights') is tagged pain point = Inflight Entertainment, and the reservation-system complaint maps to Value For Money without clear basis. The assignments are not reliably a sound reading of the text/scores."
+      },
+      {
+        "name": "Delight_Driver_Dimension",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.42,
+        "hallucination_observed": true,
+        "rationale": "Best-scoring dimension is analytically valuable for identifying satisfaction drivers. However evidence undermines groundedness: a review complaining the 'regional seat was really uncomfortable' is tagged Delight Driver = Seat Comfort, directly contradicting the source text."
+      },
+      {
+        "name": "Sub_Rating_Variance",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Dispersion across sub-ratings captures inconsistent experiences, a genuine new modeling axis distinct from the mean. Computable directly from existing sub-rating columns."
+      },
+      {
+        "name": "Service_Tier",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A three-level bucket offers a convenient grouping variable, though it is largely a coarsening of Staff Service / composite ratings, limiting novelty. Mostly a sound categorisation of present ratings, though one sample ('no offer of pre departure drinks... nothing offered for 2.5 hours' rated Medium) is borderline."
+      },
+      {
+        "name": "Value_For_Money_Class_Adjusted",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Adjusting value-for-money by travel class is a meaningful axis for comparing satisfaction fairly across cabins. Derivable from Value For Money + Class columns, though the adjustment logic is opaque and some mappings are hard to verify from the text."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.63,
+    "rationale": "The numeric-derivative columns (Avg_Sub_Rating, Sub_Rating_Variance, Satisfaction_Gap, Value_For_Money_Class_Adjusted, Service_Tier) are well grounded in existing rating columns and give distinct, useful axes for modeling what drives Overall Rating. The two dimension-attribution columns (Pain_Point_Dimension, Delight_Driver_Dimension) are the most analytically pointed but show clear contradictions with the source text in multiple evidence samples, indicating unreliable attribution. This pulls the table-level groundedness down while usefulness stays reasonably high."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

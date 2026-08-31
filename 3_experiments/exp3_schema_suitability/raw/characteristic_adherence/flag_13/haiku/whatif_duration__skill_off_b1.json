@@ -1,0 +1,53 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "operational_burden",
+    "burden_reduction_percent",
+    "estimated_duration_reduction_minutes"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.6167,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.4333,
+    "source_groundedness__table_level": 0.4,
+    "b1_overall": 0.525,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "operational_burden",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Categorizes each ticket by the type of operational burden from short_description, giving a genuine grouping axis directly relevant to identifying the 'most common' burdens the query asks about. Row samples (WiFi, VPN, Database, printing->Other) are sound readings of the source text."
+      },
+      {
+        "name": "burden_reduction_percent",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.15,
+        "rationale": "Values are perfectly correlated one-to-one with operational_burden category (each category maps to a single fixed percent), making it largely a redundant restatement of the category. Moreover the specific percentages (32, 30, 28...) are not derivable from any information present in the table; they appear to be invented assumptions with no textual support."
+      },
+      {
+        "name": "estimated_duration_reduction_minutes",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.2,
+        "rationale": "This is the quantity the query ultimately calls for, so it is on-axis. However it is derived by multiplying an ungrounded fabricated percentage by a duration, and the table samples do not even expose closed_at/resolution duration in evidence, so the specific minute values assert a confident precision the source does not support."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.4,
+    "rationale": "operational_burden is a strong, well-grounded categorization that directly serves the query's need to identify common burdens. The two quantitative columns, however, rest on fabricated per-category reduction percentages with no basis in the table's content; burden_reduction_percent is also essentially a deterministic restatement of the category. As a set, the useful analytical axis is present but the numeric magnitudes central to answering 'how much would duration drop' are ungrounded inventions."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

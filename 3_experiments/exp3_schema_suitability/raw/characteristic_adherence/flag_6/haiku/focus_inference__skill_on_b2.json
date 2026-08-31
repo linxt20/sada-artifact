@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these incident tickets.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "service_domain",
+    "assigned_technician",
+    "self_assigned_resolution",
+    "recurring_incident_pattern"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.504,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature and recurrence of incidents (what types of service issues occur, how they cluster, and whether they recur), i.e. incident characterization for operational analysis",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "supports_focus": true,
+        "rationale": "A semantic classification of the incident by type (email, VPN, database, etc.), directly characterizing what kind of incident it is -- a core facet of the implied focus."
+      },
+      {
+        "name": "service_domain",
+        "supports_focus": true,
+        "rationale": "A higher-level grouping of the incident category into service domains, adding a coherent coarser granularity facet to the same 'what type of incident' concept."
+      },
+      {
+        "name": "assigned_technician",
+        "supports_focus": true,
+        "rationale": "Derived from assigned_to; relates incidents to who handles them. Ties into operational analysis but shifts toward a resourcing facet rather than the incident-nature core."
+      },
+      {
+        "name": "self_assigned_resolution",
+        "supports_focus": true,
+        "rationale": "A process/workflow attribute (whether the assignee resolved their own ticket). Relevant to incident handling but drifts from the incident-type core toward process quality."
+      },
+      {
+        "name": "recurring_incident_pattern",
+        "supports_focus": true,
+        "rationale": "Flags whether an incident represents a recurring problem -- a strong, actionable facet directly central to 'what's worth analyzing' in incident data."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.8,
+    "rationale": "The columns collectively centre on characterizing incidents for operational analysis, with a clear coherent backbone: incident_category and service_domain provide a well-structured two-level typology, and recurring_incident_pattern adds a high-value, actionable facet. This is data-inferable and non-trivial. However, coherence is diluted because assigned_technician and self_assigned_resolution pivot toward a resourcing/process axis rather than the incident-nature core, making the focus read as two adjacent concepts (incident types vs. handling behaviour) rather than one tightly unified focus. The structure is sound at a useful granularity (multi-level categorization plus binary recurrence/behaviour flags) and avoids mechanical noise like token counts. The implied focus -- recurring service-incident patterns -- is genuinely actionable (an analyst could prioritize root-cause work on recurring VPN/email/database issues), earning strong actionability. Marked down modestly on coherence and structure due to the partial split between typology and process/resourcing facets."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

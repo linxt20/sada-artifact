@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Why do some incidents take longer to resolve?",
+  "focus_variable": "incident_delay_reasons",
+  "concept": "incident_delay_reasons",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "priority_level",
+    "category_criticality",
+    "is_weekend_opened"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.0,
+    "exhaustiveness": 0.0,
+    "mece": 0.0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_delay_reasons",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is the outcome/magnitude of delay itself, not a constitutive aspect OF the reasons for delay. It measures how long, not which facet of causation. It restates the phenomenon rather than decomposing its reasons."
+      },
+      {
+        "name": "priority_level",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Priority is an attribute of the incident that may correlate with or predict delay, but it is an external driver, not a part-of the concept 'delay reasons'. It is not an aspect of the reason itself."
+      },
+      {
+        "name": "category_criticality",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Criticality of the category is a covariate that may explain variation in delay, but it is an external predictor rather than a constitutive facet of the reasons for delay."
+      },
+      {
+        "name": "is_weekend_opened",
+        "is_constitutive_facet": false,
+        "role": "cause",
+        "rationale": "Whether opened on a weekend is a potential causal/contextual factor of delay, not an aspect that is part-of the delay-reasons concept. It is a candidate cause, not a facet."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "resolution_time_hours",
+      "priority_level",
+      "category_criticality",
+      "is_weekend_opened"
+    ],
+    "mutual_exclusivity": 0.0,
+    "exhaustiveness": 0.0,
+    "rationale": "A faceted decomposition of 'incident_delay_reasons' would require columns that are constitutive parts/aspects of the reasons for delay itself -- e.g., wait-for-vendor time, awaiting-customer time, reassignment/bouncing, diagnostic/investigation time, approval/change-management delay, resource-availability contention. None of the added columns are meronymic parts of the reason concept. resolution_time_hours restates the delay outcome; priority_level and category_criticality are external predictors; is_weekend_opened is a candidate cause/context. Because no columns qualify as facets, both mutual exclusivity and exhaustiveness are 0."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

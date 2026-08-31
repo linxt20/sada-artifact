@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "sentiment_label",
+    "helpfulness_ratio",
+    "review_length_bucket",
+    "issue_flags",
+    "repeat_buy_signal",
+    "exclamation_count",
+    "caps_ratio"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.5214,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.8214,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.6714,
+    "hallucination_rate": 0.4286
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "sentiment_label",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "A 3-way sentiment axis is a useful grouping dimension for 'what's worth attention.' Values are mostly sound readings; the Robitussin/'medicinal' review is a defensible negative-lean though arguably neutral. Generally grounded."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Directly derived from existing HelpfulnessNumerator/Denominator; NULL for zero-denominator rows is correct behaviour. Gives a real axis to surface reviews the community found useful, though it is largely a deterministic transform of existing columns."
+      },
+      {
+        "name": "review_length_bucket",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Bucketed text length is grounded and correctly computed, but length is a generic, low-leverage feature for understanding what's actionable in reviews. Adds little analytical value for THIS query."
+      },
+      {
+        "name": "issue_flags",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A multi-label topic axis (taste/quality/shipping/value/health/repeat_buy) is highly useful for triaging actionable issues. However groundedness is shaky: the taffy review tagged 'shipping|value|taste' is defensible, but the dog-food review lacks any explicit taste complaint yet gets 'taste'; 'taste' appears near-universally, suggesting an over-broad/default assignment rather than evidence-based extraction."
+      },
+      {
+        "name": "repeat_buy_signal",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A repeat-purchase/loyalty flag is analytically valuable for retention insight. Grounding is mixed: the C.S. Lewis confection review is flagged 1 with no clear repeat-buy statement, while the dog-food review ('bought several') is flagged 0 despite explicit repeat purchase — indicating inconsistent, sometimes unsupported inference."
+      },
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Exactly the kind of generic surface-text statistic the query does not need; low analytical leverage. Values are directly countable and grounded."
+      },
+      {
+        "name": "caps_ratio",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Raw capitalization ratio is a generic text feature with little analytical bearing on what's actionable. Computable from text and grounded, but near-noise for this query."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.75,
+    "rationale": "The set mixes genuinely useful analytical axes (issue_flags topic tags, sentiment, helpfulness_ratio, repeat_buy_signal) that give real grouping/triage leverage for surfacing actionable reviews, with several low-value generic surface statistics (review_length_bucket, exclamation_count, caps_ratio) that add little for this query. On groundedness, deterministic transforms are solid, but the inferential columns (issue_flags, repeat_buy_signal) show unsupported or contradictory assignments in the samples — notably a near-ubiquitous 'taste' flag and repeat-buy calls that invert the actual text evidence — dragging overall groundedness below the deterministic columns."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

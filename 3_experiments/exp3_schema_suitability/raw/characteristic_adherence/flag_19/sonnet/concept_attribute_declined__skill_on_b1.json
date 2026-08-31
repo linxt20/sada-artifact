@@ -1,0 +1,97 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "asset_hardware_subtype",
+    "entry_origin",
+    "source_id_present",
+    "vendor_brand",
+    "is_premium_or_luxury_item",
+    "is_travel_category_hardware_mismatch",
+    "ci_name_quality"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.5687,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.7688,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.6687,
+    "hallucination_rate": 0.125
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorising what was purchased gives a useful grouping axis for spotting patterns in declined expenses. Values are soundly read from short_description/ci, though the RAM-as-'miscellaneous' case is a slightly loose read."
+      },
+      {
+        "name": "asset_hardware_subtype",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.8,
+        "hardware_subtype_note": null,
+        "hallucination_observed": false,
+        "rationale": "Refines hardware into subtypes, a legitimate additional axis. Mostly well grounded and NULL/Unknown correctly used for non-hardware. The 'RAM component' labelled 'peripheral_accessory' is a mild misclassification."
+      },
+      {
+        "name": "entry_origin",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Manual vs auto-generated entry could be relevant to compliance, but the basis is unclear from the provided fields; every sample is 'manually_entered' with no evident textual support, suggesting an inferred/invented distinction."
+      },
+      {
+        "name": "source_id_present",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A trivial null-check restating the existing source_id column; well grounded but adds little analytical leverage for the compliance query."
+      },
+      {
+        "name": "vendor_brand",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Vendor extraction is a genuinely useful axis for compliance/spend analysis. Values track the source text well; 'ISP Services' → 'other_known' is defensible, 'generic_unnamed' correctly flags silent cases."
+      },
+      {
+        "name": "is_premium_or_luxury_item",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A luxury flag is directly relevant to compliance risk, but it is near-constant (only 10 true) limiting leverage, and the criteria for 'premium' are only weakly supported by the text; samples are plausible."
+      },
+      {
+        "name": "is_travel_category_hardware_mismatch",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A mismatch flag between category and item type is a targeted compliance-risk signal directly serving the query. Requires cross-field inference; sample values appear consistent, though correctness depends on the original category field not shown."
+      },
+      {
+        "name": "ci_name_quality",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Data-quality of the ci label can plausibly correlate with declined/flagged entries, giving a modest new axis. Values are soundly derived from the ci string content."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.78,
+    "rationale": "Most added columns provide genuine grouping axes (vendor, category, subtype, mismatch and luxury flags) that support investigating reasons and compliance risks in declined expenses, and their values are generally well grounded in short_description/ci. Weak spots: source_id_present is a trivial restatement of an existing field, and entry_origin appears inferred without clear textual support (all samples 'manually_entered'), the main groundedness concern. Occasional loose categorisations (RAM as miscellaneous/peripheral) are minor."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

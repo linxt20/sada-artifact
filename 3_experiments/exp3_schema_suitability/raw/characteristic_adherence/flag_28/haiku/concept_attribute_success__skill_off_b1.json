@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What goal-management practices support high achievement?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "achievement_gap",
+    "progress_status",
+    "priority_score",
+    "priority_completion_alignment",
+    "achievement_level"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.74,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.59,
+    "source_groundedness__table_level": 0.57,
+    "b1_overall": 0.665,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "achievement_gap",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A numeric gap (target vs. actual) is a strong new axis to compare goal outcomes and relate to management practices. However, values are largely derivable from original columns (target_percentage, percent_complete) rather than the source text, and several samples look inconsistent/contradictory: a cost-reduction goal marked 'exceeds_target' yields -27 while other 'significantly_below' rows get large positives without textual support for the actual figure. The specific numbers are not warranted by the description text alone."
+      },
+      {
+        "name": "progress_status",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A categorical progress bucket is useful for grouping achievement levels against practices. It appears derived from percent_complete vs. target, a warranted categorisation. But some labels conflict with the gap/level (e.g., 'exceeds_target' with achievement_level 'achieved' but a negative gap on a reduction goal is plausible, yet 'on_track' with gap 0 labeled 'achieved' is borderline), and the underlying actual values aren't clearly grounded in the text."
+      },
+      {
+        "name": "priority_score",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A numeric encoding of the existing 'priority' column is largely redundant with an original column, giving little new analytical leverage beyond ordinal convenience. Values are plausibly grounded as a mapping of priority, so groundedness is reasonable, though the mapping (including 0) is opaque."
+      },
+      {
+        "name": "priority_completion_alignment",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Relating priority to completion is a genuinely useful practice-oriented axis for the query. However it is heavily skewed to 'neutral' (441 vs 109), reducing leverage, and the alignment logic is not clearly grounded—'aligned' vs 'neutral' judgements aren't obviously supported by the text, though they derive from existing structured fields."
+      },
+      {
+        "name": "achievement_level",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A clean achieved/in_progress/abandoned outcome label is highly useful as the dependent variable for 'high achievement' analysis. But 'abandoned' is asserted for a row whose text and state give no evidence of abandonment (the employee-engagement goal), and it likely relies on 'state' rather than text; some labels conflict with progress_status, indicating unsupported specifics."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.57,
+    "rationale": "The added columns collectively give real analytical axes—an outcome label, a numeric gap, and a progress bucket—directly relevant to identifying goal-management practices tied to high achievement, with only priority_score being largely redundant with an existing column. Groundedness is the weaker dimension: several produced values assert specific numbers (achievement_gap) and confident categorical states (e.g., 'abandoned', 'exceeds_target') that are derived from structured fields but are not warranted by the source text and, in a few samples, appear internally inconsistent or contradictory. No completeness considerations were used in scoring."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

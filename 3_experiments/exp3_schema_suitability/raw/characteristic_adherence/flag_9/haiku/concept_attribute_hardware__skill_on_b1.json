@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of hardware issues appear in these incidents?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "hardware_component_type",
+    "hardware_failure_mode",
+    "device_location_scope",
+    "resolution_category",
+    "is_peripheral_device"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.79,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.82,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.805,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_component_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorizing which hardware is involved (printer, server, network device, etc.). Values in evidence samples are correctly 'Unknown' for software-only tickets, showing sound reading of source text."
+      },
+      {
+        "name": "hardware_failure_mode",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Categorizes the kind of failure (connectivity, not working, display, overheating), a strong new axis for grouping hardware issues. The 'connectivity_issue' for a MySQL connection ticket is a defensible reading, and software tickets are correctly left null."
+      },
+      {
+        "name": "device_location_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Provides a useful scope axis (workstation vs. network-wide vs. building infrastructure). However short_description is often terse; inferring 'individual_workstation' vs 'shared_office_device' from brief text risks unwarranted specificity, though silent rows are correctly 'Unknown'."
+      },
+      {
+        "name": "resolution_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Adds a meaningful remediation dimension useful for analysis. Risk: the source is a short_description of the problem, not the resolution, so specific resolution categories (repair vs. driver update) are partly inferred rather than stated, though many are plausibly warranted."
+      },
+      {
+        "name": "is_peripheral_device",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Largely redundant with hardware_component_type (peripheral/keyboard/monitor already encode this), reducing its analytical leverage as a bare boolean. Values appear consistent with the component type, so groundedness is acceptable."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns give genuine, complementary axes for answering what hardware issues appear: component type and failure mode are highly relevant and well grounded, correctly leaving software-only rows unknown. Location scope and resolution category add useful grouping dimensions but involve some inference beyond the terse short_description, introducing mild over-specificity risk. is_peripheral_device is largely redundant with component type and adds little. Overall the set is useful and reasonably grounded."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "concept_attribute_hardware",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 5
+}

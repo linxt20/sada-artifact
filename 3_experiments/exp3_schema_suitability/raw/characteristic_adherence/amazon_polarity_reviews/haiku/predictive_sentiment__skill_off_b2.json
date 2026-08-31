@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How do review facets differ by sentiment label?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "exclamation_count",
+    "question_count",
+    "caps_words_count",
+    "avg_sentence_length",
+    "criticism_words_count",
+    "praise_words_count",
+    "review_length_chars"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.7143
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "exclamation_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Exclamation usage is an interpretable stylistic facet (0, 1, 2+) that can be segmented and compared against sentiment; plausibly associated with emotional tone."
+      },
+      {
+        "name": "question_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Question frequency is an interpretable, coarse-grained facet (mostly 0 vs some) that supports meaningful segmentation, though heavily skewed toward zero it still allows a present/absent comparison."
+      },
+      {
+        "name": "caps_words_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "All-caps emphasis is an interpretable expressive facet that groups naturally (none/some/many) and can be compared across sentiment labels."
+      },
+      {
+        "name": "avg_sentence_length",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "A meaningful stylistic scale in principle, but the observed values are highly fine-grained continuous floats with no natural categories, so grouping requires binning and offers weaker interpretable separation."
+      },
+      {
+        "name": "criticism_words_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Count of criticism/negative-lexicon words is a directly interpretable facet strongly and intuitively associated with sentiment; excellent for segmentation."
+      },
+      {
+        "name": "praise_words_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Count of praise words is an interpretable, well-separated facet naturally tied to positive sentiment; ideal for grouping against label_pos."
+      },
+      {
+        "name": "review_length_chars",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": false,
+        "rationale": "Length is an interpretable dimension, but values are fine-grained and appear capped/truncated at 600, weakening clean categorical comparison without binning."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.72,
+    "rationale": "As a set, these columns decompose review style/content into external, interpretable facets (emphasis, punctuation, praise vs criticism lexicon, length, sentence structure) that can each be segmented and compared against the sentiment label, directly serving the query 'how do review facets differ by sentiment label?'. The strongest are criticism_words_count and praise_words_count, which offer well-separated, intuitively sentiment-associated categories, complemented by exclamation/caps/question counts as expressive facets. Two columns (avg_sentence_length, review_length_chars) are continuous/fine-grained and require binning for interpretable comparison, slightly lowering set informativeness. None merely restate label_pos, and none are opaque model-only scores."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

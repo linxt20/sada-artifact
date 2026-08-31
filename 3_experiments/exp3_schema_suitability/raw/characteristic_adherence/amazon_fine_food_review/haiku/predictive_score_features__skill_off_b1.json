@@ -1,0 +1,120 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "n_added_columns": 11,
+  "added_columns": [
+    "avg_word_length",
+    "capitalized_word_count",
+    "exclamation_count",
+    "has_product_mention",
+    "helpfulness_ratio",
+    "negative_word_count",
+    "positive_word_count",
+    "question_mark_count",
+    "summary_length",
+    "text_length",
+    "word_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 11,
+    "n_judged_columns": 11,
+    "analytical_usefulness": 0.5864,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.9109,
+    "source_groundedness__table_level": 0.92,
+    "b1_overall": 0.7487,
+    "hallucination_rate": 0.0909
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "avg_word_length",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Derivable from Text and a plausible stylometric feature; weak but non-trivial predictor of score."
+      },
+      {
+        "name": "capitalized_word_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Cleanly extracted from text; captures emphasis/shouting style, a modest signal for sentiment/score."
+      },
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.98,
+        "hallucination_observed": false,
+        "rationale": "Directly countable; exclamations often correlate with strong (usually positive) sentiment, a useful score feature."
+      },
+      {
+        "name": "has_product_mention",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Near-constant (9934 zeros) so little analytical leverage. Definition is opaque, and sample rows that clearly reference products (peanuts, taffy) are marked 0, suggesting the flag does not reliably reflect the text."
+      },
+      {
+        "name": "helpfulness_ratio",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Numerator/Denominator ratio from original columns; a genuine new numeric axis potentially related to score."
+      },
+      {
+        "name": "negative_word_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Lexicon-based sentiment count directly tied to score prediction; grounded in text with reasonable values per sample."
+      },
+      {
+        "name": "positive_word_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Strong sentiment signal for score; sample values (e.g., 'great taffy' -> 2) are plausible readings of the text."
+      },
+      {
+        "name": "question_mark_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.98,
+        "hallucination_observed": false,
+        "rationale": "Directly countable; weaker but legitimate stylistic feature that may correlate with uncertainty/negative reviews."
+      },
+      {
+        "name": "summary_length",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Length of Summary field; a modest, grounded feature distinct from text length."
+      },
+      {
+        "name": "text_length",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.98,
+        "hallucination_observed": false,
+        "rationale": "Grounded character count but a generic length feature; heavily redundant with word_count, offering limited extra leverage."
+      },
+      {
+        "name": "word_count",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.98,
+        "hallucination_observed": false,
+        "rationale": "Grounded and a standard verbosity feature; overlaps strongly with text_length but still a reasonable predictor."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.92,
+    "rationale": "Most columns are well-grounded, mechanically derivable features that give real modeling leverage for predicting review score, with the sentiment-word counts, helpfulness_ratio, and punctuation features being the strongest. Several length-type columns are grounded but generic and mutually redundant, lowering their individual usefulness. The main groundedness concern is has_product_mention, which is near-constant and appears to mislabel rows that plainly mention products, indicating an unreliable derivation. Overall the set is largely sound on both necessary conditions."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 11
+}

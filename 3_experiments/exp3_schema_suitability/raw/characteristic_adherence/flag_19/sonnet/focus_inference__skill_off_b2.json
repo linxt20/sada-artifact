@@ -1,0 +1,62 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing and actionable in these expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "amount_tier",
+    "processing_lag_days",
+    "missing_source_id",
+    "submitter_expense_count"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.504,
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.78,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Expense processing quality and spending magnitude — surfacing anomalies/risk in expense records (large amounts, processing delays, missing metadata, high-volume submitters)",
+    "per_column": [
+      {
+        "name": "amount_tier",
+        "supports_focus": true,
+        "rationale": "Buckets expense magnitude into Low/Medium/High, a directly actionable facet for flagging high-value spend worth scrutiny."
+      },
+      {
+        "name": "processing_lag_days",
+        "supports_focus": true,
+        "rationale": "Quantifies delay between opening and processing, a process-quality facet an analyst can investigate for bottlenecks."
+      },
+      {
+        "name": "missing_source_id",
+        "supports_focus": true,
+        "rationale": "Flags data-completeness/traceability gaps, a coherent facet of expense-record integrity and audit risk."
+      },
+      {
+        "name": "submitter_expense_count",
+        "supports_focus": true,
+        "rationale": "Measures submitter activity/frequency, enabling detection of high-volume or anomalous submitters — relevant to spend oversight."
+      }
+    ],
+    "focus_coherence": 0.72,
+    "structure_quality": 0.7,
+    "focus_actionability": 0.78,
+    "rationale": "The four columns collectively cohere around auditing/analyzing expense records for what is 'worth analyzing and actionable': spend magnitude (amount_tier), process timeliness (processing_lag_days), data integrity (missing_source_id), and submitter behavior (submitter_expense_count). These are genuine, data-inferable analytical facets rather than mechanical text metrics, so they meaningfully realise an inferred focus. The main weakness is that the facets span somewhat distinct sub-themes (spend risk vs. data quality vs. process latency vs. submitter profiling), so the single-focus centering is moderate rather than tight — an analyst could reasonably see this as a broad 'expense audit health' framing rather than one sharply defined focus. Granularity is useful and non-trivial (tiers, counts, lag, flag), and the implied focus (identifying actionable/risky expense patterns) is clearly actionable, hence the reasonably high but not top scores."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

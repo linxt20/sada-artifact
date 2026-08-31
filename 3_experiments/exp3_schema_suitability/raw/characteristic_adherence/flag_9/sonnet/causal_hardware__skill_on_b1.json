@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "software_update_triggered",
+    "incident_action_type",
+    "recurring_caller",
+    "recurrence_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7083,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.7583,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.7333,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents (hardware vs software vs printer vs network) is directly central to explaining a hardware incident spike, enabling grouping and comparison within the anomaly window. Sample values (software installs -> software, MySQL connection -> database) are sound readings of short_description."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Failure modes (not_powering_on, overheating, physical_damage, connectivity_failure) give a genuine new axis to diagnose WHY hardware failed during the spike -- highly relevant. Values appear warranted from descriptions; NULL/Unknown for silent rows (e.g. generic software install) is appropriate behavior, not a hallucination."
+      },
+      {
+        "name": "software_update_triggered",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A near-constant boolean (578 false / 22 true) with a bare flag character limits leverage, though a software-update trigger could plausibly relate to a hardware spike root cause. Values look conservatively inferred and 'update' descriptions are not force-flagged true, so grounding is reasonable."
+      },
+      {
+        "name": "incident_action_type",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Action type (hardware_repair_replacement, connectivity_repair, installation) partially overlaps with incident_category but adds a resolution/action axis useful for characterizing the spike's workload. Sample mappings are well grounded in the text."
+      },
+      {
+        "name": "recurring_caller",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "This is largely a restatement of the existing caller_id column (just surfacing top callers), adding little new analytical axis. Labeling callers as 'recurring' is a distinct claim requiring frequency evidence; a single-row sample cannot confirm recurrence, so specific attributions are weakly grounded."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A recurrence flag is genuinely useful for explaining a spike (repeat incidents driving volume). However, recurrence is not derivable from a single row's source_text; the true/false determination depends on cross-row logic not evidenced in samples, making per-row grounding uncertain."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.75,
+    "rationale": "Most columns give real analytical leverage for diagnosing a hardware spike -- incident_category and failure_mode are directly on-point, and incident_action_type/recurrence_signal add useful axes. recurring_caller largely duplicates caller_id and, like recurrence_signal, asserts frequency/recurrence claims not verifiable from single-row source text. Category/failure_mode/action mappings are well grounded with appropriate Unknown handling for silent rows; the recurrence-based columns are the main grounding weakness."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

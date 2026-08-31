@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "praise_signal_count",
+    "complaint_signal_count",
+    "dominant_driver",
+    "mentioned_aspects",
+    "review_length_bucket",
+    "exclamation_count",
+    "has_comparison",
+    "repeat_purchase_signal"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6687,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7093,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "praise_signal_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A count of praise signals is a genuine axis for driving the praise/complaint query. However groundedness is imperfect: AMZ-0004 is effusively positive ('can't get enough of it') yet scores 0, and AMZ-0005 with multiple praises scores only 1, suggesting inconsistent extraction."
+      },
+      {
+        "name": "complaint_signal_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to the complaint side of the query. Sampled values are mostly defensible (disappointment=1, mixed review=1), though AMZ-0004 which explicitly has a 'negative comment' scores 0, a mild miss."
+      },
+      {
+        "name": "dominant_driver",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "A useful categorical for grouping reviews by praise vs complaint orientation, but it is largely a restatement of the two count columns. The strongly positive AMZ-0004 is labeled 'neutral', which contradicts its clearly praising text."
+      },
+      {
+        "name": "mentioned_aspects",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Aspect tagging is the single most valuable column for identifying WHAT drives praise/complaints. However 'general' dominates 70% of rows, and AMZ-0005 tagged 'value' where the text mainly praises the film/package; extraction seems shallow but not fabricated."
+      },
+      {
+        "name": "review_length_bucket",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A bucketed text-length proxy adds little analytical leverage for identifying drivers of praise/complaints; it is a generic surface feature. Values are trivially derivable from the text and correct."
+      },
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Exclamation count is a weak intensity proxy, only loosely tied to drivers of sentiment. Values are directly countable from source and sampled ones look correct."
+      },
+      {
+        "name": "has_comparison",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A comparison flag can surface competitor/alternative framing that drives judgments, a reasonable axis. Sampled values plausible; near-constant (94% zero) limits leverage somewhat."
+      },
+      {
+        "name": "repeat_purchase_signal",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Repeat-purchase/loyalty signal is a meaningful driver of praise. But AMZ-0004 ('using this product for many years', gave it to friends) is a clear repeat/loyalty case scored 0, showing the extractor misses obvious positives; column is also near-constant."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.72,
+    "rationale": "Most columns give genuine analytical axes for the praise/complaint query: signal counts, dominant_driver, aspects, comparison and repeat-purchase flags all support grouping and modeling drivers. review_length_bucket and exclamation_count are generic surface proxies that add little leverage. Groundedness is generally acceptable but undermined by inconsistent extraction: the strongly positive AMZ-0004 is scored 0 praise, 0 complaint, 'neutral', and 0 repeat-purchase despite explicit loyalty language, and its 'negative comment' is missed — indicating the signal detectors under-fire, producing some values contradicted by the source."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What reasons or compliance risks appear in declined expenses?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "decline_reason",
+    "compliance_risk",
+    "is_declined"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8333,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.55,
+    "source_groundedness__table_level": 0.45,
+    "b1_overall": 0.6917,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "decline_reason",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Directly targets the query's core ('reasons in declined expenses'), giving a clean categorical axis to group declines. However, groundedness is weak: reasons are assigned to rows that are not declined (is_declined=0) and the source text (short_description, ci) rarely states any decline rationale. E.g., 'Provision of Services for iPod touch' -> 'Service_Compliance_Issue' and 'Asset assignment for new Dell Laptop' -> 'Asset_Approval_Process' are inferred category labels from item type, not evidence of an actual decline reason. The confident specific reasons are largely unwarranted by the text."
+      },
+      {
+        "name": "compliance_risk",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Multi-label risk tags provide a rich new axis for comparing compliance exposure, well aligned with the query. But values assert specifics the text does not support: 'High_Value_Approval' implies an amount threshold not shown in the sampled source text, and 'Sensitive_Department' presumes department info not present in samples. Some tags (Asset_Tracking_Required from a laptop asset, Service_Agreement_Issue from a services item) are reasonable readings, but the higher-order risk flags are speculative."
+      },
+      {
+        "name": "is_declined",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A binary decline flag is exactly the filter the query needs to isolate declined expenses, so it has real analytical leverage. It is presumably derivable from the original 'state' column, making it well grounded. Slightly redundant with an existing field, but as a normalized flag it remains useful."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.45,
+    "rationale": "All three columns are on-topic and give genuine axes (reason category, risk tags, decline flag) to answer the query about declined-expense reasons/risks, so usefulness is high. Groundedness is the weakness: decline_reason and compliance_risk assign confident, specific reason/risk labels to rows whose source text (item description and CI) does not state a decline rationale, and they are even applied to non-declined rows (is_declined=0). Several tags (High_Value_Approval, Sensitive_Department) assert facts not visible in the sampled evidence. is_declined is well grounded; the categorical columns show notable hallucination."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "concept_attribute_declined",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

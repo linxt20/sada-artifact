@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_symptom_type",
+    "affected_system",
+    "scope_indicator",
+    "is_self_resolved",
+    "has_assigned_agent",
+    "incident_open_status",
+    "caller_user"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.465,
+    "predictor_fraction": 0.75,
+    "n_predictors": 6,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.62,
+    "interpretable_fraction": 0.75
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean, well-separated semantic categories (email, database, vpn, network) with reasonable distribution; resolution_time can be grouped and compared across these, a highly informative segmentation. Overlaps somewhat with the existing 'category' column but adds interpretable structure."
+      },
+      {
+        "name": "failure_symptom_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distinct, human-interpretable symptom classes (cannot_connect, access_denied, service_down) that plausibly relate to how long incidents take to resolve; good for segmentation, though cannot_connect dominates."
+      },
+      {
+        "name": "affected_system",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable system-level categories; useful axis to compare resolution_time. Largely collinear with incident_category (email->email_server etc.), so partially redundant but still a valid segmentation variable."
+      },
+      {
+        "name": "scope_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Excellent EDA variable: scope of impact (individual_user vs enterprise_wide vs remote_access) is external to resolution_time, well-separated, and plausibly associated with how long resolution takes."
+      },
+      {
+        "name": "is_self_resolved",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary interpretable flag likely strongly associated with resolution_time, but risks partially restating the outcome (self-resolved incidents may be defined by fast/no-agent resolution); still a meaningful comparison group. High NULL rate weakens it."
+      },
+      {
+        "name": "has_assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary; can compare resolution_time with vs without an agent. Somewhat imbalanced (435/65) but usable as a segmentation."
+      },
+      {
+        "name": "incident_open_status",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Whether the incident is still open is entangled with resolution_time itself (open incidents may lack a resolution time); this restates the outcome/state rather than providing an external explanatory axis."
+      },
+      {
+        "name": "caller_user",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "High-cardinality identifier-like values (individual names); no interpretable, generalizable category structure for comparing resolution_time. Opaque for human understanding of relationships."
+      }
+    ],
+    "n_predictors": 6,
+    "relationship_informativeness": 0.62,
+    "rationale": "The set offers several genuinely informative, interpretable segmentation axes (scope_indicator, failure_symptom_type, incident_category, affected_system) that let a human explore how resolution_time varies. However informativeness is diluted: incident_category/affected_system are mutually redundant and overlap the existing category column, incident_open_status and partly is_self_resolved restate the outcome/state, and caller_user is an opaque identifier providing no meaningful comparison. A strong but imperfect EDA augmentation."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

@@ -1,0 +1,74 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "industry_domain",
+    "talent_skill_requirement",
+    "capital_proximity_indicator",
+    "company_maturity_signal",
+    "technology_innovation_posture",
+    "target_market_vertical"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7083,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.5833,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.6458,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "industry_domain",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Industry sector is a strong axis for explaining regional clustering (e.g. life sciences near Sand Hill/biotech hubs). Values are mostly well-read from descriptions (23andMe->life_sciences, Addepar->fintech), with a reasonable 'not_present' for silent rows. Some noise (Accel, a VC, tagged not_present) but generally grounded."
+      },
+      {
+        "name": "talent_skill_requirement",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "rationale": "Talent/skill availability is a genuine driver of location choice, so the axis is useful. However values are only weakly derivable: labels like 'general_software' vs 'specialized_stem' are often inferred beyond what the terse description supports (e.g. 280 Group, a PM training/consulting firm, labeled general_software; Accel labeled general_software). Considerable warranted-inference stretch."
+      },
+      {
+        "name": "capital_proximity_indicator",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.5,
+        "rationale": "Proximity to capital is highly relevant to why firms locate near VC corridors. Grounding is mixed: 'venture_hub' is well supported when text/address names a VC on Sand Hill Rd, but 'self_funded' vs 'corporate_subsidiary' for most rows is an unsupported confident specific—the source text rarely states funding structure, so many values assert facts not present."
+      },
+      {
+        "name": "company_maturity_signal",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.4,
+        "rationale": "Company maturity can relate to location, so the axis has some leverage, but it is near-constant ('growth_stage' 149/199) which limits discriminating power. Grounding is weak: descriptions almost never state stage, yet confident specifics are assigned (23andMe->established_large_cap is defensible, but most 'growth_stage' labels are unsupported guesses)."
+      },
+      {
+        "name": "technology_innovation_posture",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.45,
+        "rationale": "Innovation posture could weakly relate to region, but the column is heavily skewed ('incremental_product' 158/199), reducing analytical leverage, and the distinction is largely inferred rather than stated. 'cutting_edge_research' for a life-science VC is defensible, but most incremental labels are not clearly warranted by terse marketing copy."
+      },
+      {
+        "name": "target_market_vertical",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.75,
+        "rationale": "B2B vs consumer orientation is a reasonable additional axis and reasonably readable from descriptions (23andMe->consumer, Addepar->enterprise_b2b). Somewhat skewed toward enterprise_b2b but retains variation, and values are mostly sound readings of the text."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.58,
+    "rationale": "The added columns provide several genuinely useful axes for a location-choice analysis—industry, capital proximity, talent needs, and target market are all plausible drivers of why a company sits in a given region. However, groundedness is uneven: industry_domain and target_market_vertical are largely sound extractions, but capital_proximity_indicator, company_maturity_signal, and technology_innovation_posture frequently assert funding structure, growth stage, or innovation posture that the terse descriptions do not state, defaulting to confident specifics (self_funded, growth_stage, incremental_product) rather than 'unknown'. This over-asserting behaviour, plus heavy skew in the maturity and innovation columns, pulls the overall groundedness down while usefulness remains moderately high."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

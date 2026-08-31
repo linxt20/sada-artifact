@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What satisfaction and complaint themes appear in Yelp reviews?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "satisfaction_themes",
+    "complaint_themes",
+    "sentiment_intensity",
+    "theme_count"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7125,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.85,
+    "source_groundedness__table_level": 0.84,
+    "b1_overall": 0.7812,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "satisfaction_themes",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly operationalizes the 'satisfaction themes' half of the query, giving a clean multi-label axis to group/aggregate on. Grounding is mostly sound: YLP-0001 praises friendly employees (service_quality) and food, though it flags only service while food is arguably present; YLP-0004 service_quality is well warranted. Values are reasonable readings, with NULL correctly used for silent/negative rows."
+      },
+      {
+        "name": "complaint_themes",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Directly addresses the 'complaint themes' half of the query and provides a strong categorical axis. YLP-0002 poor_service is well grounded. Weakness: YLP-0005 (gave away cabana, refused entry, bad drinks, discriminatory) is marked 'none' despite clear complaints, and YLP-0003's price/portion gripe is missed — these are under-extractions rather than invented facts, so groundedness stays fairly high."
+      },
+      {
+        "name": "sentiment_intensity",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A graded sentiment scale is somewhat richer than the existing binary label_pos, offering a finer axis, but it substantially overlaps with label_pos and is only tangential to identifying specific satisfaction/complaint THEMES. Values align well with source tone (very_negative for YLP-0005, positive for YLP-0001)."
+      },
+      {
+        "name": "theme_count",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Largely a mechanical roll-up of the two theme columns, adding limited independent analytical leverage for the thematic query. Values are internally consistent with the produced theme columns (e.g., single-theme rows = 1, empty = 0), so groundedness is high even where the underlying theme extraction is debatable."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.84,
+    "rationale": "The two theme columns squarely serve the query, providing genuine categorical axes for grouping satisfaction and complaint patterns, and are the analytical core. Sentiment_intensity is a useful but partly redundant refinement of the existing binary label, and theme_count is a derived roll-up with modest added value. Grounding is generally sound extraction/categorisation with appropriate NULLs; no invented facts observed, though there are some under-extractions (e.g., YLP-0005 complaints marked none), which slightly lowers groundedness without constituting hallucination."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "concept_attribute_experience",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 4
+}

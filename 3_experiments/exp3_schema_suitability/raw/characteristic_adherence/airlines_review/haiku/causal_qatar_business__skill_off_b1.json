@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "Review_Length",
+    "Rating_Variance",
+    "Complaint_Count",
+    "Low_Rating_Count",
+    "Has_Major_Complaint",
+    "Overall_Low",
+    "Service_Comfort_Gap"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6457,
+    "analytical_usefulness__table_level": 0.66,
+    "source_groundedness": 0.7529,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.6993,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Review_Length",
+        "analytical_usefulness": 0.12,
+        "source_groundedness": 0.85,
+        "rationale": "Raw text length is a generic surface feature with little analytical leverage for explaining non-recommendation. It is trivially derivable from the review text, though the specific counts don't obviously match word/char counts of the shown samples.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "Rating_Variance",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "rationale": "Variance across the sub-ratings is a genuine new axis (inconsistent experiences may drive non-recommendation), derivable from the numeric rating columns. Some values are hard to verify but the quantity is plausibly computed from present fields.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "Complaint_Count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "rationale": "Counting distinct complaints in the text is highly relevant to explaining non-recommendation. Extraction is a warranted reading, though some samples look questionable (the seat-recline row with clear grievances scored 0), indicating imperfect grounding.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "Low_Rating_Count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "rationale": "Number of low sub-ratings directly relates to why a flight is not recommended and is derivable from the rating columns. The seat-recline sample scoring 5 low ratings seems inconsistent with a mostly-praised check-in narrative, but numeric fields aren't shown to fully verify.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "Has_Major_Complaint",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.75,
+        "rationale": "A flag for a serious complaint (e.g., lost bag, refused reimbursement) gives a useful categorical axis and is a warranted reading of the text, as seen in the JFK-bag sample scoring 1.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "Overall_Low",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.78,
+        "rationale": "A low-overall-rating flag is useful but partly redundant with the existing Overall Rating and closely correlated with Recommended. It is soundly derivable from the overall rating field.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "Service_Comfort_Gap",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.72,
+        "rationale": "The gap between service and comfort ratings is a genuine analytical axis that can explain dissatisfaction, derivable from the two rating columns. Some sample values are hard to fully verify but plausible.",
+        "hallucination_observed": false
+      }
+    ],
+    "analytical_usefulness": 0.66,
+    "source_groundedness": 0.75,
+    "rationale": "Most added columns (Complaint_Count, Low_Rating_Count, Has_Major_Complaint, Service_Comfort_Gap, Rating_Variance) provide genuine axes for explaining non-recommendation and are largely derivable from the review text and existing rating fields. Review_Length is a generic surface feature adding little leverage, and Overall_Low is somewhat redundant with existing columns. Groundedness is generally sound, but a few sample values (e.g., the seat-recline row scoring 0 complaints yet 5 low ratings) appear inconsistent with the source text, lowering confidence somewhat."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

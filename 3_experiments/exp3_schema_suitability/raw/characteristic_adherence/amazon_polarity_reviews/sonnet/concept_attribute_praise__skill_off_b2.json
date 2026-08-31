@@ -1,0 +1,107 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "focus_variable": "praise_and_complaint_drivers",
+  "concept": "praise_and_complaint_drivers",
+  "n_added_columns": 8,
+  "added_columns": [
+    "praise_signal_count",
+    "complaint_signal_count",
+    "dominant_driver",
+    "mentioned_aspects",
+    "review_length_bucket",
+    "exclamation_count",
+    "has_comparison",
+    "repeat_purchase_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.2154,
+    "facet_fraction": 0.375,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "praise_and_complaint_drivers",
+    "per_column": [
+      {
+        "name": "praise_signal_count",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Counts the positive-sentiment drivers present in a review; this is a constitutive part (the praise side) of the driver concept."
+      },
+      {
+        "name": "complaint_signal_count",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Counts the negative-sentiment drivers; the complaint side is a constitutive aspect of the concept."
+      },
+      {
+        "name": "dominant_driver",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A summary label (praise_driven/complaint_driven/mixed/neutral) that recombines the two count facets into a single verdict about the whole; it restates the concept rather than isolating a distinct part."
+      },
+      {
+        "name": "mentioned_aspects",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Identifies WHICH product aspects (quality, value, shipping, service, performance...) the praise/complaints are about; these are the substantive thematic parts of what drives sentiment."
+      },
+      {
+        "name": "review_length_bucket",
+        "is_constitutive_facet": false,
+        "role": "irrelevant",
+        "rationale": "A mechanical property of the text (length); not an aspect OF what drives praise or complaint."
+      },
+      {
+        "name": "exclamation_count",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "A stylistic intensity signal that may correlate with strength of sentiment but is not itself a constitutive part of the driver concept."
+      },
+      {
+        "name": "has_comparison",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the review compares products is a rhetorical feature that may predict, but does not constitute, a praise/complaint driver."
+      },
+      {
+        "name": "repeat_purchase_signal",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Indicates loyalty behavior that may cause or correlate with praise but is an external behavioral signal, not a facet of the driver itself."
+      }
+    ],
+    "facet_columns": [
+      "praise_signal_count",
+      "complaint_signal_count",
+      "mentioned_aspects"
+    ],
+    "non_facet_columns": [
+      "dominant_driver",
+      "review_length_bucket",
+      "exclamation_count",
+      "has_comparison",
+      "repeat_purchase_signal"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "rationale": "Only three columns are true meronymic facets: the praise side, the complaint side, and the thematic aspects being praised/complained about. However mutual exclusivity is weakened because dominant_driver overlaps entirely with the two signal-count columns (it is derived from them) and mentioned_aspects also implicitly re-encodes valence, so the polarity and aspect axes partly bleed together. Exhaustiveness is moderate: praise, complaint, and topical aspects cover the core, but constitutive facets like the specific reason/attribute cause, emotional intensity as a genuine facet, and expectation-vs-outcome are only partially represented, and much of the set (length, exclamations, comparisons, repeat-purchase) consists of external predictors and stylistic features rather than parts of the concept."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

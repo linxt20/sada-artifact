@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What kinds of expenses tend to get declined, and does it differ by department?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "is_declined",
+    "amount_bucket",
+    "dept_decline_rate",
+    "category_decline_rate",
+    "dept_category_decline_rate",
+    "high_decline_risk"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.825,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.975,
+    "source_groundedness__table_level": 0.97,
+    "b1_overall": 0.9,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_declined",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Directly encodes the decline outcome from the existing 'state' column; this is the core dependent variable the query asks about. Grounded and central to the analysis."
+      },
+      {
+        "name": "amount_bucket",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Bins the original 'amount' into low/medium/high, giving a clean axis to see whether declines vary by expense size. Directly derivable from amount; useful for grouping."
+      },
+      {
+        "name": "dept_decline_rate",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Per-department decline rate directly targets the 'does it differ by department' part of the query. Computed from department + state, fully grounded. Slightly redundant as an aggregate on each row but analytically valuable."
+      },
+      {
+        "name": "category_decline_rate",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Per-category decline rate addresses the 'what kinds of expenses get declined' part directly. Derivable from category + state."
+      },
+      {
+        "name": "dept_category_decline_rate",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Interaction of department and category decline rates is exactly the cross-tab the query implies. Grounded and adds a genuine modeling axis beyond the two marginal rates."
+      },
+      {
+        "name": "high_decline_risk",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A binary risk flag whose distribution (45/455) nearly mirrors is_declined (46/454), making it largely a restatement/threshold of the already-present decline signals. Derivable from the rate columns but adds little independent leverage."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.97,
+    "rationale": "The added columns strongly serve the query: is_declined provides the outcome, amount_bucket and the three decline-rate columns give department, category, and their interaction axes for exactly the 'what kinds / by department' comparison requested. All values are soundly derivable from existing fields (state, amount, department, category). Only high_decline_risk is weak, functioning as a near-duplicate threshold of the decline signal rather than a new axis. No hallucinations observed in the evidence samples."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 6
+}

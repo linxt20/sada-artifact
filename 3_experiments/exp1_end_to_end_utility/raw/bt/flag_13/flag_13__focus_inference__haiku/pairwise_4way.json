@@ -1,0 +1,1256 @@
+[
+  {
+    "var_a": "original",
+    "var_b": "skill_off",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.8,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 3,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Network (52%, 260 incidents), Database (27%, 134 incidents)",
+          "why": "concrete counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Critical incidents (83 total) predominantly involve server-side infrastructure",
+          "why": "cross-group reasoning"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "High Attention (Immediate Escalation)",
+          "why": "tiered triage rules"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Critical incidents average attention scores of 4.51/5, while High-priority issues score 2.68/5",
+          "why": "quantified group comparison"
+        },
+        {
+          "dimension": "depth",
+          "quote": "52 of 83 Critical incidents (62.7%) include contains_outage_signal=1",
+          "why": "quantified pattern"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "has_critical_keyword=1 (n=22 incidents) average attention 3.95/5",
+          "why": "precise segment stats"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Escalate automatically if: Priority = Critical AND contains_outage_signal = 1",
+          "why": "decision-ready rule"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides stronger quantified evidence and deeper attention-score segmentation with equally actionable rules.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.68,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Critical (1): 83 incidents (16.6% of total) → Average attention: 4.51/5",
+          "why": "precise counts and score magnitudes"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "52 of 83 Critical incidents (62.7%) include contains_outage_signal=1",
+          "why": "column-referenced numeric claim"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Category and Issue Type do not always align, and the mismatch correlates with attention variance",
+          "why": "cross-field causal reasoning"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Escalate automatically if: Priority = Critical AND contains_outage_signal = 1",
+          "why": "decision-ready rule"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Network category issues (52% of dataset)",
+          "why": "contradicts earlier service table summing near 100%"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Network (VPN, connectivity) 260 52% 48 (58% of Criticals)",
+          "why": "concrete counts and shares"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Outage/Downtime (~40 incidents, ~48% Critical)",
+          "why": "quantified problem types"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Distinguishing Server-Side vs. Client-Side Issues",
+          "why": "mechanism-based segmentation"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "High Attention (Immediate Escalation): Any incident with 'outage,' 'down,' or 'not responding'",
+          "why": "clear triage tiers"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "97% of incidents are marked High or Critical",
+          "why": "internally consistent priority figures"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper column-level quantitative evidence and richer triage rules despite minor internal inconsistencies.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.78,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "1 - Critical: 83 incidents (16.6%)",
+          "why": "concrete counts and percentages"
+        },
+        {
+          "dimension": "depth",
+          "quote": "48 (58% of Criticals)",
+          "why": "cross-tab of service by criticality"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Network (52%, 260)... assignment group: Network (57%, 287)",
+          "why": "inconsistent network counts"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "96 repeat-caller incidents (19.2%)... suggest unresolved root causes",
+          "why": "recurrence-based causal reasoning"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "363 of 500 incidents (72.6%) are enterprise-system issues",
+          "why": "precise scope magnitude"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Tier 1: Immediate Escalation",
+          "why": "decision-ready tiered framework"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "High-Volume Assignee (154) 31%",
+          "why": "workload numbers tied to domains"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B offers more segmentation (recurrence, workload, scope) and decision-ready tiers with consistent numbers.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "96 repeat-caller incidents (19.2%) suggest unresolved root causes",
+          "why": "segmentation with causal reasoning"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Multi-user outages (51 incidents) almost always involve email (31 of 51)",
+          "why": "cross-tabulated magnitudes"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Network/Connectivity 287 57%\" vs later \"136 database incidents",
+          "why": "service counts differ across tables"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Network 260 52% Critical 48 (58% of Criticals)",
+          "why": "criticals cross-tab per service"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Any incident with \"outage,\" \"down,\" or \"not responding\"",
+          "why": "concrete triage rule"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "aligns with the largest assignment group: Network (57%, 287 incidents)",
+          "why": "acknowledges service vs group discrepancy"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper segmentation and richer numeric detail despite minor internal count inconsistencies.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.68,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 3,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "1 - Critical: 83 incidents (16.6%)",
+          "why": "concrete counts and percentages"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "High Attention (Immediate Escalation)",
+          "why": "decision-ready triage tiers"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Critical incidents (83 total) predominantly involve server-side infrastructure",
+          "why": "cross-cut analysis"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Email Service | 134 | 26.8% | 43",
+          "why": "granular cross-tabulated counts"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "72 of 83 Critical... 62 of 83 Critical incidents (74.7%) are service outages",
+          "why": "numeric claims"
+        },
+        {
+          "dimension": "depth",
+          "quote": "126 out of 165 inconsistently-assigned incidents (76.4%) are high-frequency",
+          "why": "correlation/segmentation reasoning"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B offers deeper multi-dimensional cross-tabulation and numeric evidence, though some internal count inconsistencies weaken coherence.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 3,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Network Connectivity | 194 | 38.8%",
+          "why": "precise counts and percentages"
+        },
+        {
+          "dimension": "depth",
+          "quote": "72 incidents (14.4%) combine Priority 1 (Critical) + high-frequency recurrence",
+          "why": "cross-segment combination analysis"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Network Connectivity | 194 | 38.8% ... Network (52%, 260 incidents)",
+          "why": "counts differ from B, and internal severity totals shift"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "actionability",
+          "quote": "Any incident with \"outage,\" \"down,\" or \"not responding\"",
+          "why": "decision-ready triage rules"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Priority Inflation: 78% ... reduces discrimination",
+          "why": "consistent caveats"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Connectivity Failures (~200 incidents)",
+          "why": "approximate, not tied to exact table counts"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper numeric segmentation despite some internal inconsistencies, while B is cleaner and action-oriented but less evidence-grounded.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.78,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Critical incidents average attention scores of 4.51/5",
+          "why": "numeric tie to attention metric"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Category and Issue Type do not always align",
+          "why": "cross-field mismatch reasoning"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Network category issues (52% of dataset)",
+          "why": "conflicts with earlier 14.2% network figure"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Multi-user outages (51 incidents) almost always involve email (31 of 51)",
+          "why": "concrete cross-tab counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "96 repeat-caller incidents (19.2%) suggest unresolved root causes",
+          "why": "recurrence-based causal segmentation"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Tier 1: Immediate Escalation",
+          "why": "decision-ready tiered framework"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B offers richer multi-dimensional segmentation and cleaner internally consistent evidence than A.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.75,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Network/Connectivity | 287 | 57%",
+          "why": "concrete counts and percentages"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Tier 1: Immediate Escalation",
+          "why": "prioritization framework"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "136 database incidents; 21 are critical",
+          "why": "database counts differ (139 vs 128 vs 136) across sections"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Critical incidents average attention scores of 4.51/5",
+          "why": "quantified attention by priority"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Category and Issue Type do not always align",
+          "why": "mismatch correlation analysis"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Escalate automatically if: Priority = Critical AND contains_outage_signal = 1",
+          "why": "decision-ready rules"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B offers tighter quantified attention scoring, cross-group correlation, and cleaner triage rules, while A has internal count inconsistencies.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "actionability",
+          "quote": "Priority = Critical AND `contains_outage_signal = 1`",
+          "why": "concrete triage rule"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "52 of 83 Critical incidents (62.7%)",
+          "why": "numeric backing"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "High (2): 391 incidents (78.2%)",
+          "why": "391 High yet 'Network 52% of dataset' contradicts service table"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "72 incidents ... combine Priority 1 (Critical) + high-frequency recurrence",
+          "why": "cross-segment analysis"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Email service ... 43 of 83 Critical = 51.8%",
+          "why": "precise magnitudes"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "96% of database backend issues are high-frequency",
+          "why": "column-tied numbers"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B offers deeper multi-dimensional segmentation with tighter numeric evidence, while A is strong but less coherent.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Network Connectivity | 194 | 38.8%",
+          "why": "concrete counts and percentages"
+        },
+        {
+          "dimension": "depth",
+          "quote": "126 out of 165 inconsistently-assigned incidents (76.4%) are high-frequency",
+          "why": "cross-segment reasoning"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "43 of 83 Critical = 51.8%",
+          "why": "critical counts vary (83 vs 72 vs 62) across sections"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "actionability",
+          "quote": "Escalate automatically if: Priority = Critical AND contains_outage_signal = 1",
+          "why": "decision-ready rule"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "52 of 83 Critical incidents (62.7%) include contains_outage_signal=1",
+          "why": "numeric tie to column"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Critical incidents average attention scores of 4.51/5",
+          "why": "specific magnitude"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers denser numeric segmentation and depth despite some internal inconsistencies, edging out B's cleaner but less granular analysis.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "83 Critical (1-Priority) incidents (16.6% of dataset)",
+          "why": "concrete counts and percentages"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Multi-user outages (51 incidents) almost always involve email (31 of 51)",
+          "why": "cross-group breakdown"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "136 database incidents; 21 are critical",
+          "why": "conflicts with earlier 139 database count"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Email service ... 43 of 83 Critical = 51.8%",
+          "why": "precise cross-tabulated ratio"
+        },
+        {
+          "dimension": "depth",
+          "quote": "96% of database backend issues are high-frequency (131/137)",
+          "why": "causal segmentation reasoning"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "72 incidents (14.4%) combine Priority 1 (Critical) + high-frequency",
+          "why": "specific joint segment"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B offers tighter cross-tabulated numeric segmentation and fewer internal inconsistencies.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_on",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 4,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "depth",
+          "quote": "72 incidents (14.4% of dataset) combine Priority 1 (Critical) + high-frequency recurrence",
+          "why": "cross-segment causal analysis"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "96% of database backend issues are high-frequency (131/137",
+          "why": "numeric ratios tied to columns"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Email Service | 134 | 26.8%",
+          "why": "later table shows 95 email service outages, inconsistent totals"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "actionability",
+          "quote": "Tier 1: Immediate Escalation",
+          "why": "decision-ready prioritization framework"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Time-related anomalies... appear to be duration data",
+          "why": "honest limitations noted"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "96 repeat-caller incidents (19.2% of dataset)",
+          "why": "concrete magnitude"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers deeper numeric cross-segmentation despite some total inconsistencies, edging out B's cleaner but shallower framework.",
+    "validation_warnings": []
+  }
+]

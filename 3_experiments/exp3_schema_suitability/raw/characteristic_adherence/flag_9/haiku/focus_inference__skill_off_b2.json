@@ -1,0 +1,50 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different kinds of hardware problems appear in these incidents?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "hardware_problem_type",
+    "is_hardware_incident"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.495,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Classification of hardware-related incidents by hardware problem type",
+    "per_column": [
+      {
+        "name": "hardware_problem_type",
+        "supports_focus": true,
+        "rationale": "Directly decomposes hardware incidents into a coherent typology (Printer, Monitor, Keyboard, Storage, CPU/GPU, etc.), which is the core of the implied focus and directly answers the query about kinds of hardware problems."
+      },
+      {
+        "name": "is_hardware_incident",
+        "supports_focus": true,
+        "rationale": "A gating flag that scopes the population to hardware incidents; coherent with the focus and explains the NULLs in the type column, though it is a coarse binary restatement rather than an added facet."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.55,
+    "focus_actionability": 0.85,
+    "rationale": "Both columns center tightly on one data-inferable focus: hardware problem classification. focus_coherence is high because there is no grab-bag; both columns serve the same concept. However, structure_quality is only moderate: the two columns are effectively one categorical typology plus its own binary derivative (is_hardware_incident is entailed by hardware_problem_type being non-null), so the analytical structure is thin -- it captures the 'what type' facet but adds no orthogonal facets (e.g., severity/component/root-cause/resolution) to build a richer structure around the focus. The typology itself is at a useful granularity, avoiding both single-restatement and noise, which keeps it above mid. focus_actionability is high because a hardware-problem-type breakdown is directly investigable (e.g., prioritizing printer vs. display issues)."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

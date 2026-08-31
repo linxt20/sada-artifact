@@ -1,0 +1,135 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can clinics improve triage and scheduling?",
+  "focus_variable": "triage_and_scheduling_efficiency",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "clinical_urgency_signal",
+    "chief_complaint_category",
+    "presentation_acuity_type",
+    "diagnostic_workup_required",
+    "referral_or_consult_required",
+    "in_visit_procedure_performed",
+    "follow_up_interval_signal",
+    "patient_population_context",
+    "comorbidity_complexity_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 0.4,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 4,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "triage_and_scheduling_efficiency",
+    "per_column": [
+      {
+        "name": "clinical_urgency_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Clinical urgency is a patient-intrinsic driver of both how a case is triaged/scheduled and the efficiency outcome; it is a common cause, not a settable lever. It largely restates the existing 'urgency' column rather than introducing an intervenable treatment."
+      },
+      {
+        "name": "chief_complaint_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The nature of the complaint influences both triage assignment and scheduling efficiency; an immutable case attribute, not something a clinic can set."
+      },
+      {
+        "name": "presentation_acuity_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Acute vs chronic/preventive presentation is an intrinsic case characteristic that drives both triage routing and efficiency; not intervenable."
+      },
+      {
+        "name": "diagnostic_workup_required",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Ordering imaging/labs lies on the pathway from clinical presentation to scheduling/efficiency; it is largely determined by the case and sits between presentation and outcome, so it is a mediator rather than a confounder."
+      },
+      {
+        "name": "referral_or_consult_required",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Referrals/consults are downstream consequences of the presentation that then affect scheduling flow; a mediator, not a common cause."
+      },
+      {
+        "name": "in_visit_procedure_performed",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether a procedure is performed is downstream of the clinical case and affects visit/scheduling load; lies on the causal path, so a mediator."
+      },
+      {
+        "name": "follow_up_interval_signal",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Follow-up interval is an outcome of the visit that feeds subsequent scheduling; downstream, not a pre-treatment common cause."
+      },
+      {
+        "name": "patient_population_context",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Patient demographic mix is a common cause of both case handling and efficiency; an immutable attribute, not an intervenable treatment."
+      },
+      {
+        "name": "comorbidity_complexity_flag",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Comorbidity complexity drives both triage prioritization and efficiency; a patient-intrinsic common cause, not settable."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "treatment_intervenable": false,
+    "confounders": [
+      {
+        "name": "clinical_urgency_signal",
+        "named_in_query": true,
+        "plausibility": 0.6
+      },
+      {
+        "name": "chief_complaint_category",
+        "named_in_query": true,
+        "plausibility": 0.6
+      },
+      {
+        "name": "presentation_acuity_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "patient_population_context",
+        "named_in_query": true,
+        "plausibility": 0.55
+      },
+      {
+        "name": "comorbidity_complexity_flag",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The query asks an interventional 'how can clinics improve' question, which requires an intervenable lever (e.g., staffing, appointment slot policy, triage protocol, walk-in vs scheduled, telehealth option) plus confounders adjusted for. NONE of the added columns is a settable treatment: they are all patient-/case-intrinsic characteristics or downstream mediators of the visit. Several columns (urgency signal, chief complaint, acuity, population, comorbidity) are plausible confounders, but a few of them merely echo existing columns (urgency, age_group, reason_for_visit) and thus are largely named/implied in the original context. Critically, no intervenable treatment exists, so the counterfactual 'what-if' cannot be set up. The what-if claim is not realised."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the common advantage attributes of airlines whose overall rating is high?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "cabin_crew_attitude",
+    "ground_service_quality",
+    "service_proactivity",
+    "service_consistency",
+    "food_quality",
+    "seat_comfort_assessment",
+    "baggage_handling_outcome",
+    "customer_service_responsiveness",
+    "refund_rebooking_handling",
+    "value_for_money_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.555,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.679,
+    "source_groundedness__table_level": 0.66,
+    "b1_overall": 0.617,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_attitude",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "Crew attitude is a core 'advantage attribute' axis for high-rated airlines, giving real grouping leverage. Well grounded where crew is described (rows 1,3,4,5: 'welcoming/kind/helpful', 'well-trained on hospitality', 'came round regularly', 'friendly, cared for passengers' -> warm_proactive). But row 2 (a seat/entertainment complaint that never mentions crew) is labelled 'cold_indifferent', an unwarranted inference from overall negativity."
+      },
+      {
+        "name": "ground_service_quality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.66,
+        "hallucination_observed": true,
+        "rationale": "Distinct axis from onboard crew, genuinely useful. Rows 2-5 correctly return Unknown when ground service is not discussed. However row 1, an entirely onboard review, is confidently labelled 'efficient_helpful' though ground handling is never mentioned — a specific asserted where the text is silent."
+      },
+      {
+        "name": "service_proactivity",
+        "analytical_usefulness": 0.42,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "A bare boolean that largely restates the 'proactive' pole of cab_crew_attitude (warm_proactive), so it adds little independent leverage for this query. Values track the crew descriptions reasonably; 'false' for silent/negative rows is a defensible default rather than an invented fact."
+      },
+      {
+        "name": "service_consistency",
+        "analytical_usefulness": 0.68,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Consistency (consistent_high vs inconsistent) is a meaningful comparative axis and is well populated (few NULLs). Row 5 explicitly says 'service was consistently good' -> consistent_high. Other labels are plausible readings, though consistency is somewhat inferred from single-flight sentiment (rows 1,2), a mild stretch but not contradictory."
+      },
+      {
+        "name": "food_quality",
+        "analytical_usefulness": 0.52,
+        "source_groundedness": 0.66,
+        "hallucination_observed": true,
+        "rationale": "Useful but partly redundant with the original 'Food & Beverages' rating. Grounded where food is described (rows 1,3,4 'delicious/plentiful/2 full meals' -> excellent) and correctly Unknown in row 5. Row 2 mentions no food at all yet is labelled 'poor', sentiment leakage from a seat complaint."
+      },
+      {
+        "name": "seat_comfort_assessment",
+        "analytical_usefulness": 0.52,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Overlaps with the original 'Seat Comfort' rating, reducing novelty, but the categorical detail (comfortable_spacious/cramped/broken) can still support attribute analysis. Values are sound: row1 'legroom spacious', row2 'far too narrow, poor padding' -> cramped, row5 'comfortable and wide'. Row 3's 'adequate' for a seat-silent review is a mild neutral default, acceptable."
+      },
+      {
+        "name": "baggage_handling_outcome",
+        "analytical_usefulness": 0.48,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Plausible attribute axis but heavily dominated by 'no_issue' (5663), so it is near-constant and low-leverage for distinguishing high-rated airlines. Groundedness concern: none of the sampled reviews mention baggage, yet all are asserted 'no_issue' rather than unknown — a confident specific from silence, not merely a not-stated label."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Relevant mainly to complaint handling rather than the 'advantage' framing, giving modest leverage here. 'not_contacted' as the default for reviews that never describe contacting support (all five samples) is a reasonable not-applicable reading rather than an invented fact."
+      },
+      {
+        "name": "refund_rebooking_handling",
+        "analytical_usefulness": 0.33,
+        "source_groundedness": 0.72,
+        "hallucination_observed": false,
+        "rationale": "Overwhelmingly 'not_applicable' (6206) and tangential to identifying advantages of highly-rated airlines, so it offers little analytical leverage. However the 'not_applicable' default for reviews with no refund context is correct behaviour, so groundedness is fine."
+      },
+      {
+        "name": "value_for_money_perception",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Restates the original 'Value For Money' rating in categorical form, limiting new leverage. None of the sampled texts explicitly discuss price/value, yet each gets a confident label (excellent_value / poor_value_overpriced) inferred from overall sentiment; directionally reasonable but the specific 'overpriced' claim is not grounded in the text."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.66,
+    "rationale": "As a set the columns open several genuine attribute axes (crew attitude, ground service, service consistency, food, seat, value, baggage, support, refunds) that let an analyst group high-rated airlines by advantage characteristics, which is exactly what the query needs. Weaknesses: a few columns (food_quality, seat_comfort_assessment, value_for_money_perception, service_proactivity) largely duplicate existing rating columns or another added column, and refund/baggage/customer-service columns are near-constant, so their marginal leverage is limited. Groundedness is decent when the attribute is explicitly described and correct 'Unknown' is used in several silent rows, but there is a systematic tendency to propagate overall review sentiment into attributes the text is silent on (row 2 'cold_indifferent'/'poor' food, row 1 'efficient_helpful' ground service, blanket 'no_issue' baggage, inferred 'overpriced' value). These are real but bounded groundedness lapses, so scores are moderate rather than low."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_advantage_attributes",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 10
+}

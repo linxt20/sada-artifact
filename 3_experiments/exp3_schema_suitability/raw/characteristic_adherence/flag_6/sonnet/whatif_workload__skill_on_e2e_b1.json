@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the ticket types that create the heaviest agent workload were reduced, how much would resolution time drop?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "affected_system",
+    "failure_mode",
+    "ticket_complexity_signal",
+    "location_scope",
+    "resolver_match",
+    "recurrence_indicator",
+    "is_open_unresolved"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.625,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.6813,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.6532,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorizing tickets by type is the core grouping axis for identifying which ticket types drive agent workload. Values are sound readings of short_description (database access, VPN, internet). One row maps 'company's intranet' to network_wifi which is a slightly loose but defensible inference."
+      },
+      {
+        "name": "affected_system",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Provides a distinct system-level grouping axis useful for workload attribution; overlaps somewhat with incident_category but adds separable detail. Values track the source text well, with reasonable NULL/Unknown for silent rows (e.g. software update)."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Failure mode (connectivity, outage, access denied) is a genuine new axis that can correlate with resolution effort. Values are well-warranted from descriptions, though 'access_denied' for an unstable intranet connection is a mild stretch."
+      },
+      {
+        "name": "ticket_complexity_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Complexity/scope directly relates to workload and resolution time, so highly relevant. However 'multi_user_or_system_wide' vs 'simple_single_user' is often not derivable from terse descriptions; 'Internet connection unstable' labeled multi_user is an unsupported specific inference from silent text."
+      },
+      {
+        "name": "location_scope",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual vs enterprise_wide) is a plausible workload driver. But specific scope values like 'enterprise_wide' or 'individual' are frequently not stated in the text; assigning confident scope where descriptions are silent risks invention, though VPN->remote_vpn is well grounded."
+      },
+      {
+        "name": "resolver_match",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Constant 'true' across all 500 rows provides zero analytical leverage. A near-constant flag cannot help distinguish ticket types or workload, and its uniform truth is not clearly warranted by the source."
+      },
+      {
+        "name": "recurrence_indicator",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Recurrence could matter for workload, but 480/500 'true' is near-constant and the value is asserted even where the text gives no recurrence signal (e.g. 'Unable to access the database' labeled recurring). Largely unsupported confident inference."
+      },
+      {
+        "name": "is_open_unresolved",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Open/unresolved status is somewhat relevant to resolution-time analysis but is largely derivable from existing state/closed_at columns, making it partly redundant. Values are well grounded in closure timestamps."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.7,
+    "rationale": "The core categorical columns (incident_category, affected_system, failure_mode, ticket_complexity_signal) give strong, well-grounded grouping axes directly serving the workload-vs-resolution-time query. However several columns weaken the set: resolver_match is a useless constant, recurrence_indicator is near-constant and poorly grounded, and location_scope/complexity assign confident scope values the terse source text often does not support. is_open_unresolved is partly redundant with existing state columns. Overall a useful but uneven augmentation with meaningful groundedness concerns in the inferred-scope columns."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "whatif_workload",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 8
+}

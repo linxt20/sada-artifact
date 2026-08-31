@@ -1,0 +1,104 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these food-product reviews and what's worth attention or actionable.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 11,
+  "added_columns": [
+    "product_category",
+    "taste_quality_verdict",
+    "flavor_profile_match",
+    "product_effectiveness_verdict",
+    "primary_complaint_type",
+    "food_safety_concern",
+    "product_quality_change",
+    "repeat_purchase_intent",
+    "brand_comparison_mention",
+    "use_context",
+    "health_dietary_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 11,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.792,
+    "focus_coherence": 0.9,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.92,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Reviewer product experience/satisfaction — the drivers of whether a food product is well-received and repurchase-worthy, plus attention-worthy risk signals",
+    "per_column": [
+      {
+        "name": "product_category",
+        "supports_focus": true,
+        "rationale": "Segmentation dimension enabling satisfaction/complaint analysis by product type."
+      },
+      {
+        "name": "taste_quality_verdict",
+        "supports_focus": true,
+        "rationale": "Core facet of product experience — overall quality judgment."
+      },
+      {
+        "name": "flavor_profile_match",
+        "supports_focus": true,
+        "rationale": "Expectation-vs-reality facet, a driver of satisfaction."
+      },
+      {
+        "name": "product_effectiveness_verdict",
+        "supports_focus": true,
+        "rationale": "Functional performance facet of experience."
+      },
+      {
+        "name": "primary_complaint_type",
+        "supports_focus": true,
+        "rationale": "Directly surfaces actionable pain points."
+      },
+      {
+        "name": "food_safety_concern",
+        "supports_focus": true,
+        "rationale": "High-attention risk flag, aligns with 'worth attention'."
+      },
+      {
+        "name": "product_quality_change",
+        "supports_focus": true,
+        "rationale": "Trend/degradation signal worth investigating."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "supports_focus": true,
+        "rationale": "Outcome variable capturing satisfaction consequence — strong actionable target."
+      },
+      {
+        "name": "brand_comparison_mention",
+        "supports_focus": true,
+        "rationale": "Competitive context feeding into satisfaction/positioning."
+      },
+      {
+        "name": "use_context",
+        "supports_focus": true,
+        "rationale": "Segmentation by usage occasion, contextualizes experience."
+      },
+      {
+        "name": "health_dietary_signal",
+        "supports_focus": true,
+        "rationale": "Attribute capturing health-driven reception and concerns."
+      }
+    ],
+    "focus_coherence": 0.9,
+    "structure_quality": 0.88,
+    "focus_actionability": 0.92,
+    "rationale": "The added columns cohere tightly around a single inferable focus: understanding reviewer product experience/satisfaction and its actionable drivers. They form a well-differentiated structure — segmentation dimensions (product_category, use_context), core experience facets (taste, flavor match, effectiveness), an outcome/target (repeat_purchase_intent), risk/attention flags (food_safety_concern, quality_change, complaint_type), and contextual attributes (brand comparison, health signals). This is neither a single restatement nor generic noise (no bare length/token/sentiment columns); each column is data-inferable from review text at useful granularity. The framing directly answers 'what's worth attention or actionable,' making the implied focus genuinely investigable. Minor deductions: some overlap between taste_quality_verdict, flavor_profile_match, and taste_flavor complaint values introduces mild redundancy rather than fully orthogonal facets."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 11
+}

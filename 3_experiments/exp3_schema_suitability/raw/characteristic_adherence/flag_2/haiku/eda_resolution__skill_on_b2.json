@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "infrastructure_domain",
+    "problem_severity",
+    "resolution_completion_status",
+    "incident_scope",
+    "authentication_access_failure",
+    "technician_assignment_continuity"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 0.8333
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "infrastructure_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated categories (email, database, VPN, network) derived from ticket content. Resolution time can be meaningfully compared across these domains, complementing the given 'category' column with a technical-domain lens."
+      },
+      {
+        "name": "problem_severity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Severity levels (outage_system_wide, partial_access, performance_degraded) form an ordered, interpretable scale that plausibly associates with resolution_time and supports segmentation."
+      },
+      {
+        "name": "resolution_completion_status",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "A boolean of whether the ticket was resolved/closed. This is downstream of and near-tautological with resolution_time (unresolved tickets have no/ongoing resolution time); it restates the focus rather than offering an external associational variable."
+      },
+      {
+        "name": "incident_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Scope categories (system_wide, single_user, department_scoped) are interpretable and well-separated, and blast radius plausibly relates to how long resolution takes. Note partial overlap with problem_severity, but still a distinct segmentation axis."
+      },
+      {
+        "name": "authentication_access_failure",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "A clear binary flag with reasonable class balance (76/424) marking auth/access issues; a plausible, interpretable dimension to compare resolution times against."
+      },
+      {
+        "name": "technician_assignment_continuity",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Whether the ticket stayed with one technician vs. was reassigned; balanced binary (216/284) and process-oriented, directly plausible as a driver of resolution time and interpretable for a human explorer."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.72,
+    "rationale": "Five of six columns are external, interpretable, well-separated segmentations (domain, severity, scope, auth flag, assignment continuity) that a human can group on and compare against resolution_time, going beyond the given category/priority/group. Several overlap conceptually (severity vs. scope vs. auth), slightly reducing distinctiveness. The main failure is resolution_completion_status, which is essentially a restatement of the focus (resolution outcome) and offers no independent relationship. Overall a strong EDA-oriented set with one tautological inclusion."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

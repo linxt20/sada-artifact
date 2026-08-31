@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined travel expenses?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "travel_decline_risk_flag",
+    "missing_source_id_indicator",
+    "unprocessed_duration_days",
+    "amount_quartile"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.3,
+    "analytical_usefulness__table_level": 0.32,
+    "source_groundedness": 0.55,
+    "source_groundedness__table_level": 0.55,
+    "b1_overall": 0.425,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "travel_decline_risk_flag",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.2,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the query (decline risk on travel), but is a constant 0 across all 500 rows, so it provides zero discriminative leverage. The rows shown are hardware/cloud assets, not travel expenses, and nothing in the source supports a travel-decline determination; the flag is uniformly 0 by default rather than a grounded reading. Near-constant and effectively ungrounded."
+      },
+      {
+        "name": "missing_source_id_indicator",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A data-completeness flag derived directly from presence/absence of source_id, which is verifiable. It has real variance (354/146). However it is only weakly connected to reducing declined travel expenses and largely restates an existing column's null-status, so analytical leverage for THIS query is limited."
+      },
+      {
+        "name": "unprocessed_duration_days",
+        "analytical_usefulness": 0.1,
+        "source_groundedness": 0.3,
+        "hallucination_observed": false,
+        "rationale": "Constant -1 across all 500 rows, providing no analytical signal. The sentinel presumably means 'processed' or 'uncomputable', but rows with valid processed_date still show -1, so it neither reflects the source nor discriminates. Near-constant and poorly grounded."
+      },
+      {
+        "name": "amount_quartile",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Cleanly derived from the existing amount column with a well-balanced distribution (roughly 125 per quartile), giving a genuine axis to group/compare spend magnitude. Grounded in a real numeric field. Usefulness for the specific decline-reduction query is moderate since it is a generic transform of an existing column, but it does add binning leverage."
+      }
+    ],
+    "analytical_usefulness": 0.32,
+    "source_groundedness": 0.55,
+    "rationale": "Two of four columns are near-constant (travel_decline_risk_flag all 0, unprocessed_duration_days all -1) and contribute no analytical leverage while also being poorly grounded. amount_quartile is a sound, grounded binning that offers real grouping value, and missing_source_id_indicator is well-grounded but only tangentially useful for the travel-decline question. Overall the set is weak on usefulness and mixed on groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 4
+}

@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can clinics improve triage and scheduling?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "clinical_urgency_signal",
+    "chief_complaint_category",
+    "presentation_acuity_type",
+    "diagnostic_workup_required",
+    "referral_or_consult_required",
+    "in_visit_procedure_performed",
+    "follow_up_interval_signal",
+    "patient_population_context",
+    "comorbidity_complexity_flag"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.8122,
+    "analytical_usefulness__table_level": 0.83,
+    "source_groundedness": 0.8889,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.8506,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "clinical_urgency_signal",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly central to triage; a refined urgency axis beyond the coarse original 'urgency' column. Samples map soundly (preventive exam->preventive_wellness, MI follow-up->routine). Acne as 'semi_urgent' is a bit generous but defensible."
+      },
+      {
+        "name": "chief_complaint_category",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Clinically meaningful grouping axis to analyze triage/scheduling patterns by complaint type. Categorizations are well-grounded in the reason_for_visit text across all samples."
+      },
+      {
+        "name": "presentation_acuity_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "New vs chronic vs preventive acuity is a strong axis for scheduling logic and distinct from urgency. Samples correctly derived (MI follow-up->chronic_stable_followup, cough->new_acute)."
+      },
+      {
+        "name": "diagnostic_workup_required",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Workup drives visit length and resource scheduling. Values well-grounded (labs->lab_ordered, MRI->imaging_ordered, viral URI->no_workup)."
+      },
+      {
+        "name": "referral_or_consult_required",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Referrals affect downstream scheduling/routing. Mostly grounded; the knee-MRI row labeled 'specialist_referral' is a mild inference since the text mentions imaging not an explicit referral, but reasonable."
+      },
+      {
+        "name": "in_visit_procedure_performed",
+        "analytical_usefulness": 0.78,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Procedures affect slot duration and staffing—useful for scheduling. Samples correctly show no_procedure where text describes none; well-grounded."
+      },
+      {
+        "name": "follow_up_interval_signal",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Follow-up cadence is directly actionable for scheduling. Mostly grounded; the annual-physical row labeled 'within_1_3_months' is slightly loose (labs ordered but no explicit interval), a minor stretch."
+      },
+      {
+        "name": "patient_population_context",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a demographic segmentation axis, but partially redundant with the existing age_group column, limiting new leverage. Inferred from age_group/department reasonably; acne->adult_reproductive_age is a plausible but somewhat speculative inference."
+      },
+      {
+        "name": "comorbidity_complexity_flag",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Complexity is a useful predictor of visit length/scheduling needs. Grounding is weaker: the annual-physical row (mild fatigue, one abnormal BMI) labeled 'moderate_comorbidity' and MI follow-up as 'high_comorbidity' are inferential given only one documented condition each."
+      }
+    ],
+    "analytical_usefulness": 0.83,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns collectively provide multiple genuine, non-redundant axes (refined urgency, complaint type, acuity, workup, referrals, procedures, follow-up cadence, complexity) that are directly relevant to improving triage and scheduling. Most values are soundly extracted or categorized from the reason_for_visit text. Groundedness is strong overall, with minor over-confident inferences in comorbidity_complexity_flag and a couple of follow-up/referral labels. patient_population_context is the weakest for usefulness due to overlap with the existing age_group column. No clear hallucinations observed."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 9
+}

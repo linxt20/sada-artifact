@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If teams adopted the goal-management practices described by top performers, how much would achievement improve?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "current_achievement_rate",
+    "is_top_performer_priority",
+    "top_performer_benchmark_achievement",
+    "projected_achievement_rate",
+    "projected_improvement_pct_pts"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.48,
+    "source_groundedness__table_level": 0.47,
+    "b1_overall": 0.615,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "current_achievement_rate",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Establishes the baseline achievement level needed to quantify improvement, giving a genuine axis for the query. However, values are likely derivable from existing percent_complete/target fields, and several samples are suspect: a value of 1.5192 (152%) and 1.0 for a goal that only states an 'increase from 78% to 90%' with no progress data suggest fabricated or mis-derived specifics rather than sound readings of the source text."
+      },
+      {
+        "name": "is_top_performer_priority",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A flag identifying which rows belong to top performers is directly relevant to a query about adopting top-performer practices, offering a useful grouping axis. But the source text samples contain no signal for what makes a row a 'top performer', so the true/false assignment appears asserted without grounding; the customer-satisfaction row flagged True has no distinguishing evidence."
+      },
+      {
+        "name": "top_performer_benchmark_achievement",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A benchmark target to project against is conceptually useful for the counterfactual query. However it takes only ~5 near-constant values (~0.96-1.09) and these specific benchmarks are not derivable from any individual row's source text; they read as externally computed/injected figures with unwarranted precision."
+      },
+      {
+        "name": "projected_achievement_rate",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Directly answers the query's counterfactual ('how much would achievement improve') and is a meaningful new axis. But it is largely a mechanical restatement of the benchmark (values cluster on the same 5 constants), and its groundedness inherits the benchmark's weak support in the source text."
+      },
+      {
+        "name": "projected_improvement_pct_pts",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "This is the quantity the query explicitly asks for, so it is highly on-target. Yet it is derived arithmetically from the shaky current/projected rates, producing implausible outputs (e.g. +70.1 and +58.6 pct pts, and a -22.3 that contradicts the notion of 'improvement'), reflecting the ungrounded inputs it depends on."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.47,
+    "rationale": "As a set, the columns form a coherent baseline -> benchmark -> projection -> improvement chain that squarely targets the counterfactual query and gives real axes to group and compare on, so analytical usefulness is high. Groundedness is the weak point: the benchmark and top-performer flag have no visible support in the row source text, and several current/projected/improvement values are implausible or contradictory (152% achievement, +70 pct-pt gains, a negative 'improvement'), indicating invented specifics rather than sound readings of the provided text."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "whatif_practices",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

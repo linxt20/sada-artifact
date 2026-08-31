@@ -1,0 +1,119 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_domain",
+    "problem_category",
+    "incident_scope",
+    "service_availability_status",
+    "resolution_pathway_type",
+    "expertise_alignment",
+    "recurrent_burden_concentration"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.6,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 4,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 4,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.6,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "incident_domain",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The technical area (connectivity, database, email) is a common cause of both which operational burdens arise and how long resolution takes; not intervenable, so functions as a confounder rather than a treatment."
+      },
+      {
+        "name": "problem_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Specific problem type drives both the burden profile and the baseline duration; an inherent property of the incident, not a settable lever, so a confounder not named in the query."
+      },
+      {
+        "name": "incident_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Blast radius (enterprise-wide vs individual endpoint) jointly influences the burdens encountered and the resolution time; a given fact of the incident, not intervenable, and not named in the query."
+      },
+      {
+        "name": "service_availability_status",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Severity/failure mode is a common cause of both burden and duration; describes the incident state rather than an actor-settable treatment."
+      },
+      {
+        "name": "resolution_pathway_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The resolution approach lies on the causal path between the burden and the duration; it is a downstream mechanism, so a mediator, not a confounder or a clean treatment."
+      },
+      {
+        "name": "expertise_alignment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "How well assigned expertise matches the incident (domain specialist vs generalist) is an intervenable staffing/assignment lever that could be set or changed and plausibly affects duration."
+      },
+      {
+        "name": "recurrent_burden_concentration",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Directly operationalises the 'most common operational burdens' in the query; recurrence level is the thing to be 'eliminated', an intervenable target of the what-if intervention."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "recurrent_burden_concentration",
+      "expertise_alignment"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "incident_domain",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "problem_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "incident_scope",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "service_availability_status",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.6,
+    "rationale": "The set does establish an interventional framing: recurrent_burden_concentration operationalises the query's 'operational burdens' as an eliminable target, and expertise_alignment is a genuine settable lever, so a valid intervenable treatment is present. Several unnamed common causes of both burden and duration are added (incident_domain, problem_category, incident_scope, service_availability_status), giving moderate confounder coverage beyond what the query stated. Weaknesses: resolution_pathway_type is a mediator (on the causal path) and must not be adjusted for; and the confounders are categorical incident descriptors that only partially block back-door paths (e.g., no priority-conditioned or team-workload confounder distinct from the originals). Overall a reasonable but imperfect what-if setup."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

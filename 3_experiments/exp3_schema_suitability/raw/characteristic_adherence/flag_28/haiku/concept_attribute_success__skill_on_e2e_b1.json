@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What goal-management practices support high achievement?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "goal_domain",
+    "improvement_mechanism",
+    "quantitative_target_specificity",
+    "timeline_specificity",
+    "implementation_scope",
+    "baseline_reference_specified",
+    "technology_enablement",
+    "employee_engagement_lever",
+    "stakeholder_coordination_requirement"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.7667,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8278,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7973,
+    "hallucination_rate": 0.1111
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "goal_domain",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well-grounded categorization derivable from description/category, though it largely mirrors the existing 'category' column, limiting its novel analytical leverage. Still allows grouping achievement by domain."
+      },
+      {
+        "name": "improvement_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures the HOW of each goal (e.g. customer_engagement, employee_development), a genuine new axis directly relevant to 'practices that support achievement.' Samples read soundly from the described means, though resource_allocation labeling of the first row is a reasonable inference."
+      },
+      {
+        "name": "quantitative_target_specificity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly relevant to goal-setting best practice (specificity). Values correctly distinguish percentage-only vs. with-baseline from text; well grounded across samples."
+      },
+      {
+        "name": "timeline_specificity",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Time-bound framing is a core goal-management practice; provides a strong grouping axis. Samples (fiscal_year, specific_quarter, next_year) match the text well."
+      },
+      {
+        "name": "implementation_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Useful scope dimension for comparing achievement. Mostly sound, but 'organization_wide' is inferred fairly liberally for rows where the text does not explicitly state scope (e.g. the meetings efficiency goal), a mild over-assertion."
+      },
+      {
+        "name": "baseline_reference_specified",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Conceptually useful but largely redundant with quantitative_target_specificity's 'percentage_with_baseline'. Groundedness weakened by inconsistency: the employee-satisfaction row states 75%-to-85% (a baseline) yet is marked False, contradicting the text."
+      },
+      {
+        "name": "technology_enablement",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A boolean lever that adds a distinct axis for whether tech drives the goal; relevant to practices. Sample values plausibly grounded (all False here match text lacking tech mention)."
+      },
+      {
+        "name": "employee_engagement_lever",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Meaningful lever distinct from goal_domain; the engagement-program row is correctly True. Well grounded in the described interventions."
+      },
+      {
+        "name": "stakeholder_coordination_requirement",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Coordination requirements are a strong axis for explaining achievement. However several assignments are inferential (e.g. 'cross_functional_required' for the status-meetings goal, 'single_owner' for cost reduction) where the text does not clearly specify coordination needs."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns provide multiple genuine analytical axes (target specificity, timeline framing, improvement mechanism, coordination, engagement/technology levers) that are highly pertinent to identifying goal-management practices supporting high achievement, and most are cleanly derivable from the description text. Weaknesses: goal_domain largely duplicates the existing category column, baseline_reference_specified overlaps quantitative_target_specificity and shows an internal contradiction (baseline present yet marked False), and scope/coordination columns rely on somewhat liberal inference beyond what silent rows state. Overall the set is useful and mostly grounded with a few over-asserted values."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "concept_attribute_success",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 9
+}

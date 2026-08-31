@@ -1,0 +1,85 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "focus_variable": "hardware_incident_rate",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_scope",
+    "recurring_failure_pattern",
+    "software_installation_related",
+    "database_connectivity_related",
+    "network_connectivity_related"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "hardware_incident_rate",
+    "per_column": [
+      {
+        "name": "incident_scope",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Categorizes the reach of an incident (device vs system-wide). This is a descriptive attribute of the incident itself, not a settable lever nor a common cause of a treatment and the outcome. It behaves more like a stratifier/mediator of impact than a confounder."
+      },
+      {
+        "name": "recurring_failure_pattern",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "Flags whether a failure recurs. This operationalizes 'most common failure causes' from the query itself and describes the outcome/failure phenomenon rather than an intervenable treatment. It is closer to a characterization of the outcome than an independently settable action."
+      },
+      {
+        "name": "software_installation_related",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A cause category that could be 'addressed' (e.g., changing installation procedures). It functions as a candidate intervenable cause, though it is framed as a cause-tag of the incident rather than a clean policy lever."
+      },
+      {
+        "name": "database_connectivity_related",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another failure-cause category that could in principle be remediated. Treated as a candidate treatment/cause tag, but it is a labeling of the incident cause rather than a distinct configurable variable."
+      },
+      {
+        "name": "network_connectivity_related",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A remediable cause category. Same caveat: it tags the incident's cause rather than defining an actor-settable lever with adjustable confounding."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "software_installation_related",
+      "database_connectivity_related",
+      "network_connectivity_related"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query poses an explicit what-if: if the most common hardware failure causes were addressed, how much would the incident rate drop. The added columns supply candidate cause categories (software/database/network-related) that an operator could plausibly remediate, so a weakly intervenable treatment is present. However, these columns are essentially cause-tags of the incident rather than clean, settable policy levers, and the design provides NO confounders at all. There is no common cause of both the treatment (cause category) and the outcome (incident rate) that has been added and adjusted for -- e.g., system age/vintage, patch/maintenance cadence, workload/usage intensity, environment or hardware model, deployment tier -- none of which appear. Without any confounder columns (let alone ones not already named in the query), the counterfactual effect cannot be identified. The set therefore fails the decisive test: it neither adds unnamed confounders nor establishes adjustable confounding, so confounder_quality is 0."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

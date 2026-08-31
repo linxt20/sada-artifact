@@ -1,0 +1,114 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we reduce declined expense submissions?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "missing_source_id",
+    "missing_processed_date",
+    "processed_date_dt",
+    "processing_delay_days",
+    "is_high_amount",
+    "high_risk_department",
+    "high_risk_category"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "missing_source_id",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Completeness of the submission (providing a source_id) is a settable property of the submission; requiring/supplying it is an intervenable lever that could plausibly affect decline rates."
+      },
+      {
+        "name": "missing_processed_date",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether a processed_date exists is largely a downstream artifact of the processing/decline outcome itself rather than a prior cause; it is not a settable treatment nor a common cause."
+      },
+      {
+        "name": "processed_date_dt",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A parsed timestamp of processing; occurs after submission and is a consequence of the workflow, not an intervenable treatment nor a confounder."
+      },
+      {
+        "name": "processing_delay_days",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Processing turnaround time is an operationally controllable lever (staffing, SLAs) that could be set/changed and plausibly affects decline outcomes; intervenable."
+      },
+      {
+        "name": "is_high_amount",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Amount can drive both scrutiny/processing behavior (treatment) and decline likelihood; a common cause to adjust for, not named in the query. Derived from original 'amount'."
+      },
+      {
+        "name": "high_risk_department",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Department risk profile can influence both how submissions are handled and the likelihood of decline; a plausible common cause not named in the query."
+      },
+      {
+        "name": "high_risk_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Expense category risk can affect both processing/treatment and decline probability; a plausible confounder not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "missing_source_id",
+      "processing_delay_days"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "is_high_amount",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "high_risk_department",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "high_risk_category",
+        "named_in_query": false,
+        "plausibility": 0.75
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The query poses an interventional 'how can we reduce declines?' question. At least two added columns are genuinely intervenable treatments: submission completeness (missing_source_id) and processing_delay_days, both settable via policy/operations. Three columns (is_high_amount, high_risk_department, high_risk_category) function as plausible confounders -- common causes of both handling/treatment and the decline outcome -- and none were named or clearly implied in the terse query, demonstrating the capability under test. Some added columns (missing_processed_date, processed_date_dt) are post-outcome artifacts (colliders/consequences) rather than confounders and do not support the causal setup. Overall the set satisfies the what-if claim: an intervenable treatment plus non-query-named confounders, though a few columns are irrelevant mediators/colliders lowering precision."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 7
+}

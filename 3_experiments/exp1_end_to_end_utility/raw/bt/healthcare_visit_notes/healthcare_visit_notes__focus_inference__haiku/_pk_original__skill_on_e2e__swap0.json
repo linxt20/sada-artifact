@@ -1,0 +1,125 @@
+{
+  "var_a": "original",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "large",
+  "ok": true,
+  "confidence": 0.9,
+  "scores_a": {
+    "specificity": 3,
+    "evidence": 2,
+    "depth": 3,
+    "actionability": 3,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "evidence": {
+      "score_a": 2,
+      "score_b": 5,
+      "delta_a_minus_b": -3,
+      "winner": "B",
+      "margin": "large"
+    },
+    "depth": {
+      "score_a": 3,
+      "score_b": 5,
+      "delta_a_minus_b": -2,
+      "winner": "B",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "| Cardiovascular | ~16% |",
+        "why": "percentages are estimated/approximate"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "estimated percentages",
+        "why": "counts not tied to actual rows"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Cardiology (16%)... Cardiology (overlap)",
+        "why": "duplicate/confusing category listing"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Acute Diagnosis | 115 | 46.0%",
+        "why": "exact counts and percentages"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "89% of all emergency visits",
+        "why": "cross-tab numeric claims"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Orthopedics: 15 visits (38.5% of Orthopedics visits)",
+        "why": "segmentation across domains/urgency"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Nearly 3 in 5 visits (46%)",
+        "why": "46% is closer to 2 in 5, minor inconsistency"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "concern_type",
+        "quote": "using the TAPP-generated column `concern_type`",
+        "dependent": true
+      },
+      {
+        "column": "visit_stage_in_continuum",
+        "quote": "new_presentation in the care continuum",
+        "dependent": true
+      },
+      {
+        "column": "clinical_domain",
+        "quote": "`clinical_domain`",
+        "dependent": false
+      }
+    ]
+  },
+  "reason": "B provides exact counts, cross-tab segmentation and cited examples while A relies on estimates.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

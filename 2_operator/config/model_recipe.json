@@ -1,0 +1,335 @@
+{
+  "skill_version": "skill_v10",
+  "recipe_role": "This recipe holds calibration envelopes (caps, accuracy, wall, cache) measured on a fixed calibration_model per tier. It is NOT a model dispatcher: the v10 skill-owned executor uses whatever Host LLM the planner is invoked with (e.g., Claude Code's --model claude-opus-4-7). Pass --host-model to inspect/plan or use augment-e2e --model so cost_model.pricing and runtime_metadata reflect the real executor. tiers[].model is kept for back-compat and equals tiers[].calibration_model.",
+  "payload_order": [
+    "TextItems",
+    "ColumnName",
+    "UserQuery"
+  ],
+  "quality_constraints": {
+    "min_success_rate": 0.95,
+    "min_returned_expected": 0.98,
+    "max_forced_fit_rate": 0.2,
+    "max_f2": 0.2,
+    "post_merge_row_mismatch": 0
+  },
+  "pricing": {
+    "default": {
+      "input_per_mtok_usd": 2.0,
+      "cached_input_per_mtok_usd": 0.5,
+      "output_per_mtok_usd": 8.0
+    },
+    "gpt-41-longco-2025-04-14": {
+      "input_per_mtok_usd": 2.0,
+      "cached_input_per_mtok_usd": 0.5,
+      "output_per_mtok_usd": 8.0
+    },
+    "substrate-claude-sonnet-4-6": {
+      "input_per_mtok_usd": 3.0,
+      "cached_input_per_mtok_usd": 3.0,
+      "output_per_mtok_usd": 15.0
+    },
+    "claude-opus-4-7": {
+      "input_per_mtok_usd": 15.0,
+      "cached_input_per_mtok_usd": 1.5,
+      "output_per_mtok_usd": 75.0,
+      "source": "Anthropic public list price 2026-05; Claude Code substrate may apply rebates."
+    },
+    "claude-sonnet-4-7": {
+      "input_per_mtok_usd": 3.0,
+      "cached_input_per_mtok_usd": 0.3,
+      "output_per_mtok_usd": 15.0,
+      "source": "Anthropic public list price 2026-05."
+    },
+    "claude-haiku-4-5": {
+      "input_per_mtok_usd": 1.0,
+      "cached_input_per_mtok_usd": 0.1,
+      "output_per_mtok_usd": 5.0,
+      "source": "Anthropic public list price 2026-05."
+    },
+    "gpt-5": {
+      "input_per_mtok_usd": 1.25,
+      "cached_input_per_mtok_usd": 0.125,
+      "output_per_mtok_usd": 10.0,
+      "source": "OpenAI public list price snapshot 2026-05; revalidate before publishing main-result cost numbers."
+    },
+    "gpt-5.5": {
+      "input_per_mtok_usd": 1.25,
+      "cached_input_per_mtok_usd": 0.125,
+      "output_per_mtok_usd": 10.0,
+      "source": "OpenAI public list price snapshot 2026-05 (placeholder; codex default model); revalidate before publishing main-result cost numbers."
+    }
+  },
+  "cost_model": {
+    "static_prompt_tokens": 900,
+    "cacheable_prefix_tokens": 350,
+    "tokens_per_label": 8,
+    "tokens_per_facet_spec": 80,
+    "output_tokens_per_item": 6,
+    "reducer_static_tokens": 700,
+    "categorization_overhead_tokens": 500,
+    "categorization_output_tokens": 1600,
+    "expected_retry_rate": 0.03
+  },
+  "categorization_planning": {
+    "single_pass_max_rows": 1000,
+    "chunk_proposal_rows": 1000,
+    "long_text_p95_chars": 2000,
+    "max_chunk_proposals": 20,
+    "consolidation_top_k": 30,
+    "rare_evidence_keep_min_rows": 3,
+    "stages": [
+      "chunk_proposal",
+      "global_consolidation",
+      "final_selection"
+    ],
+    "strategy_rules": [
+      "Use single_pass categorization when rows fit the primary item envelope and text is not exceptionally long.",
+      "Use map_reduce categorization when rows exceed the single-pass envelope or text payloads are too long for stable schema induction.",
+      "Chunk-level categorization only proposes candidates; final specs must be produced by global consolidation and final selection."
+    ]
+  },
+  "visual_preview": {
+    "enabled": true,
+    "strategy": "overview_dense_ocr",
+    "density": "ocr",
+    "resolution": {
+      "width": 1600,
+      "height": 2200
+    },
+    "overview_rows": 60,
+    "rows_per_image": 60,
+    "max_columns": 6,
+    "max_pages_per_prompt": 3,
+    "use_for": [
+      "inspect",
+      "categorization",
+      "review",
+      "analysis_preview"
+    ],
+    "not_for": [
+      "tagging",
+      "merge",
+      "exact_counts",
+      "numeric_calculation"
+    ],
+    "notes": [
+      "v10 visual preview is a context-compression artifact, not a strict data authority.",
+      "Default canvas is high-resolution 1600x2200 with OCR/dense layout to maximize readable information per image.",
+      "Raw table/text remains mandatory for row-level tagging, exact counts, numeric calculations, and merge gates."
+    ]
+  },
+  "skill_v10_host_execution": {
+    "description": "Skill-owned runtime policy used by scripts/host_executor.py after reading execution_plan.json. Experiment runners should not override these chunk caps. Effective item chunk size is min(execution_plan.chunking.items.size, selected profile cap), with additional shrinkage for very wide text rows.",
+    "notes": [
+      "2026-05-28 laptop reruns showed categorization chunks around 250 rows are stable for wide tables; 500-row categorization chunks produced oversized prompts and JSON failures.",
+      "Gemini and Haiku should use smaller tag chunks, roughly 100-200 rows, while GPT/Sonnet can usually use about 400 rows.",
+      "These caps are skill-owned physical execution policy. Experiment runners should only pass workers/model/query/input/output."
+    ],
+    "model_chunk_profiles": [
+      {
+        "name": "gemini_fast",
+        "patterns": [
+          "gemini"
+        ],
+        "categorize_chunk_cap": 250,
+        "tag_chunk_cap": 200,
+        "wide_text_tag_chunk_cap": 100,
+        "very_wide_text_categorize_chunk_cap": 150,
+        "very_wide_text_tag_chunk_cap": 100
+      },
+      {
+        "name": "haiku_fast",
+        "patterns": [
+          "haiku"
+        ],
+        "categorize_chunk_cap": 250,
+        "tag_chunk_cap": 200,
+        "wide_text_tag_chunk_cap": 100,
+        "very_wide_text_categorize_chunk_cap": 150,
+        "very_wide_text_tag_chunk_cap": 100
+      },
+      {
+        "name": "opus_quality_e2e",
+        "patterns": [
+          "opus"
+        ],
+        "categorize_chunk_cap": 300,
+        "tag_chunk_cap": 250,
+        "wide_text_categorize_chunk_cap": 250,
+        "wide_text_tag_chunk_cap": 150,
+        "very_wide_text_categorize_chunk_cap": 150,
+        "very_wide_text_tag_chunk_cap": 100
+      },
+      {
+        "name": "gpt_large",
+        "models": [
+          "gpt-5.4",
+          "gpt-4.1-longco-2025-04-14"
+        ],
+        "patterns": [
+          "gpt-5",
+          "gpt-4.1"
+        ],
+        "categorize_chunk_cap": 400,
+        "tag_chunk_cap": 400,
+        "wide_text_categorize_chunk_cap": 300,
+        "wide_text_tag_chunk_cap": 250,
+        "very_wide_text_categorize_chunk_cap": 200,
+        "very_wide_text_tag_chunk_cap": 200
+      },
+      {
+        "name": "sonnet_large",
+        "patterns": [
+          "sonnet"
+        ],
+        "categorize_chunk_cap": 400,
+        "tag_chunk_cap": 400,
+        "wide_text_categorize_chunk_cap": 300,
+        "wide_text_tag_chunk_cap": 250,
+        "very_wide_text_categorize_chunk_cap": 200,
+        "very_wide_text_tag_chunk_cap": 200
+      }
+    ],
+    "default_categorize_chunk_cap": 400,
+    "default_tag_chunk_cap": 400,
+    "fast_or_budget_model_patterns": [
+      "gemini",
+      "haiku"
+    ],
+    "fast_categorize_chunk_cap": 250,
+    "fast_tag_chunk_cap": 200,
+    "opus_categorize_chunk_cap": 300,
+    "opus_tag_chunk_cap": 250,
+    "wide_text_p95_chars": 7000,
+    "very_wide_text_p95_chars": 12000,
+    "wide_text_categorize_chunk_cap": 250,
+    "wide_text_tag_chunk_cap": 150,
+    "very_wide_text_categorize_chunk_cap": 150,
+    "very_wide_text_tag_chunk_cap": 100,
+    "categorize_retry_subchunk_size": 125,
+    "tag_retry_subchunk_size": 200
+  },
+  "plan_search": {
+    "_doc": "Explicit plan-space enumeration used by `plan` and `inspect`. The planner enumerates (tier, ni, nl, cache_hit_rate) candidates, filters by reliability gate (calibration accuracy >= min_calibration_accuracy AND F2 budget OK), and picks the min-cost survivor. Set enabled=false to fall back to legacy first-fit selection.",
+    "enabled": true,
+    "min_calibration_accuracy": 0.95,
+    "max_calibration_f2": 0.2,
+    "require_calibration_for_reliability_gate": true,
+    "ni_grid_factors": [
+      0.5,
+      1.0
+    ],
+    "nl_grid_factors": [
+      0.5,
+      1.0
+    ],
+    "cache_hit_rate_grid": [
+      0.0,
+      1.0
+    ],
+    "rank_by": "estimated_cost_usd",
+    "tiebreak_by": "estimated_wall_s"
+  },
+  "host_model_compatibility": {
+    "_doc": "Pillar 3.A guard. When --host-model differs from the selected tier's calibration_model, classify the transfer: 'calibrated' (host == calibration_model), 'peer_class' (host listed in tier.host_model_allowlist or --host-model-allowlist), or 'unverified' (everything else). Policy 'warn' (default) records the result in execution_plan.json#host_model_compatibility but lets the plan proceed; 'strict' aborts the plan when status='unverified'; 'off' suppresses the check. Override via --host-model-policy at the CLI.",
+    "policy_default": "warn"
+  },
+  "tiers": [
+    {
+      "name": "primary",
+      "calibration_model": "gpt-41-longco-2025-04-14",
+      "calibration_source": "Justin recipe sweep, 2026-04",
+      "model": "gpt-41-longco-2025-04-14",
+      "max_items": 1000,
+      "max_labels": 30,
+      "max_item_label_product": 30000,
+      "cache_policy": "prefix-cache-friendly",
+      "host_model_allowlist": [
+        "claude-opus-4-7",
+        "claude-sonnet-4-7",
+        "gpt-5",
+        "gpt-5.5"
+      ],
+      "calibration": {
+        "accuracy_mean": 0.993,
+        "accuracy_ci": 0.006,
+        "cache_hit_rate": 1.0,
+        "wall_s": 34,
+        "forced_fit_rate": 0.016667,
+        "forced_fit_rate_status": "measured",
+        "forced_fit_rate_source": "oos_sweep_driver.py record-calibration --tier primary; sweep=..\\..\\script\\_calibration_runs\\real_v1\\claude-opus-4-7\\oos_sweep_report.json; selected_cells=4 (mean over nl10_gt_iF_chunF_antiT,nl10_gt_iF_chunT_antiT,nl30_gt_iF_chunF_antiT,nl30_gt_iF_chunT_antiT)",
+        "forced_fit_rate_min": 0.0,
+        "forced_fit_rate_max": 0.066667,
+        "forced_fit_rate_recorded_at": "2026-05-14T15:50:03.411874+00:00"
+      },
+      "notes": "Justin recipe primary: acc 0.993+-0.006, cache hit 100%, wall about 34s. Caps assumed transferable to peer-class hosts (e.g., claude-opus-4-7); revalidate per host before publishing numbers. forced_fit_rate left null pending real OOS sweep measurement; planner falls back to accuracy_proxy until set."
+    },
+    {
+      "name": "alternative_large_label",
+      "calibration_model": "substrate-claude-sonnet-4-6",
+      "calibration_source": "Justin recipe sweep, 2026-04",
+      "model": "substrate-claude-sonnet-4-6",
+      "max_items": 2000,
+      "max_labels": 100,
+      "max_item_label_product": 200000,
+      "cache_policy": "no-substrate-prefix-cache-observed",
+      "calibration": {
+        "accuracy_mean": 0.95,
+        "accuracy_ci": 0.029,
+        "cache_hit_rate": 0.0,
+        "wall_s": 137,
+        "forced_fit_rate": 0.0,
+        "forced_fit_rate_status": "measured",
+        "forced_fit_rate_source": "oos_sweep_driver.py record-calibration --tier alternative_large_label; sweep=..\\..\\script\\_calibration_runs\\real_v1\\claude-sonnet-4-7\\oos_sweep_report.json; selected_cells=4 (mean over nl10_gt_iF_chunF_antiT,nl10_gt_iF_chunT_antiT,nl30_gt_iF_chunF_antiT,nl30_gt_iF_chunT_antiT)",
+        "forced_fit_rate_min": 0.0,
+        "forced_fit_rate_max": 0.0,
+        "forced_fit_rate_recorded_at": "2026-05-14T15:50:10.868808+00:00"
+      },
+      "notes": "Justin recipe alternative: acc 0.950+-0.029, cache hit 0%, wall about 137s. Used to widen label envelope when nl > 30. forced_fit_rate pending OOS sweep measurement."
+    },
+    {
+      "name": "cheap_tier",
+      "calibration_model": "claude-haiku-4-5",
+      "calibration_source": "calibration_pending; ping-only smoke 2026-05-13",
+      "model": "claude-haiku-4-5",
+      "max_items": 2000,
+      "max_labels": 100,
+      "max_item_label_product": 200000,
+      "cache_policy": "prefix-cache-friendly",
+      "calibration": {
+        "accuracy_mean": null,
+        "accuracy_ci": null,
+        "cache_hit_rate": null,
+        "wall_s": null,
+        "forced_fit_rate": null,
+        "forced_fit_rate_status": "pending_measurement",
+        "forced_fit_rate_source": "oos_sweep_driver.py record-calibration --tier cheap_tier"
+      },
+      "opt_in_only": true,
+      "notes": "Cheap tier reserved for the Section 5.5 planner-vs-static comparison. Routing rules do NOT auto-pick this tier; planner must opt-in via --host-model claude-haiku-4-5 plus an explicit tier override. Calibration TBD before publishing accuracy or forced_fit_rate numbers."
+    }
+  ],
+  "blacklist": [
+    "substrate-gpt-52-chat",
+    "substrate-gpt-54-chat"
+  ],
+  "routing_rules": [
+    "Use primary when estimated items * labels <= 30000 and labels <= 30.",
+    "Use alternative_large_label when estimated items * labels <= 200000 and labels <= 100.",
+    "Use item x label map-reduce when the estimated workload exceeds all single-call envelopes.",
+    "cheap_tier is opt-in only and is excluded from automatic tier selection."
+  ],
+  "host_model_routing": {
+    "description": "TA++ is a pure-prompt skill: the executor is the Host LLM (e.g., Claude Code). Pass --host-model to planner so runtime metadata and cost_model match reality.",
+    "recommended": {
+      "report_generation_main": "claude-opus-4-7",
+      "report_generation_robustness": "claude-sonnet-4-7",
+      "smoke_dryrun": "claude-haiku-4-5",
+      "pairwise_grader": "claude-opus-4-7 (with --fallback-model claude-sonnet-4-7)"
+    },
+    "forbidden_for_main_results": [
+      "claude-haiku-4-5"
+    ]
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "var_a": "original",
+  "var_b": "skill_off",
+  "swap": false,
+  "winner": "A",
+  "margin": "medium",
+  "ok": true,
+  "confidence": 0.82,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 4,
+    "coherence": 5
+  },
+  "scores_b": {
+    "specificity": 3,
+    "evidence": 3,
+    "depth": 3,
+    "actionability": 3,
+    "coherence": 2
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 3,
+      "delta_a_minus_b": 2,
+      "winner": "A",
+      "margin": "medium"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 3,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 5,
+      "score_b": 2,
+      "delta_a_minus_b": 3,
+      "winner": "A",
+      "margin": "large"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Mean resolution duration: 30.05 minutes",
+        "why": "concrete baseline with distribution stats"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Service Desk | 34 | 6.8% | 32.81 min | 29.85 min | 2.96 minutes (9.9%)",
+        "why": "numeric what-if table"
+      },
+      {
+        "dimension": "depth",
+        "quote": "common burdens may be quick to resolve because organizations have optimized response",
+        "why": "causal reasoning and confounding discussion"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "A more actionable insight would focus on Service Desk incidents",
+        "why": "specific decision-relevant redirect"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Database | 136 | 27.2% | 1,290.03 min",
+        "why": "concrete counts and totals"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "reduce resolution duration by 81.3% of current estimated savings",
+        "why": "confusing metric conflating savings with duration"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "would preserve only 18.7% of current resolution duration improvements",
+        "why": "contradicts eliminating top 3 claim"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "estimated_duration_reduction_minutes",
+        "quote": "predictive (`estimated_duration_reduction_minutes`)",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "A directly answers the duration-drop question with clear numeric what-if estimates, while B's central 81.3% metric is internally confused.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

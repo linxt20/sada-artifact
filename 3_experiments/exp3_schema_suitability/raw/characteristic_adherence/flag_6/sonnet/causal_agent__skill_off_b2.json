@@ -1,0 +1,104 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Why do some agents have longer resolution times?",
+  "focus_variable": "agent_resolution_discrepancy",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "priority_numeric",
+    "agent_avg_resolution_hours",
+    "agent_concurrent_load",
+    "category_avg_resolution_hours",
+    "is_self_closed"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.65,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 3,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 3,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.65,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "resolution_hours",
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "causal_role": "outcome",
+        "named_in_query": true,
+        "rationale": "The per-ticket resolution time, which is the outcome ('longer resolution times') being explained."
+      },
+      {
+        "name": "priority_numeric",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Ticket priority plausibly affects resolution time and also affects which agent is assigned (routing/escalation), so it is a common cause of both agent assignment (treatment) and outcome. Not named in the query."
+      },
+      {
+        "name": "agent_avg_resolution_hours",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Agent-level average resolution time operationalises the candidate cause -- differences between agents -- whose effect on individual resolution time is being attributed. This is the treatment/exposure of interest."
+      },
+      {
+        "name": "agent_concurrent_load",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Concurrent workload plausibly slows resolution and also correlates with which agents handle tickets; it is a common cause affecting both agent behaviour and outcome. Surfaced from data, not in query."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Category difficulty affects resolution time and also affects which agents (specialists) get assigned, making it a common cause of treatment and outcome. Not named in the query."
+      },
+      {
+        "name": "is_self_closed",
+        "causal_role": "collider",
+        "named_in_query": false,
+        "rationale": "Whether the ticket was self-closed is a downstream feature of the resolution process, plausibly caused by both agent behaviour and outcome; it is more collider/mediator than confounder and should not be adjusted for as a common cause."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "agent_avg_resolution_hours"
+    ],
+    "confounders": [
+      {
+        "name": "priority_numeric",
+        "named_in_query": false,
+        "plausibility": 0.7
+      },
+      {
+        "name": "agent_concurrent_load",
+        "named_in_query": false,
+        "plausibility": 0.75
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.65,
+    "rationale": "The added columns set up a genuine causal estimation: agent-level resolution serves as the treatment (the cross-agent discrepancy whose effect is attributed) and the outcome is per-ticket resolution_hours. Three confounders -- priority, concurrent load, and category difficulty -- are plausible common causes of both which agent handles a ticket and how long resolution takes, and crucially none were named or implied in the terse query, demonstrating real surfacing of confounders. Quality is moderate rather than high because these agent/category aggregates risk being partly mechanical, and is_self_closed is a collider/mediator that should not be treated as a confounder."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

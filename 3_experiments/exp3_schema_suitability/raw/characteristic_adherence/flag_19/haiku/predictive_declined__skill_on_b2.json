@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "asset_category_type",
+    "asset_purpose_scope",
+    "asset_brand_vendor",
+    "processing_lag_indicator",
+    "department_origin",
+    "source_id_validity",
+    "asset_specificity_level",
+    "travel_associated_flag"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.6,
+    "predictor_fraction": 1.0,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorizes the expensed item (laptop, service, travel, etc.) from the description/CI. Type of asset plausibly correlates with approval likelihood and is knowable before the decline decision."
+      },
+      {
+        "name": "asset_purpose_scope",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Encodes business purpose/justification (general_business, high_performance, cloud_service). Purpose is a plausible driver of approve/decline and lies outside the focus."
+      },
+      {
+        "name": "asset_brand_vendor",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Vendor/brand can carry signal (approved vendors vs generic/miscellaneous labels). Known at submission time; legitimate predictor."
+      },
+      {
+        "name": "processing_lag_indicator",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Derived from processed_date vs opened_at. Longer lag may correlate with scrutiny/decline. Mild leakage caveat since processing timing partly co-occurs with the outcome, but it plausibly precedes/signals the decision rather than restating it."
+      },
+      {
+        "name": "department_origin",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Originating department; different departments plausibly have different decline rates. However, this largely duplicates the existing 'department' original column, so incremental leverage is limited."
+      },
+      {
+        "name": "source_id_validity",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether source_id is present/formatted vs missing. Data completeness/provenance is a plausible predictor of decline and is knowable pre-decision. Partly redundant with existing source_id column but adds a cleaned signal."
+      },
+      {
+        "name": "asset_specificity_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How specific the description is (specific_model vs vague_description). Vagueness plausibly increases decline risk; a legitimate, pre-outcome feature."
+      },
+      {
+        "name": "travel_associated_flag",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Flags travel-related expenses, which often follow distinct policy/approval rules. Knowable at submission; legitimate predictor though partly overlapping with asset_category/purpose."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.6,
+    "rationale": "All eight columns are legitimate pre-decision predictors of state_declined; none restate or leak the outcome (no column is a deterministic function of the decline state). They engineer meaningful signal from short_description/ci, source_id, department, and processing timing (item type, purpose, vendor, specificity, completeness, travel, lag). Utility is moderated by internal redundancy: department_origin and source_id_validity largely re-express existing original columns, and asset_category/purpose/specificity/travel overlap with one another. As a set they add real leverage—especially description-derived specificity, purpose, and metadata-completeness features—but with diminishing returns, hence ~0.6."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 8
+}

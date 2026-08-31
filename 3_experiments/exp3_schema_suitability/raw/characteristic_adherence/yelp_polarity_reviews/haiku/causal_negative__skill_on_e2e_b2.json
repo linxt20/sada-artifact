@@ -1,0 +1,61 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "staff_rudeness_or_indifference",
+    "food_taste_or_flavor_problem"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "staff_rudeness_or_indifference",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A candidate cause of negative experience (outcome). It is one of the 'factors' the query seeks, functioning as a treatment whose effect on label_pos is attributed."
+      },
+      {
+        "name": "food_taste_or_flavor_problem",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Another candidate cause of negative experience; a parallel treatment/explanatory factor for the outcome rather than a common cause of another treatment."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "staff_rudeness_or_indifference",
+      "food_taste_or_flavor_problem"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The two added columns are both plausible candidate causes (treatments/explanatory factors) of the negative-experience outcome, directly answering 'which factors explain' by decomposing review text into cause categories. However, the technical claim under test requires (a) a treatment AND (b) surfaced CONFOUNDERS -- variables that cause BOTH a treatment and the outcome and must be adjusted for. No such confounders were added. There are no controls (e.g., business type, price tier, cuisine, reviewer propensity, visit occasion) that would plausibly influence both which complaint arises and the negative label. The columns are effectively parallel treatments with no adjustment set, so the causal-estimation setup is incomplete and any attribution would be unadjusted/biased. confounder_quality is 0 because no genuine common causes were surfaced."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 2
+}

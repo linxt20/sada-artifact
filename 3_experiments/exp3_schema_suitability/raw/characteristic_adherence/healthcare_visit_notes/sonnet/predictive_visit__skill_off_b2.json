@@ -1,0 +1,59 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What visit reasons point to different departments?",
+  "focus_variable": "department",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "reason_category",
+    "departments_for_reason_category",
+    "reason_category_dept_count"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.1167,
+    "predictor_fraction": 0.3333,
+    "n_predictors": 1,
+    "redundancy": 0.0,
+    "predictive_utility": 0.35,
+    "leakage_rate": 0.6667
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "department",
+    "per_column": [
+      {
+        "name": "reason_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A semantic grouping of reason_for_visit that lies outside the focus. Clinical reason categories (Cardiovascular, Skin/Dermatology, Injury/Trauma) plausibly carry strong predictive signal about which department a visit is routed to, without restating or leaking department itself."
+      },
+      {
+        "name": "departments_for_reason_category",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "This column is constructed from the department values themselves (the set of departments observed for each reason category). It is a deterministic aggregate over the focus variable, so it directly encodes/leaks the outcome and cannot serve as a legitimate predictor available before the department is known."
+      },
+      {
+        "name": "reason_category_dept_count",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "The count of distinct departments per reason category is derived entirely from the department column. It is a deterministic function of the focus variable's distribution, encoding outcome information and constituting leakage rather than an independent predictive feature."
+      }
+    ],
+    "n_predictors": 1,
+    "predictive_utility": 0.35,
+    "rationale": "Only reason_category is a legitimate outside-the-focus predictor and it does carry real signal for mapping visit reasons to departments. The other two columns are aggregations derived from the department variable itself (its set and its cardinality per reason category), which leak the outcome and would inflate model performance while being unavailable at prediction time. As a set, the genuine predictive leverage beyond the original reason_for_visit column is modest, since reason_category is largely a coarser view of information already present."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "predictive_visit",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 3
+}

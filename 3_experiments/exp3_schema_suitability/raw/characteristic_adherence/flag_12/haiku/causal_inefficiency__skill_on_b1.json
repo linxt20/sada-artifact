@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why are some incidents resolved inefficiently, and which underlying issues drive it?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_type_category",
+    "equipment_criticality",
+    "issue_specificity",
+    "assigned_technician",
+    "resolution_handler_change",
+    "recurring_issue_pattern",
+    "caller_entity_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.6714,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.55,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.6107,
+    "hallucination_rate": 0.5714
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_type_category",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Categorizing incidents from short_description gives a clean grouping axis to compare inefficiency across incident types. Values (printer, network, database) are well-grounded readings of the source text."
+      },
+      {
+        "name": "equipment_criticality",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Maps incidents to infrastructure tiers, a useful axis for whether critical equipment drives inefficiency. Mostly derivable, though the label 'criticality' implies a severity judgment; values are really equipment-type buckets soundly inferred from text. NULLs for silent rows are acceptable."
+      },
+      {
+        "name": "issue_specificity",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Distinguishing vague vs specific descriptions is directly relevant to inefficient resolution. Mostly grounded, but the mixing of a specificity axis (vague_generic/specific_actionable) with a failure-type axis (hardware_failure/connectivity_issue) is inconsistent, and labeling many terse descriptions 'hardware_failure' is a somewhat loose inference."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "This appears to duplicate the existing original 'assigned_to' column, so it adds little new leverage. More concerning, the sample rows are silent on any technician name, yet specific names (Fred Luddy, Luke Wilson) are confidently produced, suggesting values pulled from an original field rather than the shown source text, or invented for silent evidence."
+      },
+      {
+        "name": "resolution_handler_change",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.25,
+        "hallucination_observed": true,
+        "rationale": "Reassignment/escalation is highly relevant to inefficiency and would be a strong axis IF grounded. But the sampled source text contains no handler-history information; asserting 'multiple_reassignments' vs 'same_handler' is not supported by the visible fields and appears fabricated."
+      },
+      {
+        "name": "recurring_issue_pattern",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "Recurrence is a plausible driver of inefficiency and useful to group on, but a per-row true/false requires cross-row aggregation not evidenced here; the flag is asserted with confidence the source text does not warrant."
+      },
+      {
+        "name": "caller_entity_type",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Distinguishing named users from generic ITIL users is a mildly useful segment, but likely redundant with the original caller_id. The value derives from caller identity, not the shown text; two near-identical printer rows get different types, indicating shaky grounding."
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.5,
+    "rationale": "Several columns (incident_type_category, issue_specificity, equipment_criticality, resolution_handler_change) offer genuine new axes well-aligned to diagnosing inefficient resolution. However groundedness is a serious problem: resolution_handler_change, recurring_issue_pattern, assigned_technician, and caller_entity_type assert facts (reassignment history, recurrence, specific names, caller type) not supported by the sampled source text, and assigned_technician largely duplicates an existing original column. The categorical text-derived columns are strong; the behavioral/history-derived columns appear fabricated relative to available evidence."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_inefficiency",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

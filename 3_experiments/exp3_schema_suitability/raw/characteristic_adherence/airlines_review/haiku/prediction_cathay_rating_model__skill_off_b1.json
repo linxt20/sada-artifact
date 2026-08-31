@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 10,
+  "added_columns": [
+    "Service_Quality_Score",
+    "Comfort_Quality_Score",
+    "Value_Perception_Gap",
+    "Route_Is_Long_Haul",
+    "Premium_Class_Flown",
+    "Service_Consistency",
+    "Overall_Experience_Quality",
+    "Meets_High_Rating_Threshold",
+    "Business_Traveler",
+    "Review_Is_Verified"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.55,
+    "analytical_usefulness__table_level": 0.5,
+    "source_groundedness": 0.495,
+    "source_groundedness__table_level": 0.48,
+    "b1_overall": 0.5225,
+    "hallucination_rate": 0.8
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Service_Quality_Score",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "A composite service score is a useful modeling axis, but it largely restates the existing Staff Service rating. Groundedness is shaky: row 3 has glowing crew praise scored 5.0 (fine), but row 5 with 'staff excellent' and 'service good' is scored only 3.0, contradicting the text, suggesting the aggregation dilutes clear signals."
+      },
+      {
+        "name": "Comfort_Quality_Score",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Comfort axis is relevant to seat/route optimization but overlaps the original Seat Comfort column. Row 3 explicitly notes no comfort discussion yet gets 2.5, and row 4 which praises then criticizes cramped economy gets 5.0, inconsistent with the source."
+      },
+      {
+        "name": "Value_Perception_Gap",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "A gap between value-for-money and delivered quality is a genuinely useful new modeling axis. However the specific signed magnitudes appear derived from numeric rating fields rather than the text, and several values (e.g. -1.0 for the strongly positive row 4) are hard to reconcile with the source, indicating weak grounding."
+      },
+      {
+        "name": "Route_Is_Long_Haul",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Long-haul flag is directly relevant to route optimization and gives a clean grouping axis. But the labels are frequently wrong: Manila-Hong Kong (short) =0 is fine, yet Beijing-Bangkok via Hong Kong marked 0 and Hong Kong-Tokyo marked 1 are geographically inconsistent, showing the classification is unreliable."
+      },
+      {
+        "name": "Premium_Class_Flown",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Cabin class is a strong axis for service optimization and derivable from the Class column. But values conflict with text: row 1/2 (no class stated) marked 1, and row 5 which explicitly mentions business class marked 0, indicating misassignment."
+      },
+      {
+        "name": "Service_Consistency",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.35,
+        "hallucination_observed": true,
+        "rationale": "Variance across sub-ratings could capture uneven experiences, which is analytically interesting. However the irrational-number values suggest a mechanical std-dev of rating fields, and the mapping to the qualitative text (e.g. row 4's 0.0 despite mixed praise/criticism) is not well grounded."
+      },
+      {
+        "name": "Overall_Experience_Quality",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "This is largely a restatement/average of the existing Overall Rating and other sub-scores, adding little new leverage. Grounding is moderate but row 1 (a severe stranding complaint) scored 3.75 overstates the experience."
+      },
+      {
+        "name": "Meets_High_Rating_Threshold",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A binary target for 'Overall Rating > 7' is directly aligned with the query and provides a clean label for modeling, though it is a trivial transform of the original Overall Rating. Values broadly track sentiment (row 1 negative =0, rows 3/4 positive =1)."
+      },
+      {
+        "name": "Business_Traveler",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Traveller-segment flag is a reasonable grouping axis, but it duplicates the original Type of Traveller column and the values look unreliable: rows with no stated traveller purpose (1,2) are flagged 1 while leisure-sounding rows are 0, not clearly warranted by the text."
+      },
+      {
+        "name": "Review_Is_Verified",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "This is a near-direct copy of the existing Verified column, offering essentially no new analytical leverage for route/service optimization. Values are plausibly grounded but redundant."
+      }
+    ],
+    "analytical_usefulness": 0.5,
+    "source_groundedness": 0.48,
+    "rationale": "Several columns offer genuine new modeling axes (long-haul, premium class, value gap, high-rating target), but a notable share are redundant restatements of existing rating/metadata columns (Review_Is_Verified, Business_Traveler, Overall_Experience_Quality). Groundedness is the bigger concern: the row-evidence samples reveal repeated inconsistencies and likely-invented values—long-haul flags that contradict geography, premium-class flags that contradict the text, and composite scores that misread clearly positive or clearly negative reviews. The derived numeric composites (Service_Consistency, Value_Perception_Gap) appear computed from rating fields with weak alignment to the narrative source. Overall the set provides moderate analytical value but only middling, at times contradicted, grounding."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 10
+}

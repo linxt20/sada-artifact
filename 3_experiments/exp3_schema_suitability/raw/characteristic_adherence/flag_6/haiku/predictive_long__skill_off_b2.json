@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an agent's tickets will take longer to resolve?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "resolution_days",
+    "priority_level",
+    "is_network_category",
+    "same_agent",
+    "agent_changed",
+    "is_open",
+    "days_in_system",
+    "is_critical_domain",
+    "self_assigned"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.1333,
+    "predictor_fraction": 0.4444,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.3,
+    "leakage_rate": 0.1111
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "resolution_days",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "This is resolution_time itself expressed in days (elapsed close - open time), a direct restatement of the focus variable. Its values mirror days_in_system. Using it to predict resolution_time is trivial leakage."
+      },
+      {
+        "name": "priority_level",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Ticket priority is known at intake, lies outside the outcome, and plausibly carries signal about how long resolution takes. Legitimate predictor (though it largely mirrors the existing priority column)."
+      },
+      {
+        "name": "is_network_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A category-derived flag known at ticket creation; category type can plausibly influence resolution duration without restating the outcome."
+      },
+      {
+        "name": "same_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the assigned agent matches (e.g., updater/caller) is knowable independently of resolution length and could plausibly relate to speed. Weak but legitimate."
+      },
+      {
+        "name": "agent_changed",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Exact complement of same_agent (401/99 mirror inverted), providing no additional information beyond same_agent. Redundant."
+      },
+      {
+        "name": "is_open",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Whether the ticket is still open is determined by the resolution/closure state; open tickets have no realized resolution time (the 22 NULLs in resolution_days). It reflects the outcome status rather than predicting it."
+      },
+      {
+        "name": "days_in_system",
+        "role": "restatement",
+        "is_predictor": false,
+        "rationale": "Values coincide with resolution_days; for closed tickets this is time in system = resolution duration. A restatement of the focus with leakage."
+      },
+      {
+        "name": "is_critical_domain",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A domain/criticality flag derivable from category or description at intake; plausibly correlated with resolution time and not a function of the outcome."
+      },
+      {
+        "name": "self_assigned",
+        "role": "irrelevant",
+        "is_predictor": false,
+        "rationale": "Constant value (0 for all 500 rows). A zero-variance feature carries no predictive signal."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.3,
+    "rationale": "The set is contaminated by direct leakage/restatement of the focus (resolution_days, days_in_system are the outcome; is_open reflects closure status). agent_changed duplicates same_agent, and self_assigned is constant. The genuine intake-time predictors (priority_level, is_network_category, same_agent, is_critical_domain) are legitimate but largely overlap existing columns (priority, category), so incremental predictive leverage beyond the original table is modest."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_long",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

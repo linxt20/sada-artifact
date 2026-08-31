@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 7,
+  "added_columns": [
+    "Haul_Type",
+    "Composite_Service_Score",
+    "Value_Gap",
+    "Route_Performance_Tier",
+    "Weakest_Dimension",
+    "Improvement_Priority",
+    "High_Rating_Potential"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7386,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.8171,
+    "source_groundedness__table_level": 0.81,
+    "b1_overall": 0.7779,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "Haul_Type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Categorising each Route into Long-haul vs Short/Medium-haul is a clean, genuinely new grouping axis directly relevant to a route-optimisation model. Values are soundly derivable from the Route field: Manchester-Sydney and HK-Melbourne read as Long-haul, HK-Tokyo/Manila-HK/Beijing-Bangkok as Short/Medium-haul. Well grounded."
+      },
+      {
+        "name": "Composite_Service_Score",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "A single aggregate of the several 1-5 service-rating columns gives a usable modelling target/feature, though it partly overlaps the underlying dimension columns. The fractional values are consistent with averaging existing numeric rating columns, so values are derivable from the table."
+      },
+      {
+        "name": "Value_Gap",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "A gap between Value-For-Money and service quality is a legitimate new axis for a pricing/value lens on the optimisation query. Computed from existing rating columns so it is grounded; the exact sign convention is a little opaque but nothing is invented beyond present columns."
+      },
+      {
+        "name": "Route_Performance_Tier",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Route-level Low/Medium/High tiering is highly pertinent to organising/optimising routes. Values appear consistent with aggregating ratings by route (very negative Manchester-Sydney = Low, praise-heavy Manila-HK = High); one positive HK-Melbourne review lands as Medium, plausible for a route-level average. Grounded in existing numeric data."
+      },
+      {
+        "name": "Weakest_Dimension",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "Identifying the lowest-scoring service dimension per row is exactly the kind of targeting signal the improvement query needs. Mostly a sound reading of the numeric rating columns; a couple of rows (e.g. a review whose only complaint is legroom labelled 'Value For Money') diverge from the review text, but the value is still derivable from the numeric ratings present, so not a hallucination."
+      },
+      {
+        "name": "Improvement_Priority",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.82,
+        "hallucination_observed": false,
+        "rationale": "Actionable, but largely a relabelling of Weakest_Dimension into an action verb (VFM->Price/Value Reset, Seat->Seat/Comfort Upgrade), so it adds limited independent leverage; the label set is also internally redundant (Enhancement vs Uplift vs Improvement variants). Values follow deterministically from the weakest dimension, hence grounded."
+      },
+      {
+        "name": "High_Rating_Potential",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.68,
+        "hallucination_observed": false,
+        "rationale": "Directly tied to the Overall Rating > 7 goal, but as a bare Yes/No it is coarse and risks near-restating Overall Rating. The samples are also hard to reconcile (a strongly positive 'best cabin crew' review = No, while a mixed part-poor review = Yes), suggesting an opaque heuristic; still derived from present ratings rather than invented facts, so no outright hallucination."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.81,
+    "rationale": "The set gives several real analytical axes for the route/service optimisation query: Haul_Type, Route_Performance_Tier and Weakest_Dimension provide new grouping/targeting leverage, while Composite_Service_Score and Value_Gap add modelling features. Improvement_Priority is mostly a restatement of Weakest_Dimension and High_Rating_Potential is a coarse, somewhat opaque binary, dragging holistic usefulness down slightly. Groundedness is generally solid: every column is derivable from the Route field or the existing 1-5 rating columns, and the evidence rows show plausible readings; minor row-level divergences from review prose and the inconsistent High_Rating_Potential logic keep it short of excellent, but no invented source facts are observed."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

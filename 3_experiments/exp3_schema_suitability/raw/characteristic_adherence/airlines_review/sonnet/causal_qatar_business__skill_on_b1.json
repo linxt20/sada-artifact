@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "n_added_columns": 5,
+  "added_columns": [
+    "downgrade_notification_failure",
+    "seat_hardware_quality",
+    "onboard_amenity_quality",
+    "cabin_crew_service_quality",
+    "service_consistency_across_sectors"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.72,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.72,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.72,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "downgrade_notification_failure",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "A near-constant binary flag (25 true of 592) capturing a specific failure mode that could plausibly drive non-recommendation, giving a narrow but genuine axis. Values in the samples are all correctly False since no sample mentions an unnotified downgrade; groundedness is sound but the specificity of the flag makes it hard to verify broadly, and it is a rare event so its analytical leverage is limited."
+      },
+      {
+        "name": "seat_hardware_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorises seat/hardware condition, directly relevant to why a Business flight might not be recommended. The defective-seat review correctly maps to full_flat_defective and the remarkable/QSuite reviews to full_flat_functional; the lost-bag review correctly yields Unknown. Good grounded categorisation with real discriminative value."
+      },
+      {
+        "name": "onboard_amenity_quality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "An amenity axis that can help explain dissatisfaction. However 'partial_omission' assigned to the defective-seat review and the 7/10 review is not supported by their text (neither mentions omitted amenities), suggesting the category is being over-applied where the source is silent, which weakens groundedness."
+      },
+      {
+        "name": "cabin_crew_service_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Service quality is a central driver of recommendation, providing a strong grouping axis. Samples are well-read: proactive_excellent for praise reviews, adequate for the mixed 7/10 sector, indifferent_or_absent for the reimbursement-failure review. Well grounded."
+      },
+      {
+        "name": "service_consistency_across_sectors",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A meaningful axis for multi-leg journeys where inconsistency drives dissatisfaction, and the uneven-aisle-service review reasonably maps to variable_by_sector. But applying variable_by_sector to a single-seat defective review and to the lost-bag review over-asserts sector variation the text does not describe, reducing groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.72,
+    "rationale": "The added columns decompose the drivers of non-recommendation into distinct, non-redundant axes (seat hardware, amenities, crew, consistency, downgrade handling) that give genuine analytical leverage for the query rather than trivial sentiment or length metrics. Most sample values are sound readings of the source text, but two columns (onboard_amenity_quality and service_consistency_across_sectors) show a tendency to assert specific negative categories on rows whose text is silent about those aspects, indicating some ungrounded inference. Silent rows correctly receiving Unknown/NULL are handled well. Overall useful with moderate groundedness concerns on the inference-heavy columns."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

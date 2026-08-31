@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What drives customer satisfaction (Overall Rating) across the different airlines?",
+  "focus_variable": "overall_rating",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "ground_staff_service_quality",
+    "service_consistency",
+    "flight_disruption_type",
+    "disruption_handling_quality",
+    "food_quality_assessment",
+    "special_meal_handling",
+    "seat_product_downgrade",
+    "customer_service_responsiveness"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.72,
+    "predictor_fraction": 1.0,
+    "n_predictors": 9,
+    "redundancy": 0.0,
+    "predictive_utility": 0.72,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating",
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A qualitative assessment of crew service, extractable from review text and distinct from the numeric overall rating; service quality plausibly drives satisfaction without being a component of the rating itself. Overlaps somewhat with existing Staff Service column but adds granularity."
+      },
+      {
+        "name": "ground_staff_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Ground/airport service is a distinct dimension not captured by inflight columns; a legitimate external driver of overall satisfaction with predictive signal."
+      },
+      {
+        "name": "service_consistency",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Characterizes whether service was uniform vs. variable across the flight/legs; a plausible driver of satisfaction, not a deterministic function of the rating."
+      },
+      {
+        "name": "flight_disruption_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Delays, cancellations, missed connections are external operational events strongly predictive of satisfaction and not restatements of the rating."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "How disruptions were handled is a distinct driver of satisfaction beyond whether a disruption occurred; legitimate predictor."
+      },
+      {
+        "name": "food_quality_assessment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A qualitative food judgment; overlaps with existing Food & Beverages numeric column so marginal novelty is limited, but semantically it is a driver, not a restatement of overall rating."
+      },
+      {
+        "name": "special_meal_handling",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether special meal requests were handled is an external service event that could affect satisfaction; legitimate though sparse (only 26 true), so weak signal."
+      },
+      {
+        "name": "seat_product_downgrade",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "A downgrade is an external adverse event plausibly driving lower satisfaction; legitimate predictor, though very sparse (23 true)."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Responsiveness/resolution of customer service contact is a distinct driver of satisfaction, not a restatement or leak of the rating."
+      }
+    ],
+    "n_predictors": 9,
+    "predictive_utility": 0.72,
+    "rationale": "All nine columns are legitimate external drivers of overall satisfaction, derived from review content rather than restating or leaking the numeric overall rating. They cover meaningful distinct dimensions (crew, ground staff, consistency, disruptions and their handling, food, special meals, downgrades, responsiveness) with plausible predictive signal. Deductions: a couple (food_quality_assessment, cabin_crew_service_quality) partially duplicate existing numeric sub-rating columns and so add limited incremental leverage, and two binary features are very sparse (~2-3% positive), limiting their contribution. As a set they still provide substantial genuine predictive value beyond the original columns."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_satisfaction_drivers",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 9
+}

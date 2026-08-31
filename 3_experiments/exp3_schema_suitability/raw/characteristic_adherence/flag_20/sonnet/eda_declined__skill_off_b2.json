@@ -1,0 +1,102 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "What signals in a travel-expense description predict whether it will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "has_travel_keyword",
+    "has_auto_generated_language",
+    "has_expense_keyword",
+    "has_equipment_keyword",
+    "is_travel_category",
+    "desc_word_count",
+    "amount_tier",
+    "travel_expense_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.63,
+    "predictor_fraction": 0.875,
+    "n_predictors": 7,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.72,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "has_travel_keyword",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Binary interpretable flag with well-separated groups (359/141) that can be segmented against decline rate; captures a content signal from the description."
+      },
+      {
+        "name": "has_auto_generated_language",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable binary indicator of boilerplate/auto-generated text, a plausible associational signal for declines with a decent split (349/151)."
+      },
+      {
+        "name": "has_expense_keyword",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable keyword flag; split is skewed (435/65) but the minority group is large enough to compare decline rates."
+      },
+      {
+        "name": "has_equipment_keyword",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable flag distinguishing equipment-related descriptions (440/60), a meaningful category to segment against the focus."
+      },
+      {
+        "name": "is_travel_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clear categorical segmentation (354/146) directly relevant to travel-expense declines; groupable and comparable."
+      },
+      {
+        "name": "desc_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable ordinal scale of description length concentrated in 3-9 words; can be binned and compared, though borderline mechanical it remains human-readable."
+      },
+      {
+        "name": "amount_tier",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Excellent interpretable segmentation (low/medium/high) with well-populated categories, ideal for comparing decline rates by spend level."
+      },
+      {
+        "name": "travel_expense_signal",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Distribution (359/141) is identical to has_travel_keyword, indicating it duplicates that flag rather than adding a distinct relationship."
+      }
+    ],
+    "n_predictors": 7,
+    "relationship_informativeness": 0.72,
+    "rationale": "As a set, these columns provide several interpretable, well-separated segmentations (amount_tier, is_travel_category, and the keyword/auto-generated flags) that a human can group on and compare against decline rates, satisfying the EDA claim. Weaknesses: travel_expense_signal appears to duplicate has_travel_keyword, and several columns are thematically overlapping travel/keyword flags rather than diverse external axes; desc_word_count is somewhat mechanical. No column is opaque or near-constant, but the redundancy and clustering around a single theme cap the informativeness."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "eda_declined",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 8
+}

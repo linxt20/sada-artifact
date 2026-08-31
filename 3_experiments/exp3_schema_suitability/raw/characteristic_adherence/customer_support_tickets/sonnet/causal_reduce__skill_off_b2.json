@@ -1,0 +1,88 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can support teams reduce ticket resolution time?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_category",
+    "estimated_complexity",
+    "routing_recommendation",
+    "self_service_candidate"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.85,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.85,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of issue is a common cause of both how a ticket is routed/handled (treatment) and how long it takes to resolve (outcome). It is a pre-existing property not named in the query, so it functions as a confounder that must be adjusted for."
+      },
+      {
+        "name": "estimated_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Intrinsic difficulty of the ticket drives both routing/escalation decisions and resolution time. It is a common cause not intervenable by the actor and not named in the query, so it is a confounder."
+      },
+      {
+        "name": "routing_recommendation",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Routing/escalation is an action a support team can actually SET or DECIDE (escalate, handle first-tier, route to a specialist). This is a settable lever whose effect on resolution time is the interventional question."
+      },
+      {
+        "name": "self_service_candidate",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether to divert a ticket to self-service is a decidable operational lever the team could set, making it an intervenable treatment on resolution time."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "routing_recommendation",
+      "self_service_candidate"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "issue_category",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "estimated_complexity",
+        "named_in_query": false,
+        "plausibility": 0.9
+      }
+    ],
+    "confounder_quality": 0.85,
+    "rationale": "The 'reduce resolution time' query is genuinely interventional. The added set includes at least one true intervenable treatment (routing_recommendation, and arguably self_service_candidate) that a support team can actually decide, satisfying part (a). It also supplies two solid common causes of both the routing decision and resolution time (issue_category, estimated_complexity), neither of which was named or implied in the query, satisfying part (b) and demonstrating the confounder-discovery capability. These are pre-treatment attributes, not mediators or colliders. The set thus realises the what-if claim well, though it omits some plausible confounders like agent skill/tenure and current queue load."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

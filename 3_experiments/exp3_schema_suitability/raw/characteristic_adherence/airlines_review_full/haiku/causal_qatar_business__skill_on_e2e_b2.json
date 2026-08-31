@@ -1,0 +1,139 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 12,
+  "added_columns": [
+    "aircraft_product_mismatch",
+    "ground_service_quality",
+    "food_beverage_quality",
+    "crew_service_consistency",
+    "seat_comfort_privacy",
+    "ife_connectivity_issues",
+    "pricing_value_mismatch",
+    "expectation_gap",
+    "expectation_versus_reality_gap",
+    "inflight_entertainment_and_connectivity",
+    "pricing_and_value_mismatch",
+    "seat_comfort_and_privacy"
+  ],
+  "metrics": {
+    "n_added_columns": 12,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome (Recommended = no)",
+    "per_column": [
+      {
+        "name": "aircraft_product_mismatch",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Captures whether the delivered product matched what was expected (downgrade, aircraft swap, older config instead of Qsuite). This is a candidate CAUSE of non-recommendation, not a common cause of another treatment and the outcome. It is a parallel driver, i.e. a treatment/explanatory factor, not a confounder."
+      },
+      {
+        "name": "ground_service_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Check-in/lounge/baggage experience is a candidate cause whose effect on recommendation is being attributed. Not a common antecedent of another treatment and the outcome."
+      },
+      {
+        "name": "food_beverage_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Service-quality dimension acting as a candidate cause of (non-)recommendation. A parallel driver, not a confounder."
+      },
+      {
+        "name": "crew_service_consistency",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Crew attentiveness is a candidate cause of the outcome. It does not cause the other service dimensions, so it is a competing treatment, not a confounder."
+      },
+      {
+        "name": "seat_comfort_privacy",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Seat/privacy experience is a direct candidate cause of recommendation. Parallel driver, not a common cause of another treatment and the outcome."
+      },
+      {
+        "name": "ife_connectivity_issues",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "In-flight entertainment/wifi problems are a candidate cause of dissatisfaction/non-recommendation. Treatment, not confounder."
+      },
+      {
+        "name": "pricing_value_mismatch",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Perceived value-for-money is a candidate cause of the outcome. It is a driver, not a common cause of a treatment and the outcome."
+      },
+      {
+        "name": "expectation_gap",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The realised gap between expectation and experience sits ON the causal path between the service dimensions (treatments) and the recommendation outcome; it summarises the effect of the treatments rather than confounding it. Adjusting for it would be a mistake, so it cannot count as a confounder."
+      },
+      {
+        "name": "expectation_versus_reality_gap",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Duplicate of expectation_gap; a post-treatment mediator/near-restatement of the outcome, not a confounder."
+      },
+      {
+        "name": "inflight_entertainment_and_connectivity",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Duplicate of ife_connectivity_issues; a candidate cause / competing treatment, not a confounder."
+      },
+      {
+        "name": "pricing_and_value_mismatch",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Duplicate of pricing_value_mismatch; candidate cause of the outcome, not a confounder."
+      },
+      {
+        "name": "seat_comfort_and_privacy",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Duplicate of seat_comfort_privacy; parallel driver / treatment, not a confounder."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "aircraft_product_mismatch",
+      "ground_service_quality",
+      "food_beverage_quality",
+      "crew_service_consistency",
+      "seat_comfort_privacy",
+      "ife_connectivity_issues",
+      "pricing_value_mismatch",
+      "inflight_entertainment_and_connectivity",
+      "pricing_and_value_mismatch",
+      "seat_comfort_and_privacy"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The operator produced a broad, largely duplicated set of parallel service-quality dimensions (aircraft/product, ground service, food, crew, seat, IFE, pricing) plus two expectation-gap columns. Every service dimension is a CANDIDATE CAUSE (treatment) whose effect on non-recommendation is being attributed, and the expectation-gap columns are post-treatment MEDIATORS that lie on the causal path from those drivers to the outcome. Crucially, NONE of the columns is a confounder in the required sense: a variable that plausibly causes BOTH a treatment and the outcome and that must be adjusted for to avoid bias. No structural common causes (e.g., route/sector, aircraft-assignment policy, traveller type, reviewer expectations set before the flight, or seasonality) were surfaced as separate adjustment variables — those that exist (Route, Type of Traveller) are already in the original table and were not among the added columns. So while a treatment is present (indeed many competing treatments), the confounder-control component of the causal-attribution claim is entirely unmet, and one of the added constructs (expectation gap) is a mediator that would bias the estimate if 'adjusted for.' This is a driver/decomposition set rather than a genuine causal-estimation design; the technical claim FAILS on confounders."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 12
+}

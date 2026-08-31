@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What drives praise and complaints in Amazon reviews?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_domain",
+    "quality_or_durability_issue",
+    "works_as_intended",
+    "value_for_money",
+    "expectation_alignment",
+    "recommendation_stance"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.8,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8917,
+    "source_groundedness__table_level": 0.89,
+    "b1_overall": 0.8458,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_domain",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Product category is a strong grouping axis for analyzing what drives praise/complaints across domains. Values are well-grounded in the source text (toy_game, book, music_cd, beauty_health, movie_dvd all clearly inferable)."
+      },
+      {
+        "name": "quality_or_durability_issue",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Captures a concrete complaint driver relevant to the query. Samples correctly mark 'not_present' for reviews with no physical quality issue. Heavy 'not_present' skew is expected given many media items, not a groundedness fault."
+      },
+      {
+        "name": "works_as_intended",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Functional performance is a meaningful praise/complaint axis. Samples are reasonable, though mapping subjective media 'quality' onto functions_as_advertised is a somewhat loose fit; still defensible readings."
+      },
+      {
+        "name": "value_for_money",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Price/value is a distinct and useful driver. Null used appropriately when text is silent (rows 1-4), and 'good_value' correctly derived from the Bicycle Thieves 'well worth it' text."
+      },
+      {
+        "name": "expectation_alignment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Meets/exceeds/falls short is a relevant sentiment-adjacent axis, though it risks partial redundancy with recommendation_stance. Sample values align soundly with the text tone."
+      },
+      {
+        "name": "recommendation_stance",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A graded recommend/discourage scale is useful as an outcome variable but correlates strongly with label_pos and expectation_alignment, reducing marginal leverage. Values are well-grounded in the samples."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.89,
+    "rationale": "The added columns provide multiple genuine analytical axes (domain, quality issues, functionality, value, expectation, recommendation) that let an analyst group and compare what drives praise vs. complaints. Values are consistently sound readings of the source text, with appropriate null/not_present handling for silent rows. Minor overlap between expectation_alignment and recommendation_stance slightly dilents usefulness, but each still contributes. No hallucinations observed in the samples."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "concept_attribute_praise",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 6
+}

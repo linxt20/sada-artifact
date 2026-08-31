@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "n_added_columns": 6,
+  "added_columns": [
+    "seat_comfort_quality",
+    "cabin_crew_service_quality",
+    "food_beverage_quality",
+    "customer_service_responsiveness",
+    "value_for_money",
+    "aircraft_type_condition"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.525,
+    "analytical_usefulness__table_level": 0.52,
+    "source_groundedness": 0.7667,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.6459,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "seat_comfort_quality",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a graded categorical read of seat comfort useful for aspect-level analysis, though it largely restates the existing 'Seat Comfort' rating column, reducing its incremental leverage. Values are well grounded: 'very_uncomfortable' for the dreadful-seats review and 'comfortable' where text supports it; NULLs for silent rows are appropriate."
+      },
+      {
+        "name": "cabin_crew_service_quality",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A crew-service axis is genuinely relevant for deciding which aspect to analyze, but overlaps with the original 'Staff Service' column. Samples map soundly (welcoming crew giving a birthday cake -> exceptional; dreadful-seat review -> poor). Reasonable extractions."
+      },
+      {
+        "name": "food_beverage_quality",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Meaningful aspect column but partly redundant with the existing 'Food & Beverages' rating. Values are well warranted (plentiful/tasty -> very_good/excellent; NULL where food not mentioned), which is correct behavior."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Conceptually near-duplicate of cabin_crew_service_quality; the two co-vary strongly across samples, limiting new analytical leverage. Groundedness is weaker: reviews rarely describe post-flight/complaint responsiveness distinct from onboard crew, yet confident 'excellent'/'poor' values are assigned, sometimes inferring beyond the text."
+      },
+      {
+        "name": "value_for_money",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.75,
+        "hallucination_observed": true,
+        "rationale": "Directly redundant with the original 'Value For Money' rating, offering little new axis. Values are plausible when derived from that rating, but several samples (e.g. the older-aircraft review) never discuss price, so specific value judgments are partly inferred rather than stated."
+      },
+      {
+        "name": "aircraft_type_condition",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A distinct, non-redundant axis (aircraft age/condition) that adds genuine grouping value. However groundedness is the weakest: most reviews do not state aircraft type, yet confident labels like 'modern_good' or 'standard' are asserted (e.g. Jakarta-Singapore review says nothing about aircraft age yet gets 'modern_good'). NULLs on silent rows are fine, but many non-null specifics are unsupported."
+      }
+    ],
+    "analytical_usefulness": 0.52,
+    "source_groundedness": 0.75,
+    "rationale": "The added columns decompose reviews into interpretable aspect ratings, which fits an exploratory 'which aspect matters' query, but most (seat comfort, crew, food, value) closely mirror existing original rating columns, limiting incremental analytical leverage, and customer_service_responsiveness largely duplicates the crew column. Groundedness is generally solid for the aspects explicitly discussed in the text, with appropriate NULLs on silent rows. The main hallucination risk is aircraft_type_condition (and some value/responsiveness rows), where specific labels are asserted despite the source text being silent about aircraft age or price."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 6
+}

@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What features can be extracted to train a model to predict a review's score?",
+  "focus_variable": "review_score",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "sentiment_polarity",
+    "product_quality_assessment",
+    "taste_flavor_quality",
+    "product_effectiveness_or_functionality",
+    "price_value_perception",
+    "repeat_purchase_intent",
+    "comparison_to_alternatives",
+    "health_dietary_concern"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.05,
+    "leakage_rate": 1.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "review_score",
+    "per_column": [
+      {
+        "name": "sentiment_polarity",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Overall sentiment of the review is essentially a restatement of the review score itself; a positive/negative review polarity is near-deterministic with the star rating. This leaks the outcome rather than providing an independent predictor."
+      },
+      {
+        "name": "product_quality_assessment",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Excellent/good/poor/defective quality judgments are the very content the score encodes. This is a paraphrase of the reviewer's evaluation and moves in lockstep with the score, so it leaks rather than predicts."
+      },
+      {
+        "name": "taste_flavor_quality",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Delicious/unpleasant/bland is a direct valenced quality verdict extracted from the same review text; it is another expression of the reviewer's satisfaction and effectively restates the score."
+      },
+      {
+        "name": "product_effectiveness_or_functionality",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Works_as_claimed vs ineffective is a satisfaction judgment aligned with the rating; derived from the review, it encodes the outcome and constitutes leakage."
+      },
+      {
+        "name": "price_value_perception",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Good_value/overpriced is an evaluative stance that co-varies almost perfectly with the score and is extracted from the same review, so it restates the outcome rather than predicting it."
+      },
+      {
+        "name": "repeat_purchase_intent",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Will_repurchase vs will_not_repurchase is a near-monotonic proxy for the star rating and is only knowable from the review's expressed satisfaction; it leaks the focus."
+      },
+      {
+        "name": "comparison_to_alternatives",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Better/worse than alternatives is a valenced verdict extracted from the review that tracks the score directly; it is another restatement of the reviewer's judgment."
+      },
+      {
+        "name": "health_dietary_concern",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "Supports_goal vs contradicts_goal is again an evaluative sentiment derived from the review content, correlated with satisfaction and thus with the score; it leaks rather than serving as an external predictor."
+      }
+    ],
+    "n_predictors": 0,
+    "predictive_utility": 0.05,
+    "rationale": "Every added column is a valenced evaluative judgment extracted from the very review whose score is being predicted. They are all downstream expressions of the reviewer's satisfaction and are near-deterministic proxies for the star rating, so they constitute label leakage rather than legitimate features. A proper predictive feature set would use variables OUTSIDE the outcome (e.g., helpfulness ratios, reviewer history, product-level priors, temporal signals, text structure) that are knowable independently of the reviewer's verdict. Because all eight columns restate/leak the focus, the set provides essentially no genuine predictive leverage for a real forecasting task."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "predictive_score_features",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

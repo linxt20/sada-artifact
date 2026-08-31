@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "focus_variable": "hardware_incident_rate",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "incident_category_primary",
+    "device_type",
+    "failure_specificity",
+    "hardware_severity_indicator",
+    "resolution_approach_candidate",
+    "affected_resource_scope"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.45,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.45,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "hardware_incident_rate",
+    "per_column": [
+      {
+        "name": "incident_category_primary",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "Classifies the incident into hardware vs other categories; this defines/selects the outcome population (hardware incidents) rather than acting as a treatment or confounder. It is essentially the outcome-defining focus, already implied by the query."
+      },
+      {
+        "name": "device_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Device type is a common cause of both which failure causes/interventions apply and the incident rate (servers vs printers fail and are remediated differently). It is a stable pre-treatment attribute one adjusts for; not named in the query."
+      },
+      {
+        "name": "failure_specificity",
+        "causal_role": "other",
+        "named_in_query": true,
+        "rationale": "This IS the 'failure cause' being addressed -- i.e. the target of the intervention description, the 'most common failure causes' explicitly referenced in the query. It is not itself an intervenable lever an actor sets, but rather the cause being remediated; treated as the focus of the what-if rather than a confounder."
+      },
+      {
+        "name": "hardware_severity_indicator",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Severity of the failure lies on the pathway between the underlying failure cause and whether it counts as/continues as an incident; it is a downstream consequence of the failure, so a mediator, not a confounder."
+      },
+      {
+        "name": "resolution_approach_candidate",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The remediation approach (replace_device, repair_device, driver_update, peripheral_reseat) is an intervenable lever an actor can decide to set/change; this is the closest thing to a settable treatment corresponding to 'addressing' the failure causes."
+      },
+      {
+        "name": "affected_resource_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (single device vs shared vs multiple locations) is a common cause of both which resolution is chosen and the resulting incident rate/impact; a pre-treatment structural attribute to adjust for. Not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "resolution_approach_candidate"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "device_type",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "affected_resource_scope",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.45,
+    "rationale": "The added columns do supply one genuinely intervenable treatment (resolution_approach_candidate: replace/repair/driver_update are levers an actor can set), satisfying part (a). Part (b) is only partially met: device_type and affected_resource_scope are plausible unnamed confounders (common causes of both the chosen remediation and the incident rate). However, several columns are outcome-defining (incident_category_primary), the cause being remediated (failure_specificity), or a mediator (hardware_severity_indicator) rather than confounders. No temporally clear pre-treatment confounders such as device age, warranty status, vendor, patch/firmware level, environment, or workload are captured. The set demonstrates modest interventional structure but weak, incomplete confounder adjustment."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

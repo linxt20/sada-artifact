@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 5,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "operational_reliability",
+    "seat_comfort_configuration",
+    "customer_service_responsiveness",
+    "ground_service_quality"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.7,
+    "facet_fraction": 1.0,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.7,
+    "mece": 0.7,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "In-flight crew attentiveness/professionalism is a core people-service aspect OF airline service quality — a genuine part-of the concept, not an external predictor. Its ordinal categories (exceptional_attentive → rude_dismissive) directly describe a constituent dimension of the service experience."
+      },
+      {
+        "name": "operational_reliability",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Punctuality/delays/cancellations constitute the 'reliability' dimension of service quality (a recognized SERVQUAL-style facet). It is an aspect OF the experience the traveller receives, not merely a cause or predictor of it, so it qualifies as a constitutive part."
+      },
+      {
+        "name": "seat_comfort_configuration",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Seat/cabin comfort is the tangible-product facet of airline service quality — an aspect OF the concept. (It somewhat mirrors the original 'Seat Comfort' column, but judged against the concept itself it is a legitimate constitutive facet.)"
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Responsiveness to inquiries/complaints is the 'responsiveness' dimension of service quality, an aspect OF the concept. However it partially overlaps the staff-helpfulness content already captured by cabin crew and ground service (note shared value 'slow_unhelpful'), so it is a facet but not cleanly disjoint."
+      },
+      {
+        "name": "ground_service_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Check-in/boarding/airport handling is the ground-touchpoint facet of the overall service experience — a constitutive part-of the concept, distinct in channel from in-flight crew service."
+      }
+    ],
+    "facet_columns": [
+      "cabin_crew_service_quality",
+      "operational_reliability",
+      "seat_comfort_configuration",
+      "customer_service_responsiveness",
+      "ground_service_quality"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.7,
+    "rationale": "All five added columns pass the meronymy test: each is an aspect OF airline_service_quality (people service in the cabin, people service on the ground, customer-service responsiveness, operational reliability, and seat/cabin comfort) rather than an external predictor, cause, or restatement of the whole. Mutual exclusivity is only moderate because three of the facets are people-service dimensions (cabin crew, ground, and customer-service responsiveness) whose 'staff helpfulness/responsiveness' content overlaps — the customer_service_responsiveness facet in particular shares scale content with the crew and ground facets (e.g., the common 'slow_unhelpful' level), so the carve-up is not fully non-overlapping. Exhaustiveness is reasonable but incomplete against the concept: it covers staff service, reliability, and comfort well, yet omits well-recognized constitutive facets such as food & beverage quality, in-flight entertainment, cleanliness, and value-for-money — the decomposition is people/operations/comfort-heavy and leaves several product-experience dimensions uncovered."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

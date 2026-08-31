@@ -1,0 +1,73 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict negative Amazon product satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "defect_type",
+    "expectation_gap",
+    "sentiment_intensity",
+    "reviewer_use_context",
+    "product_category_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.48,
+    "predictor_fraction": 0.8,
+    "n_predictors": 4,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.2
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "defect_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The type of defect mentioned is a review signal external to the label; presence and category of defect plausibly predicts dissatisfaction without being a restatement of the label itself."
+      },
+      {
+        "name": "expectation_gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Whether the product met/exceeded/fell below expectations is a distinct semantic signal carrying strong predictive value for satisfaction, yet not a mechanical restatement of the pos/neg label."
+      },
+      {
+        "name": "sentiment_intensity",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A 1-5 sentiment/star-like intensity is essentially a graded restatement of the same satisfaction polarity the label encodes; label_pos is nearly a deterministic thresholding of this, so it leaks the focus rather than providing independent signal."
+      },
+      {
+        "name": "reviewer_use_context",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "The usage context (gift, child, professional, etc.) is an external variable that may correlate with satisfaction and is not derivable from the label; a legitimate, if weaker, predictor."
+      },
+      {
+        "name": "product_category_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Product category is a genuine external covariate that can carry predictive signal about satisfaction rates and is independent of the label."
+      }
+    ],
+    "n_predictors": 4,
+    "predictive_utility": 0.6,
+    "rationale": "Four of five added columns (defect_type, expectation_gap, reviewer_use_context, product_category_signal) are legitimate external predictors extracted from review text, with defect_type and expectation_gap carrying the strongest genuine signal about dissatisfaction. However, sentiment_intensity is effectively a graded restatement of the satisfaction polarity itself and constitutes leakage of the focus variable. As a set the columns give solid, non-trivial predictive leverage beyond the raw text, but the presence of a leaky feature and the weaker signal of context/category caps the overall utility."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_negative",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

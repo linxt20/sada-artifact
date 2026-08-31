@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do goal achievement rates differ across departments?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "department_avg_completion",
+    "exceeds_dept_avg",
+    "exceeds_overall_avg",
+    "status_numeric"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.7875,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.8875,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.8375,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "department_avg_completion",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by quantifying per-department average completion, the exact axis of comparison. Values are derivable by grouping percent_complete by department; row samples show consistent department-level constants, warranting the aggregate."
+      },
+      {
+        "name": "exceeds_dept_avg",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A flag for whether a goal beats its department's average gives a useful within-department comparison axis. Values follow soundly from comparing percent_complete to department_avg_completion."
+      },
+      {
+        "name": "exceeds_overall_avg",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Complements the dept-relative flag by benchmarking against the global mean, enabling cross-department normalization. Somewhat redundant with exceeds_dept_avg but adds a distinct reference point. Derivable from percent_complete vs. overall mean."
+      },
+      {
+        "name": "status_numeric",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A numeric encoding of the existing 'state' field is largely a restatement of an original column, limiting new analytical leverage, though it can aid modeling/correlation with achievement. Values appear to be a straightforward mapping of state, grounded but not confirmable from the text-only samples."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns center on completion aggregates and relative-performance flags that directly support explaining why achievement rates differ across departments. Values are sound aggregations/comparisons of existing numeric fields with no observed hallucinations; status_numeric is the weakest as it mostly re-encodes an existing column."
+  },
+  "status": "scored",
+  "dataset": "flag_28",
+  "scenario": "causal_department",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 4
+}

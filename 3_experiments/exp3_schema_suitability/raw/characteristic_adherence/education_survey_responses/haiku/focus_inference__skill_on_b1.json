@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different themes do students raise in these open responses?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "engagement_trajectory",
+    "subject_format_alignment",
+    "hands_on_instruction_impact",
+    "peer_interaction_loss",
+    "teacher_pedagogical_strategy",
+    "asynchronous_format_advantage",
+    "parental_involvement_demand"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.78,
+    "analytical_usefulness__table_level": 0.8,
+    "source_groundedness": 0.79,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.785,
+    "hallucination_rate": 0.1429
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "engagement_trajectory",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures a genuine thematic axis (student engagement change) well-suited to theme analysis. Values are sound readings: ED-0001 'declining', ED-0004 'thriving', ED-0002 'improving' all match the text tone. Reasonable inferences throughout."
+      },
+      {
+        "name": "subject_format_alignment",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Fit of subject to online format is a real recurring theme. Values track text: algebra 'poorly_suited', recorded history lectures 'well_suited', kitchen-chemistry 'well_suited'. Well grounded."
+      },
+      {
+        "name": "hands_on_instruction_impact",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Loss of hands-on instruction is a plausible theme. But some values overreach: ED-0001 (algebra, camera freezing) and ED-0005 (essay discussion) labeled 'critical_loss' of hands-on instruction, yet neither text is about hands-on/lab work at all — the label reads engagement problems as hands-on loss. ED-0002 (labs) 'manageable_gap' is well grounded. Mixed groundedness."
+      },
+      {
+        "name": "peer_interaction_loss",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Peer interaction is an explicit theme in several responses ('zero peer interaction', silent chat). Values align well: ED-0003/ED-0005 'severely_diminished' supported directly; defaults to 'maintained_differently' when silent are reasonable."
+      },
+      {
+        "name": "teacher_pedagogical_strategy",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.78,
+        "hallucination_observed": false,
+        "rationale": "How teachers adapt instruction is a real thematic axis. Values largely defensible: kitchen-chemistry/documentary clips 'adapted_well', frozen-whiteboard 'minimally_adapted'. Some inference from student-side text about teacher strategy is a bit indirect but warranted."
+      },
+      {
+        "name": "asynchronous_format_advantage",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Async/self-paced benefit is a genuine theme surfaced explicitly in ED-0004 ('I can pause at my own pace' -> enables_deeper_learning). Heavy use of NULL/not_relevant for silent rows is correct behaviour, not penalised."
+      },
+      {
+        "name": "parental_involvement_demand",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Parental burden is a real theme (ED-0003 'unsustainable_burden' well grounded from 'we do the worksheet ourselves'). ED-0001 'significant_support_needed' is a slight overreach since the student text says nothing about parents, but most values (not_applicable for non-parent contexts) are sound."
+      }
+    ],
+    "analytical_usefulness": 0.8,
+    "source_groundedness": 0.78,
+    "rationale": "For a query about themes in open responses, the added columns provide multiple distinct, analytically useful thematic axes (engagement, format fit, peer interaction, async benefit, teacher adaptation, parental burden) that give real grouping/comparison leverage without being redundant or trivial. Groundedness is generally strong: most values are sound readings of the source text, and silent rows correctly receive NULL/not_relevant/not_applicable. The main weaknesses are occasional overreach in hands_on_instruction_impact (labeling non-lab engagement complaints as 'critical_loss') and parental_involvement_demand inferring parent support from student-only text. Overall solid on both necessary conditions."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 7
+}

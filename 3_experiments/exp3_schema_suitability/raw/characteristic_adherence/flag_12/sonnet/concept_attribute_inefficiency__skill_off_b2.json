@@ -1,0 +1,75 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What recurring issues drive resolution inefficiency?",
+  "focus_variable": "incident_inefficiency_reasons",
+  "concept": "incident_inefficiency_reasons",
+  "n_added_columns": 4,
+  "added_columns": [
+    "resolution_time_hours",
+    "issue_type",
+    "is_repeat_issue",
+    "above_avg_resolution"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.1732,
+    "facet_fraction": 0.5,
+    "n_facets": 2,
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.3,
+    "mece": 0.3464,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_inefficiency_reasons",
+    "per_column": [
+      {
+        "name": "resolution_time_hours",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This measures the magnitude/outcome of resolution inefficiency (how long it took), not a REASON for it. It is essentially a metric of the inefficiency itself rather than a constitutive aspect of why inefficiency occurs."
+      },
+      {
+        "name": "issue_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The category of underlying issue (printer, network, software, database, etc.) is a genuine constitutive facet of 'what recurring issues drive inefficiency' -- it decomposes the reasons by the nature/source of the problem."
+      },
+      {
+        "name": "is_repeat_issue",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Whether an incident is a recurring/repeat issue is a legitimate aspect of the recurring-issue reason space; recurrence itself is a constitutive facet of inefficiency drivers directly tied to 'recurring issues' in the query."
+      },
+      {
+        "name": "above_avg_resolution",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "A binary flag for above-average resolution time is a derived thresholding of resolution_time_hours -- it restates the inefficiency outcome, not a reason for it, and overlaps with resolution_time_hours."
+      }
+    ],
+    "facet_columns": [
+      "issue_type",
+      "is_repeat_issue"
+    ],
+    "non_facet_columns": [
+      "resolution_time_hours",
+      "above_avg_resolution"
+    ],
+    "mutual_exclusivity": 0.4,
+    "exhaustiveness": 0.3,
+    "rationale": "Only two of the four added columns (issue_type, is_repeat_issue) are constitutive facets of the 'reasons' concept. resolution_time_hours and above_avg_resolution measure the inefficiency OUTCOME rather than its causes/parts, and they overlap heavily with each other (the binary flag is a derived threshold of the hours), lowering mutual exclusivity. The genuine facets also fail to cover major reason dimensions that would explain WHY resolution is inefficient -- e.g., process/handoff factors (reassignments, escalations), staffing/ownership, priority/SLA breaches, information completeness, and wait vs. work time. Coverage of the concept's constitutive reason-aspects is therefore weak."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "concept_attribute_inefficiency",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

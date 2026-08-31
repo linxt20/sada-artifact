@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "product_performance_aspect",
+    "quality_durability_issue",
+    "content_substance_quality",
+    "comparison_to_alternatives"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.825,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.8125,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_performance_aspect",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Gives a genuine axis for grouping reviews by whether the product functions as expected -- directly relevant to identifying purchase aspects. Values are well grounded: AMZ-0004 ('keeps my skin clear', 'gets its job done') is correctly works_as_advertised; the doll/book/music reviews sensibly marked not_present since they discuss content, not functional performance. Reasonable use of not_present for silent rows."
+      },
+      {
+        "name": "quality_durability_issue",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct aspect (physical construction/longevity) that adds a separate grouping axis. Sampled rows are all not_present, which is correct behaviour since none of the sampled texts discuss durability. No unsupported assertions observed in samples."
+      },
+      {
+        "name": "content_substance_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Captures a meaningful aspect for media/book/music products (writing quality, depth), useful for the query. However groundedness is uneven: AMZ-0002 ('some gems but not enough') labeled well_written_substantive is defensible but borderline, and AMZ-0001 (a review about lack of black dolls, not about content substance at all) labeled 'superficial' is an unwarranted read -- the source does not address content quality, so a not_present value would have been correct. This forces a substance judgement where the text is silent."
+      },
+      {
+        "name": "comparison_to_alternatives",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Strong analytical axis -- whether reviewers position the product against alternatives is a clear purchase aspect. Sampled values (no_comparison_mentioned / not_present) are consistent with texts that make no explicit competitor comparison. Slight redundancy between 'no_comparison_mentioned' and 'not_present' categories but grounding is sound."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.78,
+    "rationale": "The four added columns each supply a distinct, non-trivial aspect axis (functional performance, physical durability, content quality, competitive comparison) that directly serves the query of identifying what reviewers discuss -- none are near-constant restatements or bare sentiment flags. Groundedness is mostly sound: extraction/categorisation aligns with source text and silent rows are reasonably marked not_present. The main weakness is content_substance_quality forcing substantive-quality labels onto rows whose text does not discuss content (e.g. AMZ-0001), a mild hallucination that lowers overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 4
+}

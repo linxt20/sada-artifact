@@ -1,0 +1,124 @@
+{
+  "var_a": "skill_off",
+  "var_b": "original",
+  "swap": true,
+  "winner": "A",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.68,
+  "scores_a": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 5,
+      "score_b": 4,
+      "delta_a_minus_b": 1,
+      "winner": "A",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "Critical (1): 83 incidents (16.6% of total) → Average attention: 4.51/5",
+        "why": "precise counts and score magnitudes"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "52 of 83 Critical incidents (62.7%) include contains_outage_signal=1",
+        "why": "column-referenced numeric claim"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Category and Issue Type do not always align, and the mismatch correlates with attention variance",
+        "why": "cross-field causal reasoning"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "Escalate automatically if: Priority = Critical AND contains_outage_signal = 1",
+        "why": "decision-ready rule"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Network category issues (52% of dataset)",
+        "why": "contradicts earlier service table summing near 100%"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "specificity",
+        "quote": "Network (VPN, connectivity) 260 52% 48 (58% of Criticals)",
+        "why": "concrete counts and shares"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Outage/Downtime (~40 incidents, ~48% Critical)",
+        "why": "quantified problem types"
+      },
+      {
+        "dimension": "depth",
+        "quote": "Distinguishing Server-Side vs. Client-Side Issues",
+        "why": "mechanism-based segmentation"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "High Attention (Immediate Escalation): Any incident with 'outage,' 'down,' or 'not responding'",
+        "why": "clear triage tiers"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "97% of incidents are marked High or Critical",
+        "why": "internally consistent priority figures"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": []
+  },
+  "reason": "A offers deeper column-level quantitative evidence and richer triage rules despite minor internal inconsistencies.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

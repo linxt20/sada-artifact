@@ -1,0 +1,81 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What features can be extracted from a company's business description to predict its regional cluster?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "primary_industry",
+    "business_model_type",
+    "market_target",
+    "service_delivery_model",
+    "tech_stack_focus",
+    "innovation_intensity",
+    "customer_segment_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7286,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.7714,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.75,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_industry",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "rationale": "Industry is a strong categorical feature for predicting regional clustering (e.g. VC on Sand Hill Rd). Values are well-grounded readings of descriptions, though 23andMe as 'commerce_and_retail' is a debatable but not baseless reading."
+      },
+      {
+        "name": "business_model_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Distinct axis with good distribution; a useful grouping variable. Values map sensibly onto source text (VC->investment_and_capital, training firm->b2b_enterprise)."
+      },
+      {
+        "name": "market_target",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.75,
+        "rationale": "Provides some signal but is highly skewed (158 enterprise vs 1 global) and partly redundant with customer_segment_type. Values are reasonable inferences but 'enterprise_focused' for a VC is a loose reading."
+      },
+      {
+        "name": "service_delivery_model",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "rationale": "Adds a delivery axis useful for modeling. Mostly grounded, but 23andMe as 'physical_product' overstates what the text supports and VC firms as 'professional_services' is inferred."
+      },
+      {
+        "name": "tech_stack_focus",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.8,
+        "rationale": "Genuinely useful new axis with a proper 'not_present' for silent rows, which is correct behavior. Values are warranted where present; 5AM Ventures->biotech is a reasonable inference from 'life science'."
+      },
+      {
+        "name": "innovation_intensity",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.65,
+        "rationale": "Potentially useful ordinal axis, but categories are somewhat subjective and thinly supported by short descriptions. Accel as 'operational_efficiency_focused' is a weakly grounded call."
+      },
+      {
+        "name": "customer_segment_type",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "rationale": "Useful grouping variable, partially overlapping with market_target but finer-grained. Values track the text well (VC->startups_and_early_stage, Addepar->enterprise)."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.78,
+    "rationale": "The added columns supply multiple genuine categorical axes (industry, business model, tech focus, customer segment) that give real leverage for predicting regional clusters, which the query calls for. Some columns (market_target, innovation_intensity) are skewed, partly redundant, or subjective, lowering usefulness. Groundedness is generally sound: values are defensible readings of the descriptions and silent rows correctly receive 'not_present', though a few inferences (23andMe physical_product, VC professional_services/enterprise_focused) stretch beyond the text without being outright fabrications."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "predictive_region",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 7
+}

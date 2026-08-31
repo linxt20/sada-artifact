@@ -1,0 +1,58 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What patient needs appear in visit notes?",
+  "focus_variable": "patient_needs",
+  "concept": "patient_needs",
+  "n_added_columns": 2,
+  "added_columns": [
+    "primary_patient_need",
+    "patient_need_category"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.0,
+    "facet_fraction": 0.0,
+    "n_facets": 0,
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.1,
+    "mece": 0.1732,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "patient_needs",
+    "per_column": [
+      {
+        "name": "primary_patient_need",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is a free-text label naming the whole patient need itself (e.g., 'Acute ear infection treatment'), not an aspect OF the need. It restates the entire concept rather than carving out a constitutive part such as clinical, functional, informational, or emotional need."
+      },
+      {
+        "name": "patient_need_category",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is a single categorical classification of the whole need (Chronic/Urgent/Preventive/etc.), i.e., a taxonomy of the concept as a whole, not a distinct facet that decomposes the need into non-overlapping aspects."
+      }
+    ],
+    "facet_columns": [],
+    "non_facet_columns": [
+      "primary_patient_need",
+      "patient_need_category"
+    ],
+    "mutual_exclusivity": 0.3,
+    "exhaustiveness": 0.1,
+    "rationale": "Neither column is a constitutive facet (part-of) of 'patient_needs'. Both restate the whole need at different granularities: 'primary_patient_need' is a fine-grained label of the need itself, and 'patient_need_category' is a coarse classification of that same need. A genuine faceted decomposition would split the need into aspects such as clinical/medical need, functional need, informational need, and psychosocial/emotional need. Because both columns describe the same underlying whole (one is essentially a rollup of the other), mutual exclusivity is low and exhaustiveness across the concept's constitutive aspects is essentially unmet."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "concept_attribute_patient",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 2
+}

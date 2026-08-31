@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why do some agents have longer resolution times?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "resolution_hours",
+    "priority_numeric",
+    "agent_avg_resolution_hours",
+    "agent_concurrent_load",
+    "category_avg_resolution_hours",
+    "is_self_closed"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.7917,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.725,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7583,
+    "hallucination_rate": 0.1667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "resolution_hours",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Directly operationalizes the query's target metric, giving the core axis for analysis. However, groundedness is compromised: many negative values (e.g. -4.29, -106.7) are not derivable from valid timestamps, and the row samples only show closed_at/sys_updated_on with no opened_at present, so computed values cannot be verified and negatives contradict a sensible reading."
+      },
+      {
+        "name": "priority_numeric",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A clean numeric encoding of the existing priority column, useful for correlating priority with resolution time. Largely redundant with an original column, but still adds modeling leverage. Values are a faithful mapping of the source."
+      },
+      {
+        "name": "agent_avg_resolution_hours",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Highly relevant to 'why some agents have longer resolution times' -- provides a per-agent aggregate axis. Derivable from the table via grouping on assigned_to, though it inherits the questionable resolution_hours base and the '750' spike/'0' values suggest some aggregation artifacts."
+      },
+      {
+        "name": "agent_concurrent_load",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "A genuinely new explanatory axis (workload) that plausibly explains slower resolution -- strong analytical value. Computable from overlapping open intervals per agent, but this depends on opened_at/closed_at which are not visible in samples, so only partially verifiable."
+      },
+      {
+        "name": "category_avg_resolution_hours",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Adds a category-level benchmark useful for separating agent effects from case-type effects. Derivable by grouping on the existing category column, though it inherits the resolution_hours reliability issues."
+      },
+      {
+        "name": "is_self_closed",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "A meaningful binary flag (whether closed_by equals assigned_to/caller) that could correlate with resolution behaviour. Derivable by comparing closed_by with other person fields; a reasonable categorisation, though the samples don't fully expose the compared fields."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns are well-aimed at the query: they supply the core resolution-time metric plus multiple distinct explanatory axes (agent averages, concurrent workload, category benchmark, self-closed flag, priority encoding), giving real leverage to explain why some agents are slower. The main weakness is groundedness of resolution_hours: numerous negative values are not a sound reading of timestamps, and since resolution_hours feeds the agent/category averages, that unreliability propagates. Values are otherwise consistent with grouping/encoding of existing columns."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "causal_agent",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 6
+}

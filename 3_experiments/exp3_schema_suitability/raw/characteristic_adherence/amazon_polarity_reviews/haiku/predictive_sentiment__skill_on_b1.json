@@ -1,0 +1,64 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review facets differ by sentiment label?",
+  "n_added_columns": 4,
+  "added_columns": [
+    "quality_defect_presence",
+    "expectation_gap_type",
+    "explicit_recommendation",
+    "usage_fit_audience"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 4,
+    "n_judged_columns": 4,
+    "analytical_usefulness": 0.85,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.7625,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.8062,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "quality_defect_presence",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorises the type of quality defect, giving a genuine facet to cross-tabulate against sentiment. Sample rows with no defect discussion correctly mapped to not_present; the AMZ-0004 reformulation complaint could arguably be a defect but not_present is defensible. Values are sound readings of source text."
+      },
+      {
+        "name": "expectation_gap_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "A useful axis distinguishing kinds of unmet expectation. However AMZ-0004 was labelled quality_below_price when the text mentions no price/value concern (only a formulation change), an unsupported specific. AMZ-0001's feature_missing is well-grounded. Some inferences overreach beyond what the text states."
+      },
+      {
+        "name": "explicit_recommendation",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A strong, well-graduated axis directly relevant to how facets vary by sentiment. Sample values match the text well (AMZ-0002 'not enough to recommend it' -> advise_against; AMZ-0004 enthusiastic gifting -> strongly_recommend; AMZ-0005 'especially recommend' -> recommend). Well grounded."
+      },
+      {
+        "name": "usage_fit_audience",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Provides a distinct fit-for-use axis useful for facet analysis. But AMZ-0002 was labelled poor_fit_for_stated_use when the review is a quality/content judgment with no stated-use fit discussion, an overreach; AMZ-0001 poor_fit_for_stated_use is reasonable (no suitable product for daughter). Grounding is mixed."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.75,
+    "rationale": "All four added columns provide genuinely distinct facets (defect type, expectation gap, recommendation strength, usage fit) that give real analytical leverage for comparing review characteristics across sentiment labels, with no trivial redundancy or near-constants. Groundedness is generally good and silent rows are appropriately mapped to not_present/not_discussed, but a couple of columns over-assert specifics not supported by the source text (e.g. quality_below_price and poor_fit labels applied where the text is silent), lowering the table-level groundedness."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 4
+}

@@ -1,0 +1,80 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_service_quality",
+    "seat_hardware_condition",
+    "food_quality_assessment",
+    "special_meal_handling",
+    "disruption_handling_quality",
+    "service_decline_signal",
+    "premium_economy_value_gap"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.33,
+    "focus_coherence": 0.55,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.75,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Service experience quality (particularly crew/staff service and its consistency) as the central aspect worth analyzing in the reviews.",
+    "per_column": [
+      {
+        "name": "crew_service_quality",
+        "supports_focus": true,
+        "rationale": "Directly captures crew/staff service quality — a strong core facet of a service-experience focus."
+      },
+      {
+        "name": "seat_hardware_condition",
+        "supports_focus": false,
+        "rationale": "Concerns physical seat/hardware state, a product/tangible attribute distinct from the service-experience focus, pulling toward a different aspect."
+      },
+      {
+        "name": "food_quality_assessment",
+        "supports_focus": false,
+        "rationale": "Food quality is a separate catering facet; relevant to reviews generally but drifts from a crew/service-centred focus."
+      },
+      {
+        "name": "special_meal_handling",
+        "supports_focus": true,
+        "rationale": "Handling of special meals is a service-delivery behaviour, partially bridging catering and service."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "supports_focus": true,
+        "rationale": "How disruptions are managed is a clear service-quality facet, aligning with a service focus."
+      },
+      {
+        "name": "service_decline_signal",
+        "supports_focus": true,
+        "rationale": "Flags deteriorating service, a temporal/consistency facet of the service-quality focus."
+      },
+      {
+        "name": "premium_economy_value_gap",
+        "supports_focus": false,
+        "rationale": "Concerns value-for-money in a specific cabin class, a pricing/value dimension rather than service quality."
+      }
+    ],
+    "focus_coherence": 0.55,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.75,
+    "rationale": "The columns lean toward a service-experience focus — crew_service_quality, disruption_handling_quality, service_decline_signal, and special_meal_handling all sit on that axis, giving a plausible inferable centre. However, seat_hardware_condition, food_quality_assessment, and premium_economy_value_gap span distinct product/catering/value aspects, so the set reads partly as a general aspect-scan rather than a tightly focused decomposition; this weakens focus_coherence. Where they do cohere around service, the facets are well-differentiated (baseline quality, disruption handling, temporal decline, meal handling) at a useful granularity, supporting a moderate structure score. The implied service-quality focus is genuinely actionable — an analyst could investigate service consistency drivers of recommendation. The mixed scope keeps this from a strong pass on coherence."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

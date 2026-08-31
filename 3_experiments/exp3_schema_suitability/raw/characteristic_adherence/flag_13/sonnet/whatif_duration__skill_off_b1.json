@@ -1,0 +1,53 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "burden_type",
+    "resolution_duration_minutes",
+    "is_top_burden"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.75,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "burden_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Categorising each ticket into a burden type is exactly the grouping axis needed to identify the 'most common operational burdens' and compare their resolution durations. Values are well-grounded readings of short_description (WiFi->Network, VPN->VPN, database->Database, printing->Hardware)."
+      },
+      {
+        "name": "resolution_duration_minutes",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "rationale": "Duration is the core outcome variable the query asks to quantify, so highly useful. However groundedness is questionable: opened_at is present but closed_at should drive duration, and the sample only shows opened_at/closed_by. The fractional values (24.5767, 47.9433) look precise but cannot be verified against the shown source, and no closed_at appears in the samples to confirm derivation."
+      },
+      {
+        "name": "is_top_burden",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.6,
+        "rationale": "A flag marking whether a row belongs to a top burden is largely redundant with burden_type (derivable by comparing frequencies), adding little independent leverage. Also groundedness is inconsistent: Network_connectivity (80) and VPN (109) rows are marked 'no' while Database (136) is 'yes', suggesting an unclear/possibly incorrect threshold that isn't self-consistent with the top-value counts."
+      }
+    ],
+    "analytical_usefulness": 0.75,
+    "source_groundedness": 0.68,
+    "rationale": "burden_type provides the essential grouping axis and resolution_duration_minutes the essential outcome, together directly serving the query. is_top_burden is largely a restatement derivable from burden_type and adds little. Groundedness concerns: duration values are highly precise but their derivation from the shown source (no closed_at in samples) is unverified, and is_top_burden's yes/no assignment appears inconsistent with the observed frequency counts."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "what_if",
+  "n_new_columns": 3
+}

@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does resolution time vary across category, priority, and assignment group?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "incident_category",
+    "failure_symptom_type",
+    "affected_system",
+    "scope_indicator",
+    "is_self_resolved",
+    "has_assigned_agent",
+    "incident_open_status",
+    "caller_user"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.5875,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.8125,
+    "source_groundedness__table_level": 0.8,
+    "b1_overall": 0.7,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A finer-grained category derived from short_description gives a genuine grouping axis for resolution-time analysis. Overlaps somewhat with the existing 'category' column, but appears more specific and text-derived. Values are sound readings of the descriptions."
+      },
+      {
+        "name": "failure_symptom_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Symptom type is a new orthogonal axis not in original columns and plausibly correlates with resolution time. Samples map cleanly from descriptions (e.g. 'Cannot connect'->cannot_connect), though 'service_down' for 'not working properly' is a reasonable but softer inference."
+      },
+      {
+        "name": "affected_system",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Maps incidents to affected system, a useful modelling axis. Values track descriptions well, though it is largely collinear with incident_category (email->email_server etc.), slightly reducing independent leverage."
+      },
+      {
+        "name": "scope_indicator",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Scope (individual vs enterprise vs department) is a strong analytical axis potentially explaining resolution time. However groundedness is weaker: 'Email system not working properly'->enterprise_wide and generic 'VPN connection issue'->remote_access are inferred beyond what the text states. Department cases are grounded, but many assignments are unsupported confident specifics."
+      },
+      {
+        "name": "is_self_resolved",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Self-resolution is relevant to resolution time, but the value basis is unclear; the sample 'Internet connectivity issue' marked True is not clearly warranted by the source text provided (only timestamps/description). Large NULL share suggests weak derivability."
+      },
+      {
+        "name": "has_assigned_agent",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly derivable from the existing 'assigned_to' column, making it largely redundant. Grounded, but adds little new analytical leverage for resolution-time comparison across assignment group."
+      },
+      {
+        "name": "incident_open_status",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "A restatement of existing 'state'/'closed_at' columns. Grounded (closed rows -> False) but trivially redundant, offering minimal new axis for the query."
+      },
+      {
+        "name": "caller_user",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Essentially a restatement of the existing caller_id and is not part of category/priority/assignment-group analysis. Grounded but adds no analytical leverage for this query."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.8,
+    "rationale": "Several added columns (failure_symptom_type, affected_system, scope_indicator, incident_category) supply genuine new grouping axes beyond category/priority/assignment_group and are mostly well-grounded in the short_description. Others (has_assigned_agent, incident_open_status, caller_user) are redundant restatements of existing original columns and add little. Groundedness is generally solid for text-extracted categories, but scope_indicator and is_self_resolved make confident inferences the source text does not clearly support, warranting some penalty."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "eda_resolution",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

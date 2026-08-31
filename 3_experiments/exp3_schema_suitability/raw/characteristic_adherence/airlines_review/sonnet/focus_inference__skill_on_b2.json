@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "service_quality_theme",
+    "service_decline_signal",
+    "cost_cutting_perception",
+    "food_quality_theme",
+    "seat_comfort_issue_type",
+    "cabin_hardware_condition",
+    "disruption_handling_quality",
+    "ground_service_issue",
+    "premium_class_value_perception"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.7055,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.83,
+    "focus_actionability": 0.88,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Service quality experience in airline reviews — the perceived quality, consistency, and decline of service (both inflight and ground) and its value relative to price",
+    "per_column": [
+      {
+        "name": "service_quality_theme",
+        "supports_focus": true,
+        "rationale": "Directly characterises the tone/quality of staff service, a core facet of the service-experience focus."
+      },
+      {
+        "name": "service_decline_signal",
+        "supports_focus": true,
+        "rationale": "Flags perceived deterioration of service over time, a temporal facet tied to the focus."
+      },
+      {
+        "name": "cost_cutting_perception",
+        "supports_focus": true,
+        "rationale": "Captures perceived cost-cutting, a plausible driver/attribute of declining service quality."
+      },
+      {
+        "name": "food_quality_theme",
+        "supports_focus": true,
+        "rationale": "Food/beverage is a concrete facet of the overall service experience."
+      },
+      {
+        "name": "seat_comfort_issue_type",
+        "supports_focus": true,
+        "rationale": "Comfort issues are a tangible dimension of the inflight service experience."
+      },
+      {
+        "name": "cabin_hardware_condition",
+        "supports_focus": true,
+        "rationale": "Cabin condition is a physical-product facet contributing to perceived service quality."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "supports_focus": true,
+        "rationale": "How disruptions are handled is a strong, actionable service-quality facet."
+      },
+      {
+        "name": "ground_service_issue",
+        "supports_focus": true,
+        "rationale": "Extends the service focus to ground/pre-flight touchpoints, coherent with the theme."
+      },
+      {
+        "name": "premium_class_value_perception",
+        "supports_focus": true,
+        "rationale": "Value-for-price of service, tying the experience facets to a value judgment."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.83,
+    "focus_actionability": 0.88,
+    "rationale": "The columns collectively converge on a single, data-inferable focus: the airline SERVICE EXPERIENCE and its perceived quality/value. Nearly every column is a distinct, non-redundant facet — staff tone, food, seat comfort, cabin hardware, disruption handling, ground service — plus signal/driver columns (service decline, cost-cutting perception) and an outcome (premium value perception). This is a well-differentiated facet set at a useful thematic granularity, not a restatement of existing numeric ratings nor generic noise (no token counts or bare sentiment). Coherence is slightly below perfect because a few columns lean toward drivers/value rather than pure facets of the same concept, giving mild theme drift between 'service quality' and 'value for money', but they remain plausibly linked. The implied focus is highly actionable: an analyst could investigate which service facets and the perceived decline/cost-cutting most drive negative reviews and poor value perception."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 9
+}

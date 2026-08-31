@@ -1,0 +1,128 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Across Type of Traveller and Class, which review themes are associated with higher vs. lower Overall Rating?",
+  "n_added_columns": 12,
+  "added_columns": [
+    "cabin_crew_sentiment",
+    "service_consistency",
+    "service_frequency_complaint",
+    "seat_comfort_issue",
+    "food_quality_sentiment",
+    "special_meal_handling",
+    "disruption_handling_quality",
+    "ground_service_quality",
+    "customer_service_responsiveness",
+    "value_for_class_perception",
+    "class_product_expectation_gap",
+    "service_decline_perception"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 12,
+    "n_judged_columns": 12,
+    "analytical_usefulness": 0.6875,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.7188,
+    "hallucination_rate": 0.25
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_sentiment",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Crew sentiment is a core review theme and a strong axis to cross with Type of Traveller/Class against Overall Rating. Most samples map soundly to explicit crew language ('very kind & helpful', 'well-trained on hospitality'). However row 2 assigns 'poor_rude' though the review never mentions cabin crew at all (only seats/IFE), indicating overall negative tone is leaking into an unmentioned aspect rather than a NULL. This over-assertion lowers groundedness."
+      },
+      {
+        "name": "service_consistency",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "A distinct axis (consistency vs. raw sentiment) that is useful for the query. Row 5 ('service was consistently good from start to finish') is explicitly grounded. But 'consistent_low'/'consistent_high' are frequently inferred from single-flight tone (e.g., row 2 is a 90-min flight yet labelled consistent_low), which is a stretch from what the text asserts about consistency."
+      },
+      {
+        "name": "service_frequency_complaint",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A narrow, highly imbalanced boolean (~6% true), limiting analytical leverage, though it captures a specific theme (service too infrequent) that could still separate ratings. Samples are consistent with the text (row 4 explicitly notes crew came round regularly → false), so values look well grounded."
+      },
+      {
+        "name": "seat_comfort_issue",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Partially overlaps the original numeric 'Seat Comfort' column but adds a qualitative 'why' (cramped, broken, spacious) that is genuinely useful for theme analysis. Values are well grounded: 'legroom is spacious'→comfortable_spacious, 'seat far too narrow and poor padding'→cramped_narrow, and it properly uses NULL for silent rows."
+      },
+      {
+        "name": "food_quality_sentiment",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Useful qualitative theme complementing the numeric 'Food & Beverages' rating. Positive rows are well grounded ('Food was delicious', '2 full meals'). But row 2, which never mentions food, is labelled 'negative', and row 5 (silent on food) is 'adequate' rather than NULL — again overall tone bleeding into an unmentioned aspect, undermining groundedness even though the column does use NULL elsewhere."
+      },
+      {
+        "name": "special_meal_handling",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Very narrow, near-constant boolean (~4% true) covering dietary/special meal requests; limited leverage for this query. Where evaluable, values are appropriately false since no special meals are described, so groundedness is high."
+      },
+      {
+        "name": "disruption_handling_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Handling of delays/disruptions is a strong differentiator of Overall Rating and a valuable axis. All samples correctly use 'not_applicable' when no disruption is described, showing it handles silence properly rather than fabricating events."
+      },
+      {
+        "name": "ground_service_quality",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": true,
+        "rationale": "Ground/check-in/boarding service is a distinct and useful theme. It correctly outputs Unknown for rows silent on ground service (rows 2-5), but row 1 (entirely about onboard experience) is labelled 'smooth_positive' with no ground-service evidence, an over-assertion from overall positivity."
+      },
+      {
+        "name": "customer_service_responsiveness",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Well-distributed axis capturing post/pre-flight responsiveness, distinct enough from onboard crew to add leverage. Uses 'not_contacted' as an explicit category and applies it correctly to samples with no customer-service interaction, so values are well grounded."
+      },
+      {
+        "name": "value_for_class_perception",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Overlaps the original 'Value For Money' rating and the sibling class_product_expectation_gap column, reducing added leverage, though a class-relative framing has some use. Values are reasonable inferences from overall sentiment (9/10→exceeds, dreadful→below) rather than fabricated specifics."
+      },
+      {
+        "name": "class_product_expectation_gap",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Essentially a restatement of value_for_class_perception — its exceeded/met/below values map almost one-to-one to that column across the samples, so it adds little independent analytical axis. Groundedness is comparable: reasonable sentiment-based inference, not invented fact."
+      },
+      {
+        "name": "service_decline_perception",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures a specific narrative theme ('service has declined') that is narrow (~8% true) but distinct and potentially interesting against ratings. Samples are correctly false with no decline narrative present, so values appear grounded."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns decompose the free-text Reviews into many genuinely useful thematic axes (crew, seat, food, disruption, ground service, customer service, value, service decline) that directly serve the query of relating review themes to Overall Rating across Type of Traveller and Class. Usefulness is dragged down by some near-constant/narrow booleans (special_meal_handling, service_frequency_complaint) and clear redundancy — value_for_class_perception vs. class_product_expectation_gap are near-restatements, and several sentiment columns partly duplicate existing numeric ratings. On groundedness, aspect-specific extractions that use NULL/not_applicable for silent rows (seat_comfort_issue, disruption_handling_quality, customer_service_responsiveness) are well grounded, but there is a systematic tendency to propagate overall review polarity onto aspects the text never mentions (row 2 → poor_rude crew and negative food; row 1 → smooth_positive ground service), a recurring over-assertion that warrants the mid-high but not high groundedness score."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "eda_rating_drivers",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 12
+}

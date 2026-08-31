@@ -1,0 +1,79 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can businesses improve Yelp user satisfaction?",
+  "focus_variable": "user_satisfaction",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "service_attentiveness",
+    "staff_communication_quality",
+    "food_taste_execution",
+    "ambiance_comfort"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "user_satisfaction",
+    "per_column": [
+      {
+        "name": "service_attentiveness",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Service attentiveness is a controllable operational lever a business can set by training and staffing; plausibly affects user satisfaction."
+      },
+      {
+        "name": "staff_communication_quality",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Staff communication quality is an intervenable practice a business can improve through training and policy; a valid what-if lever on satisfaction."
+      },
+      {
+        "name": "food_taste_execution",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Food taste/execution is settable via recipes, ingredients, and kitchen practices; an intervenable driver of satisfaction."
+      },
+      {
+        "name": "ambiance_comfort",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Ambiance/comfort is a configurable property of the venue (seating, decor, layout) that a business can change; intervenable lever affecting satisfaction."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "service_attentiveness",
+      "staff_communication_quality",
+      "food_taste_execution",
+      "ambiance_comfort"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The query is explicitly interventional ('How can businesses improve user satisfaction?'), and all four added columns are intervenable levers a business could actually set or change (service, communication, food, ambiance), so requirement (a) is satisfied. However, the columns are entirely a set of candidate treatments/drivers. Requirement (b) is NOT met: there is not a single confounder -- no common cause of both a given treatment and satisfaction (e.g., price tier, restaurant category/cuisine, location/neighborhood affluence, reviewer strictness, time period). Without any adjustment variables, the counterfactual effect of any lever cannot be identified; the set at best supports attribution among parallel drivers, not a clean interventional estimate. Confounder quality is therefore zero."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_improve",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

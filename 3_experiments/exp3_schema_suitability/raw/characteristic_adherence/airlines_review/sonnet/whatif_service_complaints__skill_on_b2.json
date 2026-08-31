@@ -1,0 +1,104 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If airlines eliminated the most common cabin-service complaints in the reviews, how much would the average Overall Rating improve?",
+  "focus_variable": "Overall Rating",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "crew_service_failure_type",
+    "food_beverage_complaint_type",
+    "service_recovery_quality",
+    "service_decline_perception",
+    "ground_service_complaint",
+    "delay_or_punctuality_issue",
+    "cabin_class_expectation_gap"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.35,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.35,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "Overall Rating",
+    "per_column": [
+      {
+        "name": "crew_service_failure_type",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Cabin-service (crew) complaint type is the exact intervenable lever the query targets: airlines could eliminate these failures. Explicitly the focus treatment named in the query."
+      },
+      {
+        "name": "food_beverage_complaint_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "A second intervenable service dimension airlines can fix. Not the cabin-service complaints named, but a settable lever; acts as a co-treatment rather than a confounder."
+      },
+      {
+        "name": "service_recovery_quality",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Recovery follows a service failure and lies on the path from complaint to rating; it is downstream of the treatment, hence a mediator, not a confounder."
+      },
+      {
+        "name": "service_decline_perception",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "A perception arising from the service experience itself, downstream of the complaint and feeding the rating; a mediator, not a common cause."
+      },
+      {
+        "name": "ground_service_complaint",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "A separate non-cabin service dimension affecting the rating. It is not a common cause of cabin-service complaints (not clearly causing them), so it is a competing cause / other rather than a true confounder."
+      },
+      {
+        "name": "delay_or_punctuality_issue",
+        "causal_role": "other",
+        "named_in_query": false,
+        "rationale": "Operational disruption affects the rating but is not plausibly a common cause of the cabin-service complaint type; better viewed as an independent cause, not a confounder of the treatment."
+      },
+      {
+        "name": "cabin_class_expectation_gap",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether service meets class-standard expectations plausibly drives both the propensity to log cabin-service complaints and the overall rating, making it a genuine common cause that must be adjusted for."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "crew_service_failure_type",
+      "food_beverage_complaint_type"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "cabin_class_expectation_gap",
+        "named_in_query": false,
+        "plausibility": 0.6
+      }
+    ],
+    "confounder_quality": 0.35,
+    "rationale": "The added columns clearly establish an intervenable treatment: cabin-service (crew) complaint types are exactly the lever the query proposes airlines eliminate, and food/beverage complaints add another settable dimension. However, the interventional identification is weak on confounding. Most added columns are either mediators (service_recovery_quality, service_decline_perception lie downstream of the complaint) or independent competing causes of the rating (ground_service_complaint, delay_or_punctuality_issue) rather than common causes of both treatment and outcome. Only cabin_class_expectation_gap functions as a plausible unnamed confounder, since expectation gaps could drive both complaint propensity and the rating. With a single, moderately plausible confounder and several misclassified mediators/competing causes, the set only partially satisfies the strict what-if requirement of adjusting for common causes."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "whatif_service_complaints",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "n_new_columns": 7
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review facets differ by sentiment label?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "review_aspect_domain",
+    "product_quality_signal",
+    "emotional_intensity",
+    "negative_emotion_type",
+    "positive_emotion_type",
+    "expectation_outcome",
+    "defect_type",
+    "recommendation_stance"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8025,
+    "analytical_usefulness__table_level": 0.82,
+    "source_groundedness": 0.8775,
+    "source_groundedness__table_level": 0.88,
+    "b1_overall": 0.84,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "review_aspect_domain",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.95,
+        "rationale": "Domain categorization gives a genuine axis to cross-tab facets by sentiment. All five samples correctly read (doll=physical, Lamott book=media_book, Eamon=music, skin cream=physical, Bicycle Thieves=film)."
+      },
+      {
+        "name": "product_quality_signal",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.92,
+        "rationale": "Praised/criticized/mixed is a useful facet distinct from the raw label and correlates well with sentiment analysis. Sample readings are sound (Lamott 'mixed', cream 'praised')."
+      },
+      {
+        "name": "emotional_intensity",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.75,
+        "rationale": "An ordinal intensity scale gives modeling leverage, but the scale is subjective and hard to fully ground; e.g. the calm cream review rated same '3' as harsh critiques is defensible but not clearly warranted. Reasonable but somewhat interpretive."
+      },
+      {
+        "name": "negative_emotion_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Fine-grained negative emotion is a strong facet for sentiment comparison. Samples grounded (disappointment for doll, disgust for Eamon rant, not_present for positive reviews)."
+      },
+      {
+        "name": "positive_emotion_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.88,
+        "rationale": "Complements negative emotion; useful facet. Readings mostly sound, though 'love_affection' vs 'calm_satisfaction' for the enthusiastic cream review is a mild judgment call, still defensible."
+      },
+      {
+        "name": "expectation_outcome",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.82,
+        "rationale": "Expectation framing is a genuine analytical axis. Some inference: 'exceeded_expectations' for the cream and 'met_expectations' for the film are plausible but not explicitly stated, minor over-confidence where text is silent on prior expectations."
+      },
+      {
+        "name": "defect_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "rationale": "Structured defect taxonomy is useful for negative-review analysis. Sample values well grounded (content_quality_flaw for book/music, not_present elsewhere)."
+      },
+      {
+        "name": "recommendation_stance",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Recommendation stance is a strong, distinct facet. Readings sound (explicit recommend/discourage extracted from 'recommend'/'skip it' cues), with implicit/explicit distinction reasonable."
+      }
+    ],
+    "analytical_usefulness": 0.82,
+    "source_groundedness": 0.88,
+    "rationale": "The added columns supply multiple genuinely distinct facets (domain, quality valence, emotion types, expectation framing, defect taxonomy, recommendation stance) that give real leverage for comparing facets across sentiment labels; none are near-constant or trivially redundant with the original label. Values are largely sound readings of the source text; the main minor weakness is interpretive/over-confident inference in emotional_intensity and expectation_outcome where the text is partly silent, but these remain defensible and no clear hallucinations were observed in the samples."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

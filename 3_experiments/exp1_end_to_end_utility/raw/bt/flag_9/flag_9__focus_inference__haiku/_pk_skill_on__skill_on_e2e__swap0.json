@@ -1,0 +1,125 @@
+{
+  "var_a": "skill_on",
+  "var_b": "skill_on_e2e",
+  "swap": false,
+  "winner": "B",
+  "margin": "small",
+  "ok": true,
+  "confidence": 0.72,
+  "scores_a": {
+    "specificity": 4,
+    "evidence": 4,
+    "depth": 4,
+    "actionability": 4,
+    "coherence": 3
+  },
+  "scores_b": {
+    "specificity": 5,
+    "evidence": 5,
+    "depth": 5,
+    "actionability": 5,
+    "coherence": 4
+  },
+  "dimension_decisions": {
+    "specificity": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "evidence": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "depth": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "actionability": {
+      "score_a": 4,
+      "score_b": 5,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    },
+    "coherence": {
+      "score_a": 3,
+      "score_b": 4,
+      "delta_a_minus_b": -1,
+      "winner": "B",
+      "margin": "small"
+    }
+  },
+  "evidence_refs": {
+    "A": [
+      {
+        "dimension": "specificity",
+        "quote": "182 of 600",
+        "why": "concrete counts and percentages"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "Not Functioning | 99 | 54.4%",
+        "why": "tabular numeric backing"
+      },
+      {
+        "dimension": "coherence",
+        "quote": "Power Supply/Boot Failures (8 incidents, 1.3%)",
+        "why": "8/182 is 4.4% not 1.3%, internal inconsistency"
+      }
+    ],
+    "B": [
+      {
+        "dimension": "depth",
+        "quote": "cross-tab of manifestation and failure_mechanism per type",
+        "why": "multi-dimensional segmentation"
+      },
+      {
+        "dimension": "evidence",
+        "quote": "component_failure (95%)",
+        "why": "mechanism-level numeric tie-ins"
+      },
+      {
+        "dimension": "actionability",
+        "quote": "component replacement for peripherals, specialized diagnostics for power/boot",
+        "why": "targeted, decision-ready"
+      },
+      {
+        "dimension": "specificity",
+        "quote": "Critical-priority incidents: 16 incidents (8.8%)",
+        "why": "priority-linked magnitudes"
+      }
+    ]
+  },
+  "augmented_column_refs": {
+    "A": [],
+    "B": [
+      {
+        "column": "problem_manifestation",
+        "quote": "The augmented `problem_manifestation` column captures how hardware failures are experienced",
+        "dependent": true
+      },
+      {
+        "column": "affected_scope",
+        "quote": "The `affected_scope` column cleanly separates single-user, shared, and infrastructure",
+        "dependent": true
+      },
+      {
+        "column": "failure_mechanism",
+        "quote": "The `failure_mechanism` column reveals the root cause class",
+        "dependent": true
+      }
+    ]
+  },
+  "reason": "B adds cross-tabbed mechanism/priority segmentation and is internally consistent, while A contains a percentage contradiction.",
+  "validation_warnings": [],
+  "judge_rc": 0,
+  "judge_model": "claude-opus-4.8-xhigh"
+}

@@ -1,0 +1,53 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "What factors explain low review scores?",
+  "focus_variable": "low_review_score",
+  "concept": null,
+  "n_added_columns": 1,
+  "added_columns": [
+    "product_efficacy_failure"
+  ],
+  "metrics": {
+    "n_added_columns": 1,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": false,
+    "n_confounders": 0,
+    "unnamed_confounder_present": false,
+    "n_unnamed_confounders": 0,
+    "unnamed_confounder_fraction": 0.0,
+    "confounder_quality": 0.0,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "low_review_score",
+    "per_column": [
+      {
+        "name": "product_efficacy_failure",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "This captures whether the product failed to deliver its advertised effect (insufficient_effect, no_detectable_effect, effect_too_brief vs as_advertised). It is a candidate CAUSE of a low review score -- a plausible treatment/driver whose effect on the outcome is being attributed. It is surfaced from the review text rather than named in the generic query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "product_efficacy_failure"
+    ],
+    "confounders": [],
+    "confounder_quality": 0.0,
+    "rationale": "The single added column supplies a plausible TREATMENT (product efficacy failure) that could causally drive low review scores, and it was surfaced from the text rather than copied from the query. However, the causal-attribution claim requires BOTH a treatment AND confounders -- variables that cause both the treatment and the outcome and must be adjusted for to avoid biased attribution. No confounders were added at all (e.g., price expectations, reviewer strictness/history, product category, prior expectations). With zero confounders, there is nothing to adjust for and the setup cannot yield an unbiased causal estimate. The technical claim under test is therefore NOT satisfied."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 1
+}

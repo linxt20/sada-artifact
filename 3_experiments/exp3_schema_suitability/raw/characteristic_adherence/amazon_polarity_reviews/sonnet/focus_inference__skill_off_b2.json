@@ -1,0 +1,92 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What different aspects of their purchase are Amazon reviewers actually talking about?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "aspect_product_quality",
+    "aspect_price_value",
+    "aspect_shipping_delivery",
+    "aspect_customer_service",
+    "aspect_features_functionality",
+    "aspect_ease_of_use",
+    "aspect_aesthetics_design",
+    "aspect_content_narrative",
+    "primary_aspect"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.874,
+    "focus_coherence": 0.95,
+    "structure_quality": 0.92,
+    "focus_actionability": 0.9,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The purchase aspect(s) an Amazon review discusses (aspect-based decomposition of review content)",
+    "per_column": [
+      {
+        "name": "aspect_product_quality",
+        "supports_focus": true,
+        "rationale": "Binary flag for whether the review touches on product quality -- a coherent aspect facet."
+      },
+      {
+        "name": "aspect_price_value",
+        "supports_focus": true,
+        "rationale": "Flag for price/value aspect, a distinct facet of the purchase."
+      },
+      {
+        "name": "aspect_shipping_delivery",
+        "supports_focus": true,
+        "rationale": "Flag for shipping/delivery, a clear purchase aspect."
+      },
+      {
+        "name": "aspect_customer_service",
+        "supports_focus": true,
+        "rationale": "Flag for customer service aspect, coherent with the focus."
+      },
+      {
+        "name": "aspect_features_functionality",
+        "supports_focus": true,
+        "rationale": "Flag for features/functionality, a meaningful product aspect."
+      },
+      {
+        "name": "aspect_ease_of_use",
+        "supports_focus": true,
+        "rationale": "Flag for usability aspect, distinct and relevant."
+      },
+      {
+        "name": "aspect_aesthetics_design",
+        "supports_focus": true,
+        "rationale": "Flag for design/aesthetics aspect, coherent facet."
+      },
+      {
+        "name": "aspect_content_narrative",
+        "supports_focus": true,
+        "rationale": "Flag for content/narrative aspect (relevant for media items); a defensible aspect facet."
+      },
+      {
+        "name": "primary_aspect",
+        "supports_focus": true,
+        "rationale": "Categorical roll-up identifying the dominant aspect, giving a single-label view over the multi-flag structure."
+      }
+    ],
+    "focus_coherence": 0.95,
+    "structure_quality": 0.92,
+    "focus_actionability": 0.9,
+    "rationale": "Every added column centres tightly on a single, data-inferable focus: which aspects of the purchase reviewers discuss. This directly answers the query's 'what different aspects are reviewers talking about'. The structure is sound: a set of mutually-distinguishable binary aspect indicators at a useful granularity, plus a categorical primary_aspect roll-up that summarises dominance -- neither a bare restatement nor undifferentiated noise. The aspects are semantically distinct facets (quality, price, shipping, service, features, usability, design, content), avoiding the generic-metric trap (no token counts or bare sentiment). The implied focus is highly actionable: an analyst can quantify aspect prevalence, cross with label_pos to study which aspects drive positive/negative sentiment, and prioritise operational areas. Minor deduction only because empty descriptions/domains leave the exact coding conventions implicit, but the semantics are clear."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

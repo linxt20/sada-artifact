@@ -1,0 +1,1299 @@
+[
+  {
+    "var_a": "original",
+    "var_b": "skill_off",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 3,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Chest pain / STEMI (acute, ST-elevation) | Emergency (V-0008)",
+          "why": "cites concrete visit IDs and reasons"
+        },
+        {
+          "dimension": "depth",
+          "quote": "routing depends on acuity ... chronicity, and anatomical specificity",
+          "why": "causal reasoning across departments"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "O₂ sat 86%, bilateral crackles",
+          "why": "numeric clinical detail but few counts"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Musculoskeletal | Orthopedics | 12/14 (86%)",
+          "why": "quantified distributions per category"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Prediction Tree Summary",
+          "why": "decision-ready routing tree"
+        },
+        {
+          "dimension": "depth",
+          "quote": "age_group=0-17 → Pediatrics; adult → GeneralPractice",
+          "why": "segmentation logic"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": [
+        {
+          "column": "BodySystemFocus",
+          "quote": "The augmented columns `BodySystemFocus` and `TriageComplexityLevel` align closely",
+          "dependent": false
+        },
+        {
+          "column": "TriageComplexityLevel",
+          "quote": "`BodySystemFocus` and `TriageComplexityLevel` align closely",
+          "dependent": false
+        }
+      ]
+    },
+    "reason": "B provides quantified distributions and a decision-ready routing tree, edging out A's rich but count-light narrative.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Musculoskeletal | Orthopedics | 12/14 (86%)",
+          "why": "quantified counts and percentages"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "reason_category ├── Musculoskeletal → Orthopedics",
+          "why": "decision-ready routing tree"
+        },
+        {
+          "dimension": "depth",
+          "quote": "age_group further resolves this split (0-17 → Pediatrics, adult → GeneralPractice)",
+          "why": "secondary segmentation reasoning"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Chest pain / STEMI (acute, ST-elevation) | Emergency (V-0008)",
+          "why": "row-level record IDs cited"
+        },
+        {
+          "dimension": "depth",
+          "quote": "routing depends on acuity...chronicity, and anatomical specificity",
+          "why": "causal disambiguation across departments"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "O₂ sat 86%, bilateral crackles",
+          "why": "specific clinical values tied to routing"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Skin infections involving children route to Pediatrics; the same conditions in adults route to Dermatology",
+          "why": "consistent age-based rule"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [
+        {
+          "column": "BodySystemFocus",
+          "quote": "The augmented columns `BodySystemFocus` and `TriageComplexityLevel`",
+          "dependent": false
+        },
+        {
+          "column": "TriageComplexityLevel",
+          "quote": "`BodySystemFocus` and `TriageComplexityLevel` align closely",
+          "dependent": false
+        }
+      ],
+      "B": []
+    },
+    "reason": "B gives richer row-level evidence and causal cross-department reasoning, while A offers cleaner aggregate percentages and a decision tree.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.6,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Chest pain / STEMI (acute, ST-elevation) | Emergency (V-0008)",
+          "why": "cites exact row IDs per reason"
+        },
+        {
+          "dimension": "depth",
+          "quote": "routing depends on acuity ... chronicity, and anatomical specificity",
+          "why": "causal segmentation logic"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "the sample is small (2 vs. many)",
+          "why": "acknowledges inference limits"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "chronic_condition_monitoring — 6 departments (n=53)",
+          "why": "quantified counts per department"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "Cardiology 29 | GeneralPractice 16",
+          "why": "concrete distribution magnitudes"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Small cell counts ... provide weak evidence",
+          "why": "consistent caveat"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A gives row-level, richly reasoned mappings while B offers cleaner aggregate counts; A's depth and specificity edge it out.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "original",
+    "swap": true,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.7,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 4,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "evidence",
+          "quote": "Cardiology | 29 ... GeneralPractice | 16",
+          "why": "quantified departmental distributions"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Pain → Orthopedics (musculoskeletal) vs Emergency (visceral)",
+          "why": "routing factor reasoning"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Small cell counts ... provide weak evidence",
+          "why": "flags own limitations"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "herniated disc with radiculopathy | Orthopedics (V-0142)",
+          "why": "cites specific record IDs"
+        },
+        {
+          "dimension": "depth",
+          "quote": "risk-based escalation pattern",
+          "why": "causal reasoning on routing thresholds"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "O₂ sat 86%, bilateral crackles",
+          "why": "concrete clinical numbers per row"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B ties on quantitative rigor but adds row-level specificity and richer causal routing logic.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "original",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.78,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Chest pain / STEMI (acute, ST-elevation) | Emergency (V-0008)",
+          "why": "cites specific visit IDs"
+        },
+        {
+          "dimension": "depth",
+          "quote": "routing depends on acuity ... chronicity, and anatomical specificity",
+          "why": "reasoning about routing drivers"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "no Ophthalmology department exists",
+          "why": "acknowledges dataset scope consistently"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "cardiovascular | 49 | 4 | Cardiology (42) | Emergency (3)",
+          "why": "quantified counts per department"
+        },
+        {
+          "dimension": "depth",
+          "quote": "acuity and body system are the differentiators, not visit problem category",
+          "why": "causal reasoning across facets"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Department-Routing Decision Framework",
+          "why": "decision tree is decision-ready"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "age_group = 0–17 exclusively for Pediatrics",
+          "why": "concrete cross-tab magnitudes"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides quantified cross-department counts and a decision-ready routing framework, edging out A's rich but example-based enumeration.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "original",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "cardiovascular | 49 | 4 | Cardiology (42) | Emergency (3)",
+          "why": "quantified domain-department spread"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "13/14 trauma visits",
+          "why": "numeric routing claim"
+        },
+        {
+          "dimension": "depth",
+          "quote": "acuity and body system are the differentiators",
+          "why": "causal splitter reasoning"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Department-Routing Decision Framework",
+          "why": "decision-ready flowchart"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Chest pain / STEMI (acute, ST-elevation) | Emergency (V-0008)",
+          "why": "row-level citations"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "O₂ sat 86%, bilateral crackles",
+          "why": "concrete clinical values"
+        },
+        {
+          "dimension": "depth",
+          "quote": "risk-based escalation pattern",
+          "why": "escalation reasoning"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "sample is small (2 vs. many)",
+          "why": "acknowledges limitations honestly"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A provides quantified cross-department distributions and a decision-ready routing framework while B offers rich row-level examples but less aggregate quantification.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.82,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 3,
+        "score_b": 5,
+        "delta_a_minus_b": -2,
+        "winner": "B",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Musculoskeletal | Orthopedics | 12/14 (86%)",
+          "why": "concrete counts and percentages"
+        },
+        {
+          "dimension": "depth",
+          "quote": "age_group further resolves this split (0-17 → Pediatrics, adult → GeneralPractice)",
+          "why": "secondary-feature reasoning"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "augmented columns BodySystemFocus and TriageComplexityLevel",
+          "why": "references columns not defined in dataset, inconsistent"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Cardiology | 29 ... GeneralPractice | 16",
+          "why": "full per-department count tables"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Urgency is the key discriminator... route to Cardiology... routes to Emergency",
+          "why": "causal routing explanations per category"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "growth_development (n=24) is exclusively routed to Pediatrics",
+          "why": "clear decision-ready rule"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B gives complete per-department tables with consistent causal routing logic, while A introduces undefined columns creating minor incoherence.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.82,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "chronic_condition_monitoring — 6 departments (n=53)",
+          "why": "concrete category with counts"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Cardiology | 29 ... GeneralPractice | 16",
+          "why": "full per-department tables"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Urgency is the key discriminator",
+          "why": "explains routing factors per category"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Only growth_development (n=24) is exclusively routed to Pediatrics",
+          "why": "decision-ready exclusivity finding"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Musculoskeletal | Orthopedics | 12/14 (86%)",
+          "why": "concentration ratios given"
+        },
+        {
+          "dimension": "depth",
+          "quote": "age_group further resolves this split",
+          "why": "secondary-feature reasoning"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Chronic Disease Management ... 2+2 / 4 (100%)",
+          "why": "very small n undercuts stated strong signal"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": [
+        {
+          "column": "BodySystemFocus",
+          "quote": "augmented columns BodySystemFocus and TriageComplexityLevel",
+          "dependent": false
+        },
+        {
+          "column": "TriageComplexityLevel",
+          "quote": "augmented columns BodySystemFocus and TriageComplexityLevel",
+          "dependent": false
+        }
+      ]
+    },
+    "reason": "A provides fuller, consistent per-department distributions with n=250 accounting, while B has smaller-n claims and mild internal inconsistencies.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_off",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "medium",
+    "ok": true,
+    "confidence": 0.85,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 4
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Musculoskeletal | Orthopedics | 12/14 (86%)",
+          "why": "concrete counts per category"
+        },
+        {
+          "dimension": "depth",
+          "quote": "age_group further resolves this split (0-17 → Pediatrics, adult → GeneralPractice)",
+          "why": "secondary splitter reasoning"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Prediction Tree Summary",
+          "why": "routing tree usable for decisions"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "evidence",
+          "quote": "Cardiology (42) | Emergency (3), GeneralPractice (3), Pediatrics (1)",
+          "why": "per-department numeric breakdown"
+        },
+        {
+          "dimension": "depth",
+          "quote": "chronic, stable cardiovascular conditions go to Cardiology... acute life-threatening presentations divert to Emergency",
+          "why": "causal routing across acuity"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "0–17 | 0 | 0 | 6 | 0 | 1 | 45",
+          "why": "full age cross-tab"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Department-Routing Decision Framework",
+          "why": "decision-ready splitter framework"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "acute_illness ... appearing in all 6 departments",
+          "why": "consistent cross-tabs"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B provides deeper per-department numeric breakdowns and richer causal routing logic across acuity and age.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_off",
+    "swap": true,
+    "winner": "A",
+    "margin": "large",
+    "ok": true,
+    "confidence": 0.9,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 3,
+      "evidence": 3,
+      "depth": 3,
+      "actionability": 3,
+      "coherence": 3
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 3,
+        "delta_a_minus_b": 2,
+        "winner": "A",
+        "margin": "medium"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "cardiovascular | 49 | 4 | Cardiology (42) | Emergency (3), GeneralPractice (3), Pediatrics (1)",
+          "why": "concrete per-domain department counts"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Chronic, stable cardiovascular conditions go to Cardiology... acute life-threatening presentations divert to Emergency",
+          "why": "causal routing logic per shared domain"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Decision-ready insight: The visit reasons with the greatest inter-department ambiguity are cardiovascular acute illness...",
+          "why": "specific decision framework"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "Musculoskeletal | Orthopedics | 12/14 (86%)",
+          "why": "some numeric distributions"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Preventive/Wellness splits exclusively between Pediatrics (18) and GeneralPractice (5)",
+          "why": "consistent but 18+5/23 math is off"
+        },
+        {
+          "dimension": "depth",
+          "quote": "urgency=Emergency → Emergency dept",
+          "why": "some secondary-feature reasoning"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A gives detailed cross-department tables with acuity/age routing logic while B is coarser with weaker, partly inconsistent counts.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on",
+    "var_b": "skill_on_e2e",
+    "swap": false,
+    "winner": "B",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.72,
+    "scores_a": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 4
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 4,
+        "score_b": 5,
+        "delta_a_minus_b": -1,
+        "winner": "B",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "chronic_condition_monitoring — 6 departments (n=53)",
+          "why": "concrete category counts by department"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Small cell counts... provide weak evidence",
+          "why": "acknowledges limits consistently"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Orthopedics 18, Emergency 5",
+          "why": "numeric department breakdowns"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "depth",
+          "quote": "acuity | chronic_vs_acute | encounter_type | urgency | avg duration",
+          "why": "multi-factor causal routing analysis"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Department-Routing Decision Framework",
+          "why": "decision-ready routing tree"
+        },
+        {
+          "dimension": "specificity",
+          "quote": "trauma_injury... routes to Orthopedics (13/14 trauma visits)",
+          "why": "precise sub-category magnitudes"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "B adds acuity/age cross-tabs and a decision framework giving deeper causal routing logic, despite claiming nonexistent augmented columns.",
+    "validation_warnings": []
+  },
+  {
+    "var_a": "skill_on_e2e",
+    "var_b": "skill_on",
+    "swap": true,
+    "winner": "A",
+    "margin": "small",
+    "ok": true,
+    "confidence": 0.8,
+    "scores_a": {
+      "specificity": 5,
+      "evidence": 5,
+      "depth": 5,
+      "actionability": 5,
+      "coherence": 5
+    },
+    "scores_b": {
+      "specificity": 4,
+      "evidence": 4,
+      "depth": 4,
+      "actionability": 4,
+      "coherence": 5
+    },
+    "dimension_decisions": {
+      "specificity": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "evidence": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "depth": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "actionability": {
+        "score_a": 5,
+        "score_b": 4,
+        "delta_a_minus_b": 1,
+        "winner": "A",
+        "margin": "small"
+      },
+      "coherence": {
+        "score_a": 5,
+        "score_b": 5,
+        "delta_a_minus_b": 0,
+        "winner": "TIE",
+        "margin": "tie"
+      }
+    },
+    "evidence_refs": {
+      "A": [
+        {
+          "dimension": "specificity",
+          "quote": "Cardiology | 42 | routine | chronic_stable | scheduled_followup | Routine | 30 min",
+          "why": "per-department metrics with durations"
+        },
+        {
+          "dimension": "depth",
+          "quote": "trauma_injury almost exclusively routes to Orthopedics (13/14)",
+          "why": "sub-category causal routing"
+        },
+        {
+          "dimension": "actionability",
+          "quote": "Department-Routing Decision Framework",
+          "why": "explicit decision tree"
+        },
+        {
+          "dimension": "evidence",
+          "quote": "Cardiology = 33 chronic disease management + 5 post-procedure follow-up",
+          "why": "numeric cross-checks"
+        }
+      ],
+      "B": [
+        {
+          "dimension": "specificity",
+          "quote": "chronic_condition_monitoring — 6 departments (n=53)",
+          "why": "counts per category"
+        },
+        {
+          "dimension": "coherence",
+          "quote": "Small cell counts ... provide weak evidence",
+          "why": "consistent caveat on low-n"
+        },
+        {
+          "dimension": "depth",
+          "quote": "Urgency is the key discriminator",
+          "why": "routing-factor reasoning"
+        }
+      ]
+    },
+    "augmented_column_refs": {
+      "A": [],
+      "B": []
+    },
+    "reason": "A offers richer per-department metrics, cross-checks, and a decision-ready framework.",
+    "validation_warnings": []
+  }
+]

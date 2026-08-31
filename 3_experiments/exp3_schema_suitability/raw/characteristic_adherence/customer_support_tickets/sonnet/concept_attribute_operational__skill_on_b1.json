@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What customer issues create the most support burden?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "issue_category",
+    "product_area",
+    "operational_impact",
+    "failure_mechanism",
+    "affected_user_scope",
+    "workaround_available",
+    "escalation_required",
+    "requires_engineering"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8588,
+    "analytical_usefulness__table_level": 0.89,
+    "source_groundedness": 0.8788,
+    "source_groundedness__table_level": 0.89,
+    "b1_overall": 0.8688,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "issue_category",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.96,
+        "hallucination_observed": false,
+        "rationale": "A clean taxonomy of issue types is the primary grouping axis for 'what issues create the most support burden'. Sample categorisations (billing, auth, outage, feature request, bug regression) are all sound readings of the source text."
+      },
+      {
+        "name": "product_area",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Product area gives a genuine second axis to locate burden. Values are well grounded (billing_invoicing, authentication_sso, data_export_import). CS-0003 mapping analytics dashboard to 'performance_search' rather than an analytics area is a slightly loose but defensible read; NULLs for silent rows are acceptable."
+      },
+      {
+        "name": "operational_impact",
+        "analytical_usefulness": 0.93,
+        "source_groundedness": 0.92,
+        "hallucination_observed": false,
+        "rationale": "Severity/impact is central to burden analysis and enables weighting beyond raw counts. Samples align well: full_outage for the 502 tenant-wide error, blocked_users for session drops, no_functional_impact for feature request/invoice."
+      },
+      {
+        "name": "failure_mechanism",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "Root-cause mechanism is useful for modelling recurring burden drivers. Most samples are warranted (regression_after_deploy for post-4.7 BOM, auth_config_error for SSO push). 'infrastructure_capacity' for the 502 is a plausible but not text-confirmed inference; a mild specific-where-silent risk but not a clear contradiction."
+      },
+      {
+        "name": "affected_user_scope",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Blast-radius axis (single_user vs entire_tenant) is a strong lever for prioritising burden. Sample values track the text well: 'all members of the Acme tenant' -> entire_tenant, individual invoice/session -> single_user."
+      },
+      {
+        "name": "workaround_available",
+        "analytical_usefulness": 0.82,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Workaround availability distinguishes hard-blocking tickets and adds analytical leverage. CS-0005 correctly reads the manual sed step as customer_has_workaround. Assigning 'no_workaround' to silent rows is a slightly assumptive default but broadly reasonable, and 'not_present' is used elsewhere for feature requests."
+      },
+      {
+        "name": "escalation_required",
+        "analytical_usefulness": 0.88,
+        "source_groundedness": 0.86,
+        "hallucination_observed": false,
+        "rationale": "Escalation path directly reflects support/engineering burden. Samples are grounded (p1_bridge_requested for the RCA outage, billing_escalation for the invoice correction). Some values are mild inferences but consistent with the text."
+      },
+      {
+        "name": "requires_engineering",
+        "analytical_usefulness": 0.62,
+        "source_groundedness": 0.83,
+        "hallucination_observed": false,
+        "rationale": "A useful boolean for cost of resolution, but it is substantially redundant with escalation_required (engineering_escalation) and partly with failure_mechanism, reducing its independent leverage. Values are reasonable inferences from the text."
+      }
+    ],
+    "analytical_usefulness": 0.89,
+    "source_groundedness": 0.89,
+    "rationale": "The added columns give multiple genuine, non-trivial axes (category, product area, impact severity, blast radius, mechanism, workaround, escalation) that let an analyst group and weight support burden well beyond raw counts. Values are consistently sound readings of the source text, with sensible NULL/not_present handling for silent rows and only mild, defensible inferences (e.g., infrastructure_capacity, default no_workaround). The main weakness is requires_engineering, which largely restates escalation_required; scored down on usefulness only, not completeness."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "concept_attribute_operational",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 8
+}

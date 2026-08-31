@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "is_in_anomaly_window",
+    "days_to_anomaly",
+    "is_critical_or_high",
+    "is_hardware_incident",
+    "is_anomaly_hardware"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.89,
+    "analytical_usefulness__table_level": 0.9,
+    "source_groundedness": 0.77,
+    "source_groundedness__table_level": 0.77,
+    "b1_overall": 0.83,
+    "hallucination_rate": 0.2
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "is_in_anomaly_window",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly defines the anomaly window that the query centers on; essential for comparing incidents inside vs outside. Values are derivable from timestamps and samples are consistent (all pre-window rows flagged 0)."
+      },
+      {
+        "name": "days_to_anomaly",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Continuous distance-to-window enables temporal trend analysis around the anomaly, a genuine axis. Derivable from timestamps, but the samples show a suspicious constant 197/196 for distinct dates, suggesting the metric is computed against a fixed reference rather than exact per-row offsets, weakening grounding somewhat."
+      },
+      {
+        "name": "is_critical_or_high",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Priority severity is a strong grouping axis for explaining an incident spike. However, priority is not shown in the evidence samples and produced values are inconsistent: near-identical 'software installation' rows are flagged both 0 and 1, indicating values may not faithfully track the source priority field."
+      },
+      {
+        "name": "is_hardware_incident",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Central to the query about hardware incidents; enables isolating hardware from other categories. Sample software/DB rows are correctly flagged 0, showing sound reading of short_description/category."
+      },
+      {
+        "name": "is_anomaly_hardware",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Interaction of window and hardware directly targets the query's subject (hardware incidents in the anomaly window). Somewhat redundant with combining the two flags but still analytically convenient; samples correctly 0."
+      }
+    ],
+    "analytical_usefulness": 0.9,
+    "source_groundedness": 0.77,
+    "rationale": "The added columns form a coherent, query-aligned toolkit: window membership, temporal distance, severity, hardware categorization, and their interaction all give real leverage for explaining a hardware-incident spike in the anomaly window. Grounding is mostly sound for the window and hardware flags, but days_to_anomaly shows an implausibly constant value across distinct dates and is_critical_or_high assigns differing severities to near-identical rows without visible priority evidence, indicating some values may not be faithfully derived from the source."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 5
+}

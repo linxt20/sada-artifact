@@ -1,0 +1,80 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How can we reduce declined expense submissions?",
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_type_category",
+    "submission_pattern",
+    "requisition_source_department",
+    "expense_description_specificity",
+    "travel_expense_flag",
+    "ci_identifier_quality"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 6,
+    "n_judged_columns": 6,
+    "analytical_usefulness": 0.6333,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.7,
+    "b1_overall": 0.6666,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "asset_type_category",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Categorising submissions by asset type gives a real axis to compare decline rates across hardware/software/travel. Values are sound readings of short_description/ci (e.g. Dell Laptop -> hardware_device, ISP Services -> software_service). Minor borderline cases but generally warranted."
+      },
+      {
+        "name": "submission_pattern",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Distinguishing automatically_generated vs user_initiated vs travel_related is potentially very useful for decline analysis. However the source text shown gives little basis for asserting whether a submission was 'automatically_generated' vs 'user_initiated'; all samples default to user_initiated without clear textual support, suggesting some values are unsupported inferences."
+      },
+      {
+        "name": "requisition_source_department",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.3,
+        "hallucination_observed": true,
+        "rationale": "An original 'department' column already exists, making this largely redundant. Worse, the produced values (e.g. sales, product_management) are not derivable from the shown source text (short_description/ci), so these appear invented or guessed rather than grounded."
+      },
+      {
+        "name": "expense_description_specificity",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Description specificity is a plausible driver of declines (vague submissions may be rejected) and offers a genuine grouping axis. Values match the source text well (named model vs generic category)."
+      },
+      {
+        "name": "travel_expense_flag",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A single boolean flag is somewhat generic but travel expenses often have distinct decline behaviour, so it retains modest analytical leverage. Flags in samples correctly read false for non-travel items."
+      },
+      {
+        "name": "ci_identifier_quality",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Quality of the CI identifier is a reasonable and novel axis potentially correlated with declines. Values track the ci field well (OptiPlex 7050 -> standard_model_number, ISP Services -> descriptive_only)."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.7,
+    "rationale": "Most added columns provide genuine new axes (asset type, description specificity, CI identifier quality, travel flag) relevant to diagnosing declined submissions, and their values are generally sound readings of the source text. The main weaknesses are requisition_source_department, which duplicates the existing 'department' column and produces values not grounded in the shown text, and submission_pattern, whose automatic-vs-user classification lacks clear textual support in the samples."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "what_if",
+  "n_new_columns": 6
+}

@@ -1,0 +1,68 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What market-expansion focus should analysts study?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 5,
+  "added_columns": [
+    "industry_vertical",
+    "business_model_type",
+    "customer_segment_primary",
+    "company_stage",
+    "technology_capability_class"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.5904,
+    "focus_coherence": 0.82,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.6,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "Firmographic/segmentation profile of technology companies as a basis for market-expansion targeting",
+    "per_column": [
+      {
+        "name": "industry_vertical",
+        "supports_focus": true,
+        "rationale": "Classifies each company by market vertical, a core dimension for identifying expansion opportunities and underserved segments."
+      },
+      {
+        "name": "business_model_type",
+        "supports_focus": true,
+        "rationale": "Characterizes how the company monetizes, a meaningful facet of market positioning and expansion strategy."
+      },
+      {
+        "name": "customer_segment_primary",
+        "supports_focus": true,
+        "rationale": "Identifies target customer segment, directly relevant to where market expansion could occur."
+      },
+      {
+        "name": "company_stage",
+        "supports_focus": true,
+        "rationale": "Maturity/stage is a coherent attribute for prioritizing which firms/markets are ripe for expansion."
+      },
+      {
+        "name": "technology_capability_class",
+        "supports_focus": true,
+        "rationale": "Adds a capability facet, though the dominant 'not_present' (114) value weakens its signal and coherence with the focus."
+      }
+    ],
+    "focus_coherence": 0.82,
+    "structure_quality": 0.72,
+    "focus_actionability": 0.6,
+    "rationale": "The added columns collectively centre on a coherent, data-inferable focus: a multi-facet segmentation/firmographic profile of tech companies (vertical, business model, customer segment, stage, capability) that an analyst could use to frame market-expansion analysis. As facets they are differentiated and non-redundant, forming a sound analytical structure rather than a restatement or noise, which supports strong coherence and reasonable structure quality. The main weakness is on actionability and precision: the operator was asked to PROPOSE a single market-expansion focus, but the columns describe a general company profile without crystallising WHICH expansion angle to study (e.g., which vertical, segment, or geography represents the opportunity gap) -- the original geo columns are also unused despite 'market-expansion' implying spatial/market coverage. The technology_capability_class column is further diluted by a majority 'not_present' value, reducing its discriminative value. So the set implies a workable but somewhat generic segmentation focus rather than a sharp, immediately actionable expansion target."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_focus",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

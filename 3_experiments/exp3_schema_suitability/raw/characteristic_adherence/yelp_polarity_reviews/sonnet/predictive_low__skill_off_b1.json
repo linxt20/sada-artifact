@@ -1,0 +1,95 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What review signals predict low Yelp user satisfaction?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "neg_word_count",
+    "pos_word_count",
+    "sentiment_score",
+    "negation_adjusted_sentiment",
+    "complaint_phrase_count",
+    "exclamation_ratio",
+    "caps_ratio",
+    "review_length_tokens",
+    "predicted_low_satisfaction"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.6444,
+    "analytical_usefulness__table_level": 0.65,
+    "source_groundedness": 0.7944,
+    "source_groundedness__table_level": 0.78,
+    "b1_overall": 0.7194,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "neg_word_count",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "rationale": "Negative word count is a direct, interpretable signal for low satisfaction and offers a genuine axis for comparison. Counts align reasonably with source text (e.g. the harsh review YLP-0002 gets 3), though lexicon-based counting can miss context (YLP-0005 'Cons/sucked' scored only 1), a minor grounding limitation."
+      },
+      {
+        "name": "pos_word_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "rationale": "Positive word count complements neg count and gives a distinct axis useful for predicting satisfaction. Values track the text sensibly (glowing YLP-0001 gets 6, terse YLP-0004 gets 1). Reasonable extraction from source."
+      },
+      {
+        "name": "sentiment_score",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "rationale": "A continuous sentiment measure is highly relevant to satisfaction prediction and adds modeling leverage. However it is largely a function of pos/neg counts (some redundancy) and the strongly negative YLP-0005 scoring exactly 0.0 is a questionable grounding, since the text is clearly negative."
+      },
+      {
+        "name": "negation_adjusted_sentiment",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.75,
+        "rationale": "A negation-aware refinement of sentiment is analytically plausible and here it correctly pushes YLP-0005 negative where raw sentiment failed. But it heavily overlaps with sentiment_score (many identical values), reducing its marginal leverage."
+      },
+      {
+        "name": "complaint_phrase_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.75,
+        "rationale": "A complaint-phrase indicator is directly on-target for detecting dissatisfaction. Nearly binary (0/1) which limits granularity, and recall seems low (YLP-0002, an entire complaint narrative, scored 0), a grounding weakness, though the flagged rows appear justified."
+      },
+      {
+        "name": "exclamation_ratio",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "rationale": "Exclamation intensity can carry emotional signal (YLP-0005's 'sucked!!!!!' yields a high ratio), giving some leverage, but it is ambiguous (used in both positive and negative reviews) and largely mechanical. Values are directly derivable from punctuation, so grounding is high."
+      },
+      {
+        "name": "caps_ratio",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.9,
+        "rationale": "Capitalization ratio is trivially computable and well grounded, but mostly zero across rows and only weakly tied to satisfaction; it provides limited analytical leverage for this query."
+      },
+      {
+        "name": "review_length_tokens",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.9,
+        "rationale": "Raw token length is a generic surface feature explicitly the kind of column that adds little analytical leverage for predicting satisfaction. It is accurately derived from the text, hence high groundedness."
+      },
+      {
+        "name": "predicted_low_satisfaction",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "rationale": "A direct prediction target is on-topic, but it largely restates label_pos (an existing column) and appears derived from the other added signals rather than the text itself, so its groundedness as an independent reading is weaker. Sample predictions are consistent with labels."
+      }
+    ],
+    "analytical_usefulness": 0.65,
+    "source_groundedness": 0.78,
+    "rationale": "Most added columns give genuine, on-query axes (negative/positive lexicon counts, sentiment, complaint flag) for modeling low satisfaction, and their values are generally sound readings of the review text. Weaknesses: notable redundancy among the three sentiment-family columns, two low-leverage surface features (review_length_tokens, caps_ratio), and some grounding gaps (clearly negative YLP-0005 scoring sentiment 0.0; complaint_phrase_count missing an obvious complaint). Overall the set meets the necessary conditions at moderate-to-good quality."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 9
+}

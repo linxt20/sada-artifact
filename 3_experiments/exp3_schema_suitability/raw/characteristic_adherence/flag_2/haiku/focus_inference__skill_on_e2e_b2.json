@@ -1,0 +1,56 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "What recurring types of problems show up in these incident tickets?",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 3,
+  "added_columns": [
+    "problem_domain",
+    "incident_scope",
+    "resolution_complexity"
+  ],
+  "metrics": {
+    "n_added_columns": 3,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.663,
+    "focus_coherence": 0.85,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/type of recurring incidents -- characterizing each ticket by the kind of problem it represents (what domain, how widespread, how it was resolved)",
+    "per_column": [
+      {
+        "name": "problem_domain",
+        "supports_focus": true,
+        "rationale": "Directly categorizes the type of problem (connectivity, email, database, etc.), which is the core of identifying recurring problem types."
+      },
+      {
+        "name": "incident_scope",
+        "supports_focus": true,
+        "rationale": "Characterizes how broadly the problem manifests (system-wide vs individual), a coherent facet distinguishing kinds of recurring problems."
+      },
+      {
+        "name": "resolution_complexity",
+        "supports_focus": true,
+        "rationale": "Captures the remediation pattern (server restart, infrastructure change, config update), another facet of the problem's nature and how it clusters into recurring types."
+      }
+    ],
+    "focus_coherence": 0.85,
+    "structure_quality": 0.78,
+    "focus_actionability": 0.85,
+    "rationale": "The three columns collectively centre on one coherent, data-inferable focus: characterizing the TYPE of recurring problem in each incident ticket. problem_domain names the problem category, incident_scope its breadth of impact, and resolution_complexity its remediation pattern -- three distinct, non-redundant facets that together let an analyst cluster and profile recurring problem types rather than merely restate one attribute. The focus is directly actionable: an analyst can group tickets by domain and scope to prioritize systemic issues. Minor weaknesses lower the scores: 'resolution_complexity' is mislabeled (its values are resolution ACTIONS/types, not a complexity level, and 'server_restart' vs 'simple_restart' overlap), which introduces slight incoherence in that facet; and the values appear inferred from short_description with some ambiguity. Overall a sound, focused structure with one imperfect facet."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 3
+}

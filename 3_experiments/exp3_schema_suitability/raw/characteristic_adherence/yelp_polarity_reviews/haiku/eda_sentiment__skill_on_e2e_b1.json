@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review themes differ between positive and negative Yelp sentiment?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "staff_attentiveness",
+    "staff_demeanor",
+    "food_taste_flavor"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.8833,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.8667,
+    "source_groundedness__table_level": 0.87,
+    "b1_overall": 0.875,
+    "hallucination_rate": 0.6667
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "staff_attentiveness",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "Categorizing staff responsiveness gives a strong new axis to compare positive vs negative review themes. Values are mostly well-grounded (YLP-0002 'forgot us twice' -> inattentive_ignored is spot-on; YLP-0005 no staff attention info -> not_present is correct). However YLP-0003 ('Service was good') maps to attentive_responsive reasonably, but YLP-0001 and YLP-0004 assert 'attentive_responsive' where the text speaks to friendliness/professionalism rather than explicit attentiveness/responsiveness, a mild over-read."
+      },
+      {
+        "name": "staff_demeanor",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.85,
+        "hallucination_observed": true,
+        "rationale": "Demeanor (friendly/rude/indifferent) is a distinct and analytically useful theme axis for this sentiment comparison. Grounding is generally sound: YLP-0001 'always friendly and composed' -> friendly_professional; YLP-0005 discriminatory/exclusionary behavior -> rude_hostile is defensible. YLP-0002 'indifferent_dismissive' is a reasonable inference from repeated forgetting. YLP-0003 has no explicit demeanor statement, so friendly_professional is a mild unwarranted inference."
+      },
+      {
+        "name": "food_taste_flavor",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Food quality/flavor is a core theme differentiating restaurant reviews and useful for the query. Values are well-grounded: YLP-0001 (loves the pita/fries) and YLP-0003 ('very good pizza') -> delicious_flavorful_fresh; YLP-0004 (real estate agent, no food) and YLP-0005 -> not_present are correct. YLP-0002 null for a silent row is acceptable behavior."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.87,
+    "rationale": "All three added columns give genuine, distinct thematic axes (staff attentiveness, staff demeanor, food taste) that directly support comparing themes across positive and negative sentiment. None are near-constant, trivially redundant, or generic sentiment restatements. Grounding is strong overall: most produced values are sound readings of the source text, and 'not_present'/null on silent rows is handled correctly. Minor over-reads occur where attentiveness/demeanor are inferred from adjacent-but-not-explicit cues (e.g., inferring attentiveness from friendliness), slightly lowering groundedness for the two staff columns."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "eda_sentiment",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 3
+}

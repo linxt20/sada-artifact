@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Help me understand what's in these airline reviews — I'm not sure which aspect is most worth analyzing.",
+  "n_added_columns": 8,
+  "added_columns": [
+    "rating_consistency",
+    "primary_complaint",
+    "aspect_variance",
+    "sentiment_mismatch",
+    "rating_consistency.1",
+    "primary_complaint.1",
+    "aspect_variance.1",
+    "sentiment_mismatch.1"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.35,
+    "analytical_usefulness__table_level": 0.45,
+    "source_groundedness": 0.7,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.525,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "rating_consistency",
+        "analytical_usefulness": 0.5,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "A consistent/inconsistent flag comparing the numeric overall rating to the sub-aspect ratings is a legitimate new axis for exploration, though its meaning is vague and it overlaps heavily with aspect_variance. Values derive from the original numeric rating columns (not shown in samples), so groundedness is plausible but only partially verifiable; the pattern in which uniformly glowing reviews (rows 1,3,4,5) are all tagged 'inconsistent' while the harshly negative row 2 is 'consistent' is somewhat counterintuitive, keeping confidence moderate."
+      },
+      {
+        "name": "primary_complaint",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query's 'which aspect is most worth analyzing' by categorizing the dominant grievance (service/seat/operations/value/food/entertainment). Strong grouping/comparison leverage. Samples check out: the seat-complaint review maps to 'seat', and the four positive reviews correctly receive 'none'/NULL, which is the right silent-row behavior."
+      },
+      {
+        "name": "aspect_variance",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Spread among aspect ratings (high/medium/low) is a usable analytical dimension but conceptually overlaps with rating_consistency. Derivable from the original numeric aspect columns; the visible samples (all-positive row 1 = low, mixed-negative row 2 = high) are broadly consistent, though not fully verifiable without the numeric fields."
+      },
+      {
+        "name": "sentiment_mismatch",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Flagging divergence between numeric rating and text tone gives a genuinely distinct axis (finding reviews where the score and prose disagree). Samples are grounded: clearly positive row 1 and clearly negative row 2 are both 'aligned', matching their tone."
+      },
+      {
+        "name": "rating_consistency.1",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.55,
+        "hallucination_observed": false,
+        "rationale": "Exact duplicate of rating_consistency (identical distribution and per-row values). As a pure restatement of another added column it provides no additional analytical leverage, so usefulness is near zero; groundedness mirrors its twin."
+      },
+      {
+        "name": "primary_complaint.1",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Exact duplicate of primary_complaint with identical values; redundant restatement adds no new axis, so usefulness is minimal even though the underlying values remain well-grounded."
+      },
+      {
+        "name": "aspect_variance.1",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Exact duplicate of aspect_variance; no incremental analytical value as a mere restatement. Groundedness matches its counterpart."
+      },
+      {
+        "name": "sentiment_mismatch.1",
+        "analytical_usefulness": 0.05,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Exact duplicate of sentiment_mismatch; redundant copy contributes nothing beyond the original, so usefulness is near zero while grounding is unchanged."
+      }
+    ],
+    "analytical_usefulness": 0.45,
+    "source_groundedness": 0.68,
+    "rationale": "The distinct concepts include one strongly on-point column for this exploratory query (primary_complaint) plus a useful rating-vs-tone divergence flag (sentiment_mismatch), while rating_consistency and aspect_variance are usable but overlap each other. The dominant defect is that four of the eight columns are exact duplicates (the '.1' set), pure restatements that add no analytical leverage and roughly halve the effective value of the set, pulling table-level usefulness down. Groundedness is generally sound: text-derived columns (primary_complaint, sentiment_mismatch) verify cleanly against the sampled reviews and use appropriate 'none'/NULL for silent rows, while the rating-based columns derive from original numeric fields not shown in samples and are plausible if only partially verifiable; no clear invented facts contradict the visible source text."
+  },
+  "status": "scored",
+  "dataset": "airlines_review_full",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 8
+}

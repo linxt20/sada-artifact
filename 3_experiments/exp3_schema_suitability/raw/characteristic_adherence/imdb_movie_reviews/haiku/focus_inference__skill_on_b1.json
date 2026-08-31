@@ -1,0 +1,89 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "production_quality_focus",
+    "performance_quality_focus",
+    "plot_coherence_focus",
+    "technical_craft_focus",
+    "emotional_resonance_focus",
+    "thematic_depth_focus",
+    "genre_expectation_focus",
+    "entertainment_level_focus"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6937,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.6125,
+    "source_groundedness__table_level": 0.62,
+    "b1_overall": 0.6531,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "production_quality_focus",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "rationale": "Groups reviews by focus on production quality, a valid analytical axis. But the binary low/high_focus values are ambiguous — for IMDB-0005, which never mentions production, 'low_focus' is asserted without support, and the scheme conflates 'quality is low' with 'focus is low', weakening groundedness."
+      },
+      {
+        "name": "performance_quality_focus",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "Acting is a genuine review aspect and the categories (praised/criticized/mixed/absent) give real grouping leverage. Samples like the 'wooden performances' and 'acting is pretty good' rows are well grounded; IMDB-0005 marked 'mixed_uneven' despite no acting comment is a mild overreach."
+      },
+      {
+        "name": "plot_coherence_focus",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "Plot/coherence is a core aspect and the values distinguish coherent/predictable/confusing/absent meaningfully. 'predictable_derivative' for the 'well-trodden premise' review is sound; 'confusing_incoherent' for IMDB-0002 is a defensible reading of a mocked plot, though somewhat inferred."
+      },
+      {
+        "name": "technical_craft_focus",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.55,
+        "rationale": "Technical craft is a legitimate axis with a healthy 'not_present' category. But 'technical_failure' for IMDB-0001 (which criticizes writing, not technical craft) and 'technical_adequacy' for the 'well-made/atmospheric' row are loose mappings that risk asserting more than the text specifies."
+      },
+      {
+        "name": "emotional_resonance_focus",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "rationale": "Emotional resonance is relevant, but the distribution is heavily skewed to 'emotionally_flat' (154) and only 6 'not_present', suggesting the operator forces a value even when the text is silent about emotion. IMDB-0004, a sexploitation review with no emotional comment, being 'not_present' is right, but the pervasive 'flat' default looks over-asserted elsewhere."
+      },
+      {
+        "name": "thematic_depth_focus",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.65,
+        "rationale": "Thematic depth is a strong analytical axis (superficial vs substantive). Grounded for the sexploitation review ('superficial_hollow') and the immigration drama ('substantive_meaningful'), but IMDB-0003 marked 'substantive_meaningful' despite the review deriding the premise is questionable."
+      },
+      {
+        "name": "genre_expectation_focus",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.6,
+        "rationale": "Genre fulfillment/subversion is a useful and appropriately sparse axis (142 not_present). However 'subverts_genre' for IMDB-0001 and IMDB-0003, where the reviews don't discuss genre expectations, appear inferred beyond the text."
+      },
+      {
+        "name": "entertainment_level_focus",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "rationale": "Entertainment/engagement is a central review aspect with good grouping value. Well grounded for 'tedious_boring' and 'entertaining_enjoyable' rows, but 'thought_provoking' for IMDB-0001 (a review calling the show insipid) contradicts the source and is a hallucination."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.62,
+    "hallucination_observed": true,
+    "rationale": "The added columns decompose the query 'what aspects are reviewers focusing on' into distinct, analytically meaningful axes (performance, plot, theme, genre, entertainment, etc.), each offering a real grouping/comparison dimension rather than trivial restatements — strong analytical usefulness. Groundedness is more mixed: extraction is sound for aspects reviewers explicitly discuss, and 'not_present' is used appropriately in some columns. However several values are over-asserted where the source is silent (e.g. IMDB-0005's technical/genre judgments) and at least one clearly contradicts the text (IMDB-0001 'thought_provoking' for an insipid-labeled show). Skewed distributions in production_quality and emotional_resonance suggest the operator forces categorical labels rather than defaulting to unknown, dragging groundedness down."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 8
+}

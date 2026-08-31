@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can support teams reduce ticket resolution time?",
+  "focus_variable": "resolution_minutes",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "issue_category",
+    "requires_external_action",
+    "external_dependency_type",
+    "resolution_action"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 1,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 1,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 2,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_minutes",
+    "per_column": [
+      {
+        "name": "issue_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of issue is a common cause: it drives which resolution action is chosen and also directly affects how long resolution takes. It is an intrinsic property of the ticket (not a settable lever), so it functions as a confounder rather than a treatment. Not named in the query."
+      },
+      {
+        "name": "requires_external_action",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Whether the ticket is awaiting engineering/infra/customer is largely a downstream consequence of the issue and the chosen handling path, and it lies on the causal pathway to resolution time; it is a mediator/collider-like state rather than a common cause of an intervenable treatment."
+      },
+      {
+        "name": "external_dependency_type",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "The specific external dependency (identity provider, cloud infra, etc.) is a consequence of the issue type and sits on the pathway delaying resolution; it is a mediator, not an adjustable confounder or lever."
+      },
+      {
+        "name": "resolution_action",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The action taken to resolve the ticket (investigation, config flag toggle, documentation, workaround, etc.) is something a support team can actually SET or DECIDE, making it an intervenable treatment for the what-if question about resolution time."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "resolution_action"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "issue_category",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The set contains one genuine intervenable treatment (resolution_action) that a support team could actually choose, satisfying part (a). For part (b), only issue_category functions as a true confounder — a common cause of both the chosen resolution action and the resolution time — and it is not named in the query, which is the capability under test. However, the remaining two added columns (requires_external_action, external_dependency_type) are mediators/downstream states on the causal pathway rather than confounders, so they do not support de-confounding and would in fact bias a naive adjustment. With only a single valid confounder and no adjustment for pre-treatment common causes like ticket priority (already in the original table) or agent skill, confounder coverage is thin. The intervention is set up, but the confounding control is weak."
+  },
+  "status": "scored",
+  "dataset": "customer_support_tickets",
+  "scenario": "causal_reduce",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 4
+}

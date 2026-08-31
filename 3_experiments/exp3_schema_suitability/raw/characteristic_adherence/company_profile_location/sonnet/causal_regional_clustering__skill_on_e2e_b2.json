@@ -1,0 +1,122 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain what leads a company to be based in one region rather than another.",
+  "focus_variable": "regional_cluster",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "industry_sector",
+    "tech_focus_area",
+    "company_stage",
+    "business_model_type",
+    "deep_tech_rd_intensity",
+    "physical_infrastructure_dependency",
+    "specialized_talent_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.4,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.4,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "regional_cluster",
+    "per_column": [
+      {
+        "name": "industry_sector",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Industry sector plausibly drives both where a company locates (sectors cluster geographically) and is a stable company attribute; a common cause candidate for regional location. Not named in the query."
+      },
+      {
+        "name": "tech_focus_area",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The technology focus shapes location choice (e.g., AI/biotech hubs) and is an intrinsic firm characteristic, making it a plausible common driver of regional clustering. Surfaced from data, not the query."
+      },
+      {
+        "name": "company_stage",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Firm maturity affects capacity/incentive to locate in expensive innovation hubs and is not on any mediating path forced by location; plausible common cause of location patterns. Not in query."
+      },
+      {
+        "name": "business_model_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Business model (B2B software vs hardware vs consumer) plausibly influences where firms base and reflects firm type; a candidate common cause of regional choice."
+      },
+      {
+        "name": "deep_tech_rd_intensity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "R&D intensity drives proximity to universities/talent hubs and is a firm attribute; plausible common driver of location. Not named in query."
+      },
+      {
+        "name": "physical_infrastructure_dependency",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Dependence on manufacturing/data-center/lab infrastructure is a concrete candidate cause whose effect on where a company bases can be attributed -- functions as a treatment-like driver of location."
+      },
+      {
+        "name": "specialized_talent_signal",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of specialized talent needed drives location toward talent pools and is a firm requirement; a plausible common cause of regional clustering."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "physical_infrastructure_dependency",
+      "specialized_talent_signal"
+    ],
+    "confounders": [
+      {
+        "name": "industry_sector",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "tech_focus_area",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "company_stage",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "business_model_type",
+        "named_in_query": false,
+        "plausibility": 0.5
+      },
+      {
+        "name": "deep_tech_rd_intensity",
+        "named_in_query": false,
+        "plausibility": 0.55
+      }
+    ],
+    "confounder_quality": 0.4,
+    "rationale": "The added columns are all firm-attribute drivers of location, and none were named in the highly generic query, so they were genuinely surfaced from the data. However, the design does NOT cleanly realise a causal-attribution setup: there is no single, well-delineated TREATMENT distinguished from CONFOUNDERS. All columns are alternative candidate causes of the outcome sitting at the same level, functioning more as a multi-factor explanatory regression than a treatment-plus-adjustment-set. Because a confounder must be a common cause of BOTH a treatment and the outcome, and no treatment is privileged, these variables cannot be verified as genuine confounders rather than parallel treatments -- they are just co-drivers. Talent needs and infrastructure dependency are also plausibly mediators of industry/tech-focus effects on location, blurring roles. The set is sensible for explanation but weak as a rigorous causal estimation scaffold, hence low confounder_quality."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "causal_regional_clustering",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

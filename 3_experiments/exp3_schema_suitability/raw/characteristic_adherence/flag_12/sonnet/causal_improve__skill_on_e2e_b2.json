@@ -1,0 +1,124 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can we improve incident resolution efficiency?",
+  "focus_variable": "incident_resolution_efficiency",
+  "concept": null,
+  "n_added_columns": 7,
+  "added_columns": [
+    "incident_category",
+    "affected_component",
+    "failure_symptom",
+    "resolution_action_type",
+    "involves_escalation_or_reassignment",
+    "is_recurring_issue_type",
+    "software_trigger_indicated"
+  ],
+  "metrics": {
+    "n_added_columns": 7,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.7,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.7,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "incident_resolution_efficiency",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The type of incident is a common cause: it influences both which resolution actions/escalation are applied and how long/efficiently the incident resolves. Not an intervenable lever (given by the incident itself), but a valid adjustment variable."
+      },
+      {
+        "name": "affected_component",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The hardware/software component involved is a common cause of both the handling approach and resolution efficiency; it is a given attribute of the incident, not something an actor sets."
+      },
+      {
+        "name": "failure_symptom",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "The observed symptom drives what actions are needed and affects resolution difficulty/time; a pre-existing property of the incident, appropriate to adjust for."
+      },
+      {
+        "name": "resolution_action_type",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "The action taken to resolve (repair, replace, connectivity fix, software install, config fix) is an intervenable lever an operator can choose/set, and plausibly affects resolution efficiency."
+      },
+      {
+        "name": "involves_escalation_or_reassignment",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether to escalate or reassign is a decision/action within the process that can be set or changed and directly affects resolution efficiency."
+      },
+      {
+        "name": "is_recurring_issue_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether the issue is a recurring type is a property of the incident that could affect both treatment choice and outcome. Degenerate here (all true), so low utility, but semantically a confounder not a lever."
+      },
+      {
+        "name": "software_trigger_indicated",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Whether a software trigger is present is a characteristic of the incident that could jointly influence handling approach and resolution efficiency; not a settable lever."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "resolution_action_type",
+      "involves_escalation_or_reassignment"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "incident_category",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "affected_component",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "failure_symptom",
+        "named_in_query": false,
+        "plausibility": 0.85
+      },
+      {
+        "name": "is_recurring_issue_type",
+        "named_in_query": false,
+        "plausibility": 0.3
+      },
+      {
+        "name": "software_trigger_indicated",
+        "named_in_query": false,
+        "plausibility": 0.5
+      }
+    ],
+    "confounder_quality": 0.7,
+    "rationale": "The added columns do set up a genuine interventional question. At least two treatments (resolution_action_type, involves_escalation_or_reassignment) are true intervenable levers that a process owner can set or change, and both plausibly affect the outcome (resolution efficiency). Several columns (failure_symptom, affected_component, incident_category) are pre-existing incident properties that act as common causes of both the chosen handling and the outcome, and none of these confounders are named or implied in the terse query, satisfying the decisive test. Weaknesses: is_recurring_issue_type is degenerate (constant true) and thus useless for adjustment, and there is a mediator-vs-confounder ambiguity risk (e.g., action type may partly be downstream of symptom, but it is still a settable lever). Overall the operator demonstrates intervenable-treatment identification plus non-query-named confounders, so it substantially realises the what-if claim."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "causal_improve",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 7
+}

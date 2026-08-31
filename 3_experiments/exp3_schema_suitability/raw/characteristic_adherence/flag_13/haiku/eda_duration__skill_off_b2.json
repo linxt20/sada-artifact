@@ -1,0 +1,70 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution duration vary across incident category and priority?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 4,
+  "added_columns": [
+    "duration_seconds",
+    "duration_minutes",
+    "priority_level",
+    "category_priority"
+  ],
+  "metrics": {
+    "n_added_columns": 4,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.1,
+    "interpretable_fraction": 0.5
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "duration_seconds",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "This is a direct unit conversion of resolution_duration itself, not an external associational variable. Grouping on it would be grouping the focus against itself, and its fine-grained continuous values offer no meaningful segmentation."
+      },
+      {
+        "name": "duration_minutes",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": false,
+        "rationale": "Another unit restatement of the focus variable. It duplicates the target rather than opening a relationship to any external factor."
+      },
+      {
+        "name": "priority_level",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Priority already exists in the original table; this merely re-encodes it. While it has clean, well-separated categories to segment on, it adds no new external variable beyond what the query already names."
+      },
+      {
+        "name": "category_priority",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "A concatenation of category and priority, both already in the original table and both named in the query. It provides interpretable, well-separated composite groups but introduces no new external dimension for exploration."
+      }
+    ],
+    "n_predictors": 0,
+    "relationship_informativeness": 0.1,
+    "rationale": "None of the added columns introduce a genuinely new external, associational variable. Two columns (duration_seconds, duration_minutes) are unit restatements of the focus itself, offering no comparison axis. The other two (priority_level, category_priority) merely re-encode or combine existing columns (category, priority) that are already present and already named in the query. While category_priority provides a clean crosstab grouping that trivially supports the stated query, the augmentation adds no new interpretable dimension for discovering informative relationships beyond what the base table already offered. The set fails the technical claim of opening up new associational variables."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "eda_duration",
+  "model": "haiku",
+  "variant": "skill_off",
+  "n_new_columns": 4
+}

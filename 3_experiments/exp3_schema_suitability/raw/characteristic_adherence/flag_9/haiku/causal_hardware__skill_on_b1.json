@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Why did hardware incidents spike in the anomaly window?",
+  "n_added_columns": 7,
+  "added_columns": [
+    "hardware_component_type",
+    "hardware_failure_mechanism",
+    "incident_recurrence_pattern",
+    "severity_implied",
+    "assigned_technician",
+    "caller_segment",
+    "location_scope"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 7,
+    "n_judged_columns": 7,
+    "analytical_usefulness": 0.7143,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.7357,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.725,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "hardware_component_type",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly central to the query: lets the analyst group spike incidents by component (printer, network_device, etc.) to find the culprit. Values in the sample are Unknown for software-install rows, which is correct silent behaviour; categorisation is a warranted reading of short_description."
+      },
+      {
+        "name": "hardware_failure_mechanism",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Provides a strong failure-mode axis to explain WHY incidents spiked (e.g. connectivity_loss surge). 'connectivity_loss' for the MySQL connection row is a sound inference; Unknown for non-hardware rows is appropriate."
+      },
+      {
+        "name": "incident_recurrence_pattern",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Recurring vs isolated is highly relevant to diagnosing a spike. However recurrence generally requires cross-row aggregation; from a single short_description alone the specific label is a weaker, less directly grounded inference, though still plausible."
+      },
+      {
+        "name": "severity_implied",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Adds a severity dimension distinct from the original priority column, useful for characterising the spike. Somewhat overlaps priority, and the mapping from short text to blocking/non-critical is a reasonable but interpretive inference."
+      },
+      {
+        "name": "assigned_technician",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.6,
+        "hallucination_observed": false,
+        "rationale": "Trivially redundant with the existing 'assigned_to'/'closed_by' original columns; adds little new analytical leverage for a hardware-spike root-cause query. Values appear to just restate an existing person field."
+      },
+      {
+        "name": "caller_segment",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Categorising callers as regular vs itil user is a modestly useful grouping axis, though largely derivable from caller_id/role and only weakly tied to explaining a hardware spike. Sample mapping (itil for a server DB incident) is plausible."
+      },
+      {
+        "name": "location_scope",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.65,
+        "hallucination_observed": false,
+        "rationale": "Location/scope (office_wide, network_area, server_infrastructure) is a genuinely useful axis for localising a spike. Groundedness is moderate: short_description rarely states location explicitly, so 'workstation_local' defaults for a software-install row are somewhat speculative rather than text-supported."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.75,
+    "rationale": "Most added columns give real analytical axes (component type, failure mechanism, location scope, recurrence) that directly serve a hardware-spike root-cause investigation. assigned_technician is essentially redundant with existing person columns and drags usefulness down. Groundedness is generally sound: hardware categorisations and failure mechanisms are warranted readings of short_description, and Unknown is correctly used for non-hardware rows. Weaker spots are location_scope and recurrence_pattern, where specific labels are inferred beyond what a single short_description clearly states, but no outright contradictions or invented facts are observed."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "causal_hardware",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "causal_attribution",
+  "n_new_columns": 7
+}

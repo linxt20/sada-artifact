@@ -1,0 +1,83 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Why do some incidents take longer to resolve?",
+  "focus_variable": "incident_delay_reasons",
+  "concept": "incident_delay_reasons",
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "incident_complexity",
+    "incident_scope",
+    "assigned_technician",
+    "same_technician_closure"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.3447,
+    "facet_fraction": 0.6,
+    "n_facets": 3,
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "incident_delay_reasons",
+    "per_column": [
+      {
+        "name": "incident_category",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The type/nature of the incident (connectivity, email, database) is a constitutive aspect of why delays arise -- it decomposes delay reasons by the domain of the problem."
+      },
+      {
+        "name": "incident_complexity",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Complexity of the incident (system failure, escalation required, service degradation) is an intrinsic aspect of the delay-reason concept: harder incidents contribute a distinct facet of why resolution takes longer."
+      },
+      {
+        "name": "incident_scope",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Scope/breadth of impact (individual vs system-wide vs departmental) is a genuine aspect of what makes an incident's resolution slow -- a constitutive facet of delay reasons."
+      },
+      {
+        "name": "assigned_technician",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "The identity of the technician is an external attribute correlated with resolution time, not an aspect OF the delay-reason concept itself. It is a predictor/actor, not a part of the reason."
+      },
+      {
+        "name": "same_technician_closure",
+        "is_constitutive_facet": false,
+        "role": "external_predictor",
+        "rationale": "Whether the same technician closed the incident is a process/handoff attribute correlated with delay, not a constitutive facet (an 'aspect of') the delay-reason concept."
+      }
+    ],
+    "facet_columns": [
+      "incident_category",
+      "incident_complexity",
+      "incident_scope"
+    ],
+    "non_facet_columns": [
+      "assigned_technician",
+      "same_technician_closure"
+    ],
+    "mutual_exclusivity": 0.6,
+    "exhaustiveness": 0.55,
+    "rationale": "Three columns (category, complexity, scope) are genuine constitutive facets that decompose the delay-reason concept into aspects of the incident itself. However, complexity and scope partially overlap (e.g., 'system_wide' scope and 'system_failure' complexity capture related severity/breadth notions), lowering mutual exclusivity. The remaining two columns (assigned_technician, same_technician_closure) are external predictors/process attributes, not facets, so they do not satisfy the meronymy claim. The facet set covers problem-type, difficulty, and impact-breadth but omits process/lifecycle aspects of delay (queueing/wait time, dependency-on-third-party, information availability), so exhaustiveness is moderate."
+  },
+  "status": "scored",
+  "dataset": "flag_2",
+  "scenario": "concept_attribute_delay",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 5
+}

@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "If the most common hardware failure causes were addressed, how much would the hardware incident rate drop?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "incident_category",
+    "failure_mode",
+    "recurrence_signal",
+    "affected_scope",
+    "software_issue_subtype"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.68,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.75,
+    "source_groundedness__table_level": 0.75,
+    "b1_overall": 0.715,
+    "hallucination_rate": 0.4
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "incident_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Essential for isolating hardware incidents, the base denominator of the query. Values align well with short_description (installation->software, MySQL->database)."
+      },
+      {
+        "name": "failure_mode",
+        "analytical_usefulness": 1.0,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly answers 'most common failure causes' — the core of the query. NULLs for non-hardware/silent rows are appropriate. Connectivity_failure from MySQL text is well grounded."
+      },
+      {
+        "name": "recurrence_signal",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Recurrence could inform which causes drive incident rate, but a boolean flag derived from a single short_description is weakly grounded; the source text gives little basis to assert repeat occurrence per row."
+      },
+      {
+        "name": "affected_scope",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.5,
+        "hallucination_observed": true,
+        "rationale": "Scope adds a plausible grouping axis, but values like 'individual_device' for a bare 'software installation' text are confident specifics the source does not clearly support; MySQL->production_system is more defensible."
+      },
+      {
+        "name": "software_issue_subtype",
+        "analytical_usefulness": 0.3,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Well grounded (installation, update_failure, database_connectivity map cleanly to text) but pertains to software incidents, offering little leverage for a query specifically about hardware failure causes."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.75,
+    "rationale": "incident_category and failure_mode together directly enable the query: they let the analyst isolate hardware incidents, rank failure causes, and estimate the rate reduction from addressing the top ones — high usefulness and solid grounding. affected_scope and recurrence_signal add secondary axes but assert per-row specifics (device scope, recurrence) that the terse short_descriptions do not clearly warrant, lowering groundedness. software_issue_subtype is well grounded but tangential to a hardware-focused query. Overall a useful, mostly grounded set with some unsupported confident values."
+  },
+  "status": "scored",
+  "dataset": "flag_9",
+  "scenario": "whatif_hardware_causes",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "what_if",
+  "n_new_columns": 5
+}

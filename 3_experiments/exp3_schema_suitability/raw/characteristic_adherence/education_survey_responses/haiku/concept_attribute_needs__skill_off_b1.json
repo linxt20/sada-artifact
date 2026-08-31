@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What learner needs and pain points appear in survey responses?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "primary_need_category",
+    "sentiment",
+    "engagement_impact"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.75,
+    "analytical_usefulness__table_level": 0.78,
+    "source_groundedness": 0.8167,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.7833,
+    "hallucination_rate": 0.3333
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_need_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Directly targets the query about learner needs/pain points, giving a rich categorical axis (technical_support, participation, peer_interaction, pedagogical_adaptation, etc.) to group and compare responses. Sampled values are well-grounded: ED-0001's camera freeze -> technical_support and missing hand-raising -> teacher_feedback; ED-0003's logout/no peer interaction -> technical_support|student_support|peer_interaction. Multi-label reading is a sound extraction from the text. Minor concern that the taxonomy is inconsistent/fragmented across many overlapping labels, but values themselves are warranted by the source."
+      },
+      {
+        "name": "sentiment",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "A bare positive/neutral/negative sentiment flag is fairly generic and partly redundant with the existing satisfaction_1to5 column, limiting new analytical leverage for pinpointing specific needs/pain points. However, values are accurately derived from the text (negative for the crying second grader, positive for the self-paced learner), so groundedness is strong."
+      },
+      {
+        "name": "engagement_impact",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Engagement is a genuinely relevant axis for this query and adds a severity dimension beyond sentiment. But the values are weakly grounded and near-constant toward 'high' (147). ED-0001 (camera freezes, falling behind) and ED-0004 (positive self-paced) both get 'high', which conflates opposite meanings; the label seems to assert engagement level the text does not clearly support in a consistent way. The 'critical' rating for ED-0003 is defensible, but the overall scale application is inconsistent and partly invented."
+      }
+    ],
+    "analytical_usefulness": 0.78,
+    "source_groundedness": 0.82,
+    "rationale": "primary_need_category is the strongest addition, directly serving the learner-needs query with well-grounded multi-label extractions. sentiment is grounded but somewhat generic and overlaps with existing satisfaction. engagement_impact adds a useful severity axis but is applied inconsistently and skews heavily to 'high', with some values not clearly warranted by the text. Overall the columns are analytically useful and mostly grounded, with engagement_impact dragging groundedness down."
+  },
+  "status": "scored",
+  "dataset": "education_survey_responses",
+  "scenario": "concept_attribute_needs",
+  "model": "haiku",
+  "variant": "skill_off",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 3
+}

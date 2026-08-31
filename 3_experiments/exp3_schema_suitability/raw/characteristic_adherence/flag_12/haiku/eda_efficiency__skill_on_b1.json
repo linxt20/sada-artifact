@@ -1,0 +1,72 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "n_added_columns": 5,
+  "added_columns": [
+    "problem_domain",
+    "equipment_type",
+    "root_cause_type",
+    "assigned_team_member",
+    "incident_recurrence"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 5,
+    "n_judged_columns": 5,
+    "analytical_usefulness": 0.6,
+    "analytical_usefulness__table_level": 0.6,
+    "source_groundedness": 0.536,
+    "source_groundedness__table_level": 0.5,
+    "b1_overall": 0.568,
+    "hallucination_rate": 0.6
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "problem_domain",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Categorising incidents into problem domains gives a genuine grouping axis complementary to the raw category field, useful for comparing resolution efficiency. Values are sound readings of the short_description (connectivity, printer->hardware, database->software)."
+      },
+      {
+        "name": "equipment_type",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Finer-grained equipment extraction offers a distinct, more specific axis than problem_domain and is well supported by descriptions (printer, monitor, keyboard). Some overlap with problem_domain but adds resolution-relevant detail."
+      },
+      {
+        "name": "root_cause_type",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "Root cause is a useful analytical lens, but values are largely a deterministic restatement of problem_domain (hardware_device->hardware_failure count 384 identical) and are inferred beyond the text. 'Printer not working' -> 'hardware_failure' is a confident cause the text does not establish; 'Unable to connect to database' labelled connectivity_issue is a plausible but unwarranted specific."
+      },
+      {
+        "name": "assigned_team_member",
+        "analytical_usefulness": 0.2,
+        "source_groundedness": 0.2,
+        "hallucination_observed": true,
+        "rationale": "This is essentially redundant with the existing assigned_to/assignment_group columns, adding little new leverage. Worse, the short_description samples contain no person names, so specific names like 'Fred Luddy' appear invented at the row level rather than extracted from the shown source text (unless copied from an existing column, in which case redundant)."
+      },
+      {
+        "name": "incident_recurrence",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.15,
+        "hallucination_observed": true,
+        "rationale": "A recurrence flag would be analytically valuable for efficiency analysis, but the source text gives no basis for it; every sampled row is labelled 'True' with no supporting evidence, indicating an unsupported/invented boolean."
+      }
+    ],
+    "analytical_usefulness": 0.6,
+    "source_groundedness": 0.5,
+    "rationale": "problem_domain and equipment_type are strong, well-grounded grouping axes that directly serve the efficiency-by-category query. root_cause_type is partly a restatement of problem_domain with inferred causes. assigned_team_member is redundant with existing assignment columns and its specific values are not evidenced in the sampled source text. incident_recurrence targets a useful concept but its values appear fabricated (uniformly True across samples with no textual support), pulling down overall groundedness."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 5
+}

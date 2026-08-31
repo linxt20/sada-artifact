@@ -1,0 +1,112 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "n_added_columns": 10,
+  "added_columns": [
+    "focus_acting",
+    "focus_plot_story",
+    "focus_directing",
+    "focus_visuals_cinematography",
+    "focus_music_sound",
+    "focus_dialogue",
+    "focus_effects_technical",
+    "focus_atmosphere_tone",
+    "focus_entertainment_humor",
+    "primary_focus"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 10,
+    "n_judged_columns": 10,
+    "analytical_usefulness": 0.815,
+    "analytical_usefulness__table_level": 0.85,
+    "source_groundedness": 0.735,
+    "source_groundedness__table_level": 0.68,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.5
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "focus_acting",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A well-balanced binary aspect flag that directly serves the query. However, groundedness is shaky: IMDB-0001 (writing/dialogue focus, no acting mention) and IMDB-0002 (no performance mention) are both marked 1, suggesting over-firing on this dimension."
+      },
+      {
+        "name": "focus_plot_story",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "hallucination_observed": false,
+        "rationale": "Genuine aspect axis for grouping. Samples are mostly defensible (writing/premise mentions in 0001 and 0003), and silent rows correctly get 0."
+      },
+      {
+        "name": "focus_directing",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Useful distinct aspect, but IMDB-0002 flagged 1 for directing though the text mentions only camera panning/general badness, not direction specifically — an unwarranted read."
+      },
+      {
+        "name": "focus_visuals_cinematography",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.65,
+        "hallucination_observed": true,
+        "rationale": "Distinct aspect. Well-grounded for 0004 ('visual pleasure'), but 0003 flagged 1 with no visual/cinematography reference in the text."
+      },
+      {
+        "name": "focus_music_sound",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Legitimate aspect axis; rarer (31 positives) but still discriminating. Samples all correctly 0 where sound is unmentioned."
+      },
+      {
+        "name": "focus_dialogue",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct aspect well-warranted by 0001 ('stilted dialogue'); silent rows correctly 0."
+      },
+      {
+        "name": "focus_effects_technical",
+        "analytical_usefulness": 0.65,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Rare (12 positives) but a genuine aspect; sample values correct. Slightly lower usefulness due to sparsity but still a valid grouping axis."
+      },
+      {
+        "name": "focus_atmosphere_tone",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.6,
+        "hallucination_observed": true,
+        "rationale": "Valid aspect and well-grounded for 0004 ('atmospheric'), but 0002 and 0003 flagged 1 without clear atmosphere/tone commentary, indicating some over-firing."
+      },
+      {
+        "name": "focus_entertainment_humor",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "Distinct aspect axis; samples all correctly 0 where humor/entertainment is not discussed."
+      },
+      {
+        "name": "primary_focus",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.55,
+        "hallucination_observed": true,
+        "rationale": "A useful single-label summary enabling direct distribution analysis. However it inherits the acting over-firing: 0001 and 0002 are labeled 'acting' as primary despite acting not being the dominant (or present) aspect, contradicting the source."
+      }
+    ],
+    "analytical_usefulness": 0.85,
+    "source_groundedness": 0.68,
+    "rationale": "The added columns form a coherent multi-aspect decomposition that directly answers 'what aspects are reviewers focusing on' — each binary flag is a distinct, non-redundant grouping axis, and primary_focus offers a clean summary variable. This is strong analytical leverage. The weakness is groundedness: several rows show over-firing, especially on focus_acting and its downstream primary_focus (0001 is about writing/dialogue and 0002 about general badness, yet both are tagged acting), and a few atmosphere/visuals/directing flags assert aspects the source text does not clearly support. Silent rows are handled correctly (0/general), which is appropriate. Overall useful but with meaningful grounding noise."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "focus_inference",
+  "n_new_columns": 10
+}

@@ -1,0 +1,101 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What review signals predict low Yelp user satisfaction?",
+  "focus_variable": "label_pos",
+  "concept": null,
+  "n_added_columns": 9,
+  "added_columns": [
+    "neg_word_count",
+    "pos_word_count",
+    "sentiment_score",
+    "negation_adjusted_sentiment",
+    "complaint_phrase_count",
+    "exclamation_ratio",
+    "caps_ratio",
+    "review_length_tokens",
+    "predicted_low_satisfaction"
+  ],
+  "metrics": {
+    "n_added_columns": 9,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.5333,
+    "predictor_fraction": 0.8889,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.6,
+    "leakage_rate": 0.1111
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "label_pos",
+    "per_column": [
+      {
+        "name": "neg_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of negative lexicon words derived from text; lies outside the label and plausibly correlates with low satisfaction."
+      },
+      {
+        "name": "pos_word_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Count of positive lexicon words; a legitimate text-derived signal predicting positive sentiment label."
+      },
+      {
+        "name": "sentiment_score",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Continuous lexicon-based sentiment; a plausible predictor of label_pos, not a deterministic restatement of it."
+      },
+      {
+        "name": "negation_adjusted_sentiment",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Sentiment refined for negation handling; a distinct, plausibly stronger predictive feature of the label."
+      },
+      {
+        "name": "complaint_phrase_count",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Counts explicit complaint phrases in text; carries targeted signal about low satisfaction while remaining outside the label."
+      },
+      {
+        "name": "exclamation_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Stylistic intensity feature; weak but legitimate predictor, not a component of the label."
+      },
+      {
+        "name": "caps_ratio",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Proportion of capitalized characters; stylistic emphasis signal, plausibly mildly predictive, not leakage."
+      },
+      {
+        "name": "review_length_tokens",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Length is a generic but legitimate covariate that can correlate with satisfaction; weak predictor."
+      },
+      {
+        "name": "predicted_low_satisfaction",
+        "role": "leakage",
+        "is_predictor": false,
+        "rationale": "A prediction of the outcome itself; it is a direct proxy/restatement of the focus label and constitutes target leakage."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.6,
+    "rationale": "Most columns are genuine text-derived features (sentiment, negation-adjusted sentiment, complaint counts, positive/negative word counts) that plausibly predict label_pos without restating it, giving real predictive leverage. Several stylistic features (exclamation ratio, caps ratio, length) are weaker and somewhat generic. However 'predicted_low_satisfaction' is target leakage—a direct proxy of the focus—and should be excluded. As a set, the sentiment and complaint features provide solid, non-trivial signal beyond the raw text, warranting a moderately high but not maximal utility."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "predictive_low",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 9
+}

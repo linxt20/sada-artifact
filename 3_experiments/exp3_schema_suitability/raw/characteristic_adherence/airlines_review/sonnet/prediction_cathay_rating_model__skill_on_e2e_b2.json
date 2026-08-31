@@ -1,0 +1,94 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "focus_variable": "overall_rating_gt7",
+  "concept": null,
+  "n_added_columns": 8,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "crew_absence_pattern",
+    "food_quality_rating",
+    "special_meal_handling",
+    "baggage_handling_outcome",
+    "haul_category",
+    "outstation_region",
+    "premium_economy_product_gap"
+  ],
+  "metrics": {
+    "n_added_columns": 8,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.55,
+    "predictor_fraction": 1.0,
+    "n_predictors": 8,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "overall_rating_gt7",
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Categorical assessment of crew service extracted from review text; a plausible driver of satisfaction that lies outside the overall rating and is not a deterministic function of it. Overlaps with existing Staff Service but adds granularity."
+      },
+      {
+        "name": "crew_absence_pattern",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Behavioral detail about crew responsiveness; an operational feature outside the focus that plausibly correlates with satisfaction and is not a restatement of the overall rating."
+      },
+      {
+        "name": "food_quality_rating",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Qualitative food assessment; a plausible predictor of overall satisfaction, external to the focus. Partially redundant with the existing Food & Beverages column but still legitimate signal."
+      },
+      {
+        "name": "special_meal_handling",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Boolean about special-meal handling; an operational service attribute outside the focus that could carry modest predictive signal, though sparsely populated (only 26 true)."
+      },
+      {
+        "name": "baggage_handling_outcome",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Outcome of baggage handling (lost/damaged/no issue); a service-failure feature distinct from the overall rating and plausibly predictive of low satisfaction."
+      },
+      {
+        "name": "haul_category",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Flight duration bucket derived from route; a structural feature external to the focus that plausibly relates to comfort and satisfaction. Directly relevant to route optimization intent."
+      },
+      {
+        "name": "outstation_region",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Geographic region of the route; an external structural predictor relevant to the route-organization query and plausibly correlated with satisfaction patterns."
+      },
+      {
+        "name": "premium_economy_product_gap",
+        "role": "predictor",
+        "is_predictor": true,
+        "rationale": "Flag indicating a product shortfall in premium economy; an external service-quality feature that plausibly predicts lower satisfaction, not a restatement of the overall rating."
+      }
+    ],
+    "n_predictors": 8,
+    "predictive_utility": 0.55,
+    "rationale": "All eight added columns are legitimate predictors: they lie outside the focus variable, none deterministically restate or leak the overall rating, and each plausibly carries satisfaction signal. Several (cabin_crew_service_quality, food_quality_rating) overlap semantically with existing rating sub-scores, capping the marginal leverage, and several are sparse or heavily NULL (crew_absence_pattern, baggage_handling_outcome, special_meal_handling). The structural route features (haul_category, outstation_region) are the most novel and directly aligned with the route-optimization intent, adding genuine incremental signal. As a set they provide moderate predictive leverage beyond the original columns."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 8
+}

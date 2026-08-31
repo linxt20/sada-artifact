@@ -1,0 +1,74 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "predictive_feature_engineering",
+  "subtype_label": "Correlational / predictive feature engineering",
+  "family": "correlational",
+  "query": "What signals suggest an expense will be declined?",
+  "focus_variable": "state_declined",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "asset_category_type",
+    "asset_creation_mechanism",
+    "department_classification",
+    "travel_asset_flag",
+    "requester_repeat_status",
+    "source_tracking_present"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "predictive_feature_engineering",
+    "family": "correlational",
+    "adherence": 0.0,
+    "predictor_fraction": 0.0,
+    "n_predictors": 0,
+    "redundancy": 0.0,
+    "predictive_utility": 0.55,
+    "leakage_rate": 0.0
+  },
+  "judge": {
+    "subtype": "predictive_feature_engineering",
+    "focus_variable": "state_declined",
+    "per_column": [
+      {
+        "name": "asset_category_type",
+        "role": "predictor",
+        "rationale": "The type of asset/expense (hardware, travel, subscription, misc) is known before the decision and plausibly correlates with approval rates; a legitimate external predictor of whether an expense is declined."
+      },
+      {
+        "name": "asset_creation_mechanism",
+        "role": "predictor",
+        "rationale": "Whether the record was manually created vs automatically generated is available prior to the outcome and could carry signal (e.g., manual entries may face more scrutiny). Plausible predictor outside the focus."
+      },
+      {
+        "name": "department_classification",
+        "role": "predictor",
+        "rationale": "Requesting department is a pre-outcome attribute that plausibly relates to decline rates due to differing budgets/policies. Legitimate predictor (largely mirrors existing 'department' but as engineered feature it still carries signal)."
+      },
+      {
+        "name": "travel_asset_flag",
+        "role": "predictor",
+        "rationale": "A boolean indicating a travel-related expense is known in advance and travel spend often has distinct approval policies; plausible predictive signal, though partly redundant with asset_category_type."
+      },
+      {
+        "name": "requester_repeat_status",
+        "role": "predictor",
+        "rationale": "Requester frequency (single/occasional/high-frequency) is a behavioral history feature knowable before the decision and plausibly correlates with declines; a genuine predictor."
+      },
+      {
+        "name": "source_tracking_present",
+        "role": "predictor",
+        "rationale": "Whether source tracking/provenance is present is a pre-outcome data-completeness signal; missing provenance could plausibly raise decline likelihood. Legitimate predictor, if modest in strength."
+      }
+    ],
+    "n_predictors": 6,
+    "predictive_utility": 0.55,
+    "rationale": "All six columns are pre-decision attributes that lie outside the focus variable and none leak or restate the decline outcome. They span asset type, creation mechanism, department, travel flag, requester history, and data provenance, giving reasonable and diverse predictive leverage. However, several are correlated/overlapping (asset_category_type vs travel_asset_flag, department_classification vs existing 'department'), and none is a strong, decision-specific driver of declines, so the incremental predictive gain as a set is moderate rather than high."
+  },
+  "status": "scored",
+  "dataset": "flag_19",
+  "scenario": "predictive_declined",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

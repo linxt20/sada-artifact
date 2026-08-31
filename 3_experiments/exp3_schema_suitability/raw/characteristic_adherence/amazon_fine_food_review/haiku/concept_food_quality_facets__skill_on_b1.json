@@ -1,0 +1,40 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What distinct aspects of food quality do reviewers focus on?",
+  "n_added_columns": 1,
+  "added_columns": [
+    "comparative_positioning"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 1,
+    "n_judged_columns": 1,
+    "analytical_usefulness": 0.35,
+    "analytical_usefulness__table_level": 0.35,
+    "source_groundedness": 0.4,
+    "source_groundedness__table_level": 0.4,
+    "b1_overall": 0.375,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "comparative_positioning",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "The query asks what DISTINCT ASPECTS of food quality reviewers focus on (e.g. taste, texture, freshness, packaging, value). This column instead captures comparative framing relative to alternatives, which is a different axis and only tangentially serves the query; it does not decompose the aspects of quality themselves. Groundedness is weak: several produced values overreach. The dog food review states quality is good and preferred by the dog, but 'superior_to_alternatives' is a mild stretch. The taffy review contains no comparison to alternatives yet is labeled 'superior_to_alternatives'. The 'Not as Advertised' peanut review is a labeling/mismatch complaint, not a comparison to alternatives, yet is coded 'inferior_to_alternatives'. The confection review shows no category comparison but is coded 'best_in_category'. The 'Unknown' value for the silent Robitussin row is correct behavior. The pattern of asserting comparisons where the text makes none indicates hallucination."
+      }
+    ],
+    "analytical_usefulness": 0.35,
+    "source_groundedness": 0.4,
+    "rationale": "Only one column is present. It offers a comparative-positioning axis that is somewhat generic and misaligned with the query's focus on distinct aspects of food quality, giving limited analytical leverage. More critically, several sampled values assert comparisons to alternatives that the source text does not support (taffy, peanuts, confection), indicating recurring hallucination, though the appropriate 'Unknown' for the silent row is handled correctly."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "concept_food_quality_facets",
+  "model": "haiku",
+  "variant": "skill_on",
+  "subtype": "faceted_decomposition",
+  "n_new_columns": 1
+}

@@ -1,0 +1,69 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "causal_attribution",
+  "subtype_label": "Causal / attribution (observed cause)",
+  "family": "causal",
+  "query": "Explain why some Qatar Airways Business-Class flights receive a non-recommended (Recommended = no) result.",
+  "focus_variable": "non_recommendation_outcome",
+  "concept": null,
+  "n_added_columns": 2,
+  "added_columns": [
+    "traveller_type_segment",
+    "route_or_aircraft_type_exposure"
+  ],
+  "metrics": {
+    "n_added_columns": 2,
+    "subtype": "causal_attribution",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": false,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.3,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "causal_attribution",
+    "outcome_variable": "non_recommendation_outcome",
+    "per_column": [
+      {
+        "name": "traveller_type_segment",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Traveller segment (solo/couple/business/family leisure) plausibly influences both the service aspects experienced/expected (a candidate treatment) and the propensity to recommend. It is a pre-treatment characteristic derived from the data, not named in the query. However, no explicit treatment variable is provided, so it functions more as a baseline covariate than a confounder in a well-defined estimation."
+      },
+      {
+        "name": "route_or_aircraft_type_exposure",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Route/aircraft exposure (long-haul premium, older fleet, hub transfer, etc.) plausibly affects service quality delivered and the recommendation outcome, and is surfaced from data rather than the query. Yet without a clearly designated treatment it again reads as an exposure/covariate rather than a confounder adjusting a specific treatment-outcome relationship."
+      }
+    ],
+    "treatment_present": false,
+    "treatment_columns": [],
+    "confounders": [
+      {
+        "name": "traveller_type_segment",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "route_or_aircraft_type_exposure",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.3,
+    "rationale": "The causal-attribution claim requires BOTH (a) an explicit treatment whose effect on non-recommendation is being attributed, and (b) confounders that are common causes of that treatment and the outcome. Here NO treatment column was added at all -- the original table's service ratings (Seat Comfort, Staff Service, etc.) are the natural candidate causes, but the augmentation did not surface or operationalise any treatment. The two added columns are plausibly pre-treatment covariates surfaced from the data (not copied from the query), which is a point in their favour, but a confounder is only meaningful relative to a treatment; with no treatment defined, they cannot fulfil the confounding role and the causal-estimation setup is incomplete. The columns are more like segmentation/exposure dimensions than a genuine treatment+confounder design, so the technical claim is only weakly satisfied."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "causal_qatar_business",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 2
+}

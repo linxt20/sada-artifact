@@ -1,0 +1,86 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "exploratory_data_analysis",
+  "subtype_label": "Correlational / exploratory data analysis",
+  "family": "correlational",
+  "query": "How does resolution time vary by agent and issue type?",
+  "focus_variable": "resolution_time",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "issue_type",
+    "assigned_agent",
+    "resolver_matches_assignee",
+    "failure_mode",
+    "affected_system",
+    "issue_severity_signal"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "exploratory_data_analysis",
+    "family": "correlational",
+    "adherence": 0.625,
+    "predictor_fraction": 0.8333,
+    "n_predictors": 5,
+    "redundancy": 0.0,
+    "relationship_informativeness": 0.75,
+    "interpretable_fraction": 1.0
+  },
+  "judge": {
+    "subtype": "exploratory_data_analysis",
+    "focus_variable": "resolution_time",
+    "per_column": [
+      {
+        "name": "issue_type",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly named in the query ('by issue type'); provides well-separated, interpretable categories (vpn, email, database, etc.) that can be grouped and compared against resolution_time."
+      },
+      {
+        "name": "assigned_agent",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Directly named in the query ('by agent'); clean, low-cardinality set of named agents ideal for segmenting resolution_time. Overlaps with original assigned_to but is explicitly the requested dimension."
+      },
+      {
+        "name": "resolver_matches_assignee",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Clean binary flag capturing whether the closer equals the assignee; an interpretable associational variable (reassignment/handoff) that plausibly relates to resolution_time and can be segmented on."
+      },
+      {
+        "name": "failure_mode",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Interpretable, well-separated categories (connectivity_loss, no_access, crash_outage) offering an orthogonal lens on the nature of the failure vs resolution_time. Partially correlated with issue_type but adds a distinct semantic angle."
+      },
+      {
+        "name": "affected_system",
+        "role": "restatement",
+        "is_predictor": false,
+        "is_interpretable_segmentation": true,
+        "rationale": "Categories are interpretable but largely redundant with issue_type (vpn->vpn, email->email, database->database); it mostly restates the same partition rather than opening a new relationship."
+      },
+      {
+        "name": "issue_severity_signal",
+        "role": "predictor",
+        "is_predictor": true,
+        "is_interpretable_segmentation": true,
+        "rationale": "Well-separated severity-flavored categories (inaccessible, error, outage_down, degraded_slow) that give an interpretable severity-like axis to compare against resolution_time, complementing the existing priority column."
+      }
+    ],
+    "n_predictors": 5,
+    "relationship_informativeness": 0.75,
+    "rationale": "The set strongly supports interpretable EDA on resolution_time. It squarely delivers the two requested dimensions (issue_type, assigned_agent) with clean, low-cardinality categories, plus genuinely informative extra segmentations: resolver_matches_assignee (handoff), failure_mode, and a severity-like signal. The main weakness is redundancy: affected_system, issue_type, and failure_mode overlap heavily in their partitioning, so several columns describe roughly the same underlying dimension rather than opening distinct relationships. No column is opaque or near-constant, and none merely restates resolution_time itself, so informativeness is high but not maximal."
+  },
+  "status": "scored",
+  "dataset": "flag_6",
+  "scenario": "predictive_resolution",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

@@ -1,0 +1,56 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What are the main types of concerns patients come in with in these visit notes?",
+  "n_added_columns": 3,
+  "added_columns": [
+    "concern_type",
+    "clinical_domain",
+    "visit_stage_in_continuum"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 3,
+    "n_judged_columns": 3,
+    "analytical_usefulness": 0.64,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.91,
+    "source_groundedness__table_level": 0.91,
+    "b1_overall": 0.775,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "concern_type",
+        "analytical_usefulness": 0.97,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorising the type of concern, giving a genuine grouping axis. Samples map soundly (viral URI -> acute_diagnosis, knee injury -> injury_trauma, post-MI stable -> follow_up_stable). Minor tension: the acne case labeled acute_diagnosis is defensible but the annual physical labeled routine_monitoring is a fair reading. Values are warranted from the text."
+      },
+      {
+        "name": "clinical_domain",
+        "analytical_usefulness": 0.15,
+        "source_groundedness": 1.0,
+        "hallucination_observed": false,
+        "rationale": "Values are perfectly grounded but trivially redundant: every sample's clinical_domain equals the existing 'department' column verbatim. It adds essentially no new analytical leverage for this query."
+      },
+      {
+        "name": "visit_stage_in_continuum",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.88,
+        "hallucination_observed": false,
+        "rationale": "Provides an orthogonal axis (where the patient is in the care continuum) that complements concern_type and helps characterise concern types. Samples are well grounded (post-MI follow-up -> follow_up_post_intervention, acne first Rx -> initial_management). Somewhat correlated with concern_type but not a mere restatement."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.91,
+    "rationale": "concern_type is the core, highly useful and well-grounded answer to the query, and visit_stage_in_continuum adds a genuine complementary axis. clinical_domain drags the set down as it merely duplicates the existing department column, offering little new leverage. Groundedness is strong overall, with sound readings of source text and no observed hallucinations."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "focus_inference",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "focus_inference",
+  "n_new_columns": 3
+}

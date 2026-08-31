@@ -1,0 +1,82 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "What business models and customers do these companies describe?",
+  "focus_variable": "company_business_profile",
+  "concept": "company_business_profile",
+  "n_added_columns": 5,
+  "added_columns": [
+    "primary_business_model",
+    "primary_customer_segment",
+    "service_delivery_mode",
+    "industry_focus",
+    "value_proposition_type"
+  ],
+  "metrics": {
+    "n_added_columns": 5,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.7714,
+    "facet_fraction": 1.0,
+    "n_facets": 5,
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.85,
+    "mece": 0.7714,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "company_business_profile",
+    "per_column": [
+      {
+        "name": "primary_business_model",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The business model (how the company creates and captures value) is a core constitutive aspect of a company's business profile."
+      },
+      {
+        "name": "primary_customer_segment",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Who the customers are is an explicit part of the query and a genuine aspect OF the business profile."
+      },
+      {
+        "name": "service_delivery_mode",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "How the offering is delivered (SaaS, on-prem, hardware) is a distinct aspect of the profile, though it partially correlates with business model."
+      },
+      {
+        "name": "industry_focus",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The industry/domain a company operates in is a constitutive aspect of its business profile."
+      },
+      {
+        "name": "value_proposition_type",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "The type of value delivered is an aspect OF the business profile describing what the company offers to customers."
+      }
+    ],
+    "facet_columns": [
+      "primary_business_model",
+      "primary_customer_segment",
+      "service_delivery_mode",
+      "industry_focus",
+      "value_proposition_type"
+    ],
+    "non_facet_columns": [],
+    "mutual_exclusivity": 0.7,
+    "exhaustiveness": 0.85,
+    "rationale": "All five columns are genuine part-of aspects of a company_business_profile rather than external predictors or causes, satisfying the meronymy requirement. Mutual exclusivity is good but not perfect: business_model, service_delivery_mode, and industry_focus overlap substantially (e.g. 'software_platform' business model correlates heavily with 'cloud_saas' delivery and 'software_development' industry; value categories like 'security_compliance' echo the 'cybersecurity' industry). This shared underlying dimension of 'what kind of software/product company it is' reduces non-overlap. Exhaustiveness is strong for the query's stated scope (business models + customers): it covers model, customer, delivery, industry, and value proposition. Minor gaps include revenue/monetization mechanics and company scale/stage, which are also constitutive aspects of a full business profile but are not decomposed here."
+  },
+  "status": "scored",
+  "dataset": "company_profile_location",
+  "scenario": "concept_attribute_business",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 5
+}

@@ -1,0 +1,91 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "faceted_decomposition",
+  "subtype_label": "Focus internal / faceted decomposition (MECE facets)",
+  "family": "focus_internal",
+  "query": "Help me understand the key points in this table — what should I concentrate on?",
+  "focus_variable": "airline_service_quality",
+  "concept": "airline_service_quality",
+  "n_added_columns": 6,
+  "added_columns": [
+    "service_quality_assessment",
+    "seat_comfort_experience",
+    "food_beverage_quality",
+    "operational_reliability",
+    "crew_professionalism",
+    "sentiment_direction"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "faceted_decomposition",
+    "family": "focus_internal",
+    "adherence": 0.383,
+    "facet_fraction": 0.6667,
+    "n_facets": 4,
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "mece": 0.5745,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "faceted_decomposition",
+    "concept": "airline_service_quality",
+    "per_column": [
+      {
+        "name": "service_quality_assessment",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "This is a holistic quality verdict (poor/excellent/good) that restates the whole concept rather than isolating one constitutive aspect of it."
+      },
+      {
+        "name": "seat_comfort_experience",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Physical comfort of the seat is a genuine aspect-of the flying experience and a constitutive part of service quality."
+      },
+      {
+        "name": "food_beverage_quality",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Catering quality is a distinct constitutive component of the onboard service offering."
+      },
+      {
+        "name": "operational_reliability",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Punctuality/delays/cancellations are a bona fide dimension of the service delivered (the schedule performance facet), part-of overall service quality."
+      },
+      {
+        "name": "crew_professionalism",
+        "is_constitutive_facet": true,
+        "role": "facet",
+        "rationale": "Staff/crew conduct and attentiveness is a core constitutive facet of the human-service aspect of quality."
+      },
+      {
+        "name": "sentiment_direction",
+        "is_constitutive_facet": false,
+        "role": "restatement",
+        "rationale": "Overall positive/negative/mixed sentiment is an aggregate valence of the whole review, restating the global evaluation rather than decomposing a specific facet."
+      }
+    ],
+    "facet_columns": [
+      "seat_comfort_experience",
+      "food_beverage_quality",
+      "operational_reliability",
+      "crew_professionalism"
+    ],
+    "non_facet_columns": [
+      "service_quality_assessment",
+      "sentiment_direction"
+    ],
+    "mutual_exclusivity": 0.55,
+    "exhaustiveness": 0.6,
+    "rationale": "Four of the six columns (seat comfort, food/beverage, operational reliability, crew professionalism) are genuine part-of facets that carve service quality into distinct non-overlapping dimensions. However, two columns fail the meronymy test: 'service_quality_assessment' and 'sentiment_direction' are holistic restatements of the whole concept, not constitutive parts, and they overlap heavily with each other and with the whole, lowering mutual exclusivity. Exhaustiveness is moderate: the true facets cover cabin comfort, catering, punctuality, and staff, but leave gaps (e.g., inflight entertainment, boarding/ground process, value-for-money/pricing, cabin cleanliness). Because a substantial portion of the set consists of whole-concept restatements rather than facets, the decomposition only partially satisfies the faceted (MECE part-of) claim."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "concept_key_focus_points",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 6
+}

@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "(Cathay MD) Build a model to organise/optimise routes and service so Overall Rating > 7.",
+  "n_added_columns": 8,
+  "added_columns": [
+    "cabin_crew_service_quality",
+    "crew_absence_pattern",
+    "food_quality_rating",
+    "special_meal_handling",
+    "baggage_handling_outcome",
+    "haul_category",
+    "outstation_region",
+    "premium_economy_product_gap"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6813,
+    "analytical_usefulness__table_level": 0.7,
+    "source_groundedness": 0.7212,
+    "source_groundedness__table_level": 0.72,
+    "b1_overall": 0.7012,
+    "hallucination_rate": 0.375
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "cabin_crew_service_quality",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.72,
+        "hallucination_observed": true,
+        "rationale": "A genuine service-quality axis directly relevant to a route/service optimisation model and not redundant with the numeric Staff Service rating's granularity. Mostly a sound reading of the text (excellent/poor track review tone), but sample 1 assigns 'poor' where the complaint is about ground staff after a diversion rather than cabin crew, and sample 5 ('staff excellent') is downgraded to 'adequate', showing occasional strained inference."
+      },
+      {
+        "name": "crew_absence_pattern",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "hallucination_observed": true,
+        "rationale": "Conceptually a useful service-timing signal for optimisation. However groundedness is weak: sample 1's 'absent_after_meal_service' is invented from a ground-handling complaint with no meal context, and 'responsive_throughout' is asserted on reviews that do not discuss meal-time crew presence. Many NULLs (correct for silent rows) but the non-null specifics are often unwarranted."
+      },
+      {
+        "name": "food_quality_rating",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A clear categorical food axis useful for service optimisation and adds granularity beyond raw Food & Beverages score. Values track the text well ('food good'->good, 'Dinner poor'->average for a mixed review, silent rows->Unknown). Reasonable use of Unknown for silent rows."
+      },
+      {
+        "name": "special_meal_handling",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.75,
+        "hallucination_observed": false,
+        "rationale": "Highly skewed boolean (718 false / 26 true) that is near-constant, giving little analytical leverage; false defaults for silent rows are defensible but the column is close to a constant flag. Groundedness acceptable since true rows presumably mention special meals."
+      },
+      {
+        "name": "baggage_handling_outcome",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Baggage outcome could be a useful operational axis, but the values are poorly grounded: all four samples never mention baggage yet are confidently labelled 'no_issue' rather than NULL. Asserting a positive fact where the text is silent is a hallucination pattern, undermining reliability of the 392 'no_issue' rows."
+      },
+      {
+        "name": "haul_category",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Strong grouping axis for route/service optimisation, derived reliably from the Route field. Sample durations check out (HK-Tokyo medium, Manila-HK short, transpacific/UK ultra-long). Well warranted inference from present route data."
+      },
+      {
+        "name": "outstation_region",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.95,
+        "hallucination_observed": false,
+        "rationale": "Regional grouping directly supports organising routes and comparing service by geography. Cleanly derivable from the Route column and consistent across samples (Oceania, Northeast Asia, Southeast Asia)."
+      },
+      {
+        "name": "premium_economy_product_gap",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.7,
+        "hallucination_observed": false,
+        "rationale": "Skewed boolean (673 false / 71 true) that is near-constant and adds limited modelling leverage for most rows; concept is relevant but low variance. Defaulting silent rows to false is defensible, giving moderate groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.7,
+    "source_groundedness": 0.72,
+    "rationale": "Route-derived columns (haul_category, outstation_region) and the food/crew-quality categoricals give genuine new axes to group and model service quality by route, which is exactly what the MD's optimisation query needs. The main weaknesses are (1) two skewed near-constant booleans (special_meal_handling, premium_economy_product_gap) with limited leverage, and (2) groundedness gaps where silent rows are given confident positive specifics rather than unknown — most notably baggage_handling_outcome ('no_issue' when baggage is never mentioned) and crew_absence_pattern (invented meal-timing detail from a ground-handling complaint). Overall the set is useful but several columns over-assert facts the source text does not support."
+  },
+  "status": "scored",
+  "dataset": "airlines_review",
+  "scenario": "prediction_cathay_rating_model",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "subtype": "predictive_feature_engineering",
+  "n_new_columns": 8
+}

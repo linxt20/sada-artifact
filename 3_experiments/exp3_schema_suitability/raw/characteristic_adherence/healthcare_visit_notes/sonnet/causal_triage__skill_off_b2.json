@@ -1,0 +1,103 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "How can clinics improve triage and scheduling?",
+  "focus_variable": "triage_and_scheduling_efficiency",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "clinical_complexity_score",
+    "triage_priority",
+    "visit_type",
+    "telehealth_eligible",
+    "duration_deviation_min",
+    "recommended_slot_length_min"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.65,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 2,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 2,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.65,
+    "mediator_mislabel_count": 1,
+    "redundancy": 0.0,
+    "treatment_intervenable": true
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "triage_and_scheduling_efficiency",
+    "per_column": [
+      {
+        "name": "clinical_complexity_score",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Intrinsic case difficulty is a common cause of both scheduling decisions (slot length, telehealth eligibility) and efficiency outcomes; not settable, so a confounder rather than treatment. Not named in the query."
+      },
+      {
+        "name": "triage_priority",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Triage priority assignment is an intervenable lever a clinic can set; triage is explicitly named in the query."
+      },
+      {
+        "name": "visit_type",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Clinical categorization of the visit is largely a fixed attribute of the case that drives both triage/scheduling choices and efficiency; not a settable lever. Not named in query."
+      },
+      {
+        "name": "telehealth_eligible",
+        "causal_role": "treatment",
+        "named_in_query": false,
+        "rationale": "Whether a visit is routed to telehealth is a configurable scheduling policy the clinic can decide, plausibly affecting efficiency. An intervenable lever not named in the query."
+      },
+      {
+        "name": "duration_deviation_min",
+        "causal_role": "mediator",
+        "named_in_query": false,
+        "rationale": "Deviation of actual from expected duration lies on the causal path between scheduling decisions and efficiency; it is a downstream mechanism, not a confounder."
+      },
+      {
+        "name": "recommended_slot_length_min",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "Slot length is a directly settable scheduling parameter; scheduling is named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "triage_priority",
+      "telehealth_eligible",
+      "recommended_slot_length_min"
+    ],
+    "treatment_intervenable": true,
+    "confounders": [
+      {
+        "name": "clinical_complexity_score",
+        "named_in_query": false,
+        "plausibility": 0.8
+      },
+      {
+        "name": "visit_type",
+        "named_in_query": false,
+        "plausibility": 0.7
+      }
+    ],
+    "confounder_quality": 0.65,
+    "rationale": "The added set clearly establishes an interventional what-if setup: multiple genuinely settable treatments (recommended_slot_length_min, triage_priority, telehealth_eligible) that a clinic can decide, directly targeting triage and scheduling. It also supplies two plausible confounders that are common causes of both the scheduling decisions and efficiency but are NOT named in the query (clinical_complexity_score, visit_type), demonstrating the adjustment capability under test. duration_deviation_min is a mediator, not a confounder, so it does not count toward confounder quality. Overall the intervention claim is satisfied with adequate but not exhaustive confounder coverage."
+  },
+  "status": "scored",
+  "dataset": "healthcare_visit_notes",
+  "scenario": "causal_triage",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "n_new_columns": 6
+}

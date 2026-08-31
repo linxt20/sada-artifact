@@ -1,0 +1,95 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How do review facets differ by sentiment label?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "review_word_count",
+    "review_sentence_count",
+    "exclamation_count",
+    "question_count",
+    "caps_word_count",
+    "positive_word_count",
+    "negative_word_count",
+    "has_personal_pronoun",
+    "avg_word_length"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.5444,
+    "analytical_usefulness__table_level": 0.55,
+    "source_groundedness": 0.9267,
+    "source_groundedness__table_level": 0.92,
+    "b1_overall": 0.7355,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "review_word_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.95,
+        "rationale": "Length is a mildly informative facet that can differ by sentiment; derivable directly from text. Somewhat generic but gives a groupable axis."
+      },
+      {
+        "name": "review_sentence_count",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.95,
+        "rationale": "Largely redundant with word count and generic structural metric; still soundly derived from text."
+      },
+      {
+        "name": "exclamation_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.97,
+        "rationale": "Punctuation intensity is a genuine stylistic facet plausibly linked to sentiment; trivially extractable and values match text."
+      },
+      {
+        "name": "question_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.97,
+        "rationale": "Rhetorical questions can mark negative/critical reviews; well grounded (row 1 and 3 questions counted correctly)."
+      },
+      {
+        "name": "caps_word_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.9,
+        "rationale": "All-caps emphasis is a plausible sentiment-linked facet; mostly grounded though 'REAL' title vs content scope makes some counts ambiguous."
+      },
+      {
+        "name": "positive_word_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Directly relevant to sentiment facet analysis and gives comparative leverage; lexicon-based so somewhat dependent on word list but readings are reasonable."
+      },
+      {
+        "name": "negative_word_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "rationale": "Strong axis for contrasting facets by sentiment; row 3 (clearly negative text) counted 0 negative words shows lexicon limits, but generally sound."
+      },
+      {
+        "name": "has_personal_pronoun",
+        "analytical_usefulness": 0.35,
+        "source_groundedness": 0.95,
+        "rationale": "Near-constant (203/47) and generic; adds little discriminating leverage though accurately extracted."
+      },
+      {
+        "name": "avg_word_length",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.95,
+        "rationale": "Low-variance stylistic metric with weak link to sentiment facets; correctly computable from text."
+      }
+    ],
+    "analytical_usefulness": 0.55,
+    "source_groundedness": 0.92,
+    "rationale": "The added columns are all extractive/computable facets soundly derived from the review text, with no invented facts (values in row samples match the source). For the query about how facets differ by sentiment, the sentiment-lexicon and punctuation columns provide genuine analytical axes, while several structural metrics (sentence count, avg word length, personal pronoun flag) are generic, low-variance, or redundant, dragging holistic usefulness to moderate. Groundedness is high overall; the only soft spots are lexicon-based sentiment counts that occasionally miss clearly negative rows (e.g., row 3), but these are reasonable readings rather than hallucinations."
+  },
+  "status": "scored",
+  "dataset": "amazon_polarity_reviews",
+  "scenario": "predictive_sentiment",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 9
+}

@@ -1,0 +1,104 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "Which factors best explain negative Yelp experiences?",
+  "n_added_columns": 9,
+  "added_columns": [
+    "complaint_category",
+    "negative_signal_count",
+    "service_mention_count",
+    "food_mention_count",
+    "price_mention_count",
+    "wait_mention_count",
+    "cleanliness_mention_count",
+    "atmosphere_mention_count",
+    "review_length_bucket"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 9,
+    "n_judged_columns": 9,
+    "analytical_usefulness": 0.6778,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.8556,
+    "source_groundedness__table_level": 0.86,
+    "b1_overall": 0.7667,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "complaint_category",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Directly answers the query by categorizing the type of complaint driving negative experiences, giving a clean grouping axis. Values are well-grounded in samples (service review→service, cabana/entry issue→other). Folding positives into a 'positive' bucket is a reasonable design; the food_quality/service split matches evidence."
+      },
+      {
+        "name": "negative_signal_count",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "A count of negative cues provides a continuous intensity axis useful for correlating with negative label. Values track the source reasonably (0 for glowing reviews, higher for complaint-heavy ones), though it partly overlaps with the label_pos signal. Still adds gradient beyond the binary label."
+      },
+      {
+        "name": "service_mention_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Quantifies attention to service, a leading candidate factor for negative experiences; enables regression/grouping. Sample values are plausible extractions (service-heavy review→3). Sound grounding."
+      },
+      {
+        "name": "food_mention_count",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Captures food-topic salience, a genuine explanatory axis. Values align with source (pizza review→3). Well grounded, distinct axis from service."
+      },
+      {
+        "name": "price_mention_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Price is a plausible driver of dissatisfaction; count gives usable variation despite heavy zero skew. Sample values grounded (pizza review mentions $20 but count=0 is a minor miss, still defensible on threshold)."
+      },
+      {
+        "name": "wait_mention_count",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Wait time is a classic complaint factor; count enables comparison. Grounded in samples. Skewed distribution but still informative."
+      },
+      {
+        "name": "cleanliness_mention_count",
+        "analytical_usefulness": 0.55,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Cleanliness is a legitimate factor, but the column is near-constant (231 zeros) giving little analytical leverage here. Values are grounded where present. Usefulness reduced by low variance."
+      },
+      {
+        "name": "atmosphere_mention_count",
+        "analytical_usefulness": 0.6,
+        "source_groundedness": 0.85,
+        "hallucination_observed": false,
+        "rationale": "Atmosphere is a plausible axis but heavily zero-skewed, limiting leverage. Grounded readings in samples. Moderate usefulness."
+      },
+      {
+        "name": "review_length_bucket",
+        "analytical_usefulness": 0.25,
+        "source_groundedness": 0.9,
+        "hallucination_observed": false,
+        "rationale": "This is essentially raw text length, a generic feature that adds little analytical leverage for explaining WHY experiences are negative. Nearly all rows are 'medium', so variance is low. Values are trivially derivable and grounded, but usefulness for this causal/explanatory query is weak."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.86,
+    "rationale": "The added columns provide a strong, query-aligned decomposition of negative-experience drivers: a categorical complaint type plus per-topic mention counts (service, food, price, wait, cleanliness, atmosphere) and an overall negative-signal intensity. These give genuine axes to group and model against the negative label, directly serving the query. Values are soundly grounded in the source text across all samples with no observed hallucinations; sensible zeros for silent topics are correct. Usefulness is dragged down slightly by low-variance topic columns (cleanliness, atmosphere) and by review_length_bucket, which is a generic length proxy with little explanatory value for this query. Per scope rules, no penalty for missing columns."
+  },
+  "status": "scored",
+  "dataset": "yelp_polarity_reviews",
+  "scenario": "causal_negative",
+  "model": "sonnet",
+  "variant": "skill_off",
+  "subtype": "causal_attribution",
+  "n_new_columns": 9
+}

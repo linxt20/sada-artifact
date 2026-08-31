@@ -1,0 +1,96 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "How does incident resolution efficiency vary across category, priority, and assignment group?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "primary_asset_type",
+    "specific_failure_mechanism",
+    "issue_complexity_signal",
+    "resolution_scope",
+    "issue_severity_signal",
+    "issue_frequency_pattern",
+    "assignment_hand_off_evidence",
+    "requester_type"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.6813,
+    "analytical_usefulness__table_level": 0.68,
+    "source_groundedness": 0.6,
+    "source_groundedness__table_level": 0.58,
+    "b1_overall": 0.6406,
+    "hallucination_rate": 0.625
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "primary_asset_type",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Categorizing the asset type from short_description gives a genuine new axis to group resolution efficiency, complementing the coarse original 'category'. Values (printer, network_connectivity) are sound readings of the source text.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "specific_failure_mechanism",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.75,
+        "rationale": "A finer failure taxonomy is useful for modeling efficiency. Mostly well grounded (connectivity_failure, database_connection_error), but 'hardware_malfunction' assigned to vague 'not working properly' text is a somewhat generic inference not explicitly stated, though defensible.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "issue_complexity_signal",
+        "analytical_usefulness": 0.75,
+        "source_groundedness": 0.55,
+        "rationale": "Complexity is analytically relevant to efficiency. However values like 'simple_functional_issue' vs 'requires_replacement' are inferred from thin text ('printer not working properly' -> equipment_replacement is asserted, not stated), so groundedness is moderate.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "resolution_scope",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.45,
+        "rationale": "Potentially useful axis, but it asserts a specific resolution ('equipment_replacement', 'repair_required') that the short_description does not state; closed_at exists but does not reveal resolution type. Largely invented specifics.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "issue_severity_signal",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.5,
+        "rationale": "Severity is relevant to efficiency and overlaps with the original 'priority'. Some values map from text (connectivity_loss), but 'single_failure' vs 'critical_system_outage' are inferred beyond what the terse text supports.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "issue_frequency_pattern",
+        "analytical_usefulness": 0.45,
+        "source_groundedness": 0.3,
+        "rationale": "isolated vs recurring could matter, but the short_descriptions ('Printer not working') give no evidence of frequency; the 137 'recurring' labels appear largely unsupported by the source text.",
+        "hallucination_observed": true
+      },
+      {
+        "name": "assignment_hand_off_evidence",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.95,
+        "rationale": "Comparing assigned_to vs closed_by is directly derivable from original columns and is a strong, well-grounded signal of hand-off relevant to resolution efficiency across assignment groups.",
+        "hallucination_observed": false
+      },
+      {
+        "name": "requester_type",
+        "analytical_usefulness": 0.4,
+        "source_groundedness": 0.4,
+        "rationale": "Requester type could add an axis, but the samples show contradictory/unsupported labels: identical printer texts get 'standard_user' vs 'system_integration_user'; likely derived from caller_id/sys_updated_by patterns not visible in source text, making it weakly grounded.",
+        "hallucination_observed": true
+      }
+    ],
+    "analytical_usefulness": 0.68,
+    "source_groundedness": 0.58,
+    "rationale": "Several columns (primary_asset_type, assignment_hand_off_evidence, specific_failure_mechanism) give genuine, well-grounded new axes that directly support analyzing resolution efficiency by category/priority/assignment group. However a cluster of 'signal' columns (resolution_scope, issue_complexity_signal, issue_severity_signal, issue_frequency_pattern) assert specific resolutions, severities, and recurrence that the terse short_descriptions do not support, and requester_type shows inconsistent, unsupported labeling. These lower overall groundedness while usefulness remains moderate-to-good."
+  },
+  "status": "scored",
+  "dataset": "flag_12",
+  "scenario": "eda_efficiency",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "exploratory_data_analysis",
+  "n_new_columns": 8
+}

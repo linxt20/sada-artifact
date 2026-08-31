@@ -1,0 +1,40 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What factors explain low review scores?",
+  "n_added_columns": 1,
+  "added_columns": [
+    "product_efficacy_failure"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 1,
+    "n_judged_columns": 1,
+    "analytical_usefulness": 0.72,
+    "analytical_usefulness__table_level": 0.72,
+    "source_groundedness": 0.4,
+    "source_groundedness__table_level": 0.4,
+    "b1_overall": 0.56,
+    "hallucination_rate": 1.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "product_efficacy_failure",
+        "analytical_usefulness": 0.72,
+        "source_groundedness": 0.4,
+        "hallucination_observed": true,
+        "rationale": "Usefulness: The column proposes a genuine analytical axis -- categorizing whether a product failed to deliver its promised effect -- which is directly relevant to explaining low review scores and gives a non-trivial way to group and compare reviews. Groundedness: Values are unreliable. The 'Jumbo Salted Peanuts' row concerns mislabeling/misrepresentation, not efficacy, yet was tagged 'no_detectable_effect' -- a mismatched categorization. The cough-medicine row describes a medicinal flavor complaint (taste), not insufficient efficacy, yet was labeled 'insufficient_effect', overreaching what the text supports. Positive rows ('as_advertised') are more defensible readings. The frequent forcing of texts into an efficacy frame that the source does not actually address (many reviews are about taste, price, delivery, or labeling) produces unwarranted specifics and contradictions, lowering groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.72,
+    "source_groundedness": 0.4,
+    "rationale": "The single added column offers a plausible and query-relevant analytical dimension (failure to deliver promised effect), so it scores reasonably on usefulness. However, its produced values repeatedly assert efficacy-related categories that the source texts do not support -- treating a labeling/misrepresentation complaint as 'no_detectable_effect' and a flavor complaint as 'insufficient_effect' -- indicating hallucinated categorization rather than sound reading of the text. This materially depresses source groundedness."
+  },
+  "status": "scored",
+  "dataset": "amazon_fine_food_review",
+  "scenario": "causal_low_score_attribution",
+  "model": "haiku",
+  "variant": "skill_on_e2e",
+  "subtype": "causal_attribution",
+  "n_new_columns": 1
+}

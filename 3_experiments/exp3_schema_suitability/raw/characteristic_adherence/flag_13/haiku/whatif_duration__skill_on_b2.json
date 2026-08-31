@@ -1,0 +1,116 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "what_if",
+  "subtype_label": "Causal / what-if (intervenable treatment)",
+  "family": "causal",
+  "query": "If the most common operational burdens described in the text were eliminated, how much would resolution duration drop?",
+  "focus_variable": "resolution_duration",
+  "concept": null,
+  "n_added_columns": 6,
+  "added_columns": [
+    "primary_issue_category",
+    "issue_scope",
+    "technical_complexity",
+    "issue_recurrence_pattern",
+    "assignee_resolution_efficiency",
+    "assigned_technician_continuity"
+  ],
+  "metrics": {
+    "n_added_columns": 6,
+    "subtype": "what_if",
+    "family": "causal",
+    "adherence": 0.0,
+    "treatment_present": true,
+    "confounder_present": true,
+    "n_confounders": 5,
+    "unnamed_confounder_present": true,
+    "n_unnamed_confounders": 5,
+    "unnamed_confounder_fraction": 1.0,
+    "confounder_quality": 0.5,
+    "mediator_mislabel_count": 0,
+    "redundancy": 0.0,
+    "treatment_intervenable": false
+  },
+  "judge": {
+    "subtype": "what_if",
+    "outcome_variable": "resolution_duration",
+    "per_column": [
+      {
+        "name": "primary_issue_category",
+        "causal_role": "treatment",
+        "named_in_query": true,
+        "rationale": "The query targets eliminating 'the most common operational burdens'; the top issue category (database_access, email_service, etc.) operationalizes the burden being intervened on. However, an issue's intrinsic category is largely an immutable attribute of the incident rather than a settable lever, so its status as a true intervention is questionable."
+      },
+      {
+        "name": "issue_scope",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Scope (system_wide vs individual) plausibly affects both which burdens arise and resolution duration, functioning as a common cause. Not named in the query."
+      },
+      {
+        "name": "technical_complexity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Complexity influences both the type/frequency of operational burden and the duration to resolve, a common cause not named in the query. Could arguably be a mediator, but as a pre-existing property it acts as a confounder."
+      },
+      {
+        "name": "issue_recurrence_pattern",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Recurrence relates to which burdens are 'most common' and to how long resolution takes; a common cause not named in the query."
+      },
+      {
+        "name": "assignee_resolution_efficiency",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Technician efficiency affects duration and can correlate with the burdens handled; plausible confounder not named in the query, though it borders on being a direct cause of the outcome only."
+      },
+      {
+        "name": "assigned_technician_continuity",
+        "causal_role": "confounder",
+        "named_in_query": false,
+        "rationale": "Continuity of the assigned technician can affect both handling of recurring burdens and duration; plausible confounder not named in the query."
+      }
+    ],
+    "treatment_present": true,
+    "treatment_columns": [
+      "primary_issue_category"
+    ],
+    "treatment_intervenable": false,
+    "confounders": [
+      {
+        "name": "issue_scope",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "technical_complexity",
+        "named_in_query": false,
+        "plausibility": 0.6
+      },
+      {
+        "name": "issue_recurrence_pattern",
+        "named_in_query": false,
+        "plausibility": 0.55
+      },
+      {
+        "name": "assignee_resolution_efficiency",
+        "named_in_query": false,
+        "plausibility": 0.4
+      },
+      {
+        "name": "assigned_technician_continuity",
+        "named_in_query": false,
+        "plausibility": 0.45
+      }
+    ],
+    "confounder_quality": 0.5,
+    "rationale": "The query poses a what-if: eliminating common operational burdens and measuring the drop in resolution_duration. The added set identifies the burden being intervened on (primary_issue_category) and several unnamed common causes that would need adjustment. However, the treatment is weak on intervenability: the 'burden' is captured as an intrinsic issue category/type, which an actor cannot straightforwardly SET or CHANGE per ticket — eliminating a burden class is a systemic policy, but the column encodes an immutable attribute of each incident rather than a configurable lever. Thus treatment_intervenable=false. The confounders are plausible and mostly not named in the query, showing some capability, though a few (efficiency) verge on being outcome-adjacent direct causes rather than common causes of the treatment. Overall a partial realization of the interventional claim."
+  },
+  "status": "scored",
+  "dataset": "flag_13",
+  "scenario": "whatif_duration",
+  "model": "haiku",
+  "variant": "skill_on",
+  "n_new_columns": 6
+}

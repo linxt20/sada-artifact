@@ -1,0 +1,98 @@
+{
+  "scorer": "B-2 characteristic adherence (per-subtype)",
+  "subtype": "focus_inference",
+  "subtype_label": "Focus internal / focus inference (no given focus)",
+  "family": "focus_internal",
+  "query": "Help me understand what's worth analyzing in these travel-expense records.",
+  "focus_variable": "proposed_focus_variable",
+  "concept": null,
+  "n_added_columns": 10,
+  "added_columns": [
+    "asset_category",
+    "ci_form_factor",
+    "travel_context",
+    "asset_brand",
+    "record_action_type",
+    "creation_method",
+    "processing_lag_band",
+    "source_id_present",
+    "department_group",
+    "is_miscellaneous_ci"
+  ],
+  "metrics": {
+    "n_added_columns": 10,
+    "subtype": "focus_inference",
+    "family": "focus_internal",
+    "adherence": 0.372,
+    "focus_coherence": 0.62,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.78,
+    "redundancy": 0.0
+  },
+  "judge": {
+    "subtype": "focus_inference",
+    "implied_focus": "The nature/classification of the underlying asset or configuration item (CI) behind each expense record -- i.e., what kind of asset each 'travel-expense' record actually represents and how it was recorded.",
+    "per_column": [
+      {
+        "name": "asset_category",
+        "supports_focus": true,
+        "rationale": "Directly classifies the asset type behind the record; a core facet of the CI/asset focus."
+      },
+      {
+        "name": "ci_form_factor",
+        "supports_focus": true,
+        "rationale": "Refines asset classification by physical/logical form factor; strongly on-focus."
+      },
+      {
+        "name": "travel_context",
+        "supports_focus": true,
+        "rationale": "Flags whether the asset is travel-related, a coherent sub-facet of asset nature revealing that most records aren't actually travel."
+      },
+      {
+        "name": "asset_brand",
+        "supports_focus": true,
+        "rationale": "Vendor/brand attribute of the asset; a natural predictor/attribute of the asset focus."
+      },
+      {
+        "name": "record_action_type",
+        "supports_focus": true,
+        "rationale": "Describes the lifecycle action producing the record; relates to how the CI came to exist, adjacent to the focus."
+      },
+      {
+        "name": "creation_method",
+        "supports_focus": false,
+        "rationale": "Manual vs automated is a process-provenance attribute of the record, not of the asset's nature; drifts from the focus."
+      },
+      {
+        "name": "processing_lag_band",
+        "supports_focus": false,
+        "rationale": "Processing latency is a workflow/timeliness metric unrelated to asset classification."
+      },
+      {
+        "name": "source_id_present",
+        "supports_focus": false,
+        "rationale": "A generic data-completeness flag; mechanical and not centred on the asset focus."
+      },
+      {
+        "name": "department_group",
+        "supports_focus": false,
+        "rationale": "Organizational dimension; useful for slicing but not part of the asset-nature focus."
+      },
+      {
+        "name": "is_miscellaneous_ci",
+        "supports_focus": true,
+        "rationale": "Classifies whether the CI is a residual/uncategorized asset; a facet of the asset-nature focus."
+      }
+    ],
+    "focus_coherence": 0.62,
+    "structure_quality": 0.6,
+    "focus_actionability": 0.78,
+    "rationale": "A plurality of columns (asset_category, ci_form_factor, travel_context, asset_brand, is_miscellaneous_ci, and arguably record_action_type) converge on a genuinely data-inferable focus: the true nature of the asset/CI behind each 'travel expense', surfacing the striking finding that most records are hardware endpoints rather than travel. This is a coherent, actionable insight an analyst could pursue (mislabelled expense taxonomy, procurement vs travel spend). However coherence is diluted by a cluster of off-focus process/provenance/quality columns (creation_method, processing_lag_band, source_id_present, department_group) that form a second, unrelated theme, making the set partly a grab-bag rather than a tight facet structure. Granularity is reasonable, but the two competing themes prevent a high structure score."
+  },
+  "status": "scored",
+  "dataset": "flag_20",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on_e2e",
+  "n_new_columns": 10
+}

@@ -1,0 +1,88 @@
+{
+  "scorer": "B-1 general augmentation quality",
+  "query": "What aspects of the films are reviewers focusing on?",
+  "n_added_columns": 8,
+  "added_columns": [
+    "acting_performance_focus",
+    "writing_script_focus",
+    "directing_craft_focus",
+    "plot_story_focus",
+    "technical_production_focus",
+    "emotional_engagement_focus",
+    "comparative_reference_type",
+    "audience_fit_focus"
+  ],
+  "n_evidence_rows": 5,
+  "metrics": {
+    "n_added_columns": 8,
+    "n_judged_columns": 8,
+    "analytical_usefulness": 0.8688,
+    "analytical_usefulness__table_level": 0.88,
+    "source_groundedness": 0.825,
+    "source_groundedness__table_level": 0.82,
+    "b1_overall": 0.8469,
+    "hallucination_rate": 0.0
+  },
+  "judge": {
+    "per_column": [
+      {
+        "name": "acting_performance_focus",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.9,
+        "rationale": "A clear aspect-focus axis directly serving the query about what reviewers focus on. Values track source well: IMDB-0004 praises acting explicitly, IMDB-0005 correctly not_present. IMDB-0001 marks criticized where the excerpt targets writing/show quality, a slight stretch but defensible."
+      },
+      {
+        "name": "writing_script_focus",
+        "analytical_usefulness": 0.95,
+        "source_groundedness": 0.95,
+        "rationale": "Strong aspect dimension. IMDB-0001 and IMDB-0003 explicitly criticize writing; silent rows correctly marked not_present. Well grounded."
+      },
+      {
+        "name": "directing_craft_focus",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "rationale": "Useful aspect axis, but some values are inferred where the text is thin. IMDB-0002 'criticized' directing is a stretch since the excerpt criticizes the movie/writing generally without naming direction; IMDB-0004 'praised' aligns with 'well-made'/'Sarno knows'."
+      },
+      {
+        "name": "plot_story_focus",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.8,
+        "rationale": "Relevant grouping axis. IMDB-0005 'mixed' plot is reasonable given the plot summary. IMDB-0004 'praised' plot is weakly supported; the text focuses on sex/atmosphere, not plot. Mostly sound."
+      },
+      {
+        "name": "technical_production_focus",
+        "analytical_usefulness": 0.85,
+        "source_groundedness": 0.9,
+        "rationale": "Distinct useful axis. Mostly correct not_present values; IMDB-0003 'criticized' is defensible via 'wooden performances' framing though borderline vs acting. Silent rows handled well."
+      },
+      {
+        "name": "emotional_engagement_focus",
+        "analytical_usefulness": 0.7,
+        "source_groundedness": 0.85,
+        "rationale": "Adds a valence/engagement axis distinct from aspect columns and largely tracks label_pos and tone (strong_negative for pans, strong_positive for the enthusiastic review). Somewhat redundant with existing label_pos, lowering usefulness slightly, but the intensity granularity adds value."
+      },
+      {
+        "name": "comparative_reference_type",
+        "analytical_usefulness": 0.9,
+        "source_groundedness": 0.75,
+        "rationale": "Genuinely interesting axis for what reviewers reference. IMDB-0001 'other_films' grounded (Star Trek, Silver Spoons). IMDB-0003 'genre_canon' (soap operas) and IMDB-0004 'genre_canon' (sexploitation fans) are looser inferences bordering on interpretation."
+      },
+      {
+        "name": "audience_fit_focus",
+        "analytical_usefulness": 0.8,
+        "source_groundedness": 0.7,
+        "rationale": "Useful segmentation. IMDB-0004 'adult_genre_fans' well grounded ('fans of sexploitation'), IMDB-0003 'general_audience' reasonable ('housewife's daytime movie'). But many 'general_audience' values appear to be a default inference not asserted by silent texts, weakening groundedness."
+      }
+    ],
+    "analytical_usefulness": 0.88,
+    "source_groundedness": 0.82,
+    "rationale": "The added columns collectively decompose review focus into distinct, non-trivial aspect and framing axes that directly serve the query on what reviewers focus on, offering real grouping/comparison leverage. Values are generally sound readings of the source, with appropriate not_present handling for silent rows. Groundedness is dragged down modestly by some confident aspect assignments (directing, plot, comparative, audience) inferred where the excerpt is thin or focused elsewhere, but no gross contradictions or invented facts are observed."
+  },
+  "status": "scored",
+  "dataset": "imdb_movie_reviews",
+  "scenario": "focus_inference",
+  "model": "sonnet",
+  "variant": "skill_on",
+  "subtype": "focus_inference",
+  "n_new_columns": 8
+}
