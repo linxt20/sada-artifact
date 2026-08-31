@@ -26,6 +26,8 @@ Then read, in order:
 4. `3_experiments/<exp>/tables/*.csv` — the regenerated tables, with the paper
    value beside each recomputed value
 5. `5_reference/paper/experiments.tex` — the paper section under test
+6. `5_reference/paper/appendix.pdf` — the supplementary appendix, including the
+   verbatim judge prompts of appendix D.1–D.4 referenced in §5
 
 ---
 
